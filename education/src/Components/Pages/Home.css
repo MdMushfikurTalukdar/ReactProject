@@ -1,0 +1,56 @@
+.body{
+	background-color: rgb(214, 193, 241);
+	height: 600px;
+	width: 100%;
+}
+
+.banner{
+	height: 600px;
+	width: 100%;
+	position: absolute;
+}
+
+.welcomeTxt{
+	margin-top: 6%;
+}
+
+.getBtn{
+	margin-top: 15%;
+	height: 50px;
+    width: 130px;
+    border: noen;
+    border-radius: 22%;
+    color: #080808;
+    background: lightblue;
+    font-weight: bold;
+}
+.getBtn:hover{
+	color: rgb(197, 200, 202);
+	background-color: rgb(108, 108, 165);
+}
+
+.second{
+	position: absolute;
+	height: 500px;
+	width: 100%;
+}
+
+.aboutTxt{
+	margin-left: 45%;
+	margin-top: 2%;
+}
+.underline{
+	margin-left: 46%;
+	color: red;
+}
+.redColor{
+	color: red;
+}
+
+.txtAbout{
+
+}
+.txtDiv{
+	width: 70%;
+	margin-left: 15%;
+}
