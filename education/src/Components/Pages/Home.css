@@ -54,3 +54,101 @@
 	width: 70%;
 	margin-left: 15%;
 }
+
+.second-second{
+	position: absolute;
+	width: 40%;
+	height: 400px;
+	margin-left: 17%;
+	margin-top: 4%;
+}
+.second-third{
+	position: absolute;
+	width: 35%;
+	height: 400px;
+	margin-left: 60%;
+	margin-top: 4%;
+}
+.third{
+	position: absolute;
+	height: 600px;
+	width: 100%;
+	background-color: #d8d8d8;
+	margin-top: 530px;
+}
+.third-first{
+	margin-top: 2%;
+	margin-left: 43%;
+}
+.underline2{
+	margin-left: 3%;
+	color: red;
+}
+.third-second{
+	height: 600px;
+	width: 100%;
+	margin-top: 2%;
+}
+
+.third-second-first{
+	position: absolute;
+	height: 100%;
+	width: 20%;
+	margin-left: 10%;
+}
+
+.third-second-second{
+	position: absolute;
+	height: 100%;
+	width: 20%;
+	margin-left: 35%;
+
+}
+.third-second-third{
+	position: absolute;
+	height: 100%;
+	width: 20%;
+	margin-left: 60%;
+
+}
+.imgSport{
+	margin-top: 50px;
+    margin-left: 20px;
+    border: 5px solid #60605f;
+	height: 190px;
+    width: 280px;
+}
+.imgSport:hover{
+	height: 190px;
+    width: 280px;
+	filter: grayscale(100%);
+}
+.sportTxt{
+	margin-top: 22px;
+    margin-left: 115px;
+}
+.sportTxt:hover{
+	color: #0fa016;
+}
+.btnExplore{
+	position: absolute;
+	height: 44px;
+    width: 150px;
+    margin-top: 346px;
+    margin-left: 42%;
+    border: none;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	background-color: aliceblue;
+}
+.btnExplore:hover{
+	background-color: #777575;
+	color: white;
+	
+}
+.fourth{
+	position: absolute;
+	height: 400px;
+	width: 100%;
+	background-color: #030303;
+	margin-top: 1130px;
+}
