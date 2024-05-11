@@ -1,86 +1,230 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+*{
+  ::-webkit-scrollbar{
+    width: 3px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #999; /* Set the background color of the thumb */
+    border-radius: 10px; /* Set the border radius to make it rounded */
+  }
+  
+  ::-webkit-scrollbar-track {
+    background-color: #f0f0f0; /* Set the background color of the track */
   }
 }
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-#home {
-  position: relative;
-  padding: 50px 0 0;
-}
-
-.banner {
-  width: 100%;
-  height: 600px;
-  position: relative;
-  color: white;
-  text-align: center;
-}
-
-.banner img {
-  width: 100%;
+.parentdiv_small_screen{
   height: 100%;
-
-
-  background-position: center center;
-
-  background-size: cover;
-
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index:99
+  background-color:#6c42ec;
+  overflow-x: hidden
+}
+.children1_small_screen{
+  width: 100vw;
+  min-height: 100%;
+  display: flex;
+  justify-content: center
+}
+.parentGrid_small_screen{
+  background-color: white;
+  border-radius: 20px 20px 20px 20px;
+  text-align: center; 
+  padding: 25px;
+  height: 100vh;
+  width: 100vw
+}
+.largeScreen_typography{
+  position: fixed;
+  left: 2%; 
+  top: 11%;
+  font-size:2.6rem;
+  color: #dedea0
+}
+.largeScreen_typography1{
+  position: fixed; 
+  left: 6%; 
+  top: 19%; 
+  font-size: 2.6rem;
+  color: #dedea0 
+}
+.img{
+  position: fixed; 
+  left: 9%;
+  top: 33%;
+  width: 400px;
+  height: auto
+}
+.parentGrid_largeScreen{
+  background-color: white;
+  border-radius: 20px 0px 0px 20px;
+  text-align: center; 
+  padding: 25px;
+  height: 100vh;
+  width: 100vw
+}
+.Divider{
+  width: 50%;
+  position: relative; 
+  left: 25%;
+  margin: 40px 0px 40px 0px;
 }
 
-.banner .overlay {
+.icon_button{
+  display: flex;
+  gap: 10px;
+  justify-content: center; 
   width: 100%;
-  height: 600px;
-  background-color: rgba(0, 35, 82, 0.7);
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index:999
+  margin-top: 20px 
 }
 
-.banner h2 {
-  margin-top: 170px;
-  font-size: 3em;
+.body{
+	background-color: rgb(214, 193, 241);
+	height: 600px;
+	width: 100%;
 }
 
-.banner p {
-  margin-top: 8px;
-  font-size: 1.2em;
+.banner{
+	height: 600px;
+	width: 100%;
+	position: absolute;
 }
 
+.welcomeTxt{
+	margin-top: 6%;
+}
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.getBtn{
+	margin-top: 15%;
+	height: 50px;
+    width: 130px;
+    border: noen;
+    border-radius: 22%;
+    color: #080808;
+    background: lightblue;
+    font-weight: bold;
+}
+.getBtn:hover{
+	color: rgb(197, 200, 202);
+	background-color: rgb(108, 108, 165);
+}
+
+.second{
+	position: absolute;
+	height: 500px;
+	width: 100%;
+}
+
+.aboutTxt{
+	margin-left: 45%;
+	margin-top: 2%;
+}
+.underline{
+	margin-left: 46%;
+	color: red;
+}
+.redColor{
+	color: red;
+}
+
+.txtAbout{
+
+}
+.txtDiv{
+	width: 70%;
+	margin-left: 15%;
+}
+
+.second-second{
+	position: absolute;
+	width: 40%;
+	height: 400px;
+	margin-left: 17%;
+	margin-top: 4%;
+}
+.second-third{
+	position: absolute;
+	width: 35%;
+	height: 400px;
+	margin-left: 60%;
+	margin-top: 4%;
+}
+.third{
+	position: absolute;
+	height: 600px;
+	width: 100%;
+	background-color: #d8d8d8;
+	margin-top: 530px;
+}
+.third-first{
+	margin-top: 2%;
+	margin-left: 43%;
+}
+.underline2{
+	margin-left: 3%;
+	color: red;
+}
+.third-second{
+	height: 600px;
+	width: 100%;
+	margin-top: 2%;
+}
+
+.third-second-first{
+	position: absolute;
+	height: 100%;
+	width: 20%;
+	margin-left: 10%;
+}
+
+.third-second-second{
+	position: absolute;
+	height: 100%;
+	width: 20%;
+	margin-left: 35%;
+
+}
+.third-second-third{
+	position: absolute;
+	height: 100%;
+	width: 20%;
+	margin-left: 60%;
+
+}
+.imgSport{
+	margin-top: 50px;
+    margin-left: 20px;
+    border: 5px solid #60605f;
+	height: 190px;
+    width: 280px;
+}
+.imgSport:hover{
+	height: 190px;
+    width: 280px;
+	filter: grayscale(100%);
+}
+.sportTxt{
+	margin-top: 22px;
+    margin-left: 115px;
+}
+.sportTxt:hover{
+	color: #0fa016;
+}
+.btnExplore{
+	position: absolute;
+	height: 44px;
+    width: 150px;
+    margin-top: 346px;
+    margin-left: 42%;
+    border: none;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	background-color: aliceblue;
+}
+.btnExplore:hover{
+	background-color: #777575;
+	color: white;
+	
+}
+.fourth{
+	position: absolute;
+	height: 400px;
+	width: 100%;
+	background-color: #030303;
+	margin-top: 1130px;
 }

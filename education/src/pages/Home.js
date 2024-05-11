@@ -1,18 +1,22 @@
-import React from 'react'
+import Navbar from "../components/Navbar";
+
+import img1 from "../Img/img1.jpeg";
+import img2 from "../Img/img2.jpeg";
+import img3 from "../Img/img3.png";
+import sport from "../Img/sports.jpeg";
+import club from "../Img/club.jpeg";
+import student from "../Img/studen.jpg";
+
 import './Home.css';
-import img1 from '../Img/img2.jpeg';
-import img3 from '../Img/img3.png';
-import sport from '../Img/sports.jpeg';
-import club from '../Img/club.jpeg';
-import student from '../Img/studen.jpg';
 
+export const Home = () => {
+    return (
+        <>
+            <Navbar />
 
-export default function Home() {
-  return (
-    <>
     <div className='body'>
       <div className='banner'>
-        <img src={img1} ></img>
+        <img className="imgBanner" src={img2} ></img>
         <div className='overlay'> 
           <h1 className='welcomeTxt'>Welcome to Our Edicuation Platform </h1> 
           <div>
@@ -68,6 +72,6 @@ export default function Home() {
     <div className='fourth'>
       <h1>Footer</h1>
     </div>
-    </>
-  )
+        </>
+    )
 }
