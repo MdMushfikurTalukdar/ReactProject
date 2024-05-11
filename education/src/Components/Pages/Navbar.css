@@ -1,8 +1,0 @@
-.navbar-nav{
-    margin-left: 40%;
-}
-
-.navbar-nav :last-child{
-    position: absolute;
-    margin-left: 50%;
-}
