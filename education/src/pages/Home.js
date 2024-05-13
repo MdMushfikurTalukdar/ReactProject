@@ -325,7 +325,7 @@ export const Home=()=>{
                     <Grid container spacing={5}>
                         <Grid item xs={12} sm={12} >
 
-                            <h2 className="title" style={{color:"white"}}>Discover the Ultimate Education Hub</h2>
+                            <h2 className="title" style={{color:"white"}}>Discover the Ultimate Education Platform</h2>
 
                             <h4 className="subtitle" style={{color:"white"}}>
                             Immerse yourself in a transformative educational experience with our innovative platform designed to empower learners of all ages and backgrounds. </h4>
