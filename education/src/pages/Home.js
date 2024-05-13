@@ -311,12 +311,12 @@ export const Home=()=>{
     })
 
     return (
-        <div style={{ backgroundColor: "black", minHeight: "100vh", minWidth: "100vw",fontStretch: 'extra-condensed',
+        <div style={{ backgroundColor: "white", minHeight: "100vh", minWidth: "100vw",fontStretch: 'extra-condensed',
         fontFamily: 'math',
         fontWeight: '500',
         fontVariant: 'small-caps' }} >
 
-            <div className="phoneSize">
+            <div className="phoneSize" style={{fontFamily:"cursive"}}>
                 <div>
                     <HomepageNav />
                 </div>
@@ -325,9 +325,9 @@ export const Home=()=>{
                     <Grid container spacing={5}>
                         <Grid item xs={12} sm={12} >
 
-                            <h2 className="title" style={{color:"white"}}>Discover the Ultimate Education Platform</h2>
+                            <h2 className="title" style={{color:"black",fontFamily:"cursive"}}>Discover the Ultimate Education Platform</h2>
 
-                            <h4 className="subtitle" style={{color:"white"}}>
+                            <h4 className="subtitle" style={{color:"black",}}>
                             Immerse yourself in a transformative educational experience with our innovative platform designed to empower learners of all ages and backgrounds. </h4>
 
                             <div>
@@ -523,9 +523,10 @@ export const Home=()=>{
                         </Grid>
                     </Grid>
 
-                    <div id="text0" ref={scrollRef0} style={{ width: '578px', marginTop: "150px", marginBottom: "200px" }}>
+                    <div id="text0" ref={scrollRef0} style={{ width: '578px', marginTop: "150px", marginBottom: "200px",color:"black" }}>
                         <Typography variant="h2">Ready to get started?</Typography>
-                        <center><Button variant="outlined" style={{ width: "150px", height: "50px", marginTop: "20px", marginBottom: "20px",fontFamily:"cursive"}} >Join with Us</Button></center>
+                        <center><Button variant="outlined" style={{ width: "150px", height: "50px", marginTop: "20px", marginBottom: "20px",fontFamily:"cursive"}} 
+                        onClick={(e)=>navigate('/register')}>Join with Us</Button></center>
                     </div>
 
                     <Footer />

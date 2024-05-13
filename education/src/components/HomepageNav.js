@@ -47,9 +47,9 @@ function HomepageNav(props) {
   const container = window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <Box sx={{ display: 'flex',marginBottom:"00px" }}>
+    <Box sx={{ display: 'flex',marginBottom:"00px", }}>
       <CssBaseline />
-      <AppBar component="nav" style={{backgroundColor:'rgb(37, 150, 190,0.9)'}}>
+      <AppBar component="nav" style={{backgroundColor:'925fe2'}}>
         <Toolbar>
           <IconButton
             color="inherit"
