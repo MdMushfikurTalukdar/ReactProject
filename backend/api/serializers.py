@@ -1,5 +1,6 @@
-from rest_framework import serializers
-from .models import User
+from rest_framework import serializers, status
+
+from .models import User,UserProfile
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
     class Meta:
@@ -15,3 +16,17 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return attrs
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
+
+
+class UserLoginSerializer(serializers.ModelSerializer):
+    registration_number = serializers.CharField(max_length=10)
+    class Meta:
+        model = User
+        fields = ['registration_number', 'password']
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    registration_number = serializers.CharField(source='user.registration_number',read_only=True)
+    class Meta:
+        model = UserProfile
+        fields = ['user','registration_number','f_name','l_name','bio','education']
+        read_only_fields = ['user','registration_number']
