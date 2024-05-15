@@ -4,8 +4,15 @@ import MessageIcon from "@mui/icons-material/Message";
 import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
+import EventBusyIcon from '@mui/icons-material/EventBusy';
+import { useNavigate } from 'react-router-dom';
 
 export const Sidebar = () => {
+  const navigate = useNavigate();
+  function leave(){
+    navigate('/leave');
+  }
+
   return (
     <Box
       style={{
@@ -54,6 +61,10 @@ export const Sidebar = () => {
         <Box style={{ display: "flex", gap: "10px",marginTop:"20px",color:"white"}}>
           <SpaceDashboardIcon />
           <Typography variant="p">Skills</Typography>
+        </Box>
+        <Box onClick={leave} style={{ display: "flex", gap: "10px",marginTop:"20px",color:"white"}}>  
+          <EventBusyIcon />
+          <Typography variant="p">Leave Form</Typography>
         </Box>
 
         <Box style={{ display: "flex", gap: "10px",margin:"55px 0px 20px 0px",color:"white" }}>
