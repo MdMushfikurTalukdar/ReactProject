@@ -6,7 +6,7 @@ import { gsap } from 'gsap/dist/gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import { useRef } from "react";
 import '../App.css'
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 gsap.registerPlugin(ScrollTrigger);
@@ -332,7 +332,7 @@ export const Home=()=>{
 
                             <div>
 
-                                <Button variant="outlined" className="login" >Login</Button>
+                                <Button onClick={(e)=>{navigate('/login')}} variant="outlined" className="login" >Login</Button>
                             </div>
                         </Grid>
 
@@ -425,7 +425,7 @@ export const Home=()=>{
                                     <Button variant="outlined" sx={{ width: "200px", height: "55px", marginRight: "20px", borderRadius: "35px" }}
                                       onClick={(e)=>navigate('/register')} >Start Your Journey</Button>
 
-                                    <Button variant="outlined" sx={{ width: "200px", height: "55px", borderRadius: "35px" }} >Sign in</Button>
+                                    <Button onClick={(e)=>{navigate('/login')}} variant="outlined" sx={{ width: "200px", height: "55px", borderRadius: "35px" }} >Sign in</Button>
                                 </div>
                             </Grid>
 
