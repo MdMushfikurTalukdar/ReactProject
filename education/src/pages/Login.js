@@ -8,7 +8,7 @@ export const LoginPage = () => {
     
     if (data.rollNumber === '123456' && data.password === 'password') {
       console.log('Login successful');
-      history.push('/dashboard');
+      //history.push('/dashboard');
     } else {
       console.log('Login failed');
       
