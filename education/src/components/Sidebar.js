@@ -1,7 +1,6 @@
 import { Box, Typography} from "@mui/material";
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import MessageIcon from "@mui/icons-material/Message";
-import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
 import EventBusyIcon from '@mui/icons-material/EventBusy';
@@ -44,18 +43,8 @@ export const Sidebar = () => {
         </Box>
 
         <Box style={{ display: "flex", gap: "10px",marginTop:"20px",color:"white" }}>
-          <CollectionsBookmarkIcon />
-          <Typography variant="p">Courses</Typography>
-        </Box>
-
-        <Box style={{ display: "flex", gap: "10px",marginTop:"20px",color:"white" }}>
           <MessageIcon />
           <Typography variant="p">Result</Typography>
-        </Box>
-
-        <Box style={{ display: "flex", gap: "10px",marginTop:"20px",color:"white" }}>
-          <SpaceDashboardIcon />
-          <Typography variant="p">Notice</Typography>
         </Box>
 
         <Box style={{ display: "flex", gap: "10px",marginTop:"20px",color:"white"}}>
