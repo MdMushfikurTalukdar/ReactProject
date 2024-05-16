@@ -6,11 +6,13 @@ import '../App.css';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Link, useNavigate } from 'react-router-dom';
 
 export const RegisterUser = () => {
 
     const [responsive, setResponsive] = useState(window.innerWidth < 900 ? true : false); // Check if the screen is smaller than 1024
-
+    const navigate=useNavigate();
+    
     useEffect(() => {
 
         window.addEventListener('resize', resize);
@@ -51,35 +53,20 @@ export const RegisterUser = () => {
                             <h2 style={{ marginRight: "35%" }}>Create Account</h2>
 
                             <form onSubmit={handleSubmit(onSubmit)}>
-                                <Grid container spacing={1} style={{ textAlign: "center", justifyContent: "center" }}>
-                                    <Grid item xs={12} sm={3} md={3} lg={3}>
-
-                                        <TextField
-                                            type='text'
-                                            label='first name'
-                                            placeholder='john'
-                                            required
-                                            sx={{
-                                                width: { md: "100%", lg: "100%", sm: "100%", xs: "80%" }
-                                            }}
-                                            {...register('firstname')}
-                                            helperText={errors.firstname?.message}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} sm={3} md={3} lg={3} >
-                                        <TextField
-                                            type='text'
-                                            label='last name'
-                                            placeholder='doe'
-                                            required
-                                            sx={{
-                                                width: { md: "100%", lg: "100%", sm: "100%", xs: "80%" }
-                                            }}
-                                            {...register('lastname')}
-                                            helperText={errors.lastname?.message}
-                                        />
-                                    </Grid>
-                                </Grid>
+                                <Box>
+                                    <TextField
+                                        type='text'
+                                        label='Email'
+                                        placeholder='johndoe@gmail.com'
+                                        required
+                                        sx={{
+                                            width: { lg: '50%', md: "50%", sm: "50%", xs: "80%" },
+                                            marginTop: "12px"
+                                        }}
+                                        {...register('email')}
+                                        helperText={errors.email?.message}
+                                    />
+                                </Box>
                                 <Box>
                                     <TextField
                                         type='text'
@@ -148,40 +135,11 @@ export const RegisterUser = () => {
                         <h2 style={{ marginRight: "35%", marginTop: "60px" }}>Create Account</h2>
                         
                         <form onSubmit={handleSubmit(onSubmit)}>
-                        <Grid container spacing={1} style={{ textAlign: "center", justifyContent: "center" }}>
-                           
-                            <Grid item xs={12} sm={12} md={3} lg={3}>
-                                <TextField
-                                    type='text'
-                                    label='first name'
-                                    placeholder='john'
-                                    required
-                                    sx={{
-                                        width: "100%"
-                                    }}
-                                    {...register('firstname')}
-                                    helperText={errors?.firstname?.message}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={12} md={3} lg={3} >
-                                <TextField
-                                    type='text'
-                                    label='last name'
-                                    placeholder='doe'
-                                    required
-                                    sx={{
-                                        width: "100%"
-                                    }}
-                                    {...register('lastname')}
-                                    helperText={errors?.lastname?.message}
-                                />
-                            </Grid>
-                        </Grid>
                         <Box>
                             <TextField
                                 type='text'
-                                label='Email'
-                                placeholder='johndoe@gmail.com'
+                                label='Resistation Number'
+                                placeholder='0123442'
                                 required
                                 sx={{
                                     width: '50%',
@@ -194,9 +152,39 @@ export const RegisterUser = () => {
                         <Box>
                             <TextField
                                 type='password'
-                                label='password'
+                                label='Password'
                                 placeholder='password...'
                                 required
+                                sx={{
+                                    width: '50%',
+                                    marginTop: "12px"
+                                }}
+                                {...register('email')}
+                                helperText={errors?.email?.message}
+                            />
+                        </Box>
+                        <Box>
+                            <TextField
+                                type='password'
+                                label='Confirm Password'
+                                placeholder='confirm password...'
+                                required
+                                sx={{
+                                    width: '50%',
+                                    marginBottom: "10px",
+                                    marginTop: "10px"
+                                }}
+                                {...register('password')}
+                                helperText={errors?.password?.message}
+                            />
+                        </Box>
+                        <Box>
+                            <TextField
+                                type='text'
+                                label='Student'
+                                placeholder='student'
+                                disabled
+                                defaultValue={"student"}
                                 sx={{
                                     width: '50%',
                                     marginBottom: "10px",
@@ -209,7 +197,7 @@ export const RegisterUser = () => {
                         <Button variant='contained' style={{ width: "50%", backgroundColor: "black", textAlign: "start" }} type='submit'>Create Account</Button>
                         </form>
 
-                        <p style={{ fontSize: "0.8rem" }}>Already have an account? <span style={{ color: "violet" }}>Login</span></p>
+                        <p style={{ fontSize: "0.8rem" }}>Already have an account? <span onClick={(e)=>navigate('/login')} style={{ color: "violet" }}>Login</span></p>
 
 
                         <Divider component="span" role="presentation" className='Divider'>
