@@ -49,6 +49,39 @@ export const Leave = () => {
               <div className='textDate'>
                 <span className='sl'>Sl. No.</span><span className='date'>Date........................</span>
               </div>
+              <div className='allText'>
+                <p>1. Pupil's Name</p>
+                <p>2. Father's Name-</p>
+                <p>3. Residence-</p>
+                <p>4. Date of admission-</p>
+                <p>5 Number of in adm. Register-</p>
+                <p>6. Date of Birth as recorded in the Adm. Reg.-</p>
+                <p>7. Date on wich he left the institute-</p>
+                <p>8. Class in wich he was then reading-</p>
+                <p>9. (To be filled up when the pupil leaves at the end of the session) whether he has passed the examination for promotion to the next higher class- </p>
+                <p>10 (To be filled up when the pupil leaves during the session) attendance during the current years-</p>
+              </div>
+              <div className='allTextTable'>
+                <table>
+                  <tr>
+                    <th>Date of admission</th>
+                    <th>Date of Leaving</th>
+                  </tr>
+                  <tr>
+                    <td>IN THIS INSTITUTE</td>
+                    <td></td>
+                  </tr>
+                </table>
+              </div>
+              <div className='allText2'>
+                <p>11. Character-</p>
+                <p>12. Reason for leaving-</p>
+                <p>13. Issuing clerk-</p>
+                <p>14. Date of Issue-</p>
+              </div>
+              <div className='principal'>
+                <p>Principal/O.S.D.</p>
+              </div>
               
             </div>
         </div>
