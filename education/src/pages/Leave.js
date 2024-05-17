@@ -8,25 +8,25 @@ export const Leave = () => {
     <>
         <div className='body'>
             <div className='side'>
-              <img className='icon' src={star} />
-              <img className='icon' src={star} />
-              <img className='icon' src={star} />
-              <img className='icon' src={star} />
-              <img className='icon' src={star} />
-              <img className='icon' src={star} />
-              <img className='icon' src={star} />
-              <img className='icon' src={star} />
-              <img className='icon' src={star} />
-              <img className='icon' src={star} />
-              <img className='icon' src={star} />
-              <img className='icon' src={star} />
-              <img className='icon' src={star} />
-              <img className='icon' src={star} />
-              <img className='icon' src={star} />
-              <img className='icon' src={star} />
-              <img className='icon' src={star} />
-              <img className='icon' src={star} />
-              <img className='icon' src={star} />
+              <img className='icon' src={star} alt="" />
+              <img className='icon' src={star}  alt=""/>
+              <img className='icon' src={star}  alt=""/>
+              <img className='icon' src={star}  alt=""/>
+              <img className='icon' src={star}  alt=""/>
+              <img className='icon' src={star}  alt=""/>
+              <img className='icon' src={star}  alt=""/>
+              <img className='icon' src={star}  alt=""/>
+              <img className='icon' src={star}  alt=""/>
+              <img className='icon' src={star}  alt=""/>
+              <img className='icon' src={star}  alt=""/>
+              <img className='icon' src={star}  alt=""/>
+              <img className='icon' src={star}  alt=""/>
+              <img className='icon' src={star}  alt=""/>
+              <img className='icon' src={star}  alt=""/>
+              <img className='icon' src={star}  alt=""/>
+              <img className='icon' src={star} alt="" />
+              <img className='icon' src={star} alt="" />
+              <img className='icon' src={star}  alt=""/>
             </div>
             <div className='main'>
               <div className='header'>
