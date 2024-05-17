@@ -1,19 +1,54 @@
+import axios from 'axios';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useSnackbar } from "notistack";
+import { useNavigate } from 'react-router-dom';
 
 export const LoginPage = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, formState: { errors },reset } = useForm();
+  const { enqueueSnackbar } = useSnackbar();
+  const navigate=useNavigate();
 
   const onSubmit = (data) => {
-    
-    if (data.rollNumber === '123456' && data.password === 'password') {
-      console.log('Login successful');
-      //history.push('/dashboard');
-    } else {
-      console.log('Login failed');
+   
+    let data1 = JSON.stringify({
+      "registration_number": data.rollNumber,
+      "password": data.password,
+    });
+    axios({
+      url: "https://amarnath013.pythonanywhere.com/api/user/login/",
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: data1,
+    })
+    .then((res) =>{
+      enqueueSnackbar(res.data.message, {
+        variant: 'success',
+        anchorOrigin: {
+          vertical: 'bottom',
+          horizontal: 'center',
+        },
+        autoHideDuration: 3000,
+      });
+      navigate('/dashboard');
+      localStorage.setItem('accesstoken',res.data.token.access);
       
-    }
+    })
+    .catch((err) =>{
+      
+      enqueueSnackbar(err.response.data.error.non_fields_errors[0], {
+        variant: 'error',
+        anchorOrigin: {
+          vertical: 'bottom',
+          horizontal: 'center',
+        },
+        autoHideDuration: 3000,
+      });
+    });
     
+    reset();
   };
   return (
     <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">

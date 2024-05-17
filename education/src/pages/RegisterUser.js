@@ -15,12 +15,12 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useSnackbar } from 'notistack';
-
+import { useSnackbar } from "notistack";
 
 export const RegisterUser = () => {
+  const [role, setRole] = useState("student");
 
-  const [role,setRole]=useState('student');
+
 
   const [responsive, setResponsive] = useState(
     window.innerWidth < 900 ? true : false
@@ -39,16 +39,18 @@ export const RegisterUser = () => {
     setResponsive(window.innerWidth < 900 ? true : false);
   };
 
-  const {enqueueSnackbar}=useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   const schema = yup.object().shape({
-    registration: yup.string().required("registration number is required"),
+    registration_number: yup
+      .string()
+      .required("registration number is required"),
     password: yup
       .string()
       .min(8, "password must be at least 8 characters")
       .max(15, "password cannot exceed 24 characters")
       .required("password is required"),
-    confirmPassword: yup
+    password2: yup
       .string()
       .oneOf([yup.ref("password"), null], "Passwords must match")
       .required("Confirm Password is required"),
@@ -62,19 +64,47 @@ export const RegisterUser = () => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = async (data) => {
-    
-    axios.post('https://amarnath013.pythonanywhere.com/api/user/register',{registration_number:data.registration,role:role,password:data.password,password2:data.password2}).then(res=>{
-      enqueueSnackbar(res.message, {
-        variant: 'success', 
+  console.log(errors);
+
+  const onSubmit = (data) => {
+   
+    let data1 = JSON.stringify({
+      "registration_number": data.registration_number,
+      "role": role,
+      "password": data.password,
+      "password2": data.password2
+    });
+    axios({
+      url: "https://amarnath013.pythonanywhere.com/api/user/register/",
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: data1,
+    })
+    .then((res) =>{
+      enqueueSnackbar(res.data.message, {
+        variant: 'success',
         anchorOrigin: {
           vertical: 'bottom',
           horizontal: 'center',
         },
         autoHideDuration: 3000,
       });
-      
+      localStorage.setItem('accesstoken',res.data.token.access);
     })
+    .catch((err) =>{
+      console.log(err);
+      enqueueSnackbar(err.response.data.errors.registration_number[0], {
+        variant: 'error',
+        anchorOrigin: {
+          vertical: 'bottom',
+          horizontal: 'center',
+        },
+        autoHideDuration: 3000,
+      });
+    });
+    
     reset();
   };
   return (
@@ -142,21 +172,7 @@ export const RegisterUser = () => {
                       helperText={errors.confirmPassword?.message}
                     />
                   </Box>
-                  <Box>
-                    <TextField
-                      type="text"
-                      label="Student"
-                      disabled
-                      defaultValue={role}
-                      required
-                      sx={{
-                        width: { lg: "50%", md: "50%", sm: "50%", xs: "80%" },
-                        marginBottom: "10px",
-                        marginTop: "10px",
-                      }}
-          
-                    />
-                  </Box>
+                
                   <Button
                     variant="contained"
                     sx={{
@@ -253,8 +269,8 @@ export const RegisterUser = () => {
                     width: "50%",
                     marginTop: "12px",
                   }}
-                  {...register("registration")}
-                  helperText={errors?.registration?.message}
+                  {...register("registration_number")}
+                  helperText={errors?.registration_number?.message}
                 />
               </Box>
               <Box>
@@ -282,26 +298,11 @@ export const RegisterUser = () => {
                     marginBottom: "10px",
                     marginTop: "10px",
                   }}
-                  {...register("confirmPassword")}
-                  helperText={errors?.confirmPassword?.message}
+                  {...register("password2")}
+                  helperText={errors?.password2?.message}
                 />
               </Box>
-              <Box>
-                <TextField
-                  type="text"
-                  label="role"
-                  placeholder="student"
-                  disabled
-                  defaultValue={"student"}
-                  sx={{
-                    width: "50%",
-                    marginBottom: "10px",
-                    marginTop: "10px",
-                  }}
-                 
-                 
-                />
-              </Box>
+           
               <Button
                 variant="contained"
                 style={{
@@ -317,7 +318,7 @@ export const RegisterUser = () => {
 
             <p style={{ fontSize: "0.8rem" }}>
               Already have an account?{" "}
-              <span
+              <span className="cursor-pointer"
                 onClick={(e) => navigate("/login")}
                 style={{ color: "violet" }}
               >

@@ -5,8 +5,25 @@ import { DashboardIntro } from "../components/DashboardIntro";
 import { DashboardMainBody } from "../components/DashboardMainBody";
 import { DailyNotice } from "../components/DailyNotice";
 import {Footer} from "../components/Footer"
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import {jwtDecode} from "jwt-decode"
 
 export const Dashboard = () => {
+
+  const navigate=useNavigate();
+
+  useEffect(()=>{
+    if(localStorage?.getItem('accesstoken')){
+    const response=jwtDecode(localStorage?.getItem('accesstoken'));
+    if(response.token_type!=='access' && typeof(response.user_id)!==Number && typeof(response.jti)!==String)
+      {
+        navigate('/login');
+      }
+    }else{
+      navigate('/login');
+    }
+  },[]);
   return (
     <Box style={{fontFamily:"cursive"}}>
       <HomepageNav />
