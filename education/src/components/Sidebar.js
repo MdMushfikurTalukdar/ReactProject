@@ -114,7 +114,7 @@ export const Sidebar = () => {
           </Typography>
         </Box>
 
-        <Box
+        {/* <Box
           style={{
             display: "flex",
             gap: "10px",
@@ -124,9 +124,9 @@ export const Sidebar = () => {
         >
           <MessageIcon />
           <Typography variant="p">Result</Typography>
-        </Box>
+        </Box> */}
 
-        <Box
+        {/* <Box
           style={{
             display: "flex",
             gap: "10px",
@@ -136,7 +136,7 @@ export const Sidebar = () => {
         >
           <SpaceDashboardIcon />
           <Typography variant="p">Skills</Typography>
-        </Box>
+        </Box> */}
         <Box
           onClick={leave}
           style={{

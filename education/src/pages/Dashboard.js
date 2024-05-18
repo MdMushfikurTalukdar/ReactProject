@@ -8,6 +8,8 @@ import {Footer} from "../components/Footer"
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {jwtDecode} from "jwt-decode"
+import { SmallScreenNavbar } from "../components/SmallScreenNavbar";
+
 
 export const Dashboard = () => {
 
@@ -33,6 +35,11 @@ export const Dashboard = () => {
         }}>
           <Sidebar />
         </Grid>
+        <Box sx={{
+            display:{sm:"inherit",md:"inherit",xs:"inherit",lg:"none"}
+        }}>
+          <SmallScreenNavbar  />
+        </Box>
         <Grid item xs={12} sm={12} md={12} lg={10}>
             <DashboardIntro/>
             <Grid container>

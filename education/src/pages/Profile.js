@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { ProfileMainBody } from "../components/ProfileMainBody";
+import { SmallScreenNavbar } from "../components/SmallScreenNavbar";
 
 export const Profile = () => {
   const navigate = useNavigate();
@@ -37,6 +38,11 @@ export const Profile = () => {
         >
           <Sidebar />
         </Grid>
+        <Box sx={{
+            display:{sm:"inherit",md:"inherit",xs:"inherit",lg:"none"}
+        }}>
+          <SmallScreenNavbar  />
+        </Box>
         <Grid item xs={12} sm={12} md={12} lg={10}>
           <ProfileMainBody/>
         </Grid>
