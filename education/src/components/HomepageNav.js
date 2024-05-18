@@ -29,7 +29,7 @@ function HomepageNav(props) {
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
       <Typography variant="h6" sx={{ my: 2 }}>
-        EDH
+        Smart Campus
       </Typography>
       <Divider />
       <List>
@@ -65,7 +65,7 @@ function HomepageNav(props) {
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
           >
-            Education HUB
+            Smart Campus
           </Typography>
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
             {navItems.map((item) => (

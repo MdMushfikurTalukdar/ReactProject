@@ -6,6 +6,7 @@ import { Dashboard } from './pages/Dashboard';
 import { LoginPage } from "./pages/Login";
 import { Leave } from "./pages/Leave";
 import { Testing } from './pages/Testing';
+import { Profile } from './pages/Profile';
 
 
 
@@ -13,17 +14,15 @@ function App() {
  
   return (
     <>
-  
     <Router>
       <Routes>
-      
         <Route path="/register" element={<RegisterUser />} />
         <Route path="/" element={<Home />} />
         <Route path='/dashboard' element={<Dashboard />} />
         <Route path="/login" element={<LoginPage/>} />
         <Route path='/leave' element={<Leave />} />
         <Route path='/testing' element={<Testing />} />
-      
+        <Route path='/profile' element={<Profile />} />
       </Routes>
     </Router>
     </>

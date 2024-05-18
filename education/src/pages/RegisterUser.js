@@ -188,7 +188,7 @@ export const RegisterUser = () => {
 
                 <p style={{ fontSize: "0.8rem" }}>
                   Already have an account?{" "}
-                  <span style={{ color: "violet" }}>Login</span>
+                  <span style={{ color: "violet" }} onClick={(e)=>navigate('/login')}>Login</span>
                 </p>
 
                 <Divider

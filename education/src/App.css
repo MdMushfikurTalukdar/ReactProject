@@ -5,7 +5,12 @@ body{
 html{
 	scroll-behavior: smooth;
 }
-
+#button_style{
+	border-radius: 15px;
+    background-color: rgb(255 204 255);
+    height: 26px;
+    font-size: 12px;
+}
 *{
   ::-webkit-scrollbar{
     width: 0px;
