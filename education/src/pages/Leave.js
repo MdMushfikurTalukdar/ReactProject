@@ -1,11 +1,13 @@
 import React from 'react'
 import "./Leave.css"
 import star from "../components/img/star.png"
+import HomepageNav from "../components/HomepageNav";
 
 
 export const Leave = () => {
   return (
     <>
+    {/* <HomepageNav /> */}
         <div className='body'>
             <div className='side'>
               <img className='icon' src={star} alt="" />

@@ -139,6 +139,7 @@ export const Sidebar = () => {
         </Box> */}
         <Box
           onClick={leave}
+          className="cursor-pointer"
           style={{
             display: "flex",
             gap: "10px",
