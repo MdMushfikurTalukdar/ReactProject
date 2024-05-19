@@ -8,11 +8,17 @@ export const DashboardMainBody = () => {
       sx={{
         marginLeft: "20px",
         marginTop: "20px",
+        padding: "4%",
         overflowX: "hidden",
         width: { lg: "55vw", md: "92vw", sm: "90vw",xs:"90vw" },
       }}
     >
-      <Grid container style={{ marginBottom: "20px" }}>
+      <Box>
+          <Typography variant="p" style={{ fontSize: "1.5rem" }}>
+            Total CGPA : 3.98
+          </Typography>
+      </Box>
+      <Grid container style={{ marginBottom: "20px",marginTop:"50px" }}>
         <Grid item xs={6} md={6} lg={6} sm={6}>
           <Typography variant="p" style={{ fontSize: "1.5rem" }}>
             Enrolled Courses
@@ -48,9 +54,9 @@ export const DashboardMainBody = () => {
         </Grid>
       </Grid>
 
-      <Box>
+      {/* <Box>
         <Schedule />
-      </Box>
+      </Box> */}
     </Box>
   );
 };
