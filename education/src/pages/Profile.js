@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { ProfileMainBody } from "../components/ProfileMainBody";
 import { SmallScreenNavbar } from "../components/SmallScreenNavbar";
+import axios from "axios";
 
 export const Profile = () => {
   const navigate = useNavigate();
@@ -24,9 +25,12 @@ export const Profile = () => {
     } else {
       navigate("/login");
     }
+
+  
   }, []);
+
   return (
-    <Box style={{ fontFamily: "Math",minHeight: "100vh" }}>
+    <Box style={{ fontFamily: "Math", minHeight: "100vh" }}>
       <HomepageNav />
       <Grid container>
         <Grid
@@ -38,16 +42,23 @@ export const Profile = () => {
         >
           <Sidebar />
         </Grid>
-        <Box sx={{
-            display:{sm:"inherit",md:"inherit",xs:"inherit",lg:"none"}
-        }}>
-          <SmallScreenNavbar  />
+        <Box
+          sx={{
+            display: {
+              sm: "inherit",
+              md: "inherit",
+              xs: "inherit",
+              lg: "none",
+            },
+          }}
+        >
+          <SmallScreenNavbar />
         </Box>
         <Grid item xs={12} sm={12} md={12} lg={10}>
-          <ProfileMainBody/>
+          <ProfileMainBody />
         </Grid>
       </Grid>
-      <Footer/>
+      <Footer />
     </Box>
   );
 };

@@ -18,10 +18,8 @@ import axios from "axios";
 import { useSnackbar } from "notistack";
 
 export const RegisterUser = () => {
-  const [role, setRole] = useState("student");
-
-
-
+  var role = "student",
+    a;
   const [responsive, setResponsive] = useState(
     window.innerWidth < 900 ? true : false
   ); // Check if the screen is smaller than 1024
@@ -64,47 +62,51 @@ export const RegisterUser = () => {
     resolver: yupResolver(schema),
   });
 
-  console.log(errors);
-
   const onSubmit = (data) => {
-   
+    a = data.registration_number;
+    if (data.registration_number.includes("-faculty")) {
+      a = data.registration_number.replace("-faculty", "");
+      role='teacher';
+    }
+  
     let data1 = JSON.stringify({
-      "registration_number": data.registration_number,
-      "role": role,
-      "password": data.password,
-      "password2": data.password2
+      registration_number: a,
+      role: role,
+      password: data.password,
+      password2: data.password2,
     });
+    
     axios({
       url: "https://amarnath013.pythonanywhere.com/api/user/register/",
       method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
       data: data1,
     })
-    .then((res) =>{
-      enqueueSnackbar(res.data.message, {
-        variant: 'success',
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'center',
-        },
-        autoHideDuration: 3000,
+      .then((res) => {
+        enqueueSnackbar(res.data.message, {
+          variant: "success",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 3000,
+        });
+        localStorage.setItem("accesstoken", res.data.token.access);
+      })
+      .catch((err) => {
+        console.log(err);
+        enqueueSnackbar(err.response.data.errors.registration_number[0], {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 3000,
+        });
       });
-      localStorage.setItem('accesstoken',res.data.token.access);
-    })
-    .catch((err) =>{
-      console.log(err);
-      enqueueSnackbar(err.response.data.errors.registration_number[0], {
-        variant: 'error',
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'center',
-        },
-        autoHideDuration: 3000,
-      });
-    });
-    
+
     reset();
   };
   return (
@@ -172,7 +174,7 @@ export const RegisterUser = () => {
                       helperText={errors.confirmPassword?.message}
                     />
                   </Box>
-                
+
                   <Button
                     variant="contained"
                     sx={{
@@ -188,7 +190,12 @@ export const RegisterUser = () => {
 
                 <p style={{ fontSize: "0.8rem" }}>
                   Already have an account?{" "}
-                  <span style={{ color: "violet" }} onClick={(e)=>navigate('/login')}>Login</span>
+                  <span
+                    style={{ color: "violet" }}
+                    onClick={(e) => navigate("/login")}
+                  >
+                    Login
+                  </span>
                 </p>
 
                 <Divider
@@ -302,7 +309,7 @@ export const RegisterUser = () => {
                   helperText={errors?.password2?.message}
                 />
               </Box>
-           
+
               <Button
                 variant="contained"
                 style={{
@@ -318,7 +325,8 @@ export const RegisterUser = () => {
 
             <p style={{ fontSize: "0.8rem" }}>
               Already have an account?{" "}
-              <span className="cursor-pointer"
+              <span
+                className="cursor-pointer"
                 onClick={(e) => navigate("/login")}
                 style={{ color: "violet" }}
               >
