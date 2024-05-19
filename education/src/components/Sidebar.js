@@ -4,6 +4,7 @@ import MessageIcon from "@mui/icons-material/Message";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
+import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
@@ -111,6 +112,24 @@ export const Sidebar = () => {
             className="cursor-pointer"
           >
             Profile
+          </Typography>
+        </Box>
+
+        <Box
+          style={{
+            display: "flex",
+            gap: "10px",
+            marginTop: "30px",
+            color: "white",
+          }}
+        >
+          <CardGiftcardIcon />
+          <Typography
+            variant="p"
+            onClick={(e) => navigate("/bonafideCertificate")}
+            className="cursor-pointer"
+          >
+            Bonafide Certificate
           </Typography>
         </Box>
 
