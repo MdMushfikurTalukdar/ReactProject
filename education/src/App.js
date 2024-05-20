@@ -8,6 +8,8 @@ import { Leave } from "./pages/Leave";
 import { Testing } from './pages/Testing';
 import { Profile } from './pages/Profile';
 import { BonafideCertificate } from './pages/BonafideCertificate';
+import { EditProfile } from './pages/EditProfile';
+
 
 
 
@@ -24,6 +26,7 @@ function App() {
         <Route path='/leave' element={<Leave />} />
         <Route path='/testing' element={<Testing />} />
         <Route path='/profile' element={<Profile />} />
+        <Route path='/profileEdit' element={<EditProfile />} />
         <Route path='/bonafideCertificate' element={<BonafideCertificate />} />
       </Routes>
     </Router>
