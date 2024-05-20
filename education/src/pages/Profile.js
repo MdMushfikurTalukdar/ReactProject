@@ -58,7 +58,7 @@ export const Profile = () => {
           <ProfileMainBody />
         </Grid>
       </Grid>
-      <Footer />
+    
     </Box>
   );
 };

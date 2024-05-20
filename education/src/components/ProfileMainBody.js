@@ -408,7 +408,7 @@ export const ProfileMainBody = () => {
             >
               <Typography variant="p">Country</Typography>
             </Grid>
-            <Grid item lg={4} sm={12} xs={12} md={12}>
+            <Grid item lg={4} sm={12} xs={12} md={12} style={{marginBottom:"40px"}}>
               <Typography variant="p">
                 {userProfile?.contact_information?.country}
               </Typography>

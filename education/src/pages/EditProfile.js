@@ -25,7 +25,7 @@ const schema = yup.object().shape({
   first_name: yup.string().required("First name is required"),
   last_name: yup.string().required("Last name is required"),
   father_name: yup.string().required("Father name is required"),
-  middle_name: yup.string().required("Middle name is required"),
+  middle_name: yup.string(),
   gender: yup.string().required("Gender is required"),
   email: yup.string().required("Email is required"),
   phone_number: yup.string().required("Phone number is required"),
@@ -162,7 +162,9 @@ export const EditProfile = () => {
       });
   }, [setValue]);
 
+  console.log(errors);
   const UpdateSubmit = (data) => {
+
     console.log(data.date_of_birth);
     let data2 = JSON.stringify({
       personal_information: {
@@ -188,11 +190,11 @@ export const EditProfile = () => {
         program: data.program,
         major: data.major,
         current_year: data.current_year,
-        gpa: data.gap,
+        gpa: data.gpa,
         course_enrolled: data.course_enrolled,
       },
       user: {
-        registration_number: "16900120124",
+        registration_number: "16900120125",
         role: "student",
       },
     });
@@ -220,6 +222,7 @@ export const EditProfile = () => {
           },
           autoHideDuration: 3000,
         });
+        navigate('/profile')
       })
       .catch((error) => {
         console.log(error);
@@ -306,6 +309,25 @@ export const EditProfile = () => {
                       helperText={errors.first_name?.message}
                     />
                   </Grid>
+                  <Divider style={{ width: "100%", margin: "10px 0" }} />
+                  <Grid
+                    item
+                    lg={4}
+                    sm={12}
+                    xs={12}
+                    md={12}
+                    style={{ marginTop: "10px" }}
+                  >
+                    <Typography variant="p">Middle Name</Typography>
+                  </Grid>
+                  <Grid item lg={4} sm={12} xs={12} md={12}>
+                    <TextField
+                      type="text"
+                      {...register("middle_name")}
+                      error={!!errors.middle_name}
+                      helperText={errors.middle_name?.message}
+                    />
+                  </Grid>
 
                   <Divider style={{ width: "100%", margin: "10px 0" }} />
                   <Grid
@@ -326,8 +348,29 @@ export const EditProfile = () => {
                       helperText={errors.last_name?.message}
                     />
                   </Grid>
+                  <Divider style={{ width: "100%", margin: "10px 0" }} />
+                  <Grid
+                    item
+                    lg={4}
+                    sm={12}
+                    xs={12}
+                    md={12}
+                    style={{ marginTop: "10px" }}
+                  >
+                    <Typography variant="p">Father Name</Typography>
+                  </Grid>
+                  <Grid item lg={4} sm={12} xs={12} md={12}>
+                    <TextField
+                      type="text"
+                      {...register("father_name")}
+                      error={!!errors.father_name}
+                      helperText={errors.father_name?.message}
+                    />
+                  </Grid>
 
                   <Divider style={{ width: "100%", margin: "10px 0" }} />
+                  
+                
                   <Grid
                     item
                     lg={4}
@@ -662,9 +705,11 @@ export const EditProfile = () => {
                   </Grid>
                 </Grid>
               </Box>
+              <center>
               <Button variant="contained" type="submit" style={{marginBottom:"40px"}}>
                 Update
               </Button>
+              </center>
             </form>
           </Box>
         </Grid>
