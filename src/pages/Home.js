@@ -1,10 +1,12 @@
 import React from "react";
 import Slider from "react-slick";
+import { useNavigate } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "../App.css";
 
 export const Home = () => {
+  const navigate = useNavigate();
   const settings = {
     dots: true,
     infinite: true,
@@ -150,7 +152,14 @@ export const Home = () => {
               />
             </div>
           </div>
+      
         </section>
+        <center className="h-full bg-orange-400 p-4">
+            {" "}
+            <button onClick={(e)=>navigate('/register')} className="px-4 mx-auto py-2 bg-blue-400 hover:bg-blue-700 text-2xl outline-none rounded-lg">
+              Register Yourself
+            </button>
+          </center>
       </div>
     </>
   );
