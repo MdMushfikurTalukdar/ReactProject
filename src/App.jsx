@@ -1,9 +1,14 @@
-import Certificate from './components/Certificate'
+
+import Homepage from "./components/Homepage";
 function App() {
+
+
 
   return (
 
-    <Certificate/>
+  <div className='w-full min-h-screen overflow-hidden'>
+      <Homepage/>
+  </div>
 
   );
 }
