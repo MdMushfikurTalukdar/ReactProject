@@ -18,6 +18,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { enqueueSnackbar } from "notistack";
+import emailValidator from 'email-validator';
 
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -27,11 +28,10 @@ const schema = yup.object().shape({
   father_name: yup.string().required("Father name is required"),
   middle_name: yup.string(),
   gender: yup.string().required("Gender is required"),
-  email: yup.string().required("Email is required"),
-  phone_number: yup.string().required("Phone number is required"),
+  email: yup.string().email("Invalid email format").test('valid-email', 'Invalid email format', value => emailValidator.validate(value)),
+  phone_number: yup.number().min(1000000000,'phone no. should be of 10 digit').max(9999999999,'phone no. should be of 10 digits').required("Phone number is required"),
   alternate_phone_number: yup
-    .string()
-    .required("Alternate phone number is required"),
+    .string(),
   date_of_birth: yup
     .string()
     .matches(
@@ -42,7 +42,7 @@ const schema = yup.object().shape({
   address: yup.string().required("Address is required"),
   city: yup.string().required("City is required"),
   state: yup.string().required("State is required"),
-  postal_code: yup.string().required("Postal code is required"),
+  postal_code: yup.number().min(100000,'should contain 6 digits').required("Postal code is required"),
   country: yup.string().required("Country is required"),
   enrollment_date: yup
     .string()
@@ -53,10 +53,15 @@ const schema = yup.object().shape({
     .required("Date is required."),
   program: yup.string().required("Program is required"),
   major: yup.string().required("Major is required"),
-  current_year: yup.string().required("Current year is required"),
-  gpa: yup.string().required("GPA is required"),
-  course_enrolled: yup.string().required("Course is required"),
+  current_year: yup.string().matches(
+    /^(1|2|3|4)$/,
+    "Current year should be 1, 2, 3, or 4"
+).required("Current year is required"),
+  gpa: yup.number().required("GPA is required"),
+  course_enrolled: yup.number().required("Course is required"),
 });
+
+
 
 export const EditProfile = () => {
   const navigate = useNavigate();
@@ -85,6 +90,7 @@ export const EditProfile = () => {
     resolver: yupResolver(schema),
   });
 
+  console.log(errors);
   const [userProfile, setUserProfile] = useState([]);
 
   useEffect(() => {

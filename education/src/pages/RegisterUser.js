@@ -269,7 +269,7 @@ export const RegisterUser = () => {
               <Box>
                 <TextField
                   type="text"
-                  label="Resistation Number"
+                  label="Registration Number"
                   placeholder="0123442"
                   required
                   sx={{
