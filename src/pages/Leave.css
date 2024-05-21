@@ -1,0 +1,294 @@
+.body{
+    width: 1480px;
+    height: 2508px;
+    background-color: #e3f9b4;
+}
+.side{
+    height: 100%;
+    width: 5%;
+}
+.icon{
+    height: 5%;
+    width: 100%;
+}
+.header{
+    position: absolute;
+    height: 20%;
+    width: 90%;
+    margin-top: -155%;
+    text-align: center;
+    font-size: 36px;
+}
+
+.header{
+    font-family: fantasy;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    margin-top: -142%;
+  }
+.csvg{
+    width: 100%;
+    max-width: 98%;
+}
+.cpath {
+    fill: transparent;
+}
+  
+.ctext {
+    font-size: 26px;
+}
+
+.text2{
+    height: 40%;
+    width: 30%;
+    margin-top: -135%;
+    position: absolute;
+    margin-left: 30%;
+    text-align: center;
+    font-size: 25px;
+    line-height: 9px;
+    font-weight: 500;
+}
+.text3{
+    height: 6%;
+    width: 40%;
+    margin-top: -122%;
+    position: absolute;
+    margin-left: 26%;
+    text-align: center;
+    font-size: 25px;
+    line-height: 9px;
+    font-weight: 500;
+    border: 1px solid;
+    padding: 10px;
+    box-shadow:-7px -5px 4px #000000;
+    font-family: cursive;
+}
+.textDate{
+    height: 6%;
+    width: 70%;
+    margin-top: -113%;
+    position: absolute;
+    margin-left: 12%;
+    text-align: center;
+    font-size: 35px;
+}
+.sl{
+    position: absolute;
+    margin-left: -50%;
+    font-family: cursive;
+}
+.date{
+    position: absolute;
+    margin-left: 30%;
+    font-family: cursive;
+}
+.dateIn{
+    margin-top: 14%;
+    position: absolute;
+    height: 26px;
+    margin-left: 14%;
+    background: transparent;
+    font-size: 25px;
+    width: 144px;
+}
+.allText{
+    position: absolute;
+    height: 150%;
+    width: 34%;
+    margin-top: -108%;
+    margin-left: 11%;
+    font-family: cursive;
+    font-size: 31px;
+
+}
+.allTextTable{
+    position: absolute;
+    width: 77%;
+    margin-top: -40%;
+    margin-left: 11%;
+    font-family: cursive;
+    font-size: 31px;
+}
+.allTextFields{
+    position: absolute;
+    width: 41%;
+    margin-top: -106%;
+    margin-left: 47%;
+    font-family: cursive;
+    font-size: 30px;
+    background-color: transparent;
+    height: 45%;
+}
+.name{
+    position: absolute;
+    height: 26px;
+    background: transparent;
+    font-size: 25px;
+    width: 100%;
+}
+.father{
+    position: absolute;
+    height: 26px;
+    background: transparent;
+    font-size: 25px;
+    width: 100%;
+    margin-top: 11%;
+}
+.residence{
+    position: absolute;
+    height: 26px;
+    background: transparent;
+    font-size: 25px;
+    width: 100%;
+    margin-top: 22%;
+}
+.admission{
+    position: absolute;
+    height: 26px;
+    background: transparent;
+    font-size: 25px;
+    width: 100%;
+    margin-top: 33%;
+}
+.register{
+    position: absolute;
+    height: 26px;
+    background: transparent;
+    font-size: 25px;
+    width: 100%;
+    margin-top: 44%;
+}
+.birth{
+    position: absolute;
+    height: 26px;
+    background: transparent;
+    font-size: 25px;
+    width: 100%;
+    margin-top: 59%;
+}
+.institute{
+    position: absolute;
+    height: 26px;
+    background: transparent;
+    font-size: 25px;
+    width: 100%;
+    margin-top: 76%;
+}
+.reading{
+    position: absolute;
+    height: 26px;
+    background: transparent;
+    font-size: 25px;
+    width: 100%;
+    margin-top: 87%;
+}
+.higher{
+    position: absolute;
+    height: 26px;
+    background: transparent;
+    font-size: 25px;
+    width: 100%;
+    margin-top: 106%;
+}
+.current{
+    position: absolute;
+    height: 26px;
+    background: transparent;
+    font-size: 25px;
+    width: 100%;
+    margin-top: 141%;
+}
+.dofadd{
+    position: absolute;
+    height: 26px;
+    background: transparent;
+    font-size: 25px;
+    width: 33%;
+    margin-top: 172%;
+    margin-left: -27%;
+}
+.dofleave{
+    position: absolute;
+    height: 26px;
+    background: transparent;
+    font-size: 25px;
+    width: 33%;
+    margin-top: 172%;
+    margin-left: 45%;
+}
+.Character{
+    position: absolute;
+    height: 26px;
+    background: transparent;
+    font-size: 25px;
+    width: 100%;
+    margin-top: 188%;
+}
+.reason{
+    position: absolute;
+    height: 26px;
+    background: transparent;
+    font-size: 25px;
+    width: 100%;
+    margin-top: 200%;
+}
+.issue{
+    position: absolute;
+    height: 26px;
+    background: transparent;
+    font-size: 25px;
+    width: 100%;
+    margin-top: 211%;
+}
+.dissue{
+    position: absolute;
+    height: 26px;
+    background: transparent;
+    font-size: 25px;
+    width: 100%;
+    margin-top:222%;
+}
+.sign{
+    position: absolute;
+    height: 36px;
+    background: transparent;
+    font-size: 25px;
+    width: 37%;
+    margin-top: 233%;
+    margin-left: 60%;
+    align-items: center;
+    padding: 0%;
+    text-align: center;
+}
+table, td, th {
+    border: 2px solid;
+    padding: 6px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+.allText2{
+    position: absolute;
+    height: 50%;
+    width: 45%;
+    margin-top: -31%;
+    margin-left: 11%;
+    font-family: cursive;
+    font-size: 31px;
+}
+.principal{
+    position: absolute;
+    height: 10%;
+    width: 77%;
+    margin-top: -10%;
+    margin-left: 11%;
+    font-family: cursive;
+    font-size: 35px;
+    text-align: end;
+}
