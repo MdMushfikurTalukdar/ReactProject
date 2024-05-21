@@ -1,15 +1,13 @@
-
 import Homepage from "./components/Homepage";
+
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 function App() {
-
-
-
   return (
-
-  <div className='w-full min-h-screen overflow-hidden'>
-      <Homepage/>
-  </div>
-
+    <Router>
+      <Routes>
+        <Route path="dashboard" element={<Homepage />} />
+      </Routes>
+    </Router>
   );
 }
 

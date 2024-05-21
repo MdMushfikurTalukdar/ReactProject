@@ -1,30 +1,25 @@
 import React from "react";
 import Slider from "react-slick";
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const Homepage = () => {
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
 
-    
-    
-      const settings = {
-        dots: true,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-      };
-    
-      const images = [
-        'https://media.istockphoto.com/id/1202957911/photo/group-of-international-students-having-fun-after-studying.webp?b=1&s=170667a&w=0&k=20&c=ddamKslA0184nXMWT_ZtMf1MhedsT8Sz1U8Q60zX8cc=',
-        'https://media.istockphoto.com/id/1461631609/photo/happy-smiling-students-looking-at-camera-while-preparing-for-exams-by-reading-books-at.webp?b=1&s=170667a&w=0&k=20&c=xcfQWFZ8dGoz_Xm51-keRJ2VEimIiEoAeQZWa_sB7XA=',
-        'https://media.istockphoto.com/id/1148219796/photo/teachers-applauding-for-student-at-awards-ceremony.webp?b=1&s=170667a&w=0&k=20&c=65VgszKqMgEfKfv8fx1h1_Mkt1fsbfTiucSvo-aSufk=',
-    
-    ];
-    
+  const images = [
+    "https://media.istockphoto.com/id/1202957911/photo/group-of-international-students-having-fun-after-studying.webp?b=1&s=170667a&w=0&k=20&c=ddamKslA0184nXMWT_ZtMf1MhedsT8Sz1U8Q60zX8cc=",
+    "https://media.istockphoto.com/id/1461631609/photo/happy-smiling-students-looking-at-camera-while-preparing-for-exams-by-reading-books-at.webp?b=1&s=170667a&w=0&k=20&c=xcfQWFZ8dGoz_Xm51-keRJ2VEimIiEoAeQZWa_sB7XA=",
+    "https://media.istockphoto.com/id/1148219796/photo/teachers-applauding-for-student-at-awards-ceremony.webp?b=1&s=170667a&w=0&k=20&c=65VgszKqMgEfKfv8fx1h1_Mkt1fsbfTiucSvo-aSufk=",
+  ];
 
   return (
-    <div className="Homepage">
+    <div className="Homepage mx-auto">
       <header className="bg-blue-600 text-white p-4 text-center text-2xl">
         My Dashboard
       </header>
@@ -32,14 +27,18 @@ const Homepage = () => {
       {/* Slider Section */}
 
       <div className="container mx-auto px-4">
-      <Slider {...settings}>
-        {images.map((image, index) => (
-          <div key={index} className="mt-4 flex w-full justify-center">
-            <img src={image} alt={`Slide ${index + 1}`} className="w-full h-[80vh] object-cover rounded-lg shadow-lg" />
-          </div>
-        ))}
-      </Slider>
-    </div>
+        <Slider {...settings}>
+          {images.map((image, index) => (
+            <div key={index} className="mt-4 flex w-full justify-center">
+              <img
+                src={image}
+                alt={`Slide ${index + 1}`}
+                className="w-full h-[80vh] object-cover rounded-lg shadow-lg"
+              />
+            </div>
+          ))}
+        </Slider>
+      </div>
 
       {/* Our Projects Section */}
       <section className="py-8 ">
@@ -75,7 +74,7 @@ const Homepage = () => {
       {/* Our Clients Section */}
       <section className="py-8 bg-gray-100">
         <h2 className="text-3xl text-center mb-4">Our Clients</h2>
-        <div className="flex overflow-x-scroll space-x-4 px-4">
+        <div className="flex  gap-8 justify-center  overflow-x-scroll space-x-4 px-4">
           <div className="w-64 h-64 bg-green-300 flex-shrink-0 flex items-center justify-center">
             <img
               className="w-full h-full object-cover "
@@ -116,16 +115,15 @@ const Homepage = () => {
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-8">
+      <section className="py-8 ">
         <h2 className="text-3xl text-center mb-4">Testimonials</h2>
-        <div className="flex overflow-x-scroll space-x-4 px-4 mb-4">
+        <div className="flex overflow-x-scroll gap-8 justify-center space-x-4 px-4 mb-4">
           <div className="w-64 h-64 flex-col flex-shrink-0 flex items-center justify-center">
             <img
               className="w-full h-full object-cover rounded-full  "
               src="https://plus.unsplash.com/premium_photo-1664475536921-e8e0e194be65?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGVkdWNhdGlvbiUyMGV2ZW50fGVufDB8fDB8fHww"
               alt=""
             />
-            
           </div>
           <div className="w-64 h-64 flex-shrink-0 flex items-center justify-center">
             <img
