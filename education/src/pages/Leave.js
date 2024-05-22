@@ -10,17 +10,17 @@ import HomepageNav from "../components/HomepageNav";
 export const Leave = () => {
   const navigate=useNavigate();
 
-  // useEffect(()=>{
-  //   if(localStorage?.getItem('accesstoken')){
-  //   const response=jwtDecode(localStorage?.getItem('accesstoken'));
-  //   if(response.token_type!=='access' && typeof(response.user_id)!==Number && typeof(response.jti)!==String)
-  //     {
-  //       navigate('/login');
-  //     }
-  //   }else{
-  //     navigate('/login');
-  //   }
-  // },[]);
+  useEffect(()=>{
+    if(localStorage?.getItem('accesstoken')){
+    const response=jwtDecode(localStorage?.getItem('accesstoken'));
+    if(response.token_type!=='access' && typeof(response.user_id)!==Number && typeof(response.jti)!==String)
+      {
+        navigate('/login');
+      }
+    }else{
+      navigate('/login');
+    }
+  },[]);
   return (
     <>
     {/* <HomepageNav /> */}
