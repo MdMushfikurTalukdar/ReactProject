@@ -60,14 +60,14 @@ export const LoginPage = () => {
           <input type="hidden" name="remember" defaultValue="true" />
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
-              <label htmlFor="roll-number" className="sr-only">Roll Number</label>
+              <label htmlFor="roll-number" className="sr-only">Registration no</label>
               <input
                 id="roll-number"
                 type="text"
                 {...register("rollNumber", { required: true })}
                 autoComplete="off"
                 className={`appearance-none rounded-none relative block w-full px-3 py-2 border ${errors.rollNumber ? 'border-red-500' : 'border-gray-300'} placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
-                placeholder="Roll Number"
+                placeholder="Registration number"
               />
               {errors.rollNumber && <p className="text-black-500 text-xs mt-1">Roll Number is required</p>}
             </div>
