@@ -71,8 +71,7 @@ export const EditProfile = () => {
       const response = jwtDecode(localStorage?.getItem("accesstoken"));
       if (
         response.token_type !== "access" &&
-        typeof response.user_id !== Number &&
-        typeof response.jti !== String && response.exp<Date.now()
+        response.exp<Math.floor(Date.now() / 1000)
       ) {
         navigate("/login");
       }

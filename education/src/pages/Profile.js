@@ -16,9 +16,8 @@ export const Profile = () => {
     if (localStorage?.getItem("accesstoken")) {
       const response = jwtDecode(localStorage?.getItem("accesstoken"));
       if (
-        response.token_type !== "access" &&
-        typeof response.user_id !== Number &&
-        typeof response.jti !== String
+        response.token_type !== "access" 
+        && response.exp<Math.floor(Date.now() / 1000)
       ) {
         navigate("/login");
       }
