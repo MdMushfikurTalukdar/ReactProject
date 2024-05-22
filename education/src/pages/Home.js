@@ -17,9 +17,9 @@ export const Home = () => {
   };
 
   const images = [
-    "https://media.istockphoto.com/id/1202957911/photo/group-of-international-students-having-fun-after-studying.webp?b=1&s=170667a&w=0&k=20&c=ddamKslA0184nXMWT_ZtMf1MhedsT8Sz1U8Q60zX8cc=",
-    "https://media.istockphoto.com/id/1461631609/photo/happy-smiling-students-looking-at-camera-while-preparing-for-exams-by-reading-books-at.webp?b=1&s=170667a&w=0&k=20&c=xcfQWFZ8dGoz_Xm51-keRJ2VEimIiEoAeQZWa_sB7XA=",
-    "https://media.istockphoto.com/id/1148219796/photo/teachers-applauding-for-student-at-awards-ceremony.webp?b=1&s=170667a&w=0&k=20&c=65VgszKqMgEfKfv8fx1h1_Mkt1fsbfTiucSvo-aSufk=",
+    "https://img.freepik.com/premium-vector/video-call-conference-working-from-home-social-distancing-business-discussion-illustration-flat-style_189033-135.jpg",
+    "https://cdn.elearningindustry.com/wp-content/uploads/2023/08/The-Rise-Of-Virtual-Classrooms-In-Hybrid-Workplaces.jpg",
+    "https://www.bu.edu/ctl/files/2020/10/shutterstock_1684170829-scaled.jpg",
   ];
 
   return (
@@ -43,11 +43,11 @@ export const Home = () => {
 
         {/* Our Projects Section */}
         <section className="py-8">
-          <h2 className="text-3xl text-center mb-4">Our Projects</h2>
+          <h2 className="text-3xl text-center mb-4">Our Services</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-4">
             <div className="bg-white shadow-md rounded-lg p-4">
               <img
-                src="https://plus.unsplash.com/premium_photo-1682124416359-d48d59ad6916?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cHJvamVjdHMlMjBlZHVjYXRpb258ZW58MHx8MHx8fDA%3D"
+                src="https://img.freepik.com/premium-photo/city-view-iconic-buildings-washington-dc-usa-political-core-center-united-states-america-technologies-education-concept-academic-research-top-ranking-university-hologram_269648-4249.jpg"
                 alt="Project 1"
                 className="w-full h-48 object-cover rounded-t-lg hover:scale-125"
               />
@@ -55,7 +55,7 @@ export const Home = () => {
             </div>
             <div className="bg-white shadow-md rounded-lg p-4">
               <img
-                src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cHJvamVjdHMlMjBlZHVjYXRpb258ZW58MHx8MHx8fDA%3D"
+                src="https://img.freepik.com/free-vector/distance-learning-infographic-concept_1284-17948.jpg?size=626&ext=jpg&ga=GA1.1.553209589.1714521600&semt=ais"
                 alt="Project 2"
                 className="w-full h-48 object-cover rounded-t-lg"
               />
@@ -63,7 +63,7 @@ export const Home = () => {
             </div>
             <div className="bg-white shadow-md rounded-lg p-4">
               <img
-                src="https://plus.unsplash.com/premium_photo-1682124399858-022a1cf3aa71?dpr=2&w=306&auto=format&fit=crop&q=60&crop=entropy&cs=tinysrgb&fm=jpg&ixid=M3wxMjA3fDB8MXxzZWFyY2h8N3x8cHJvamVjdHMlMjBlZHVjYXRpb258ZW58MHwwfHx8MTcxNjI4MDE0MHwx&ixlib=rb-4.0.3"
+                src="https://img.freepik.com/free-vector/school-children-attending-distance-class-monitors-desks-classroom-screen-view_74855-15518.jpg"
                 alt="Project 3"
                 className="w-full h-48 object-cover rounded-t-lg"
               />
