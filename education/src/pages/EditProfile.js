@@ -92,6 +92,7 @@ export const EditProfile = () => {
 
   console.log(errors);
   const [userProfile, setUserProfile] = useState([]);
+  const [file,setFile]=useState('');
 
   useEffect(() => {
     let config = {
@@ -169,9 +170,13 @@ export const EditProfile = () => {
   }, [setValue]);
 
   console.log(errors);
+  
   const UpdateSubmit = (data) => {
 
-    console.log(data.date_of_birth);
+    
+    // console.log(file);
+    // formData.append("profile_picture",file.name);
+
     let data2 = JSON.stringify({
       personal_information: {
         first_name: data.first_name,
@@ -180,6 +185,7 @@ export const EditProfile = () => {
         middle_name: data.middle_name,
         date_of_birth: data.date_of_birth,
         gender: data.gender,
+        // profile_picture:formData
       },
       contact_information: {
         email: data.email,
@@ -271,12 +277,18 @@ export const EditProfile = () => {
             </Box>
 
             <Box className="text-center">
+              <label component='label'>
               <img
                 src="https://mui.com/static/images/avatar/2.jpg"
                 alt=""
                 className="lg:w-[10%] w-[40%] sm:w-[25%] md:w-[15%] h-auto text-center"
                 style={{ borderRadius: "50%" }}
+              
               />
+              <input type="file" accept="image/*" style={{display:"none"}}
+               onChange={(e)=>setFile(e.target.files[0])}
+              />
+              </label>
             </Box>
 
             <form onSubmit={handleSubmit(UpdateSubmit)}>

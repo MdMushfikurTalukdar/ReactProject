@@ -103,6 +103,23 @@ export const ProfileMainBody = () => {
               md={12}
               style={{ marginTop: "10px" }}
             >
+              <Typography variant="p">Middle Name</Typography>
+            </Grid>
+            <Grid item lg={4} sm={12} xs={12} md={12}>
+              <Typography variant="p">
+                {userProfile?.personal_information?.middle_name}
+              </Typography>
+            </Grid>
+
+            <Divider style={{ width: "100%", margin: "10px 0" }} />
+            <Grid
+              item
+              lg={4}
+              sm={12}
+              xs={12}
+              md={12}
+              style={{ marginTop: "10px" }}
+            >
               <Typography variant="p">Last Name</Typography>
             </Grid>
             <Grid item lg={4} sm={12} xs={12} md={12}>

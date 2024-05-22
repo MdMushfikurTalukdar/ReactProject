@@ -94,6 +94,7 @@ export const RegisterUser = () => {
           autoHideDuration: 3000,
         });
         localStorage.setItem("accesstoken", res.data.token.access);
+        localStorage.setItem("bonafied", false);
       })
       .catch((err) => {
         console.log(err);
