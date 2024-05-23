@@ -118,27 +118,6 @@ html{
 	background-color: rgb(108, 108, 165);
 }
 
-.second{
-	position: absolute;
-	height: 500px;
-	width: 100%;
-}
-
-.aboutTxt{
-	margin-left: 45%;
-	margin-top: 2%;
-}
-.underline{
-	margin-left: 46%;
-	color: red;
-}
-.redColor{
-	color: red;
-}
-
-.txtAbout{
-
-}
 .txtDiv{
 	width: 70%;
 	margin-left: 15%;
@@ -200,18 +179,7 @@ html{
 	margin-left: 60%;
 
 }
-.imgSport{
-	margin-top: 50px;
-    margin-left: 20px;
-    border: 5px solid #60605f;
-	height: 190px;
-    width: 280px;
-}
-.imgSport:hover{
-	height: 190px;
-    width: 280px;
-	filter: grayscale(100%);
-}
+
 .sportTxt{
 	margin-top: 22px;
     margin-left: 115px;
