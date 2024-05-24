@@ -11,7 +11,7 @@ export const Home = () => {
 
 
   return (
-    <div className="App">
+    <div className="App overflow-x-hidden">
       <Header />
       <main className="animate-fade">
         <Hero />

@@ -71,7 +71,7 @@ const Testimonials = () => {
   return (
     <section className="testimonials bg-gray-100 md:py-12">
       <div className="container mx-auto">
-        <h2 className="text-3xl mx-auto bg-sky-500 hover:bg-sky-700 mt-5 mb-8 px-4 py-2 text-white w-fit font-light rounded-lg cursor-pointer ">Testimonials</h2>
+        <h2 className="text-3xl mx-auto bg-sky-500 hover:bg-sky-700 mb-8 px-4 py-2 text-white w-fit font-light rounded-lg cursor-pointer ">Testimonials</h2>
         <Slider {...settings}>
           {testimonials.map((testimonial, index) => (
             <div key={index} className="testimonial-card flex flex-col items-center justify-center  md:w-60 bg-white p-6 rounded-lg shadow-md">
