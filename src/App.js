@@ -1,11 +1,12 @@
 import "./App.css";
+import {gsap} from "gsap";
 import {
   BrowserRouter as Router,
   Routes,
   Route
 } from "react-router-dom";
 import { RegisterUser } from "./pages/RegisterUser";
-import {Home} from "./pages/Home";
+import {Home} from "./pages/Home.js";
 import { Dashboard } from "./pages/Dashboard";
 import { LoginPage } from "./pages/Login";
 import { Leave } from "./pages/Leave";
