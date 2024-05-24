@@ -11,7 +11,7 @@ export const Header = () => {
   };
 
   return (
-    <header className="relative bg-blue-500 text-white uppercase p-4 flex  justify-between items-center">
+    <header className="relative bg-blue-500 text-white uppercase p-1 flex  justify-between items-center">
       <div className="h-20 hidden md:block w-20">
         <img
           className="h-full w-full rounded-full object-cover object-center"

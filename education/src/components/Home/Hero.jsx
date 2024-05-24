@@ -3,6 +3,8 @@ import React from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export const Hero = () => {
   const settings = {
@@ -37,6 +39,7 @@ export const Hero = () => {
     },
   ];
 
+  const navigate=useNavigate();
   return (
     <section className="hero">
       <Slider {...settings}>
@@ -50,6 +53,9 @@ export const Hero = () => {
             <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center text-center text-white p-4">
               <h2 className="text-4xl font-bold">{slide.title}</h2>
               <p className="text-2xl mt-2">{slide.subtitle}</p>
+              <Button variant="contained" style={{marginTop:"15px"}} onClick={(e)=>{
+                navigate('/login')
+              }}>Sign in</Button>
             </div>
           </div>
         ))}

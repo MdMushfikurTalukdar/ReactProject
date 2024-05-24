@@ -252,18 +252,7 @@ export const EditProfile = () => {
         >
           <Sidebar />
         </Grid>
-        <Box
-          sx={{
-            display: {
-              sm: "inherit",
-              md: "inherit",
-              xs: "inherit",
-              lg: "none",
-            },
-          }}
-        >
-          <SmallScreenNavbar />
-        </Box>
+       
         <Grid item xs={12} sm={12} md={12} lg={10}>
           <Box
             className=" mt-20 w-full lg:p-10 sm:p-5 p-5"

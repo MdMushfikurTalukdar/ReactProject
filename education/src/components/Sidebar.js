@@ -49,8 +49,9 @@ export const Sidebar = () => {
       style={{
         height: "85vh",
         background: "linear-gradient(to bottom, whitesmoke , #7042C0 40%)",
-        marginTop: "80px",
+        marginTop: "10px",
         marginLeft: "20px",
+        marginBottom:"5px",
         borderRadius: "20px 20px 20px 20px",
       }}
     >

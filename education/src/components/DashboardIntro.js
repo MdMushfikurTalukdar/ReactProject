@@ -2,7 +2,7 @@ import { Box, Grid, Typography } from "@mui/material";
 
 export const DashboardIntro = () => {
   return (
-    <Box sx={{backgroundColor:"#925FE2",width:"80vw",marginLeft:{lg:"25px",md:"100px",sm:"70px",xs:"40px"},marginTop:"80px",borderRadius:"15px"
+    <Box sx={{backgroundColor:"#925FE2",width:"80vw",marginLeft:{lg:"25px",md:"100px",sm:"70px",xs:"40px"},marginTop:{xs:"90px",lg:"10px"},borderRadius:"15px"
     }}>
       <Box style={{padding:"50px",color:"white"}}>
         <Grid container>

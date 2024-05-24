@@ -8,7 +8,7 @@ import {Footer} from "../components/Footer"
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {jwtDecode} from "jwt-decode"
-import { SmallScreenNavbar } from "../components/SmallScreenNavbar";
+
 
 
 export const Dashboard = () => {
@@ -28,18 +28,21 @@ export const Dashboard = () => {
   },[]);
   return (
     <Box style={{fontFamily:"cursive"}}>
+      <Box sx={{display:{
+        xs:'inherit',
+        lg:'none',
+        md:'inherit',
+        sm:'inherit'
+      }}}>
       <HomepageNav />
+      </Box>
       <Grid container>
         <Grid item lg={2} sx={{
             display:{sm:"none",md:"none",xs:"none",lg:"inherit"}
         }}>
           <Sidebar />
         </Grid>
-        <Box sx={{
-            display:{sm:"inherit",md:"inherit",xs:"inherit",lg:"none"}
-        }}>
-          <SmallScreenNavbar  />
-        </Box>
+       
         <Grid item xs={12} sm={12} md={12} lg={10}>
             <DashboardIntro/>
             <Grid container>
@@ -47,12 +50,7 @@ export const Dashboard = () => {
                     <DashboardMainBody/>
                     
                 </Grid>
-
-                <Grid item xs={12} md={12} sm={12} lg={4}>
-                    <DailyNotice/>
-                    
-                </Grid>
-                
+ 
             </Grid>
             
         </Grid>

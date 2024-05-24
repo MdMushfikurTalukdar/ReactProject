@@ -41,18 +41,7 @@ export const Profile = () => {
         >
           <Sidebar />
         </Grid>
-        <Box
-          sx={{
-            display: {
-              sm: "inherit",
-              md: "inherit",
-              xs: "inherit",
-              lg: "none",
-            },
-          }}
-        >
-          <SmallScreenNavbar />
-        </Box>
+     
         <Grid item xs={12} sm={12} md={12} lg={10}>
           <ProfileMainBody />
         </Grid>
