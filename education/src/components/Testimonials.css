@@ -30,3 +30,37 @@
 .text{
   margin-top: 34%;
 }
+
+@media only screen and (min-width: 375px){
+  .square img {
+    width: 95px;
+    height: 95px;
+    margin-top: 265px;
+    margin-left: -29px;
+  }
+  .text {
+    margin-top: 400%;
+  }
+}
+@media only screen and (min-width: 425px){
+  .square img {
+    width: 95px;
+    height: 95px;
+    margin-top: 265px;
+    margin-left: -29px;
+  }
+  .text {
+    margin-top: 343%;
+  }
+}
+@media only screen and (min-width: 768px){
+  .square img {
+    width: 95px;
+    height: 95px;
+    margin-top: 265px;
+    margin-left: -29px;
+  }
+  .text {
+    margin-top: 343%;
+  }
+}
