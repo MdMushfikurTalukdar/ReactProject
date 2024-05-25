@@ -59,12 +59,13 @@ export const LoginPage = () => {
   };
   return (
     <>
-    <Header />
     <Style />
+    <Header />
+
     <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 loginBody">
       <div className="max-w-md w-full space-y-8">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Sign in to your account</h2>
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 textSign">Sign in to your account</h2>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <input type="hidden" name="remember" defaultValue="true" />
@@ -76,10 +77,10 @@ export const LoginPage = () => {
                 type="text"
                 {...register("rollNumber", { required: true })}
                 autoComplete="off"
-                className={`appearance-none rounded-none relative block w-full px-3 py-2 border ${errors.rollNumber ? 'border-red-500' : 'border-gray-300'} placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
+                className={`appearance-none rounded-none relative block w-full px-3 py-2 border ${errors.rollNumber ? 'border-red-500' : 'border-gray-300'} placeholder-blue-100 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
                 placeholder="Registration no./Employee ID."
               />
-              {errors.rollNumber && <p className="text-black-500 text-xs mt-1">Roll Number is required</p>}
+              {errors.rollNumber && <p className="text-black-500 text-xs mt-1 textSign">Roll Number is required</p>}
             </div>
             <div>
               <label htmlFor="password" className="sr-only">Password</label>
@@ -88,10 +89,10 @@ export const LoginPage = () => {
                 type="password"
                 {...register("password", { required: true })}
                 autoComplete="current-password"
-                className={`appearance-none rounded-none mt-4 relative block w-full px-3 py-2 border ${errors.password ? 'border-red-500' : 'border-gray-300'} placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
+                className={`appearance-none rounded-none mt-4 relative block w-full px-3 py-2 border ${errors.password ? 'border-red-500' : 'border-gray-300'} placeholder-blue-100 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
                 placeholder="Password"
               />
-              {errors.password && <p className="text-black-500 text-xs mt-1">Password is required</p>}
+              {errors.password && <p className="text-black-500 text-xs mt-1 textSign">Password is required</p>}
             </div>
           </div>
 
@@ -103,13 +104,13 @@ export const LoginPage = () => {
                 type="checkbox"
                 className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
               />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900 textSign">
                 Remember me
               </label>
             </div>
 
             <div className="text-sm">
-              <a href="/" className="font-medium text-indigo-600 hover:text-indigo-500">
+              <a href="/" className="font-medium text-indigo-600 hover:text-indigo-500 textSign">
                 Forgot your password?
               </a>
             </div>

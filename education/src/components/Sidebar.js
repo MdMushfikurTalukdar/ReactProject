@@ -168,7 +168,7 @@ export const Sidebar = () => {
           }}
         >
           <EventBusyIcon />
-          <Typography variant="p">Leave Form</Typography>
+          <Typography variant="p">Transfer/Leaving Certificate</Typography>
         </Box>
 
         <Box
