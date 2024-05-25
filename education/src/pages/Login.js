@@ -3,6 +3,13 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useSnackbar } from "notistack";
 import { useNavigate } from 'react-router-dom';
+import { Header } from "../components/Home/Header";
+import Footer from '../components/Home/Footer';
+import "./Login.css"
+import {
+  Button
+} from "@mui/material";
+import Style from '../components/StyleLogin';
 
 export const LoginPage = () => {
   const { register, handleSubmit, formState: { errors },reset } = useForm();
@@ -51,7 +58,10 @@ export const LoginPage = () => {
     reset();
   };
   return (
-    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <>
+    <Header />
+    <Style />
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 loginBody">
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Sign in to your account</h2>
@@ -67,7 +77,7 @@ export const LoginPage = () => {
                 {...register("rollNumber", { required: true })}
                 autoComplete="off"
                 className={`appearance-none rounded-none relative block w-full px-3 py-2 border ${errors.rollNumber ? 'border-red-500' : 'border-gray-300'} placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
-                placeholder="Registration number"
+                placeholder="Registration no./Employee ID."
               />
               {errors.rollNumber && <p className="text-black-500 text-xs mt-1">Roll Number is required</p>}
             </div>
@@ -106,36 +116,24 @@ export const LoginPage = () => {
           </div>
 
           <div>
-            <button
-              type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-              
-                <svg
-                  className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 12a2 2 0 100-4 2 2 0 000 4z"
-                    clipRule="evenodd"
-                  />
-                  <path
-                    fillRule="evenodd"
-                    d="M4 8V7a6 6 0 1112 0v1h1a1 1 0 011 1v8a1 1 0 01-1 1H4a1 1 0 01-1-1V9a1 1 0 011-1h1zm8-3V5a4 4 0 10-8 0v1h8z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </span>
-              Sign in
-            </button>
+            
+            <Button
+                    variant="contained"
+                    sx={{
+                      width: { xs: "100%", sm: "100%" },
+                      backgroundColor: "black",
+                      textAlign: "start",
+                    }}
+                    type="submit"
+                  >
+                    Login
+                  </Button>
           </div>
         </form>
       </div>
     </div>
+    <Footer/>
+
+    </>
   );
 };
