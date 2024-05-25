@@ -23,7 +23,7 @@ const navItems = [
   { label: 'Contact', path: '/contact' },
   { label: 'Profile', path: '/profile' },
   { label: 'Bonafide Certificate', path: '/bonafideCertificate' },
-  { label: 'Leave Form', path: '/leave' },
+  { label: 'Transfer/Leaving Certificate', path: '/leave' },
   { label: 'Logout', path: '/logout' }
 ];
 
@@ -47,8 +47,8 @@ function HomepageNav(props) {
   };
 
   const Logout = () => {
-    localStorage.removeItem('token');
-    navigate('/login');
+    localStorage.removeItem('accesstoken');
+    navigate('/');
   };
 
   const drawer = (

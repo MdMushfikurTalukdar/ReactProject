@@ -21,10 +21,10 @@ export const About = () => {
           height: "29rem",
         }}
       ></Grid>
-      <Box style={{ position: "absolute", top: "33%" }}>
+      <Box style={{ position: "absolute", top: "33%", }}>
         <p
           className="lg:text-5xl text-3xl text-white ml-9 w-4/5 font-semibold"
-          style={{ fontFamily: "auto" }}
+          style={{ fontFamily: "auto",color:"rgb(171 219 219)" }}
         >
           "Smartcampus - Lorem Ipsum Dolor Sit Amet"
         </p>
@@ -43,11 +43,11 @@ export const About = () => {
           <Grid item xs={12} sm={4}>
             <Grid container justifyContent="center" alignItems="center">
               <LocalShippingIcon className="text-4xl sm:text-2xl text-white" />
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                <p className="ml-2 text-lg sm:text-base text-white">
+              <div style={{ display: "flex", flexDirection: "column",color:"rgb(171 219 219)" }}>
+                <p className="ml-2 text-lg sm:text-base ">
                   Lorem Ipsum lorem
                 </p>
-                <p className="ml-2  text-white text-sm">Lorem Ipsum lorem</p>
+                <p className="ml-2  text-sm" style={{color:"rgb(171 219 219)"}}>Lorem Ipsum lorem</p>
               </div>
             </Grid>
           </Grid>
@@ -55,10 +55,10 @@ export const About = () => {
             <Grid container justifyContent="center" alignItems="center">
               <SupportAgentIcon className=" text-white sm:text-xl none" />
               <div style={{ display: "flex", flexDirection: "column" }}>
-                <p className="ml-2 text-lg sm:text-base  text-white">
+                <p className="ml-2 text-lg sm:text-base " style={{color:"rgb(171 219 219)"}}>
                   Lorem Ipsum lorem
                 </p>
-                <p className="ml-2 text-white text-sm">Lorem Ipsum lorem</p>
+                <p className="ml-2 text-sm" style={{color:"rgb(171 219 219)"}}>Lorem Ipsum lorem</p>
               </div>
             </Grid>
           </Grid>
@@ -66,10 +66,10 @@ export const About = () => {
             <Grid container justifyContent="center" alignItems="center">
               <AttachMoneyIcon className=" text-white sm:text-xl xs:none" />
               <div style={{ display: "flex", flexDirection: "column" }}>
-                <p className="ml-2 text-lg sm:text-base  text-white">
+                <p className="ml-2 text-lg sm:text-base" style={{color:"rgb(171 219 219)"}}>
                   Lorem Ipsum lorem
                 </p>
-                <p className="ml-2  text-white text-sm">Lorem Ipsum lorem</p>
+                <p className="ml-2 text-sm" style={{color:"rgb(171 219 219)"}}>Lorem Ipsum lorem</p>
               </div>
             </Grid>
           </Grid>
@@ -77,10 +77,10 @@ export const About = () => {
       </Box>
 
       <Box>
-        <p className="text-center text-2xl mt-16 mb-20">Why Us??</p>
+        <p className="text-center text-2xl mt-16 mb-20" style={{color:"rgb(171 219 219)"}}>Why Us??</p>
       </Box>
 
-      <Box className="mb-32">
+      <Box className="mb-32" >
         <Grid container>
           <Grid
             item
@@ -105,11 +105,11 @@ export const About = () => {
             >
               <p>
                 <CameraRollSharpIcon
-                  style={{ fontSize: "3.5rem", borderRadius: "50%" }}
+                  style={{ fontSize: "3.5rem", borderRadius: "50%",color:"rgb(171 219 219)" }}
                 />
               </p>
-              <p>Lorem Ipsum Dolor Sit Amet</p>
-              <p>Lorem Ipsum Amet Lorem Ipsum Dolor</p>
+              <p >Lorem Ipsum Dolor Sit Amet</p>
+              <p >Lorem Ipsum Amet Lorem Ipsum Dolor</p>
             </Box>
           </Grid>
           <Grid item xs={12} sm={12} lg={4} md={4}>
@@ -124,11 +124,11 @@ export const About = () => {
             >
               <p>
                 <SchoolIcon
-                  style={{ fontSize: "3.5rem", borderRadius: "50%" }}
+                  style={{ fontSize: "3.5rem", borderRadius: "50%",color:"rgb(171 219 219)" }}
                 />
               </p>
-              <p>Lorem Ipsum Dolor Sit Amet</p>
-              <p>Lorem Ipsum Amet Lorem Ipsum Dolor</p>
+              <p >Lorem Ipsum Dolor Sit Amet</p>
+              <p >Lorem Ipsum Amet Lorem Ipsum Dolor</p>
             </Box>
           </Grid>
           <Grid item xs={12} sm={12} lg={4} md={4}>
@@ -143,17 +143,17 @@ export const About = () => {
             >
               <p>
                 <CastForEducationIcon
-                  style={{ fontSize: "3.3rem", borderRadius: "50%" }}
+                  style={{ fontSize: "3.3rem", borderRadius: "50%",color:"rgb(171 219 219)" }}
                 />
               </p>
-              <p>Lorem Ipsum Dolor Sit Amet</p>
-              <p>Lorem Ipsum Dolor Sit Amet Lorem</p>
+              <p >Lorem Ipsum Dolor Sit Amet</p>
+              <p >Lorem Ipsum Dolor Sit Amet Lorem</p>
             </Box>
           </Grid>
         </Grid>
       </Box>
       <Box> 
-      <Box className="p-12" style={{backgroundColor:"whitesmoke"}}>
+      <Box className="p-12" style={{backgroundColor:"#F8F6F4"}}>
       <Typography variant="h4" gutterBottom>
         Mission
       </Typography>

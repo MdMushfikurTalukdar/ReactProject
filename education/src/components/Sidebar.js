@@ -37,7 +37,7 @@ export const Sidebar = () => {
       .then((response) => {
         console.log(JSON.stringify(response.data));
         localStorage.removeItem("accesstoken");
-        navigate('/login');
+        navigate('/');
       })
       .catch((error) => {
         console.log("Logout failed: ", error);
