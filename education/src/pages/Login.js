@@ -41,6 +41,7 @@ export const LoginPage = () => {
       });
       navigate('/dashboard');
       localStorage.setItem('accesstoken',res.data.token.access);
+      localStorage.setItem('refreshtoken',res.data.token.refresh);
       
     })
     .catch((err) =>{
