@@ -8,6 +8,7 @@ import {Footer} from "../components/Footer"
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {jwtDecode} from "jwt-decode"
+import { NavbarNew } from "../components/NavbarNew"
 
 
 
@@ -28,13 +29,15 @@ export const Dashboard = () => {
   },[]);
   return (
     <Box style={{fontFamily:"cursive"}}>
+      <NavbarNew />
       <Box sx={{display:{
         xs:'inherit',
         lg:'none',
         md:'inherit',
         sm:'inherit'
       }}}>
-      <HomepageNav />
+      {/* <HomepageNav /> */}
+      
       </Box>
       <Grid container>
         <Grid item lg={2} sx={{
