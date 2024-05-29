@@ -3,7 +3,15 @@ import './NavbarNew.css';
 import {Link} from "react-router-dom"
 
 export const NavbarNew = () => {
+
     const roll="student";
+
+    const mainOptin = ["General","Academic","Residential","Others"];
+    const general = ["Profile","Change Password","Logout"];
+    const academic = ["Bonafide Certificate","Academic Fee","Semester Registration","Internal Semester Marks","No dues for degree","Assignment Submission","Transfer/Leaving Certificate","Character Certificate"];
+    const residential = ["Hostel Allotment Request","Hostel/Mess Fee Payment","Hostel/Mess Fee Receipts","Hostel No Dues Request"];
+    const others = ["Guest Room Request","Complaints"];
+
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isNestedDropdownGeneralOpen, setIsNestedDropdownGeneralOpen] = useState(false);
     const [isNestedDropdownAcademicOpen, setIsNestedDropdownAcademicOpen] = useState(false);
@@ -53,28 +61,28 @@ export const NavbarNew = () => {
                     {isDropdownOpen && (
                         <div className="dropdown-content">
                             <div className='hover' onClick={toggleNestedDropdownGeneral} >
-                              General
+                              {mainOptin[0]}
                               {isNestedDropdownGeneralOpen && (
                                     <div className="nested">
-                                        <a className='hover second' href="/account">Profile</a>
-                                        <a className='hover second' href="/security">Change Password</a>
-                                        <a className='hover second' href="/security">Logout</a>
+                                        <a className='hover second' href="/account">{general[0]}</a>
+                                        <a className='hover second' href="/security">{general[1]}</a>
+                                        <a className='hover second' href="/security">{general[2]}</a>
                                     </div>
                                 )}
                               </div>
                               {roll === 'student' && (
                             <div className='hover' onClick={toggleNestedDropdownAcademic} >
-                                Academic
+                                {mainOptin[1]}
                                 {isNestedDropdownAcademicOpen && (
                                     <div className="nested">
-                                        <Link className='hover second' to="/security">Bonafide Certificate</Link>
-                                        <Link className='hover second' to="/security">Academic Fee</Link>
-                                        <Link className='hover second' to="/security">Semester Registration</Link>
-                                        <Link className='hover second' to="/security">Internal Semester Marks</Link>
-                                        <Link className='hover second' to="/security">No dues for degree</Link>
-                                        <Link className='hover second' to="/security">Assignment Submission</Link>
-                                        <Link className='hover second' to="/security">Transfer/Leaving Certificate</Link>
-                                        <Link className='hover second' to="/security">Character Certificate</Link>
+                                        <Link className='hover second' to="/security">{academic[0]}</Link>
+                                        <Link className='hover second' to="/security">{academic[1]}</Link>
+                                        <Link className='hover second' to="/security">{academic[2]}</Link>
+                                        <Link className='hover second' to="/security">{academic[3]}</Link>
+                                        <Link className='hover second' to="/security">{academic[4]}</Link>
+                                        <Link className='hover second' to="/security">{academic[5]}</Link>
+                                        <Link className='hover second' to="/security">{academic[6]}</Link>
+                                        <Link className='hover second' to="/security">{academic[7]}</Link>
                                     </div>
                                 )}
                             </div>
@@ -82,13 +90,13 @@ export const NavbarNew = () => {
 
                             {roll === 'student' && (
                             <div className='hover' onClick={toggleNestedDropdownResidential} >
-                                Residential
+                                {mainOptin[2]}
                                 {isNestedDropdownResidentialOpen && (
                                     <div className="nested">
-                                        <Link className='hover second' to="/security">Hostel Allotment Request</Link>
-                                        <Link className='hover second' to="/security">Hostel/Mess Fee Payment</Link>
-                                        <Link className='hover second' to="/security">Hostel/Mess Fee Receipts</Link>
-                                        <Link className='hover second' to="/security">Hostel No Dues Request</Link>
+                                        <Link className='hover second' to="/security">{residential[0]}</Link>
+                                        <Link className='hover second' to="/security">{residential[1]}</Link>
+                                        <Link className='hover second' to="/security">{residential[2]}</Link>
+                                        <Link className='hover second' to="/security">{residential[3]}</Link>
                                     </div>
                                 )}
                             </div>
@@ -96,11 +104,11 @@ export const NavbarNew = () => {
 
 
                               <div className='hover' onClick={toggleNestedDropdownOthers} >
-                                Others
+                              {mainOptin[3]}
                                 {isNestedDropdownOthersOpen && (
                                     <div className="nested">
-                                        <Link className='hover second' to="/security">Guest Room Request</Link>
-                                        <Link className='hover second' to="/security">Complaints</Link>
+                                        <Link className='hover second' to="/security">{others[0]}</Link>
+                                        <Link className='hover second' to="/security">{others[1]}</Link>
                                     </div>
                                 )}
                             </div>

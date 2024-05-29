@@ -2,6 +2,9 @@
 .navbar {
   background-color: #C4DFDF;
   overflow: hidden;
+  position: fixed;
+  width: 100%;
+  
 }
 
 .navbar-container {
@@ -40,7 +43,7 @@
 }
 
 .dropdown-content {
-  position: absolute;
+  position: fixed;
   background-color: #C4DFDF;
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
