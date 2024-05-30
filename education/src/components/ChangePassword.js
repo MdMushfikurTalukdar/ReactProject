@@ -91,14 +91,36 @@ export const ChangePassword = () => {
       
       axios.request(config)
       .then((response) => {
-        return enqueueSnackbar(response.data.message, {
-            variant: "success",
-            anchorOrigin: {
-              vertical: "bottom",
-              horizontal: "center",
-            },
-            autoHideDuration: 3000,
-          });
+        
+        setTimeout(()=>{
+            enqueueSnackbar(response.data.message, {
+                variant: "success",
+                anchorOrigin: {
+                  vertical: "bottom",
+                  horizontal: "center",
+                },
+                autoHideDuration: 3000,
+              });
+        },1000); 
+
+        setTimeout(()=>{
+            enqueueSnackbar('Logging out', {
+                variant: "info",
+                anchorOrigin: {
+                  vertical: "bottom",
+                  horizontal: "center",
+                },
+                autoHideDuration: 3000,
+              });
+              localStorage?.removeItem('accesstoken');
+              localStorage?.removeItem('refreshtoken');
+
+        },2000); 
+
+        setTimeout(()=>{
+            navigate('/login');
+        },3000)
+       
       })
       .catch((error) => {
         console.log(error);

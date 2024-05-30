@@ -46,6 +46,7 @@ export const LoginPage = () => {
     })
     .catch((err) =>{
       
+      console.log(err);
       enqueueSnackbar(err.response.data.error.non_fields_errors[0], {
         variant: 'error',
         anchorOrigin: {
