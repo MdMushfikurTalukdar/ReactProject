@@ -53,7 +53,7 @@ export const NavbarNew = () => {
 
     return (
         <>
-            <nav className="navbar"  onClick={toggleDropdown}>
+            <nav className="navbar"  onClick={toggleDropdown} style={{zIndex:"1000"}}>
                 <div className="navbar-container">
                     <div className="menu-icon" onClick={toggleDropdown} >
                         <i className="fas fa-bars"></i>
@@ -64,8 +64,8 @@ export const NavbarNew = () => {
                               {mainOptin[0]}
                               {isNestedDropdownGeneralOpen && (
                                     <div className="nested">
-                                        <a className='hover second' href="/account">{general[0]}</a>
-                                        <a className='hover second' href="/security">{general[1]}</a>
+                                        <a className='hover second' href="/profile">{general[0]}</a>
+                                        <a className='hover second' href="/change-password">{general[1]}</a>
                                         <a className='hover second' href="/security">{general[2]}</a>
                                     </div>
                                 )}

@@ -24,6 +24,7 @@ const navItems = [
   { label: 'Profile', path: '/profile' },
   { label: 'Bonafide Certificate', path: '/bonafideCertificate' },
   { label: 'Transfer/Leaving Certificate', path: '/leave' },
+  { label: 'Change password', path: '/change-password' },
   { label: 'Logout', path: '/logout' }
 ];
 

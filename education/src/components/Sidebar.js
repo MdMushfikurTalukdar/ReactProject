@@ -1,6 +1,6 @@
 import { Box, Button, Typography } from "@mui/material";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import MessageIcon from "@mui/icons-material/Message";
+import { RiLockPasswordFill } from "react-icons/ri";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
@@ -116,6 +116,23 @@ export const Sidebar = () => {
           </Typography>
         </Box>
 
+        <Box
+          style={{
+            display: "flex",
+            gap: "10px",
+            marginTop: "20px",
+            color: "white",
+          }}
+        >
+          <RiLockPasswordFill />
+          <Typography
+            variant="p"
+            onClick={(e) => navigate("/change-password")}
+            className="cursor-pointer"
+          >
+            Change Password
+          </Typography>
+        </Box>
         <Box
           style={{
             display: "flex",
