@@ -15,15 +15,16 @@
 }
 
 .navbar-logo {
-  color: #F8F6F4;
+  color: #000000;
   font-size: 24px;
   font-weight: bold;
   margin-left: -80%;
   cursor: pointer;
+  font-family: Arial;
 }
 
 .menu-icon {
-  color: #F8F6F4;
+  color: #000000;
   font-size: 24px;
   cursor: pointer;
   position: relative; /* Ensure dropdown is positioned relative to this */
@@ -31,18 +32,20 @@
 
 .profile {
   margin-right: 5px;
-  color: #F8F6F4;
+  color: #000000;
   cursor: pointer;
   text-decoration: underline;
+  font-family: Arial;
 }
 
 .profile-text {
   margin-right: 5px;
-  color: #F8F6F4;
+  color: #000000;
   cursor: pointer;
 }
 
 .dropdown-content {
+  font-family: Arial;
   position: fixed;
   background-color: #C4DFDF;
   min-width: 160px;
@@ -54,7 +57,7 @@
 }
 
 .dropdown-content a, .dropdown-content div {
-  color: #F8F6F4;
+  color: #000000;
   padding: 12px 16px;
   text-decoration: none;
   display: block;
