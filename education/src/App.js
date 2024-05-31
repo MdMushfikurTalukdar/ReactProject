@@ -1,5 +1,4 @@
 import "./App.css";
-import {gsap} from "gsap";
 import {
   BrowserRouter as Router,
   Routes,
@@ -14,7 +13,7 @@ import { Profile } from "./pages/Profile";
 import { BonafideCertificate } from "./pages/BonafideCertificate";
 import { EditProfile } from "./pages/EditProfile";
 import { About } from "./pages/About.js";
-import ChangePassword from "./components/ChangePassword.js";
+import {ChangePassword} from "./components/ChangePassword.js";
 
 function App() {
   return (

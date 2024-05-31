@@ -128,46 +128,44 @@ export const ChangePassword = () => {
   };
 
   return (
-    <Grid container justifyContent="center" alignItems="center" style={{ minHeight: '100vh',borderRadius:"20px" }}>
-      <Grid item xs={12} sm={8} md={6} lg={4}>
-        <Paper elevation={3} style={{ padding: '2rem' }}>
-          <Typography variant="h4" align="center" gutterBottom style={{color:"rgb(107 169 169)"}}>
-            Change Password
-          </Typography>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Box mb={2}>
-              <TextField
-                fullWidth
-                id="newPassword"
-                name="newPassword"
-                label="New Password"
-                type="password"
-                {...register('newPassword')}
-                error={!!errors.newPassword}
-                helperText={errors.newPassword?.message}
-                required
-              />
-            </Box>
-            <Box mb={2}>
-              <TextField
-                fullWidth
-                id="confirmPassword"
-                name="confirmPassword"
-                label="Confirm Password"
-                type="password"
-                {...register('confirmPassword')}
-                error={!!errors.confirmPassword}
-                helperText={errors.confirmPassword?.message}
-                required
-              />
-            </Box>
-            <Button fullWidth color="primary" variant="contained" type="submit" style={{backgroundColor:"rgb(107 169 169)"}}>
-              Change Password
-            </Button>
-          </form>
-        </Paper>
-      </Grid>
-    </Grid>
+    <div className="flex justify-center items-center min-h-screen font-sans bg-gray-100">
+    <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg">
+      <h2 className="text-3xl font-semibold text-center mb-6 text-teal-600">Change Password</h2>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="mb-4">
+          <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700">
+            New Password
+          </label>
+          <input
+            id="newPassword"
+            name="newPassword"
+            type="password"
+            {...register('newPassword')}
+            className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none sm:text-sm ${errors.newPassword ? 'border-red-500' : 'border-gray-300'}`}
+            required
+          />
+          {errors.newPassword && <p className="mt-2 text-sm text-red-600">{errors.newPassword.message}</p>}
+        </div>
+        <div className="mb-4">
+          <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+            Confirm Password
+          </label>
+          <input
+            id="confirmPassword"
+            name="confirmPassword"
+            type="password"
+            {...register('confirmPassword')}
+            className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none sm:text-sm ${errors.confirmPassword ? 'border-red-500' : 'border-gray-300'}`}
+            required
+          />
+          {errors.confirmPassword && <p className="mt-2 text-sm text-red-600">{errors.confirmPassword.message}</p>}
+        </div>
+        <button type="submit" className="w-full py-2 px-4 bg-blue-500 text-white font-medium text-sm rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+          Change Password
+        </button>
+      </form>
+    </div>
+  </div>
   );
 };
 

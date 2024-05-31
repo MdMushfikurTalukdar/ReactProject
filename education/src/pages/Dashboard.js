@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
 import axios from "axios";
 import NavbarNew from "../components/NavbarNew";
 import HistoryCard from "../components/Dashboard/HistoryCard";
 import SemesterCard from "../components/Dashboard/SemsterDashboard";
 import AttendanceDashboard from "../components/Dashboard/Attendance";
-import {Footer} from "../components/Footer";
+import { Footer } from "../components/Footer";
 
 export const Dashboard = () => {
   const navigate = useNavigate();
@@ -63,22 +63,16 @@ export const Dashboard = () => {
   return (
     <div className="bg-gray-100 min-h-screen">
       <NavbarNew />
-      <div className="flex justify-center items-center mt-8">
-        <div className="grid sm:flex grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-          <div className="flex items-center justify-center">
-          <AttendanceDashboard presentPercentage={70} />
+      <div className="flex flex-col items-center justify-center mt-8 space-y-8 px-4 min-h-[80vh]">
+        <div className="flex flex-col lg:flex-row items-center justify-around w-full p-8 gap-6">
+          <AttendanceDashboard presentPercentage={77}/>
+        
+          <div className="flex items-center justify-center w-full lg:w-1/2">
+            <SemesterCard />
           </div>
-          <div>
-          
-            <div className="grid grid-cols-1 gap-8">
-              <div>
-                <HistoryCard historyItems={historyData} />
-              </div>
-              <div>
-                <SemesterCard />
-              </div>
-            </div>
-          </div>
+        </div>
+        <div className="w-full flex justify-center mt-8">
+          <HistoryCard historyItems={historyData} />
         </div>
       </div>
       <Footer />
