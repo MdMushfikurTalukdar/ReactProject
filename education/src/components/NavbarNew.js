@@ -6,10 +6,31 @@ export const NavbarNew = () => {
   const roll = "student";
 
   const mainOptions = ["General", "Academic", "Residential", "Others"];
-  const general = ["Profile", "Change Password", "Logout"];
-  const academic = ["Bonafide Certificate", "Academic Fee", "Semester Registration", "Internal Semester Marks", "No dues for degree", "Assignment Submission", "Transfer/Leaving Certificate", "Character Certificate"];
-  const residential = ["Hostel Allotment Request", "Hostel/Mess Fee Payment", "Hostel/Mess Fee Receipts", "Hostel No Dues Request"];
-  const others = ["Guest Room Request", "Complaints"];
+  const general = [
+    { name: "Profile", link: "/profile" },
+    { name: "Change Password", link: "/change-password" },
+    { name: "Logout", link: "/logout" }
+  ];
+  const academic = [
+    { name: "Bonafide Certificate", link: "/bonafide-certificate" },
+    { name: "Academic Fee", link: "/academic-fee" },
+    { name: "Semester Registration", link: "/semester-registration" },
+    { name: "Internal Semester Marks", link: "/internal-semester-marks" },
+    { name: "No dues for degree", link: "/no-dues-for-degree" },
+    { name: "Assignment Submission", link: "/assignment-submission" },
+    { name: "Transfer/Leaving Certificate", link: "/transfer-leaving-certificate" },
+    { name: "Character Certificate", link: "/character-certificate" }
+  ];
+  const residential = [
+    { name: "Hostel Allotment Request", link: "/hostel-allotment-request" },
+    { name: "Hostel/Mess Fee Payment", link: "/hostel-mess-fee-payment" },
+    { name: "Hostel/Mess Fee Receipts", link: "/hostel-mess-fee-receipts" },
+    { name: "Hostel No Dues Request", link: "/hostel-no-dues-request" }
+  ];
+  const others = [
+    { name: "Guest Room Request", link: "/guest-room-request" },
+    { name: "Complaints", link: "/complaints" }
+  ];
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isNestedDropdownGeneralOpen, setIsNestedDropdownGeneralOpen] = useState(false);
@@ -52,7 +73,7 @@ export const NavbarNew = () => {
 
   return (
     <>
-      <nav className="bg-gray-200  text-[#041E49] px-4 py-5 shadow-md">
+      <nav className="bg-gray-200 text-[#041E49] px-4 py-5 shadow-md">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <div className="relative" onClick={toggleDropdown}>
@@ -68,7 +89,7 @@ export const NavbarNew = () => {
                       {isNestedDropdownGeneralOpen && (
                         <div className="mt-2 bg-white rounded-lg shadow-md">
                           {general.map((item, index) => (
-                            <a key={index} className="block px-4 py-2 text-gray-800 hover:bg-purple-100" href={`/${item.replace(/ /g, '').toLowerCase()}`}>{item}</a>
+                            <Link key={index} className="block px-4 py-2 text-gray-800 hover:bg-purple-100" to={item.link}>{item.name}</Link>
                           ))}
                         </div>
                       )}
@@ -80,7 +101,7 @@ export const NavbarNew = () => {
                           {isNestedDropdownAcademicOpen && (
                             <div className="mt-2 bg-white rounded-lg shadow-md">
                               {academic.map((item, index) => (
-                                <Link key={index} className="block px-4 py-2 text-gray-800 hover:bg-purple-100" to={`/${item.replace(/ /g, '').toLowerCase()}`}>{item}</Link>
+                                <Link key={index} className="block px-4 py-2 text-gray-800 hover:bg-purple-100" to={item.link}>{item.name}</Link>
                               ))}
                             </div>
                           )}
@@ -90,7 +111,7 @@ export const NavbarNew = () => {
                           {isNestedDropdownResidentialOpen && (
                             <div className="mt-2 bg-white rounded-lg shadow-md">
                               {residential.map((item, index) => (
-                                <Link key={index} className="block px-4 py-2 text-gray-800 hover:bg-purple-100" to={`/${item.replace(/ /g, '').toLowerCase()}`}>{item}</Link>
+                                <Link key={index} className="block px-4 py-2 text-gray-800 hover:bg-purple-100" to={item.link}>{item.name}</Link>
                               ))}
                             </div>
                           )}
@@ -102,7 +123,7 @@ export const NavbarNew = () => {
                       {isNestedDropdownOthersOpen && (
                         <div className="mt-2 bg-white rounded-lg shadow-md">
                           {others.map((item, index) => (
-                            <Link key={index} className="block px-4 py-2 text-gray-800 hover:bg-purple-100" to={`/${item.replace(/ /g, '').toLowerCase()}`}>{item}</Link>
+                            <Link key={index} className="block px-4 py-2 text-gray-800 hover:bg-purple-100" to={item.link}>{item.name}</Link>
                           ))}
                         </div>
                       )}
@@ -111,7 +132,7 @@ export const NavbarNew = () => {
                 </div>
               )}
             </div>
-            <h1 className="text-2xl font-bold ml-4">SmartTechnology</h1>
+            <h1 className="text-2xl font-bold ml-4">Campus</h1>
           </div>
           <div className="flex items-center">
             <Link to="/profile" className="flex items-center space-x-2">
