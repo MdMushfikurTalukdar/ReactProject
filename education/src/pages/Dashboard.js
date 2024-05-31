@@ -1,45 +1,48 @@
-import { Box, Grid } from "@mui/material";
-import HomepageNav from "../components/HomepageNav";
-import { Sidebar } from "../components/Sidebar";
-import { DashboardIntro } from "../components/DashboardIntro";
-import { DashboardMainBody } from "../components/DashboardMainBody";
-import { DailyNotice } from "../components/DailyNotice";
-import { Footer } from "../components/Footer";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import NavbarNew from "../components/NavbarNew";
+import HistoryCard from "../components/Dashboard/HistoryCard";
+import SemesterCard from "../components/Dashboard/SemsterDashboard";
+import AttendanceDashboard from "../components/Dashboard/Attendance";
+import {Footer} from "../components/Footer";
 
 export const Dashboard = () => {
   const navigate = useNavigate();
 
-  function regenerateToken(){
-    let data = JSON.stringify({
-      "refresh": localStorage.getItem('refreshtoken')
-    });
-    
-    let config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: 'https://amarnath013.pythonanywhere.com/api/user/token/refresh/',
-      headers: { 
-        'Content-Type': 'application/json'
-      },
-      data : data
-    };
-    
-    axios.request(config)
-    .then((response) => {
-      console.log(JSON.stringify(response.data));
-      localStorage.setItem('refreshtoken', response.data.refresh);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-    
-  }
+  const historyData = [
+    { date: "2024-05-01", description: "Logged into the system" },
+    { date: "2024-05-02", description: "Updated profile information" },
+    { date: "2024-05-03", description: "Submitted an assignment" },
+    { date: "2024-05-04", description: "Paid semester fee" },
+  ];
 
+  function regenerateToken() {
+    let data = JSON.stringify({
+      refresh: localStorage.getItem("refreshtoken"),
+    });
+
+    let config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: "https://amarnath013.pythonanywhere.com/api/user/token/refresh/",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        localStorage.setItem("refreshtoken", response.data.refresh);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
   useEffect(() => {
     if (localStorage?.getItem("accesstoken")) {
@@ -58,38 +61,27 @@ export const Dashboard = () => {
   }, []);
 
   return (
-    <Box style={{fontFamily:"cursive"}}>
+    <div className="bg-gray-100 min-h-screen">
       <NavbarNew />
-      <Box sx={{display:{
-        xs:'inherit',
-        lg:'none',
-        md:'inherit',
-        sm:'inherit'
-      }}}>
-      {/* <HomepageNav /> */}
-      
-      </Box>
-      <Grid container>
-        <Grid
-          item
-          lg={2}
-          sx={{
-            display: { sm: "none", md: "none", xs: "none", lg: "inherit" },
-          }}
-        >
-          <Sidebar />
-        </Grid>
-
-        <Grid item xs={12} sm={12} md={12} lg={10}>
-          <DashboardIntro />
-          <Grid container>
-            <Grid item xs={12} md={12} sm={12} lg={8}>
-              <DashboardMainBody />
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
+      <div className="flex justify-center items-center mt-8">
+        <div className="grid sm:flex grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+          <div className="flex items-center justify-center">
+          <AttendanceDashboard presentPercentage={70} />
+          </div>
+          <div>
+          
+            <div className="grid grid-cols-1 gap-8">
+              <div>
+                <HistoryCard historyItems={historyData} />
+              </div>
+              <div>
+                <SemesterCard />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <Footer />
-    </Box>
+    </div>
   );
 };
