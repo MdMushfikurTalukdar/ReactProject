@@ -4,7 +4,7 @@ const AttendanceDashboard = ({ presentPercentage }) => {
   const absentPercentage = 100 - presentPercentage;
 
   return (
-    <div className="flex items-center justify-center h-screen">
+    <div className="flex items-center justify-center h-fit">
       <div className="relative flex items-center justify-center w-52 h-52">
         <svg className="absolute w-full h-full" viewBox="0 0 36 36">
           <path

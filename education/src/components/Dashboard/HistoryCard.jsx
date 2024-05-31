@@ -2,7 +2,7 @@ import React from 'react';
 
 const HistoryCard = ({ historyItems }) => {
   return (
-    <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl my-4">
+    <div className="max-w-md mx-auto bg-white rounded-xl shadow-2xl overflow-hidden md:max-w-2xl my-4">
       <div className="md:flex">
         <div className="md:flex-shrink-0">
           <img className="h-48 w-full object-cover md:w-48" src="https://via.placeholder.com/150" alt="History" />
