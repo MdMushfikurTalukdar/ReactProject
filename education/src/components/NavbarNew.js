@@ -14,7 +14,7 @@ export const NavbarNew = () => {
   const academic = [
     { name: "Bonafide Certificate", link: "/bonafide-certificate" },
     { name: "Academic Fee", link: "/academic-fee" },
-    { name: "Semester Registration", link: "/semester-registration" },
+    { name: "Semester Registration", link: "/semesterRegistration" },
     { name: "Internal Semester Marks", link: "/internal-semester-marks" },
     { name: "No dues for degree", link: "/no-dues-for-degree" },
     { name: "Assignment Submission", link: "/assignment-submission" },
