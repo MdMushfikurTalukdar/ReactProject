@@ -89,7 +89,9 @@ export const NavbarNew = () => {
                       {isNestedDropdownGeneralOpen && (
                         <div className="mt-2 bg-white rounded-lg shadow-md">
                           {general.map((item, index) => (
-                            <Link key={index} className="block px-4 py-2 text-gray-800 hover:bg-purple-100" to={item.link}>{item.name}</Link>
+                            
+                            <Link key={index} className="block px-4 py-2 text-gray-800 hover:bg-purple-100 " to={item.link}>{item.name}</Link>
+                            
                           ))}
                         </div>
                       )}
