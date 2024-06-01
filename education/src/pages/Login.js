@@ -79,7 +79,7 @@ export const LoginPage = () => {
                 type="text"
                 {...register("rollNumber", { required: true })}
                 autoComplete="off"
-                className={`appearance-none rounded-none relative block w-full px-3 py-2 border ${errors.rollNumber ? 'border-red-500' : 'border-gray-300'} placeholder-blue-100 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
+                className={`appearance-none rounded-none relative block w-full px-3 py-2 border ${errors.rollNumber ? 'border-red-500' : 'border-gray-300'} placeholder-blue-300 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
                 placeholder="Registration no./Employee ID."
               />
               {errors.rollNumber && <p className="text-black-500 text-xs mt-1 textSign">Roll Number is required</p>}
@@ -91,7 +91,7 @@ export const LoginPage = () => {
                 type="password"
                 {...register("password", { required: true })}
                 autoComplete="current-password"
-                className={`appearance-none rounded-none mt-4 relative block w-full px-3 py-2 border ${errors.password ? 'border-red-500' : 'border-gray-300'} placeholder-blue-100 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
+                className={`appearance-none rounded-none mt-4 relative block w-full px-3 py-2 border ${errors.password ? 'border-red-500' : 'border-gray-300'} placeholder-blue-300 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
                 placeholder="Password"
               />
               {errors.password && <p className="text-black-500 text-xs mt-1 textSign">Password is required</p>}
