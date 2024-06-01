@@ -217,3 +217,12 @@ html{
 	 overflow-x: hidden;
 	}
   }
+  .bonafide-form{
+	width: 100vw;
+    height: auto;
+    padding: 47px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }

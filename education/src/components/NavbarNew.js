@@ -12,7 +12,7 @@ export const NavbarNew = () => {
     { name: "Logout", link: "/logout" }
   ];
   const academic = [
-    { name: "Bonafide Certificate", link: "/bonafide-certificate" },
+    { name: "Bonafide Certificate", link: "/bonafide-form" },
     { name: "Academic Fee", link: "/academic-fee" },
     { name: "Semester Registration", link: "/semesterRegistration" },
     { name: "Internal Semester Marks", link: "/internal-semester-marks" },
@@ -28,7 +28,7 @@ export const NavbarNew = () => {
     { name: "Hostel No Dues Request", link: "/hostel-no-dues-request" }
   ];
   const others = [
-    { name: "Guest Room Request", link: "/guest-room-request" },
+    { name: "Guest Room Request", link: "/guest-room" },
     { name: "Complaints", link: "/complaints" }
   ];
 

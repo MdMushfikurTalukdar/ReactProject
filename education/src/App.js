@@ -15,6 +15,8 @@ import { EditProfile } from "./pages/EditProfile";
 import { About } from "./pages/About.js";
 import {ChangePassword} from "./components/ChangePassword.js";
 import {SemesterRegistration} from "./components/Semester/SemesterRegistration";
+import BonafideForm from "./pages/BonafideForm.js";
+import { GuestRoom } from "./pages/GuestRoom.js";
 
 function App() {
   return (
@@ -29,6 +31,8 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/profileEdit" element={<EditProfile />} />
             <Route path="/about" element={<About/>}/>
+            <Route path='/bonafide-form' element={<BonafideForm/>}/>
+            <Route path='/guest-room' element={<GuestRoom/>}/>
             <Route
               path="/bonafideCertificate"
               element={<BonafideCertificate />}
