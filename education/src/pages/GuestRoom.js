@@ -27,7 +27,6 @@ export const GuestRoom = () => {
   const [from, setFrom] = useState('');
   const [fromError, setFromError] = useState('');
 
-  console.log(from.length);
   const onSubmit = (data) => {
    
     if (String(from.length) === String(0)) {

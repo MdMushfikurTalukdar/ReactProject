@@ -5,6 +5,7 @@ import { useSnackbar } from "notistack";
 import { useNavigate } from 'react-router-dom';
 import { Header } from "../components/Home/Header";
 import Footer from '../components/Home/Footer';
+import Cookies from 'js-cookie';
 import "./Login.css"
 import {
   Button
@@ -40,6 +41,7 @@ export const LoginPage = () => {
         autoHideDuration: 3000,
       });
       navigate('/dashboard');
+      localStorage.setItem('RollNumber',data.rollNumber)
       localStorage.setItem('accesstoken',res.data.token.access);
       localStorage.setItem('refreshtoken',res.data.token.refresh);
       

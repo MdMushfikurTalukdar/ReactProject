@@ -17,6 +17,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { enqueueSnackbar } from "notistack";
 import emailValidator from 'email-validator';
+import NavbarNew from "../components/NavbarNew";
 
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -239,21 +240,12 @@ export const EditProfile = () => {
   };
   return (
     <Box style={{ fontFamily: "Math", minHeight: "100vh" }}>
-      <HomepageNav />
+      <NavbarNew />
       <Grid container>
-        <Grid
-          item
-          lg={2}
-          sx={{
-            display: { sm: "none", md: "none", xs: "none", lg: "inherit" },
-          }}
-        >
-          <Sidebar />
-        </Grid>
        
-        <Grid item xs={12} sm={12} md={12} lg={10}>
+        <Grid item xs={12} sm={12} md={12} lg={12}>
           <Box
-            className=" mt-20 w-full lg:p-10 sm:p-5 p-5"
+            className=" mt-3 w-full lg:p-10 sm:p-5 p-5"
             style={{ height: "calc(100vh - 5px)", overflowY: "scroll" }}
           >
             <Box>
