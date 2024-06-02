@@ -11,8 +11,8 @@ import { useState } from "react";
 const schema = yup.object().shape({
  
   purpose: yup.string().required('Purpose is required'),
-  fromDate: yup.string().required('Date is required'),
-  toDate: yup.date().required('To date is required').typeError('Date is required')
+  fromDate: yup.string(),
+  toDate: yup.string().required('To date is required').typeError('Date is required')
     .test('is-after-fromDate', 'You need to set the "From" date first', function(value) {
       const { fromDate } = this.parent;
       return !fromDate ? !value : true; // If "fromDate" is not set, "toDate" should not be set.
@@ -26,7 +26,6 @@ export const GuestRoom = () => {
     register,
     handleSubmit,
     formState: { errors },
-    trigger
   } = useForm({
     resolver: yupResolver(schema),
   });
@@ -39,12 +38,7 @@ export const GuestRoom = () => {
     console.log(data);
   };
 
-  const handleFromDateChange = (e) => {
-    setFrom(e.target.value);
-    // Trigger validation when fromDate changes
-    trigger("fromDate");
-  };
-
+ 
   return (
     <div className="container-fluid">
       <NavbarNew />
@@ -78,18 +72,17 @@ export const GuestRoom = () => {
               id="fromDate"
               label="From"
               type="date"
-             
+              
               {...register("fromDate")}
 
+              onChange={(e)=>{setFrom(e.target.value)}}
               InputLabelProps={{
                 shrink: true,
               }}
               inputProps={{
                 min: today,
               }}
-              onChange={handleFromDateChange}
-              error={!!errors.fromDate}
-              helperText={errors.fromDate?.message}
+             
               variant="outlined"
               fullWidth
             />
