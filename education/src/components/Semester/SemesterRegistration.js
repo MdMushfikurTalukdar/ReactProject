@@ -77,7 +77,7 @@ export function SemesterRegistration() {
               <TextField
                 type="text"
                 label="Name"
-                value={student.name}
+                value={userProfile.name}
                 readOnly
                 sx={{
                   width: "70%",
@@ -89,7 +89,7 @@ export function SemesterRegistration() {
               <TextField
                 type="text"
                 label="Registration No"
-                value={userProfile.registration_number}
+                value={userProfile?.personal_information?.registration_number}
                 readOnly
                 sx={{
                   width: "70%",
