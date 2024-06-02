@@ -9,9 +9,9 @@ import { useState } from "react";
 
 // Validation schema
 const schema = yup.object().shape({
-  registrationEmployee: yup.string().required('Registration/Employee is required'),
+ 
   purpose: yup.string().required('Purpose is required'),
-  fromDate: yup.date().required('From date is required').typeError('Date is required'),
+  fromDate: yup.string().required('Date is required'),
   toDate: yup.date().required('To date is required').typeError('Date is required')
     .test('is-after-fromDate', 'You need to set the "From" date first', function(value) {
       const { fromDate } = this.parent;
@@ -26,6 +26,7 @@ export const GuestRoom = () => {
     register,
     handleSubmit,
     formState: { errors },
+    trigger
   } = useForm({
     resolver: yupResolver(schema),
   });
@@ -36,6 +37,12 @@ export const GuestRoom = () => {
   const onSubmit = (data) => {
     // Handle form submission
     console.log(data);
+  };
+
+  const handleFromDateChange = (e) => {
+    setFrom(e.target.value);
+    // Trigger validation when fromDate changes
+    trigger("fromDate");
   };
 
   return (
@@ -71,14 +78,16 @@ export const GuestRoom = () => {
               id="fromDate"
               label="From"
               type="date"
+             
               {...register("fromDate")}
+
               InputLabelProps={{
                 shrink: true,
               }}
               inputProps={{
                 min: today,
               }}
-              onChange={(e) => setFrom(e.target.value)}
+              onChange={handleFromDateChange}
               error={!!errors.fromDate}
               helperText={errors.fromDate?.message}
               variant="outlined"
