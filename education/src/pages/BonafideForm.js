@@ -12,8 +12,7 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  FormControlLabel,
-  Checkbox,
+  FormHelperText,
 } from "@mui/material";
 import { Footer } from "../components/Footer";
 import "../App.css";
@@ -21,8 +20,13 @@ import "../App.css";
 // Validation schema
 const schema = yup.object().shape({
   // Add your validation schema here
-  purpose: yup.string().required("this is required"),
-  file: yup.string().required("this is required"),
+  purpose: yup.string().required("Purpose is required"),
+  file: yup.mixed().required("File is required").test("fileType", "Only image files are allowed", (value) => {
+      return value && value.length > 0 && ['image/jpeg', 'image/png'].includes(value[0].type);
+    })
+    .test("isImage", "Only image is required", value => {
+      return value && value.length > 0 && ['image/jpeg', 'image/png'].includes(value[0].type);
+    }),
   fee: yup.string(),
 });
 
@@ -53,7 +57,12 @@ export const BonafideForm = () => {
           <Typography variant="h6" gutterBottom>
             Purpose
           </Typography>
-          <FormControl fullWidth variant="outlined" margin="normal">
+          <FormControl
+            fullWidth
+            variant="outlined"
+            margin="normal"
+            error={!!errors.purpose?.message}
+          >
             <InputLabel id="purpose-label">Select Purpose</InputLabel>
             <Select
               labelId="purpose-label"
@@ -61,51 +70,55 @@ export const BonafideForm = () => {
               label="Select Purpose"
               {...register("purpose")}
               defaultValue=""
-              error={!!errors.purpose}
             >
               <MenuItem value="1">Apply for student credit card</MenuItem>
               <MenuItem value="2">Apply for Scholarship</MenuItem>
               <MenuItem value="3">Others</MenuItem>
             </Select>
+            {errors.purpose && (
+              <FormHelperText>{errors.purpose.message}</FormHelperText>
+            )}
           </FormControl>
 
-          <Typography
-            variant="h6"
-            gutterBottom
-            style={{ marginBottom: "15px" }}
-          >
-            Supporting Document
-          </Typography>
+          <FormControl error={!!errors.file?.message}>
+            <Typography
+              variant="h6"
+              gutterBottom
+              style={{ marginBottom: "10px" }}
+            >
+              Supporting Document
+            </Typography>
 
-          <Button
-            component="label"
-            variant="contained"
-            style={{
-              backgroundColor: "rgb(107 169 169)",
-              marginBottom: "15px",
-            }}
-          >
-            <input
-              type="file"
-              name="file"
-              {...register("file")}
-              style={{ paddingBottom: "28px", display: "none" }}
-            />
-            Upload File
-          </Button>
-
+            <Button
+              component="label"
+              variant="contained"
+              style={{
+                backgroundColor: "rgb(107 169 169)",
+                marginBottom: "5px",
+              }}
+            >
+              <input
+                type="file"
+                name="file"
+                {...register("file")}
+                style={{ paddingBottom: "28px", display: "none" }}
+              />
+              Upload File
+            </Button>
+            {errors?.file && (
+              <FormHelperText>{errors?.file?.message}</FormHelperText>
+            )}
+          </FormControl>
           <Typography variant="h6" gutterBottom>
             Do you want fee structure also?
           </Typography>
-          <Box style={{display:"flex",gap:"10px"}}>
-          <label>
-            <input type="radio" name="option" value="yes" />
-            {" "} Yes
-          </label>
-          <label>
-            <input type="radio" name="option" value="yes" />
-            {" "} No
-          </label>
+          <Box style={{ display: "flex", gap: "10px" }}>
+            <label>
+              <input type="radio" name="option" value="yes" /> Yes
+            </label>
+            <label>
+              <input type="radio" name="option" value="yes" /> No
+            </label>
           </Box>
 
           <Button

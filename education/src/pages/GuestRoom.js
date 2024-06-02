@@ -46,7 +46,7 @@ export const GuestRoom = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <FormControl fullWidth variant="outlined" margin="normal">
            <Typography variant="h6">Registration number</Typography>
-           <Typography variant="p">16900120141</Typography>
+           <Typography variant="p" style={{marginBottom:"5px"}}>16900120141</Typography>
           </FormControl>
 
           <FormControl fullWidth variant="outlined" error={!!errors?.purpose?.message}>
