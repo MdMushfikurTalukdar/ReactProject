@@ -8,11 +8,9 @@ import {
 } from "@mui/material";
 import HomepageNav from "../components/HomepageNav";
 import { Sidebar } from "../components/Sidebar";
-import { Footer } from "../components/Footer";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import { SmallScreenNavbar } from "../components/SmallScreenNavbar";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
