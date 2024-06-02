@@ -9,10 +9,10 @@ import { useState } from "react";
 
 // Validation schema
 const schema = yup.object().shape({
-  registrationEmployee: yup.string().required('Registration/Employee is required'),
+ 
   purpose: yup.string().required('Purpose is required'),
-  fromDate: yup.date().required('From date is required').typeError('Date is required'),
-  toDate: yup.date().required('To date is required').typeError('Date is required')
+  fromDate: yup.string(),
+  toDate: yup.string().required('To date is required').typeError('Date is required')
     .test('is-after-fromDate', 'You need to set the "From" date first', function(value) {
       const { fromDate } = this.parent;
       return !fromDate ? !value : true; // If "fromDate" is not set, "toDate" should not be set.
@@ -38,6 +38,7 @@ export const GuestRoom = () => {
     console.log(data);
   };
 
+ 
   return (
     <div className="container-fluid">
       <NavbarNew />
@@ -71,16 +72,17 @@ export const GuestRoom = () => {
               id="fromDate"
               label="From"
               type="date"
+              
               {...register("fromDate")}
+
+              onChange={(e)=>{setFrom(e.target.value)}}
               InputLabelProps={{
                 shrink: true,
               }}
               inputProps={{
                 min: today,
               }}
-              onChange={(e) => setFrom(e.target.value)}
-              error={!!errors.fromDate}
-              helperText={errors.fromDate?.message}
+             
               variant="outlined"
               fullWidth
             />

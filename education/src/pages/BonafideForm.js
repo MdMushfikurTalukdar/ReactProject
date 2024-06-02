@@ -21,12 +21,13 @@ import "../App.css";
 const schema = yup.object().shape({
   // Add your validation schema here
   purpose: yup.string().required("Purpose is required"),
-  file: yup.mixed().required("File is required").test("fileType", "Only image files are allowed", (value) => {
-      return value && value.length > 0 && ['image/jpeg', 'image/png'].includes(value[0].type);
-    })
-    .test("isImage", "Only image is required", value => {
-      return value && value.length > 0 && ['image/jpeg', 'image/png'].includes(value[0].type);
-    }),
+  file: yup.mixed()
+  .test("fileRequired", "File is required", (value) => {
+    return !!value.length;
+  })
+  .test("fileType", "Only image files are allowed", (value) => {
+    return !value || (value.length > 0 && ['image/jpeg', 'image/png'].includes(value[0].type));
+  }),
   fee: yup.string(),
 });
 
