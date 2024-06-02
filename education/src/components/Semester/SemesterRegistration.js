@@ -76,8 +76,7 @@ export function SemesterRegistration() {
             <Grid item xs={12} sm={6} md={6} lg={6}>
               <TextField
                 type="text"
-                label="Name"
-                value={userProfile.name}
+                value={`${userProfile?.personal_information?.first_name} ${userProfile?.personal_information?.middle_name} ${userProfile?.personal_information?.last_name}`}
                 readOnly
                 sx={{
                   width: "70%",
@@ -88,7 +87,6 @@ export function SemesterRegistration() {
             <Grid item xs={12} sm={6} md={6} lg={6}>
               <TextField
                 type="text"
-                label="Registration No"
                 value={userProfile?.personal_information?.registration_number}
                 readOnly
                 sx={{
