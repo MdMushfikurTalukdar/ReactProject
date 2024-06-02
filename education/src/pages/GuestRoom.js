@@ -9,19 +9,12 @@ import { useState } from "react";
 
 // Validation schema
 const schema = yup.object().shape({
- 
   purpose: yup.string().required('Purpose is required'),
-  fromDate: yup.string(),
-  toDate: yup.string().required('To date is required').typeError('Date is required')
-    .test('is-after-fromDate', 'You need to set the "From" date first', function(value) {
-      const { fromDate } = this.parent;
-      return !fromDate ? !value : true; // If "fromDate" is not set, "toDate" should not be set.
-    }),
+  toDate: yup.string().required('To date is required'),
   numberOfPersons: yup.number().required('Number of persons is required').min(1, 'At least 1 person').typeError('Number of persons is required')
 });
 
 export const GuestRoom = () => {
-
   const {
     register,
     handleSubmit,
@@ -32,25 +25,33 @@ export const GuestRoom = () => {
 
   const today = new Date().toISOString().split('T')[0];
   const [from, setFrom] = useState('');
+  const [fromError, setFromError] = useState('');
 
+  console.log(from.length);
   const onSubmit = (data) => {
-    // Handle form submission
+   
+    if (String(from.length) === String(0)) {
+     
+      setFromError("From date is required");
+      return;
+    }
     console.log(data);
   };
 
- 
   return (
     <div className="container-fluid">
       <NavbarNew />
       <Box className="bonafide-form" sx={{ padding: 3, bgcolor: '#f5f5f5', borderRadius: 2 }}>
-        <Typography variant="h5" align="center" gutterBottom  style={{color:"rgb(107 169 169)"}}>Guest Room Allotment Request</Typography>
+        <Typography variant="h5" align="center" gutterBottom style={{color: "rgb(107 169 169)"}}>
+          Guest Room Allotment Request
+        </Typography>
         <form onSubmit={handleSubmit(onSubmit)}>
           <FormControl fullWidth variant="outlined" margin="normal">
-           <Typography variant="h6">Registration number</Typography>
-           <Typography variant="p" style={{marginBottom:"5px"}}>16900120141</Typography>
+            <Typography variant="h6">Registration number</Typography>
+            <Typography variant="body1" style={{ marginBottom: "5px" }}>16900120141</Typography>
           </FormControl>
 
-          <FormControl fullWidth variant="outlined" error={!!errors?.purpose?.message}>
+          <FormControl variant="outlined" error={!!errors?.purpose?.message} fullWidth>
             <InputLabel id="purpose-label">Purpose of requesting</InputLabel>
             <Select
               labelId="purpose-label"
@@ -58,6 +59,7 @@ export const GuestRoom = () => {
               label="Select Purpose"
               {...register("purpose")}
               defaultValue=""
+               
             >
               <MenuItem value="1">For staying parents</MenuItem>
               <MenuItem value="2">For staying relatives</MenuItem>
@@ -72,21 +74,22 @@ export const GuestRoom = () => {
               id="fromDate"
               label="From"
               type="date"
-              
-              {...register("fromDate")}
-
-              onChange={(e)=>{setFrom(e.target.value)}}
               InputLabelProps={{
                 shrink: true,
               }}
               inputProps={{
                 min: today,
               }}
-             
+              onChange={(e) => {
+                setFrom(e.target.value);
+                setFromError('');
+              }}
               variant="outlined"
               fullWidth
             />
+            <p style={{color:"red",fontSize:"0.75rem",fontWeight:"400"}}>{fromError}</p>
           </FormControl>
+          
 
           <FormControl fullWidth variant="outlined" margin="normal">
             <TextField
@@ -125,15 +128,17 @@ export const GuestRoom = () => {
             {errors.numberOfPersons && <FormHelperText>{errors.numberOfPersons.message}</FormHelperText>}
           </FormControl>
 
-          <Button variant="contained" color="primary" type="submit" fullWidth style={{ marginTop: '16px',backgroundColor:"rgb(107,169,169)"}} >
+          <Button variant="contained" color="primary" type="submit" fullWidth style={{ marginTop: '16px', backgroundColor: "rgb(107,169,169)" }}>
             Send Request
           </Button>
         </form>
         <Divider sx={{ my: 3 }} />
-        <Typography variant="h6" gutterBottom style={{color:"rgb(107 169 169)"}}>Approved Requests</Typography>
+        <Typography variant="h6" gutterBottom style={{color: "rgb(107 169 169)"}}>
+          Approved Requests
+        </Typography>
         <Divider sx={{ mb: 3 }} />
       </Box>
       <Footer />
     </div>
   );
-}
+};
