@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -12,28 +12,57 @@ import "../../App.css";
 import {NavbarNew} from "../NavbarNew"
 import {Footer} from "../Footer"
 import { jwtDecode } from "jwt-decode";
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export function SemesterRegistration() {
+  
+  const navigate = useNavigate();
+  const [student, setStudent] = useState({});
+  const [semesters, setSemesters] = useState([]);
+  const [subjects, setSubjects] = useState([]);
+  const [previousSemesters, setPreviousSemesters] = useState([]);
+  const [selectedSemester, setSelectedSemester] = useState('');
+  const [userProfile, setUserProfile] = useState([]);
 
-    const navigate = useNavigate();
+  // useEffect(() => {
+  //   if (localStorage?.getItem("accesstoken")) {
+  //     const response = jwtDecode(localStorage?.getItem("accesstoken"));
+  //     if (
+  //       response.token_type!== "access" 
+  //       && response.exp<Math.floor(Date.now() / 1000)
+  //     ) {
+  //       navigate("/login");
+  //     }
+  //   } else {
+  //     navigate("/login");
+  //   }
+  // }, []);
 
-    useEffect(() => {
-        if (localStorage?.getItem("accesstoken")) {
-          const response = jwtDecode(localStorage?.getItem("accesstoken"));
-          if (
-            response.token_type !== "access" 
-            && response.exp<Math.floor(Date.now() / 1000)
-          ) {
-            navigate("/login");
-          }
-        } else {
-          navigate("/login");
-        }
-    
-      
-      }, []);
+  useEffect(() => {
+    let config = {
+      method: "GET",
+      maxBodyLength: Infinity,
+      url: "https://amarnath013.pythonanywhere.com/api/user/profile/",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
+      },
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        setUserProfile(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  const handleSemesterChange = (event) => {
+    setSelectedSemester(event.target.value);
+  };
+
 
   return (
     <>
@@ -48,7 +77,7 @@ export function SemesterRegistration() {
               <TextField
                 type="text"
                 label="Name"
-                value="akkas"
+                value={student.name}
                 readOnly
                 sx={{
                   width: "70%",
@@ -60,7 +89,7 @@ export function SemesterRegistration() {
               <TextField
                 type="text"
                 label="Registration No"
-                value={"12343435"}
+                value={userProfile.registration_number}
                 readOnly
                 sx={{
                   width: "70%",
@@ -73,7 +102,7 @@ export function SemesterRegistration() {
               <TextField
                 type="text"
                 label="Branch"
-                value="some"
+                value={student.branch}
                 readOnly
                 sx={{
                   width: "70%",
@@ -85,7 +114,7 @@ export function SemesterRegistration() {
               <TextField
                 type="text"
                 label="Session"
-                value={"some"}
+                value={student.session}
                 readOnly
                 sx={{
                   width: "70%",
@@ -96,11 +125,12 @@ export function SemesterRegistration() {
             </Grid>
             
             <Grid item xs={12} sm={6} md={6} lg={6}>
-                <Select
+            <Select
                     labelId="semester-label"
                     id="semester"
-                    value={""} // Set the initial value to an empty string
-                    renderValue={(value) => value === "" ? "Choose Semester" : value} // Display "Choose Semester" if the value is empty
+                    value={selectedSemester} 
+                    onChange={handleSemesterChange}
+                    renderValue={(value) => value === ""? "Choose Semester" : value} 
                     displayEmpty
                     sx={{
                     width: "70%",
@@ -110,9 +140,9 @@ export function SemesterRegistration() {
                     <MenuItem value={""} disabled>
                     Choose Semester
                     </MenuItem>
-                    <MenuItem value={"1"}>Semester 1</MenuItem>
-                    <MenuItem value={"2"}>Semester 2</MenuItem>
-                    <MenuItem value={"3"}>Semester 3</MenuItem>
+                    {semesters.map((semester) => (
+                      <MenuItem value={semester.id}>{semester.name}</MenuItem>
+                    ))}
                 </Select>
             </Grid>
         </Grid>
