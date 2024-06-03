@@ -96,7 +96,7 @@ export function SemesterRegistration() {
                 }}
               />
             </Grid>
-            <Grid item xs={12} sm={6} md={6} lg={6}>
+            <Grid fullWidth variant="outlined" margin="normal" item xs={12} sm={6} md={6} lg={6}>
               <TextField
                 type="text"
                 label="Branch"

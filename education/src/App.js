@@ -14,11 +14,7 @@ import { BonafideCertificate } from "./pages/BonafideCertificate";
 import { EditProfile } from "./pages/EditProfile";
 import { About } from "./pages/About.js";
 import {ChangePassword} from "./components/ChangePassword.js";
-import {SemesterRegistration} from "./components/Semester/SemesterRegistration";
-import BonafideForm from "./pages/BonafideForm.js";
-import { GuestRoom } from "./pages/GuestRoom.js";
-import { Logout } from "./pages/Logout.js";
-import { HostelRoomRequest } from "./pages/HostelRoomRequest.js";
+import HostelFeePayment from "./components/HostelFeePayment.jsx"
 
 function App() {
   return (
@@ -33,19 +29,12 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/profileEdit" element={<EditProfile />} />
             <Route path="/about" element={<About/>}/>
-            <Route path='/bonafide-form' element={<BonafideForm/>}/>
-            <Route path='/guest-room' element={<GuestRoom/>}/>
-            <Route path="/logout" element={<Logout/>}/>
-            <Route path="/hostel-room-request" element={<HostelRoomRequest/>}/>
             <Route
               path="/bonafideCertificate"
               element={<BonafideCertificate />}
             />
              <Route path="/change-password" element={<ChangePassword/>}/>
-             <Route
-              path="/semesterRegistration"
-              element={<SemesterRegistration />}
-            />
+             <Route path="/hostel-mess-fee-payment" element={<HostelFeePayment/>} />
           </Routes>
         </Router>
 
