@@ -11,7 +11,7 @@ export const Header = () => {
   };
 
   return (
-    <header className="relative bg-blue-500 text-white uppercase p-1 flex  justify-between items-center">
+    <header className="relative bg-[#E5E7EB] shadow-md text-white uppercase p-1 flex  justify-between items-center">
       <div className="h-20 hidden md:block w-20">
         <img
           className="h-full w-full rounded-full object-cover object-center"
@@ -27,16 +27,16 @@ export const Header = () => {
         )}
       </div>
       <nav
-        className={` bg-blue-500 p-6 flex flex-col items-center text-3xl md:text-xl space-y-4 md:space-y-0 md:relative md:flex-row md:space-x-4 ${
+        className={` bg-[#E5E7EB] p-6 flex flex-col items-center text-3xl md:text-xl space-y-4 md:space-y-0 md:relative md:flex-row md:space-x-4 ${
           isMenuOpen ? "flex" : "hidden"
         } md:block`}
       >
-        <Link to="/dashboard" className="hover:underline text-xl text-black hover:text-orange-100  no-underline" onClick={toggleMenu}>
+        <Link to="/dashboard" className="hover:underline text-xl text-black   no-underline" onClick={toggleMenu}>
           Dashboard
         </Link>
         <Link
           to="/about"
-          className="hover:underline text-black hover:text-orange-100 no-underline text-xl"
+          className="hover:underline text-black  no-underline text-xl"
           onClick={toggleMenu}
         >
           About
@@ -44,14 +44,14 @@ export const Header = () => {
         
         <Link
           to="/contact"
-          className="hover:underline hover:text-orange-100 text-black no-underline  text-xl"
+          className="hover:underline  text-black no-underline  text-xl"
           onClick={toggleMenu}
         >
           Contact
         </Link>
         <Link
           to="/login"
-          className="hover:underline hover:text-orange-100 text-black no-underline   text-xl"
+          className="hover:underline text-black no-underline   text-xl"
           onClick={toggleMenu}
         >
           Login
