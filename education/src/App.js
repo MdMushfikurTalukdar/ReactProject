@@ -14,6 +14,7 @@ import { BonafideCertificate } from "./pages/BonafideCertificate";
 import { EditProfile } from "./pages/EditProfile";
 import { About } from "./pages/About.js";
 import {ChangePassword} from "./components/ChangePassword.js";
+import HostelFeePayment from "./components/HostelFeePayment.jsx"
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
               element={<BonafideCertificate />}
             />
              <Route path="/change-password" element={<ChangePassword/>}/>
+             <Route path="/hostel-mess-fee-payment" element={<HostelFeePayment/>} />
           </Routes>
         </Router>
 
