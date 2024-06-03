@@ -57,7 +57,7 @@ export const BonafideForm = () => {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `https://amarnath013.pythonanywhere.com/api/user/bonafide/?roll_no_registration_number=${localStorage.getItem('RollNumber')}`,
+      url: `https://amarnath013.pythonanywhere.com/api/user/bonafide/?roll_no__registration_number=${localStorage.getItem('RollNumber')}`,
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
       },
