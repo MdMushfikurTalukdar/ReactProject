@@ -16,6 +16,13 @@ import {
   FormControl,
   InputLabel,
   FormHelperText,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper
 } from "@mui/material";
 import  Footer  from "../components/Home/Footer";
 import "../App.css";
@@ -52,6 +59,24 @@ export const BonafideForm = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
+
+  const [responsive, setResponsive] = useState(
+    window.innerWidth < 669 ? true : false
+  ); 
+  
+  useEffect(() => {
+    window.addEventListener("resize", resize);
+
+    return () => {
+      window.removeEventListener("resize", resize);
+    };
+  }, []);
+
+  const resize = () => {
+    setResponsive(window.innerWidth < 669 ? true : false);
+  };
+
+
 
   useEffect(() => {
     let config = {
@@ -222,12 +247,14 @@ export const BonafideForm = () => {
           {result.length === 0 && (
             <p style={{ marginBottom: "50px" }}>Nothing to show</p>
           )}
-          {result.length > 0 &&
+
+
+          {responsive ?( result.length > 0 &&
             result.map((data, index) => (
              
               <Box key={index}>
                 
-                <Card sx={{ minWidth: 275, marginBottom: 2 }}>
+                <Card sx={{ minWidth: 275, marginBottom: 2,backgroundColor:"#D2E9E9" }}>
                   <CardContent>
                     <Typography
                       sx={{ fontSize: 14 }}
@@ -242,10 +269,10 @@ export const BonafideForm = () => {
                     <Typography sx={{ mb: 1.5 }} color="text.secondary">
                       Student Information
                     </Typography>
-                    <Typography variant="body2">
+                    {/* <Typography variant="body2">
                       Name: {data?.student_details?.first_name}{" "}
                       {data?.student_details?.last_name}
-                    </Typography>
+                    </Typography> */}
                     <Typography variant="body2">
                       Applied For: {data?.required_for}
                     </Typography>
@@ -260,7 +287,47 @@ export const BonafideForm = () => {
                   
               </Box>
            
-            ))}
+          ))):(<Box>
+            {result.length > 0 ? (
+              <TableContainer component={Paper} sx={{ marginTop: 3 }}>
+                <Table sx={{ minWidth: 650 }} aria-label="bonafide table">
+                  <TableHead style={{backgroundColor:"#D2E9E9"}}>
+                    <TableRow>
+                      <TableCell>Bonafide Number</TableCell>
+                      <TableCell>Applied For</TableCell>
+                      <TableCell>Status</TableCell>
+                      <TableCell>Applied Date</TableCell>
+                      <TableCell>Actions</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {result.map((data, index) => (
+                      <TableRow key={index}>
+                        <TableCell>{data?.bonafide_number}</TableCell>
+                        <TableCell>{data?.required_for}</TableCell>
+                        <TableCell>{data?.status}</TableCell>
+                        <TableCell>{data?.applied_date}</TableCell>
+                        <TableCell>
+                          {data?.status === 'approved' ? (
+                            <Button size="small" variant="contained" color="primary">
+                              View
+                            </Button>
+                          ) : (
+                            <Typography variant="body2" color="textSecondary">
+                              N/A
+                            </Typography>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            ) : (
+             null 
+            )}
+          </Box>)}
+         
             
         </Box>
       </Box>
