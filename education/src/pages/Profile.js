@@ -3,9 +3,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { ProfileMainBody } from "../components/ProfileMainBody";
-
 import NavbarNew from "../components/NavbarNew";
-import { Footer } from "../components/Footer";
 
 export const Profile = () => {
   const navigate = useNavigate();

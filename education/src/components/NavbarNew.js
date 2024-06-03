@@ -22,7 +22,7 @@ export const NavbarNew = () => {
     { name: "Character Certificate", link: "/character-certificate" }
   ];
   const residential = [
-    { name: "Hostel Allotment Request", link: "/hostel-allotment-request" },
+    { name: "Hostel Allotment Request", link: "/hostel-room-request" },
     { name: "Hostel/Mess Fee Payment", link: "/hostel-mess-fee-payment" },
     { name: "Hostel/Mess Fee Receipts", link: "/hostel-mess-fee-receipts" },
     { name: "Hostel No Dues Request", link: "/hostel-no-dues-request" }

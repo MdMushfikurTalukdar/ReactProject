@@ -194,9 +194,12 @@ export const BonafideForm = () => {
             <Button
               component="label"
               variant="contained"
-              style={{
-                backgroundColor: "rgb(107 169 169)",
-                marginBottom: "5px",
+              sx={{
+                marginTop:"5px",
+                marginBottom:"5px",
+                backgroundColor: "rgb(107, 169, 169)",
+                color: "#fff",
+                "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
               }}
             >
               <input
@@ -228,7 +231,12 @@ export const BonafideForm = () => {
             color="primary"
             type="submit"
             fullWidth
-            style={{ marginTop: "16px", backgroundColor: "rgb(107 169 169)" }}
+            sx={{
+              marginTop:"5px",
+              backgroundColor: "rgb(107, 169, 169)",
+              color: "#fff",
+              "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
+            }}
           >
             Send Request
           </Button>
@@ -327,8 +335,6 @@ export const BonafideForm = () => {
              null 
             )}
           </Box>)}
-         
-            
         </Box>
       </Box>
       <Box style={{ width: "100vw" }}>

@@ -18,6 +18,7 @@ import {SemesterRegistration} from "./components/Semester/SemesterRegistration";
 import BonafideForm from "./pages/BonafideForm.js";
 import { GuestRoom } from "./pages/GuestRoom.js";
 import { Logout } from "./pages/Logout.js";
+import { HostelRoomRequest } from "./pages/HostelRoomRequest.js";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
             <Route path='/bonafide-form' element={<BonafideForm/>}/>
             <Route path='/guest-room' element={<GuestRoom/>}/>
             <Route path="/logout" element={<Logout/>}/>
+            <Route path="/hostel-room-request" element={<HostelRoomRequest/>}/>
             <Route
               path="/bonafideCertificate"
               element={<BonafideCertificate />}
