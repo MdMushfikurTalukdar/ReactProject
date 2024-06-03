@@ -5,7 +5,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
+import slider from "../img/slider.jpeg"
 export const Hero = () => {
   const settings = {
     dots: true,
@@ -21,7 +21,7 @@ export const Hero = () => {
   const slides = [
     {
       image:
-        "https://img.freepik.com/free-vector/distance-learning-infographic-concept_1284-17948.jpg?size=626&ext=jpg&ga=GA1.1.553209589.1714521600&semt=ais",
+        slider,
       title: "Welcome to Smart Campus",
       subtitle: "Your journey to excellence starts here",
     },
