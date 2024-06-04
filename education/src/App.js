@@ -19,6 +19,7 @@ import BonafideForm from "./pages/BonafideForm.js";
 import { GuestRoom } from "./pages/GuestRoom.js";
 import { Logout } from "./pages/Logout.js";
 import { HostelRoomRequest } from "./pages/HostelRoomRequest.js";
+import HostelfeePayment from "./pages/HostelfeePayment.js"
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
               path="/semesterRegistration"
               element={<SemesterRegistration />}
             />
+            <Route path="/HostelfeePayment" element={<HostelfeePayment/>} />
           </Routes>
         </Router>
 
