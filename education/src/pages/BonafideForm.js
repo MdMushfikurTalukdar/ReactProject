@@ -60,6 +60,9 @@ export const BonafideForm = () => {
     resolver: yupResolver(schema),
   });
 
+  const [img,setImg]=useState('');
+  const [name,setName]=useState('');
+
   const [responsive, setResponsive] = useState(
     window.innerWidth < 669 ? true : false
   ); 
@@ -103,7 +106,7 @@ export const BonafideForm = () => {
 
     const formData=new FormData();
     formData.append('file',data.file[0]);
-    // console.log(data);
+   
 
     let data1 = JSON.stringify({
       college: 1,
@@ -148,6 +151,11 @@ export const BonafideForm = () => {
       });
   };
 
+  const handleFile=(e)=>{
+    const url=URL.createObjectURL(e.target.files[0]);
+    setName(e.target.files[0].name);
+    setImg(url);
+  }
   return (
     <div className="container-fluid" style={{ backgroundColor: "whitesmoke" }}>
       <NavbarNew />
@@ -206,11 +214,14 @@ export const BonafideForm = () => {
                 type="file"
                 name="file"
                 {...register("file")}
+                onChange={(e)=>handleFile(e)}
                 style={{ paddingBottom: "28px", display: "none" }}
               />
               Upload File
             </Button>
-            {errors?.file && (
+            {img && <img src={img} alt="" style={{width:"100px",height:"auto"}}/>}
+            {name && <p style={{marginBottom:"5px"}}>{name}</p>}
+            {!img && errors?.file && (
               <FormHelperText>{errors?.file?.message}</FormHelperText>
             )}
           </FormControl>
