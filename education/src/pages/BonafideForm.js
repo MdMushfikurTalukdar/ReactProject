@@ -22,13 +22,13 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Paper
+  Paper,
 } from "@mui/material";
 import Footer from "../components/Home/Footer";
 import "../App.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { enqueueSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
 
@@ -38,10 +38,14 @@ const schema = yup.object().shape({
   file: yup
     .mixed()
     .test("fileAvailable", "File is required", (value) => {
-      return value && value.length >0;
+      return value && value.length > 0;
     })
     .test("fileType", "Only image files are allowed", (value) => {
-      return value && value.length >0 && ["image/jpeg", "image/png"].includes(value[0].type);
+      return (
+        value &&
+        value.length > 0 &&
+        ["image/jpeg", "image/png"].includes(value[0].type)
+      );
     }),
   fee: yup.string(),
 });
@@ -55,46 +59,21 @@ export const BonafideForm = () => {
     handleSubmit,
     formState: { errors },
     setValue,
-    trigger
+    trigger,
   } = useForm({
     resolver: yupResolver(schema),
   });
 
   const [responsive, setResponsive] = useState(
     window.innerWidth < 669 ? true : false
-  ); 
-  
-  const navigate=useNavigate();
+  );
 
-  // function regenerateToken() {
-  //   let data = JSON.stringify({
-  //     refresh: localStorage.getItem("refreshtoken"),
-  //   });
-
-  //   let config = {
-  //     method: "post",
-  //     maxBodyLength: Infinity,
-  //     url: "https://amarnath013.pythonanywhere.com/api/user/token/refresh/",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     data: data,
-  //   };
-
-  //   axios
-  //     .request(config)
-  //     .then((response) => {
-  //       localStorage.setItem("accesstoken", response.data.refresh);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (localStorage?.getItem("accesstoken")) {
       const response = jwtDecode(localStorage?.getItem("accesstoken"));
-      console.log( response.exp < Math.floor(Date.now() / 1000))
+      console.log(response.exp < Math.floor(Date.now() / 1000));
       if (response.exp < Math.floor(Date.now() / 1000)) {
         navigate("/login");
       }
@@ -116,11 +95,12 @@ export const BonafideForm = () => {
   };
 
   useEffect(() => {
-
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `https://amarnath013.pythonanywhere.com/api/user/bonafide/?search=${localStorage.getItem('RollNumber')}`,
+      url: `https://amarnath013.pythonanywhere.com/api/user/bonafide/?search=${localStorage.getItem(
+        "RollNumber"
+      )}`,
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
       },
@@ -138,51 +118,49 @@ export const BonafideForm = () => {
 
   const onSubmit = (data) => {
     const formData = new FormData();
-    console.log(data);
-    formData.append('supporting_document', data.file[0]);
-   
-    let data1 = JSON.stringify({
-      college: 1,
-      student: jwtDecode(localStorage?.getItem("accesstoken")).user_id,
-      roll_no: jwtDecode(localStorage?.getItem("accesstoken")).user_id,
-      required_for: data.purpose,
-      status: "pending",
-      supporting_document: formData,
-      fee_structure: "false",
-    });
+    console.log(data.file[0]);
+  
+    formData.append("college", "1");
+    formData.append("student",  jwtDecode(localStorage?.getItem("accesstoken")).user_id);
+    formData.append("roll_no",  jwtDecode(localStorage?.getItem("accesstoken")).user_id);
+    formData.append("status", "pending");
+    formData.append("supporting_document",data.file[0]);
+    formData.append("fee_structure", "true");
+    formData.append("required_for", data.purpose);
 
     let config = {
       method: "post",
       maxBodyLength: Infinity,
       url: "https://amarnath013.pythonanywhere.com/api/user/bonafide/",
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem('accesstoken')}`,
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
       },
-      data: data1,
+      data: formData,
     };
 
     axios
       .request(config)
       .then((response) => {
-        enqueueSnackbar('Request sent successfully', {
-          variant: 'success',
+        enqueueSnackbar("Request sent successfully", {
+          variant: "success",
           anchorOrigin: {
-            vertical: 'bottom',
-            horizontal: 'center',
+            vertical: "bottom",
+            horizontal: "center",
           },
           autoHideDuration: 1000,
         });
 
-        setTimeout(()=>{
-            window.location.reload();
-        },3000);
-      }).catch((error) => {
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
+      })
+      .catch((error) => {
         console.log(error);
       });
   };
 
-  const handleFileChange = async(e) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
     setName(file.name);
     setValue("file", [file]);
@@ -198,8 +176,9 @@ export const BonafideForm = () => {
         sx={{ padding: 3, bgcolor: "whitesmoke", borderRadius: 2 }}
       >
         <form onSubmit={handleSubmit(onSubmit)}>
-
-          <Typography variant="h5" style={{marginBottom:"15px"}}>Bonafide Certificate Request</Typography>
+          <Typography variant="h5" style={{ marginBottom: "15px" }}>
+            Bonafide Certificate Request
+          </Typography>
           <Typography variant="h6" gutterBottom>
             Purpose
           </Typography>
@@ -217,7 +196,9 @@ export const BonafideForm = () => {
               {...register("purpose")}
               defaultValue=""
             >
-              <MenuItem value="credit card">Apply for student credit card</MenuItem>
+              <MenuItem value="credit card">
+                Apply for student credit card
+              </MenuItem>
               <MenuItem value="scholarship">Apply for Scholarship</MenuItem>
               <MenuItem value="others">Others</MenuItem>
             </Select>
@@ -239,8 +220,8 @@ export const BonafideForm = () => {
               component="label"
               variant="contained"
               sx={{
-                marginTop:"5px",
-                marginBottom:"5px",
+                marginTop: "5px",
+                marginBottom: "5px",
                 backgroundColor: "rgb(107, 169, 169)",
                 color: "#fff",
                 "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
@@ -249,7 +230,7 @@ export const BonafideForm = () => {
               <input
                 type="file"
                 name="file"
-                {...register('file')}
+                {...register("file")}
                 onChange={handleFileChange}
                 style={{ paddingBottom: "28px", display: "none" }}
               />
@@ -257,11 +238,15 @@ export const BonafideForm = () => {
             </Button>
             {previewUrl && (
               <Box sx={{ marginTop: 2 }}>
-                <img src={previewUrl} alt="Preview" style={{ width: '150px' }} />
+                <img
+                  src={previewUrl}
+                  alt="Preview"
+                  style={{ width: "150px" }}
+                />
               </Box>
             )}
-             {name && (
-              <Box sx={{ marginTop: 1,marginBottom:1 }}>
+            {name && (
+              <Box sx={{ marginTop: 1, marginBottom: 1 }}>
                 <p>{name}</p>
               </Box>
             )}
@@ -287,7 +272,7 @@ export const BonafideForm = () => {
             type="submit"
             fullWidth
             sx={{
-              marginTop:"5px",
+              marginTop: "5px",
               backgroundColor: "rgb(107, 169, 169)",
               color: "#fff",
               "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
@@ -315,7 +300,13 @@ export const BonafideForm = () => {
             result.length > 0 &&
             result.map((data, index) => (
               <Box key={index}>
-                <Card sx={{ minWidth: 275, marginBottom: 2, backgroundColor: "#D2E9E9" }}>
+                <Card
+                  sx={{
+                    minWidth: 275,
+                    marginBottom: 2,
+                    backgroundColor: "#D2E9E9",
+                  }}
+                >
                   <CardContent>
                     <Typography
                       sx={{ fontSize: 14 }}
@@ -369,8 +360,12 @@ export const BonafideForm = () => {
                           <TableCell>{data?.status}</TableCell>
                           <TableCell>{data?.applied_date}</TableCell>
                           <TableCell>
-                            {data?.status === 'approved' ? (
-                              <Button size="small" variant="contained" color="primary">
+                            {data?.status === "approved" ? (
+                              <Button
+                                size="small"
+                                variant="contained"
+                                color="primary"
+                              >
                                 View
                               </Button>
                             ) : (
@@ -384,9 +379,7 @@ export const BonafideForm = () => {
                     </TableBody>
                   </Table>
                 </TableContainer>
-              ) : (
-                null
-              )}
+              ) : null}
             </Box>
           )}
         </Box>
