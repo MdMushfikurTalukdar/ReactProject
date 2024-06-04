@@ -30,6 +30,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import {jwtDecode} from "jwt-decode";
 import { enqueueSnackbar } from "notistack";
+import { useNavigate } from "react-router-dom";
 
 // Validation schema
 const schema = yup.object().shape({
@@ -63,6 +64,51 @@ export const BonafideForm = () => {
     window.innerWidth < 669 ? true : false
   ); 
   
+  const navigate=useNavigate();
+
+  function regenerateToken() {
+    let data = JSON.stringify({
+      refresh: localStorage.getItem("refreshtoken"),
+    });
+
+    let config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: "https://amarnath013.pythonanywhere.com/api/user/token/refresh/",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        localStorage.setItem("refreshtoken", response.data.refresh);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  useEffect(() => {
+    if (localStorage?.getItem("accesstoken")) {
+      const response = jwtDecode(localStorage?.getItem("accesstoken"));
+      if (
+        response.token_type !== "access" &&
+        response.exp < Math.floor(Date.now()-100000 / 1000)
+      ) {
+        regenerateToken();
+      }
+    } else {
+      navigate("/login");
+    }
+  }, []);
+
+
+
+
   useEffect(() => {
     window.addEventListener("resize", resize);
 
@@ -79,7 +125,7 @@ export const BonafideForm = () => {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `https://amarnath013.pythonanywhere.com/api/user/bonafide/?roll_no_registration_number=${localStorage.getItem('RollNumber')}`,
+      url: `https://amarnath013.pythonanywhere.com/api/user/bonafide/?search=${localStorage.getItem('RollNumber')}`,
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
       },
@@ -158,6 +204,8 @@ export const BonafideForm = () => {
         sx={{ padding: 3, bgcolor: "whitesmoke", borderRadius: 2 }}
       >
         <form onSubmit={handleSubmit(onSubmit)}>
+
+          <Typography variant="h5" style={{marginBottom:"15px"}}>Bonafide Certificate Request</Typography>
           <Typography variant="h6" gutterBottom>
             Purpose
           </Typography>
