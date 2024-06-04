@@ -66,48 +66,42 @@ export const BonafideForm = () => {
   
   const navigate=useNavigate();
 
-  function regenerateToken() {
-    let data = JSON.stringify({
-      refresh: localStorage.getItem("refreshtoken"),
-    });
+  // function regenerateToken() {
+  //   let data = JSON.stringify({
+  //     refresh: localStorage.getItem("refreshtoken"),
+  //   });
 
-    let config = {
-      method: "post",
-      maxBodyLength: Infinity,
-      url: "https://amarnath013.pythonanywhere.com/api/user/token/refresh/",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: data,
-    };
+  //   let config = {
+  //     method: "post",
+  //     maxBodyLength: Infinity,
+  //     url: "https://amarnath013.pythonanywhere.com/api/user/token/refresh/",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     data: data,
+  //   };
 
-    axios
-      .request(config)
-      .then((response) => {
-        console.log(JSON.stringify(response.data));
-        localStorage.setItem("refreshtoken", response.data.refresh);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
+  //   axios
+  //     .request(config)
+  //     .then((response) => {
+  //       localStorage.setItem("accesstoken", response.data.refresh);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // }
 
   useEffect(() => {
     if (localStorage?.getItem("accesstoken")) {
       const response = jwtDecode(localStorage?.getItem("accesstoken"));
-      if (
-        response.token_type !== "access" &&
-        response.exp < Math.floor(Date.now() / 1000)
-      ) {
+      console.log( response.exp < Math.floor(Date.now() / 1000))
+      if (response.exp < Math.floor(Date.now() / 1000)) {
         navigate("/login");
       }
     } else {
       navigate("/login");
     }
   }, []);
-
-
-
 
   useEffect(() => {
     window.addEventListener("resize", resize);
@@ -122,6 +116,7 @@ export const BonafideForm = () => {
   };
 
   useEffect(() => {
+
     let config = {
       method: "get",
       maxBodyLength: Infinity,
@@ -182,8 +177,7 @@ export const BonafideForm = () => {
         setTimeout(()=>{
             window.location.reload();
         },3000);
-      })
-      .catch((error) => {
+      }).catch((error) => {
         console.log(error);
       });
   };

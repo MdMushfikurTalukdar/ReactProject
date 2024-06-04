@@ -37,7 +37,7 @@ export const Dashboard = () => {
       .request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
-        localStorage.setItem("refreshtoken", response.data.refresh);
+        localStorage.setItem("accesstoken", response.data.refresh);
       })
       .catch((error) => {
         console.log(error);
@@ -53,7 +53,7 @@ export const Dashboard = () => {
         typeof response.jti !== String &&
         response.exp < Math.floor(Date.now() / 1000)
       ) {
-        regenerateToken();
+        navigate("/login");
       }
     } else {
       navigate("/login");
