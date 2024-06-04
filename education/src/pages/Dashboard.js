@@ -47,12 +47,7 @@ export const Dashboard = () => {
   useEffect(() => {
     if (localStorage?.getItem("accesstoken")) {
       const response = jwtDecode(localStorage?.getItem("accesstoken"));
-      if (
-        response.token_type !== "access" &&
-        typeof response.user_id !== Number &&
-        typeof response.jti !== String &&
-        response.exp < Math.floor(Date.now() / 1000)
-      ) {
+      if (response.exp < Math.floor(Date.now() / 1000)) {
         navigate("/login");
       }
     } else {
