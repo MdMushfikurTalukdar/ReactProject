@@ -47,7 +47,7 @@ function App() {
               path="/semesterRegistration"
               element={<SemesterRegistration />}
             />
-            <Route path="/HostelfeePayment" element={<HostelfeePayment/>} />
+            <Route path="/hostelfeePayment" element={<HostelfeePayment/>} />
           </Routes>
         </Router>
 
