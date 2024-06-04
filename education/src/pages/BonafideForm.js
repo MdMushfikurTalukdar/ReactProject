@@ -24,44 +24,40 @@ import {
   TableRow,
   Paper
 } from "@mui/material";
-import  Footer  from "../components/Home/Footer";
+import Footer from "../components/Home/Footer";
 import "../App.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
 import { enqueueSnackbar } from "notistack";
 
 // Validation schema
 const schema = yup.object().shape({
-  // Add your validation schema here
   purpose: yup.string().required("Purpose is required"),
   file: yup
     .mixed()
-    .test("fileRequired", "File is required", (value) => {
-      return !!value.length;
+    .test("fileAvailable", "File is required", (value) => {
+      return value && value.length >0;
     })
     .test("fileType", "Only image files are allowed", (value) => {
-      return (
-        !value ||
-        (value.length > 0 &&
-          ["image/jpeg", "image/png"].includes(value[0].type))
-      );
+      return value && value.length >0 && ["image/jpeg", "image/png"].includes(value[0].type);
     }),
   fee: yup.string(),
 });
 
 export const BonafideForm = () => {
   const [result, setResult] = useState([]);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [name, setName] = useState(null);
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
+    trigger
   } = useForm({
     resolver: yupResolver(schema),
   });
-
-  const [img,setImg]=useState('');
-  const [name,setName]=useState('');
 
   const [responsive, setResponsive] = useState(
     window.innerWidth < 669 ? true : false
@@ -79,13 +75,11 @@ export const BonafideForm = () => {
     setResponsive(window.innerWidth < 669 ? true : false);
   };
 
-
-
   useEffect(() => {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `https://amarnath013.pythonanywhere.com/api/user/bonafide/?roll_no__registration_number=${localStorage.getItem('RollNumber')}`,
+      url: `https://amarnath013.pythonanywhere.com/api/user/bonafide/?roll_no_registration_number=${localStorage.getItem('RollNumber')}`,
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
       },
@@ -95,7 +89,6 @@ export const BonafideForm = () => {
       .request(config)
       .then((response) => {
         setResult(response.data.reverse());
-       
       })
       .catch((error) => {
         console.log(error);
@@ -103,11 +96,10 @@ export const BonafideForm = () => {
   }, []);
 
   const onSubmit = (data) => {
-
-    const formData=new FormData();
-    formData.append('file',data.file[0]);
+    const formData = new FormData();
+    console.log(data);
+    formData.append('supporting_document', data.file[0]);
    
-
     let data1 = JSON.stringify({
       college: 1,
       student: jwtDecode(localStorage?.getItem("accesstoken")).user_id,
@@ -132,7 +124,6 @@ export const BonafideForm = () => {
     axios
       .request(config)
       .then((response) => {
-
         enqueueSnackbar('Request sent successfully', {
           variant: 'success',
           anchorOrigin: {
@@ -151,11 +142,14 @@ export const BonafideForm = () => {
       });
   };
 
-  const handleFile=(e)=>{
-    const url=URL.createObjectURL(e.target.files[0]);
-    setName(e.target.files[0].name);
-    setImg(url);
-  }
+  const handleFileChange = async(e) => {
+    const file = e.target.files[0];
+    setName(file.name);
+    setValue("file", [file]);
+    setPreviewUrl(URL.createObjectURL(file));
+    await trigger("file");
+  };
+
   return (
     <div className="container-fluid" style={{ backgroundColor: "whitesmoke" }}>
       <NavbarNew />
@@ -213,15 +207,23 @@ export const BonafideForm = () => {
               <input
                 type="file"
                 name="file"
-                {...register("file")}
-                onChange={(e)=>handleFile(e)}
+                {...register('file')}
+                onChange={handleFileChange}
                 style={{ paddingBottom: "28px", display: "none" }}
               />
               Upload File
             </Button>
-            {img && <img src={img} alt="" style={{width:"100px",height:"auto"}}/>}
-            {name && <p style={{marginBottom:"5px"}}>{name}</p>}
-            {!img && errors?.file && (
+            {previewUrl && (
+              <Box sx={{ marginTop: 2 }}>
+                <img src={previewUrl} alt="Preview" style={{ width: '150px' }} />
+              </Box>
+            )}
+             {name && (
+              <Box sx={{ marginTop: 1,marginBottom:1 }}>
+                <p>{name}</p>
+              </Box>
+            )}
+            {errors?.file && (
               <FormHelperText>{errors?.file?.message}</FormHelperText>
             )}
           </FormControl>
@@ -233,7 +235,7 @@ export const BonafideForm = () => {
               <input type="radio" name="option" value="yes" /> Yes
             </label>
             <label>
-              <input type="radio" name="option" value="yes" /> No
+              <input type="radio" name="option" value="no" /> No
             </label>
           </Box>
 
@@ -267,13 +269,11 @@ export const BonafideForm = () => {
             <p style={{ marginBottom: "50px" }}>Nothing to show</p>
           )}
 
-
-          {responsive ?( result.length > 0 &&
+          {responsive ? (
+            result.length > 0 &&
             result.map((data, index) => (
-             
               <Box key={index}>
-                
-                <Card sx={{ minWidth: 275, marginBottom: 2,backgroundColor:"#D2E9E9" }}>
+                <Card sx={{ minWidth: 275, marginBottom: 2, backgroundColor: "#D2E9E9" }}>
                   <CardContent>
                     <Typography
                       sx={{ fontSize: 14 }}
@@ -303,49 +303,50 @@ export const BonafideForm = () => {
                     </Typography>
                   </CardContent>
                 </Card>
-                  
               </Box>
-           
-          ))):(<Box>
-            {result.length > 0 ? (
-              <TableContainer component={Paper} sx={{ marginTop: 3 }}>
-                <Table sx={{ minWidth: 650 }} aria-label="bonafide table">
-                  <TableHead style={{backgroundColor:"#D2E9E9"}}>
-                    <TableRow>
-                      <TableCell>Bonafide Number</TableCell>
-                      <TableCell>Applied For</TableCell>
-                      <TableCell>Status</TableCell>
-                      <TableCell>Applied Date</TableCell>
-                      <TableCell>Actions</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {result.map((data, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{data?.bonafide_number}</TableCell>
-                        <TableCell>{data?.required_for}</TableCell>
-                        <TableCell>{data?.status}</TableCell>
-                        <TableCell>{data?.applied_date}</TableCell>
-                        <TableCell>
-                          {data?.status === 'approved' ? (
-                            <Button size="small" variant="contained" color="primary">
-                              View
-                            </Button>
-                          ) : (
-                            <Typography variant="body2" color="textSecondary">
-                              N/A
-                            </Typography>
-                          )}
-                        </TableCell>
+            ))
+          ) : (
+            <Box>
+              {result.length > 0 ? (
+                <TableContainer component={Paper} sx={{ marginTop: 3 }}>
+                  <Table sx={{ minWidth: 650 }} aria-label="bonafide table">
+                    <TableHead style={{ backgroundColor: "#D2E9E9" }}>
+                      <TableRow>
+                        <TableCell>Bonafide Number</TableCell>
+                        <TableCell>Applied For</TableCell>
+                        <TableCell>Status</TableCell>
+                        <TableCell>Applied Date</TableCell>
+                        <TableCell>Actions</TableCell>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            ) : (
-             null 
-            )}
-          </Box>)}
+                    </TableHead>
+                    <TableBody>
+                      {result.map((data, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{data?.bonafide_number}</TableCell>
+                          <TableCell>{data?.required_for}</TableCell>
+                          <TableCell>{data?.status}</TableCell>
+                          <TableCell>{data?.applied_date}</TableCell>
+                          <TableCell>
+                            {data?.status === 'approved' ? (
+                              <Button size="small" variant="contained" color="primary">
+                                View
+                              </Button>
+                            ) : (
+                              <Typography variant="body2" color="textSecondary">
+                                N/A
+                              </Typography>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              ) : (
+                null
+              )}
+            </Box>
+          )}
         </Box>
       </Box>
       <Box style={{ width: "100vw" }}>
