@@ -20,6 +20,8 @@ import { GuestRoom } from "./pages/GuestRoom.js";
 import { Logout } from "./pages/Logout.js";
 import { HostelRoomRequest } from "./pages/HostelRoomRequest.js";
 import HostelfeePayment from './pages/HostelfeePayment.js'
+import { SemSubject } from "./pages/SemSubject.js";
+import SemBranch from "./pages/SemBranch.js";
 
 function App() {
   return (
@@ -47,6 +49,8 @@ function App() {
               path="/semesterRegistration"
               element={<SemesterRegistration />}
             />
+            <Route path="/sem-sub-register" element={<SemSubject/>}/>
+            <Route path="/sem-branch-register" element={<SemBranch/>}/>
             <Route path="/hostel-mess-fee-payment" element={<HostelfeePayment/>} />
           </Routes>
         </Router>

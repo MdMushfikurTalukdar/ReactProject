@@ -293,7 +293,7 @@ export const BonafideForm = () => {
           }}
         >
           {result.length === 0 && (
-            <p style={{ marginBottom: "50px" }}>Nothing to show</p>
+            <p style={{ marginBottom: "50px",marginTop:"100px",fontSize:"1.2rem" }}>Nothing to show</p>
           )}
 
           {responsive ? (
@@ -360,7 +360,7 @@ export const BonafideForm = () => {
                           <TableCell>{data?.status}</TableCell>
                           <TableCell>{data?.applied_date}</TableCell>
                           <TableCell>
-                            {data?.status === "approved" ? (
+                            {/* {data?.status === "approved" ? (
                               <Button
                                 size="small"
                                 variant="contained"
@@ -368,11 +368,11 @@ export const BonafideForm = () => {
                               >
                                 View
                               </Button>
-                            ) : (
+                            ) : ( */}
                               <Typography variant="body2" color="textSecondary">
                                 N/A
                               </Typography>
-                            )}
+                            {/* )} */}
                           </TableCell>
                         </TableRow>
                       ))}
