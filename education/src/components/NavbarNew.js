@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './NavbarNew.css'; // If you have custom CSS, keep this import
+import { jwtDecode } from 'jwt-decode';
 
 export const NavbarNew = () => {
-  const roll = "student";
+
+  const response = jwtDecode(localStorage?.getItem("accesstoken"))
+  const roll = response?.role;
 
   const mainOptions = ["General", "Academic", "Residential", "Other Responsibilities", "Others"];
   const general = [
@@ -28,7 +31,8 @@ export const NavbarNew = () => {
     { name: "Hostel No Dues Request", link: "/hostel-no-dues-request" }
   ];
   const other_responsibilities = [
-    { name : "not provide yet", link:"/dont-know"}
+    { name : "Add Subject", link:"/sem-sub-register"},
+    { name : "Add Branch", link:"/sem-branch-register"}
   ]
   const others = [
     { name: "Guest Room Request", link: "/guest-room" },
@@ -104,10 +108,10 @@ export const NavbarNew = () => {
                     <div className="hover:bg-purple-200 px-4 py-2 cursor-pointer" onClick={toggleNestedDropdownGeneral}>
                       {mainOptions[0]}
                       {isNestedDropdownGeneralOpen && (
-                        <div className="mt-2 bg-white rounded-lg shadow-md">
+                        <div className="mt-2 bg-white rounded-lg shadow-md" style={{textDecoration:"none"}}>
                           {general.map((item, index) => (
                             
-                            <Link key={index} className="block px-4 py-2 text-gray-800 hover:bg-purple-100 " to={item.link}>{item.name}</Link>
+                            <Link key={index} className="block px-4 py-2 text-gray-800 hover:bg-purple-100 " to={item.link} style={{textDecoration:"none"}}>{item.name}</Link>
                             
                           ))}
                         </div>
@@ -120,7 +124,7 @@ export const NavbarNew = () => {
                           {isNestedDropdownAcademicOpen && (
                             <div className="mt-2 bg-white rounded-lg shadow-md">
                               {academic.map((item, index) => (
-                                <Link key={index} className="block px-4 py-2 text-gray-800 hover:bg-purple-100" to={item.link}>{item.name}</Link>
+                                <Link key={index} className="block px-4 py-2 text-gray-800 hover:bg-purple-100" to={item.link} style={{textDecoration:"none"}}>{item.name}</Link>
                               ))}
                             </div>
                           )}
@@ -130,20 +134,20 @@ export const NavbarNew = () => {
                           {isNestedDropdownResidentialOpen && (
                             <div className="mt-2 bg-white rounded-lg shadow-md">
                               {residential.map((item, index) => (
-                                <Link key={index} className="block px-4 py-2 text-gray-800 hover:bg-purple-100" to={item.link}>{item.name}</Link>
+                                <Link key={index} className="block px-4 py-2 text-gray-800 hover:bg-purple-100" to={item.link} style={{textDecoration:"none"}}>{item.name}</Link>
                               ))}
                             </div>
                           )}
                         </div>
                       </>
                     )}
-                    {roll === 'faculty' && (
+                    {roll !== 'student' && (
                         <div className="hover:bg-purple-200 px-4 py-2 cursor-pointer" onClick={toggleNestedDropdownOther_responsibilities}>
                           {mainOptions[3]}
                           {isNestedDropdownOther_responsibilitiesOpen && (
                             <div className="mt-2 bg-white rounded-lg shadow-md">
                               {other_responsibilities.map((item, index) => (
-                                <Link key={index} className="block px-4 py-2 text-gray-800 hover:bg-purple-100" to={item.link}>{item.name}</Link>
+                                <Link key={index} className="block px-4 py-2 text-gray-800 hover:bg-purple-100" to={item.link} style={{textDecoration:"none"}}>{item.name}</Link>
                               ))}
                             </div>
                           )}
@@ -154,7 +158,7 @@ export const NavbarNew = () => {
                       {isNestedDropdownOthersOpen && (
                         <div className="mt-2 bg-white rounded-lg shadow-md">
                           {others.map((item, index) => (
-                            <Link key={index} className="block px-4 py-2 text-gray-800 hover:bg-purple-100" to={item.link}>{item.name}</Link>
+                            <Link key={index} className="block px-4 py-2 text-gray-800 hover:bg-purple-100" to={item.link} style={{textDecoration:"none"}}>{item.name}</Link>
                           ))}
                         </div>
                       )}
