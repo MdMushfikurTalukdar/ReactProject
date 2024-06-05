@@ -58,7 +58,7 @@ export const Dashboard = () => {
   return (
     <div className="bg-gray-100 min-h-screen">
       <NavbarNew />
-      <div className="flex justify-center items-center mt-8">
+      <div className="flex justify-center items-center mt-8 mb-4">
         <div className="grid sm:flex grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
           <div className="flex items-center justify-center">
           <AttendanceDashboard presentPercentage={70} />
