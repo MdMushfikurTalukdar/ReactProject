@@ -22,7 +22,7 @@ export const Logout=()=>{
                 <Typography variant="h6" component="h6" style={{margin:"20px 0px 20px 0px"}}>Are you sure want to logout?</Typography>
                 <Box className="flex gap-3 justify-end">
                     <Button variant="contained" sx={{backgroundColor:"rgb(107 169 169)",color:"white"}} onClick={Logout}>Yes</Button>
-                    <Button variant="contained" sx={{backgroundColor:"rgb(107 169 169)",color:"white"}}>No</Button>
+                    <Button variant="contained" sx={{backgroundColor:"rgb(107 169 169)",color:"white"}} onClick={(e)=>navigate('/dashboard')}>No</Button>
                 </Box>
             </Box>
         </div>

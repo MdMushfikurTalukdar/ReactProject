@@ -99,7 +99,7 @@ export const NavbarNew = () => {
           <div className="flex items-center">
             <div className="relative" onClick={toggleDropdown}>
               <div className="cursor-pointer flex items-center space-x-2">
-                <i className="fas fa-bars"></i>
+                <i className="fas fa-bars" style={{marginTop:"5px"}}></i>
                 <span className="text-xl">Menu</span>
               </div>
               {isDropdownOpen && (

@@ -45,7 +45,7 @@ export const SemSubject = () => {
     let data1 = JSON.stringify({
         "subject_name": data.subject_name,
         "subject_code": subject_code,
-        "name": data.name
+        "instructor": data.name
       });
       
       let config = {
