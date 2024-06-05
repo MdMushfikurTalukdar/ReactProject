@@ -168,7 +168,7 @@ export function SemesterRegistration() {
     setUniqueCodes(uniqueCodes);
     setUniqueSubjects(uniqueSubjects);
   }
-}, [selectedSemester, branches1]);
+}, [selectedSemester, branches2]);
 
   const onSubmit = (data) => {
     console.log(data);
