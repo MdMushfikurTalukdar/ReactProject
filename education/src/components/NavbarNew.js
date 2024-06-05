@@ -5,7 +5,7 @@ import './NavbarNew.css'; // If you have custom CSS, keep this import
 export const NavbarNew = () => {
   const roll = "student";
 
-  const mainOptions = ["General", "Academic", "Residential", "Others"];
+  const mainOptions = ["General", "Academic", "Residential", "Other Responsibilities", "Others"];
   const general = [
     { name: "Profile", link: "/profile" },
     { name: "Change Password", link: "/change-password" },
@@ -27,6 +27,9 @@ export const NavbarNew = () => {
     { name: "Hostel/Mess Fee Receipts", link: "/hostel-mess-fee-receipts" },
     { name: "Hostel No Dues Request", link: "/hostel-no-dues-request" }
   ];
+  const other_responsibilities = [
+    { name : "not provide yet", link:"/dont-know"}
+  ]
   const others = [
     { name: "Guest Room Request", link: "/guest-room" },
     { name: "Complaints", link: "/complaints" }
@@ -37,6 +40,7 @@ export const NavbarNew = () => {
   const [isNestedDropdownAcademicOpen, setIsNestedDropdownAcademicOpen] = useState(false);
   const [isNestedDropdownResidentialOpen, setIsNestedDropdownResidentialOpen] = useState(false);
   const [isNestedDropdownOthersOpen, setIsNestedDropdownOthersOpen] = useState(false);
+  const [isNestedDropdownOther_responsibilitiesOpen, setIsNestedDropdownOther_responsibilitiesOpen] = useState(false);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -47,6 +51,7 @@ export const NavbarNew = () => {
     setIsNestedDropdownGeneralOpen(!isNestedDropdownGeneralOpen);
     setIsNestedDropdownAcademicOpen(false);
     setIsNestedDropdownResidentialOpen(false);
+    setIsNestedDropdownOther_responsibilitiesOpen(false);
     setIsNestedDropdownOthersOpen(false);
   };
   const toggleNestedDropdownAcademic = (e) => {
@@ -54,6 +59,7 @@ export const NavbarNew = () => {
     setIsNestedDropdownGeneralOpen(false);
     setIsNestedDropdownAcademicOpen(!isNestedDropdownAcademicOpen);
     setIsNestedDropdownResidentialOpen(false);
+    setIsNestedDropdownOther_responsibilitiesOpen(false);
     setIsNestedDropdownOthersOpen(false);
   };
   const toggleNestedDropdownResidential = (e) => {
@@ -61,6 +67,7 @@ export const NavbarNew = () => {
     setIsNestedDropdownGeneralOpen(false);
     setIsNestedDropdownAcademicOpen(false);
     setIsNestedDropdownResidentialOpen(!isNestedDropdownResidentialOpen);
+    setIsNestedDropdownOther_responsibilitiesOpen(false);
     setIsNestedDropdownOthersOpen(false);
   };
   const toggleNestedDropdownOthers = (e) => {
@@ -69,6 +76,16 @@ export const NavbarNew = () => {
     setIsNestedDropdownAcademicOpen(false);
     setIsNestedDropdownResidentialOpen(false);
     setIsNestedDropdownOthersOpen(!isNestedDropdownOthersOpen);
+    setIsNestedDropdownOther_responsibilitiesOpen(false);
+
+  };
+  const toggleNestedDropdownOther_responsibilities = (e) => {
+    e.stopPropagation();
+    setIsNestedDropdownGeneralOpen(false);
+    setIsNestedDropdownAcademicOpen(false);
+    setIsNestedDropdownResidentialOpen(false);
+    setIsNestedDropdownOthersOpen(false);
+    setIsNestedDropdownOther_responsibilitiesOpen(!isNestedDropdownOther_responsibilitiesOpen);
   };
 
   return (
@@ -120,8 +137,20 @@ export const NavbarNew = () => {
                         </div>
                       </>
                     )}
+                    {roll === 'faculty' && (
+                        <div className="hover:bg-purple-200 px-4 py-2 cursor-pointer" onClick={toggleNestedDropdownOther_responsibilities}>
+                          {mainOptions[3]}
+                          {isNestedDropdownOther_responsibilitiesOpen && (
+                            <div className="mt-2 bg-white rounded-lg shadow-md">
+                              {other_responsibilities.map((item, index) => (
+                                <Link key={index} className="block px-4 py-2 text-gray-800 hover:bg-purple-100" to={item.link}>{item.name}</Link>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                    )}
                     <div className="hover:bg-purple-200 px-4 py-2 cursor-pointer" onClick={toggleNestedDropdownOthers}>
-                      {mainOptions[3]}
+                      {mainOptions[4]}
                       {isNestedDropdownOthersOpen && (
                         <div className="mt-2 bg-white rounded-lg shadow-md">
                           {others.map((item, index) => (
