@@ -170,7 +170,7 @@ export const NavbarNew = () => {
             <h1 className="text-2xl font-bold ml-4">Campus</h1>
           </div>
           <div className="flex items-center">
-            <Link to="/profile" className="flex items-center space-x-2">
+            <Link to="/profile" style={{textDecoration:"none"}} className="flex items-center space-x-2">
               <span className="text-xl">Profile</span>
               <i className="fas fa-user"></i>
             </Link>
