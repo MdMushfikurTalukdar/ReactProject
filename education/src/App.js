@@ -14,12 +14,13 @@ import { BonafideCertificate } from "./pages/BonafideCertificate";
 import { EditProfile } from "./pages/EditProfile";
 import { About } from "./pages/About.js";
 import {ChangePassword} from "./components/ChangePassword.js";
-import {SemesterRegistration} from "./components/Semester/SemesterRegistration";
 import BonafideForm from "./pages/BonafideForm.js";
 import { GuestRoom } from "./pages/GuestRoom.js";
 import { Logout } from "./pages/Logout.js";
 import { HostelRoomRequest } from "./pages/HostelRoomRequest.js";
 import HostelfeePayment from './pages/HostelfeePayment.js'
+import SemesterRegistrationForm from "./pages/SemesterRegistration.js";
+import ComplaintForm from "./pages/Complain.js";
 
 function App() {
   return (
@@ -45,10 +46,12 @@ function App() {
              <Route path="/change-password" element={<ChangePassword/>}/>
              <Route
               path="/semesterRegistration"
-              element={<SemesterRegistration />}
+              element={<SemesterRegistrationForm />}
             />
             <Route path="/hostel-mess-fee-payment" element={<HostelfeePayment/>} />
+            <Route path="/complaints" element={ <ComplaintForm/> } />
           </Routes>
+      
         </Router>
 
     </>
