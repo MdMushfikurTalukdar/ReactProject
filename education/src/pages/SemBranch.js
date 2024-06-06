@@ -52,10 +52,9 @@ export const SemBranch = () => {
   const onSubmit = (data) => {
     var subject_codes1 = data.subject_codes.split(",");
     var a = subject_codes1.map((data) => {
-      return data;
+      return data.toLowerCase();
     });
 
-    console.log(data.semester_name, data.branch);
 
     let data1 = JSON.stringify({
       semester_name: data.semester_name,
