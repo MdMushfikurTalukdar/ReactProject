@@ -398,9 +398,10 @@ export function SemesterRegistration() {
         <Grid item xs={12} sm={6}>
           <TextField
             type="text"
-            label="Session"
-            value={student.session}
+            label="2020-2024"
+           
             fullWidth
+            disabled
           />
         </Grid>
       </Grid>
