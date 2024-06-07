@@ -16,19 +16,21 @@ export const NavbarNew = () => {
   ];
   const academic = [
     { name: "Bonafide Certificate", link: "/bonafide-form" },
-    { name: "Academic Fee", link: "/academic-fee" },
+    { name: "Academic Fee", link: "/underDevelopment" },
     { name: "Semester Registration", link: "/semesterRegistration" },
-    { name: "Internal Semester Marks", link: "/internal-semester-marks" },
+    { name: "Internal Semester Marks", link: "/underDevelopment" },
     { name: "No dues for degree", link: "/no-dues-for-degree" },
-    { name: "Assignment Submission", link: "/assignment-submission" },
-    { name: "Transfer/Leaving Certificate", link: "/transfer-leaving-certificate" },
-    { name: "Character Certificate", link: "/character-certificate" }
+    { name: "Assignment Submission", link: "/underDevelopment" },
+    { name: "Transfer/Leaving Certificate", link: "/underDevelopment" },
+    { name: "Character Certificate", link: "/underDevelopment" }
   ];
   const residential = [
     { name: "Hostel Allotment Request", link: "/hostel-room-request" },
     { name: "Hostel/Mess Fee Payment", link: "/hostel-mess-fee-payment" },
-    { name: "Hostel/Mess Fee Receipts", link: "/hostel-mess-fee-receipts" },
-    { name: "Hostel No Dues Request", link: "/hostel-no-dues-request" }
+    { name: "Hostel/Mess Fee Receipts", link: "/underDevelopment" },
+    { name: "Leave Request", link: "/underDevelopment" },
+    { name: "Hostel No Dues Request", link: "/underDevelopment" }
+    { name: "Security Money Return Request", link: "/underDevelopment" }
   ];
   const other_responsibilities = [
     { name : "Add Subject", link:"/sem-sub-register"},
