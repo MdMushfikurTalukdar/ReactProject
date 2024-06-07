@@ -23,6 +23,7 @@ import HostelfeePayment from './pages/HostelfeePayment.js'
 import { SemSubject } from "./pages/SemSubject.js";
 import SemBranch from "./pages/SemBranch.js";
 import ComplaintForm from "./pages/Complain.js";
+import UnderDevelopment from "./pages/UnderDevelopment";
 
 function App() {
   return (
@@ -54,6 +55,7 @@ function App() {
             <Route path="/sem-branch-register" element={<SemBranch/>}/>
             <Route path="/hostel-mess-fee-payment" element={<HostelfeePayment/>} />
             <Route path="/complaints" element={ <ComplaintForm/> } />
+            <Route path="/underDevelopment" element={ <UnderDevelopment/> } />
           </Routes>
         </Router>
 
