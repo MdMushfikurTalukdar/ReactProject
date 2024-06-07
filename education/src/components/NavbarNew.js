@@ -29,7 +29,7 @@ export const NavbarNew = () => {
     { name: "Hostel/Mess Fee Payment", link: "/hostel-mess-fee-payment" },
     { name: "Hostel/Mess Fee Receipts", link: "/underDevelopment" },
     { name: "Leave Request", link: "/underDevelopment" },
-    { name: "Hostel No Dues Request", link: "/underDevelopment" }
+    { name: "Hostel No Dues Request", link: "/underDevelopment" },
     { name: "Security Money Return Request", link: "/underDevelopment" }
   ];
   const other_responsibilities = [
