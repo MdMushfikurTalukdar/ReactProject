@@ -11,6 +11,9 @@ import {
   FormHelperText,
   FormControlLabel, 
   Checkbox,
+  CardContent,
+  Card,
+  Box
 } from "@mui/material";
 import "../../App.css";
 import NavbarNew from "../NavbarNew";
@@ -419,7 +422,49 @@ export function NoDuesForDegree() {
             No dues request status
           </Typography>
         </Grid>
-        
+        <Box
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+            padding: "20px",
+            alignItems: "center",
+            alignContent: "center",
+            width: "100vw",
+          }}
+        >
+          {result?.length === 0 && (
+            <p
+              style={{
+                marginBottom: "50px",
+                marginTop: "100px",
+                fontSize: "1.2rem",
+              }}
+            >
+              Nothing to show
+            </p>
+          )}
+
+          { result.length > 0 &&
+            result.map((data, index) => (
+              <Box key={index}>
+                <Card
+                  sx={{
+                    minWidth: 275,
+                    marginBottom: 2,
+                    backgroundColor: "#D2E9E9",
+                    height: 150,
+                  }}
+                >
+                  <CardContent>
+                    <Typography variant="h6" component="div">
+                      Department : {data?.name}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Box>
+            ))}
+        </Box>
       </Grid>
       <Footer />
     </>
