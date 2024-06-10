@@ -295,7 +295,7 @@ export function NoDuesForDegree() {
 
   return (
     <>
-      {/* <NavbarNew /> */}
+      <NavbarNew />
       <Grid container spacing={3} style={{ padding: "20px" }}>
         <Grid item xs={12}>
           <Typography variant="h5" gutterBottom style={{ width: "100%" }}>
