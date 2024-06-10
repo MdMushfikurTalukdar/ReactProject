@@ -25,6 +25,7 @@ import SemBranch from "./pages/SemBranch.js";
 import ComplaintForm from "./pages/Complain.js";
 import UnderDevelopment from "./pages/UnderDevelopment";
 import NoDuesForDegree from "./components/NoDuesForDegree/NoDuesForDegree.js"
+import { HostelNoDueReq } from "./pages/HostelNoDueReq.js";
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
               element={<BonafideCertificate />}
             />
              <Route path="/change-password" element={<ChangePassword/>}/>
+             <Route path="/hostel-no-dues-request" element={<HostelNoDueReq/>}/>
              <Route
               path="/semesterRegistration"
               element={<SemesterRegistration />}
