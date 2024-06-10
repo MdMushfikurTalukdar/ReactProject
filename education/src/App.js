@@ -24,6 +24,7 @@ import { SemSubject } from "./pages/SemSubject.js";
 import SemBranch from "./pages/SemBranch.js";
 import ComplaintForm from "./pages/Complain.js";
 import UnderDevelopment from "./pages/UnderDevelopment";
+import NoDuesForDegree from "./components/NoDuesForDegree/NoDuesForDegree.js"
 
 function App() {
   return (
@@ -56,6 +57,7 @@ function App() {
             <Route path="/hostel-mess-fee-payment" element={<HostelfeePayment/>} />
             <Route path="/complaints" element={ <ComplaintForm/> } />
             <Route path="/underDevelopment" element={ <UnderDevelopment/> } />
+            <Route path="/no-dues-for-degree" element={ <NoDuesForDegree/> } />
           </Routes>
         </Router>
 
