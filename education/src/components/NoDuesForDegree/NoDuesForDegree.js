@@ -318,7 +318,6 @@ export function NoDuesForDegree() {
         <Grid item xs={12} sm={6}>
           <TextField
             type="text"
-            label="Registration No"
             value={userProfile?.personal_information?.registration_number}
             fullWidth
             disabled
