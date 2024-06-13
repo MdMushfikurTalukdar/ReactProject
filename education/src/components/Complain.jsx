@@ -81,7 +81,7 @@ const ComplaintForm = () => {
           <label className="block text-gray-700">Registration/ Employee No:</label>
           <input type="text" className="mt-1 block w-60 bg-gray-100 p-2 rounded" value={prefilledData.registrationNo} disabled />
         </div>
-        <div className="mb-4 flex gap-4 items-center">
+        <div className="mb-4  flex gap-4 items-center flex-wrap">
           <label className="block text-gray-700">Name:</label>
           <input type="text" className="mt-1 block w-60 bg-gray-100 p-2 rounded" value={prefilledData.name} disabled />
           <label className="block text-gray-700">Branch:</label>
