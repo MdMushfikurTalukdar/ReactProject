@@ -103,7 +103,7 @@ const ComplaintForm = () => {
         </div>
         <div className="mb-4">
           <label className="block text-gray-700">Complaint Description:</label>
-          <textarea name="description" className="mt-1 block w-full bg-gray-100 p-2 rounded" rows="4"></textarea>
+          <textarea name="description" className="mt-1 block w-80 bg-gray-100 p-2 rounded" rows="4"></textarea>
         </div>
         <div className="text-center">
           <button type="submit" className="bg-[#6BA9A9]  text-white text-xl border-none hover:bg-[#558888] px-4 py-2 rounded">Register Complaint</button>
