@@ -227,18 +227,26 @@ html{
     align-items: center;
   }
   .container {
-	width: 200px;
-	padding: 10px;
-	background-color: lightblue;
-	border: 1px solid black;
-	text-align: center;
+	background-color: #add8e6;
+    border: 1px solid #000;
+    padding: 10px;
+    text-align: center;
+    width: 600%;
+    margin-left: -235%;
   }
   
   .header {
 	font-size: 16px;
 	font-weight: bold;
+	margin-left: -25%;
   }
   
   .info {
-	font-size: 12px;
+	font-size: 14px;
+	margin-left: -63%;
+  }
+  .info1 {
+	font-size: 14px;
+	margin-left: 60%;
+    margin-top: -3%;
   }
