@@ -441,7 +441,7 @@ export function NoDuesForDegree() {
               }}
             >
               <div className="container">
-      <div className="header">No Dues Request</div>
+      <div className="header1">No Dues Request</div>
       <div className="info">View Status</div>
       <div className="info1">Requested on:</div>
       <div className="info1">Final Approved on:</div>
