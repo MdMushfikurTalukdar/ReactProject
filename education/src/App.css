@@ -233,6 +233,7 @@ html{
     text-align: center;
     width: 600%;
     margin-left: -235%;
+	height: 164px;
   }
   
   .header1 {
@@ -247,6 +248,7 @@ html{
     text-align: center;
     width: 90%;
     margin-left: -26%;
+	height: 50px;
   }
   
   .info {
