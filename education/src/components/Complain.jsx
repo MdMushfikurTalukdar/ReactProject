@@ -77,20 +77,20 @@ const ComplaintForm = () => {
       </header>
 
       <form className="bg-white p-4 shadow-md rounded" onSubmit={handleSubmit}>
-        <div className="mb-4">
+        <div className="mb-4  flex items-center justify-start gap-5">
           <label className="block text-gray-700">Registration/ Employee No:</label>
-          <input type="text" className="mt-1 block w-full bg-gray-100 p-2 rounded" value={prefilledData.registrationNo} disabled />
+          <input type="text" className="mt-1 block w-60 bg-gray-100 p-2 rounded" value={prefilledData.registrationNo} disabled />
         </div>
         <div className="mb-4 flex gap-4 items-center">
           <label className="block text-gray-700">Name:</label>
-          <input type="text" className="mt-1 block w-full bg-gray-100 p-2 rounded" value={prefilledData.name} disabled />
+          <input type="text" className="mt-1 block w-60 bg-gray-100 p-2 rounded" value={prefilledData.name} disabled />
           <label className="block text-gray-700">Branch:</label>
-          <input type="text" className="mt-1 block w-full bg-gray-100 p-2 rounded" value={prefilledData.branch} disabled />
+          <input type="text" className="mt-1 block w-60 bg-gray-100 p-2 rounded" value={prefilledData.branch} disabled />
         </div>
         
         <div className="mb-4">
           <label className="block text-gray-700">Complaint Type:</label>
-          <select name="type" className="mt-1 block w-full bg-gray-100 p-2 rounded">
+          <select name="type" className="mt-1 block w-60 bg-gray-100 p-2 rounded">
           <option value="Ragging related">Ragging related</option>
 //             <option value="Academic fees">Academic fees</option>
 //             <option value="Classes related">Classes related</option>
@@ -99,14 +99,14 @@ const ComplaintForm = () => {
         </div>
         <div className="mb-4">
           <label className="block text-gray-700">Subject:</label>
-          <input type="text" name="subject" className="mt-1 block w-full bg-gray-100 p-2 rounded" />
+          <input type="text" name="subject" className="mt-1 block w-60 bg-gray-100 p-2 rounded" />
         </div>
         <div className="mb-4">
           <label className="block text-gray-700">Complaint Description:</label>
           <textarea name="description" className="mt-1 block w-full bg-gray-100 p-2 rounded" rows="4"></textarea>
         </div>
         <div className="text-center">
-          <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">Register Complaint</button>
+          <button type="submit" className="bg-[#6BA9A9]  text-white text-xl border-none hover:bg-[#558888] px-4 py-2 rounded">Register Complaint</button>
         </div>
       </form>
 
