@@ -37,3 +37,20 @@
     font-size: 0.8rem;
     margin-top: 0.2rem;
   }
+
+  .container {
+    width: 200px;
+    padding: 10px;
+    background-color: lightblue;
+    border: 1px solid black;
+    text-align: center;
+  }
+  
+  .header {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .info {
+    font-size: 12px;
+  }

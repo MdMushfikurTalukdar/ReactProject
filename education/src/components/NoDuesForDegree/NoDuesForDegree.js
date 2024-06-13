@@ -440,7 +440,12 @@ export function NoDuesForDegree() {
                 fontSize: "1.2rem",
               }}
             >
-              Nothing to show
+              <div className="container">
+      <div className="header">No Dues Request</div>
+      <div className="info">View Status</div>
+      <div className="info">Requested on:</div>
+      <div className="info">Final Approved on:</div>
+    </div>
             </p>
           )}
 
