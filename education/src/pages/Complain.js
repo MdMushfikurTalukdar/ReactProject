@@ -1,12 +1,12 @@
 import React from 'react'
-import {Header} from "../components/Home/Header.jsx"
 import Footer from "../components/Home/Footer.jsx"
 import ComplaintForm from '../components/Complain'
+import NavbarNew from '../components/NavbarNew.js'
 
 function Complain() {
   return (
     <>
-     <Header/>
+     <NavbarNew/>
      <ComplaintForm/>
      <Footer/>
     </>
