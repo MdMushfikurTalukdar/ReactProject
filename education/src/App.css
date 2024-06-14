@@ -226,14 +226,14 @@ html{
     justify-content: center;
     align-items: center;
   }
-  .container {
+  .container2 {
 	background-color: #add8e6;
     border: 1px solid #000;
+    height: 164px;
+    margin-left: -235%;
     padding: 10px;
     text-align: center;
     width: 600%;
-    margin-left: -235%;
-	height: 164px;
   }
   
   .header1 {
