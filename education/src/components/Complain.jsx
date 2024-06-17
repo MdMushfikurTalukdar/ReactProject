@@ -4,17 +4,21 @@ import "react-toastify/dist/ReactToastify.css";
 
 const ComplaintForm = () => {
   const [profileData, setProfileData] = useState({
-    registrationNo: "123456789", // Static data for demonstration
-    name: "John Doe", // Static data for demonstration
-    branch: "CSE", // Static data for demonstration
+    registrationNo: "",
+    name: "",
+    branch: "",
   });
   const [complaints, setComplaints] = useState([]);
 
   useEffect(() => {
+    // Check if the token is valid
+    const token = localStorage.getItem("accesstoken");
+    if (!token) {
+      window.location.href = "/login";
+    }
+
     // Fetch user profile data from backend
     const fetchProfileData = async () => {
-      const token = localStorage.getItem("accesstoken");
-
       try {
         const response = await fetch(
           "https://amarnath013.pythonanywhere.com/api/user/profile",
@@ -39,8 +43,6 @@ const ComplaintForm = () => {
 
     // Fetch complaints from backend
     const fetchComplaints = async () => {
-      const token = localStorage.getItem("accesstoken");
-
       try {
         const response = await fetch(
           "https://amarnath013.pythonanywhere.com/api/user/complaints",
