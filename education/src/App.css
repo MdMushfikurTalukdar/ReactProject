@@ -226,3 +226,37 @@ html{
     justify-content: center;
     align-items: center;
   }
+  .container2 {
+	background-color: #add8e6;
+    border: 1px solid #000;
+    height: 164px;
+    margin-left: -235%;
+    padding: 10px;
+    text-align: center;
+    width: 600%;
+  }
+  
+  .header1 {
+	align-items: center;
+    display: flex;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 24px;
+    height: auto;
+    justify-content: center;
+    margin: 0 auto 10mm;
+    position: relative;
+    text-align: center;
+    width: 90%;
+    margin-left: -26%;
+	height: 50px;
+  }
+  
+  .info {
+	font-size: 14px;
+	margin-left: -63%;
+  }
+  .info1 {
+	font-size: 14px;
+	margin-left: 60%;
+    margin-top: -3%;
+  }

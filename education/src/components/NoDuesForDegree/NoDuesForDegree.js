@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
-  Box,
   Button,
-  Divider,
   Grid,
   TextField,
   Typography,
@@ -11,18 +9,14 @@ import {
   FormControl,
   InputLabel,
   FormHelperText,
-  Paper,
-  Card,
+  FormControlLabel, 
+  Checkbox,
   CardContent,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
+  Card,
+  Box
 } from "@mui/material";
 import "../../App.css";
 import NavbarNew from "../NavbarNew";
-
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -30,15 +24,15 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Footer from "../Home/Footer";
-import { Table } from "heroicons-react";
 import { enqueueSnackbar } from "notistack";
 
 const schema = yup.object().shape({
   selectedSemester: yup.string().required("Semester is required"),
   branch: yup.string().required("Branch is required"),
+  checkbox: yup.boolean().required("Please agree to the terms and conditions"),
 });
 
-export function SemesterRegistration() {
+export function NoDuesForDegree() {
   const navigate = useNavigate();
   const [student, setStudent] = useState({});
   const [branches, setBranches] = useState([]);
@@ -51,6 +45,7 @@ export function SemesterRegistration() {
   const [uniqueCodes, setUniqueCodes] = useState([]);
   const [uniqueSubjects, setUniqueSubjects] = useState([]);
   const [result, setResult] = useState([]);
+  const [checkedState, setCheckedState] = useState(false);
   
 
   const [responsive, setResponsive] = useState(
@@ -73,7 +68,6 @@ export function SemesterRegistration() {
     handleSubmit,
     control,
     setValue,
-    register,
     trigger,
     formState: { errors },
   } = useForm({
@@ -238,7 +232,6 @@ export function SemesterRegistration() {
   }, [selectedSemester, branches2]);
 
   const onSubmit = (data) => {
-    console.log(data);
 
     let config = {
       method: "get",
@@ -301,20 +294,21 @@ export function SemesterRegistration() {
       });
   };
 
-  // console.log(uniqueSubjects);
+  //check box
+
   return (
     <>
       <NavbarNew />
       <Grid container spacing={3} style={{ padding: "20px" }}>
         <Grid item xs={12}>
           <Typography variant="h5" gutterBottom style={{ width: "100%" }}>
-            Semester Registration
+            Overall No Dues Request (For TC)
           </Typography>
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
             type="text"
-            label="Student Name"
+            label="Name"
             value={`${userProfile?.personal_information?.first_name} ${userProfile?.personal_information?.middle_name} ${userProfile?.personal_information?.last_name}`}
             fullWidth
             disabled
@@ -329,39 +323,7 @@ export function SemesterRegistration() {
             disabled
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <FormControl fullWidth>
-            <InputLabel id="semester-label">Choose Semester</InputLabel>
-            <Controller
-              name="selectedSemester"
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  labelId="semester-label"
-                  label="Choose Semester"
-                  displayEmpty
-                  onChange={(e) => {
-                    field.onChange(e);
-                    handleSemesterChange(e);
-                  }}
-                >
-                  <MenuItem value="" disabled>
-                    Choose Semester
-                  </MenuItem>
-                  {branches.map((semester, index) => (
-                    <MenuItem key={index} value={semester.semester_name}>
-                      {semester.semester_name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              )}
-            />
-
-            <FormHelperText>{errors.selectedSemester?.message}</FormHelperText>
-          </FormControl>
-        </Grid>
+        
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth>
             <InputLabel id="branch-label">Branch</InputLabel>
@@ -398,29 +360,50 @@ export function SemesterRegistration() {
         <Grid item xs={12} sm={6}>
           <TextField
             type="text"
-            label="2020-2024"
-           
+            label="Session"
+            value={userProfile?.personal_information?.session}
+            fullWidth
+            disabled
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            type="text"
+            label="Father's Name"
+            value={userProfile?.personal_information?.fathers_name}
+            fullWidth
+            disabled
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            type="text"
+            label="Category"
+            value={userProfile?.personal_information?.category}
             fullWidth
             disabled
           />
         </Grid>
       </Grid>
-      {/* Subject List */}
-      <Grid container spacing={2} style={{ padding: "20px" }}>
-        <Grid item xs={12}>
-          <Typography variant="h5" gutterBottom>
-            Subject List
-          </Typography>
-          <Box style={{ marginTop: "20px", marginBottom: "20px" }}>
-            {uniqueSubjects &&
-              uniqueSubjects.map((data, index) => (
-                <p key={index} style={{ margin: "10px" }}>
-                  {data.subject_code} {data.subject_name}
-                </p>
-              ))}
-          </Box>
-        </Grid>
+
+{/* check box */}
+      <Grid item xs={12} sm={6}>
+        <FormControlLabel
+        sx={{ marginLeft: '15%' }}
+          control={
+            <Checkbox
+              name="checkbox"
+              checked={checkedState}
+              onChange={(e) => setCheckedState(e.target.checked)}
+            />
+          }
+          label="I declare that all these information are correct and i have not any no dues in any department/section as per my knowledge."
+        />
+        {errors.checkbox && (
+          <FormHelperText style={{marginLeft:"16%"}} error>{errors.checkbox.message}</FormHelperText>
+        )}
       </Grid>
+
       <Grid container justifyContent="center" style={{ padding: "20px" }}>
         <Button
           variant="contained"
@@ -431,10 +414,11 @@ export function SemesterRegistration() {
         </Button>
       </Grid>
 
-      <Grid container spacing={3} style={{ padding: "20px" }}>
+    {/* No dues request status */}
+    <Grid container spacing={3} style={{ padding: "20px",marginTop: "40px" }}>
         <Grid item xs={12}>
           <Typography variant="h5" gutterBottom style={{ width: "100%" }}>
-            Previous Semester Registration
+            No dues request status
           </Typography>
         </Grid>
         <Box
@@ -448,7 +432,7 @@ export function SemesterRegistration() {
             width: "100vw",
           }}
         >
-          {result?.semester?.subjets?.length === 0 && (
+          {result?.length === 0 && (
             <p
               style={{
                 marginBottom: "50px",
@@ -456,7 +440,12 @@ export function SemesterRegistration() {
                 fontSize: "1.2rem",
               }}
             >
-              Nothing to show
+              <div className="container2">
+      <div className="header1">No Dues Request</div>
+      <div className="info">View Status</div>
+      <div className="info1">Requested on:</div>
+      <div className="info1">Final Approved on:</div>
+    </div>
             </p>
           )}
 
@@ -473,11 +462,7 @@ export function SemesterRegistration() {
                 >
                   <CardContent>
                     <Typography variant="h6" component="div">
-                      Semester Name: {data?.semester?.semester_name}
-                    </Typography>
-
-                    <Typography variant="body2">
-                      Applied Date: {data?.applied_date}
+                      Department : {data?.name}
                     </Typography>
                   </CardContent>
                 </Card>
@@ -490,4 +475,4 @@ export function SemesterRegistration() {
   );
 }
 
-export default SemesterRegistration;
+export default NoDuesForDegree;

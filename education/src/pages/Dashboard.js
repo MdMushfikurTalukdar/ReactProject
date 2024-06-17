@@ -37,7 +37,7 @@ export const Dashboard = () => {
       .request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
-        localStorage.setItem("refreshtoken", response.data.refresh);
+        localStorage.setItem("accesstoken", response.data.refresh);
       })
       .catch((error) => {
         console.log(error);
@@ -47,13 +47,8 @@ export const Dashboard = () => {
   useEffect(() => {
     if (localStorage?.getItem("accesstoken")) {
       const response = jwtDecode(localStorage?.getItem("accesstoken"));
-      if (
-        response.token_type !== "access" &&
-        typeof response.user_id !== Number &&
-        typeof response.jti !== String &&
-        response.exp < Math.floor(Date.now() / 1000)
-      ) {
-        regenerateToken();
+      if (response.exp < Math.floor(Date.now() / 1000)) {
+        navigate("/login");
       }
     } else {
       navigate("/login");
@@ -63,7 +58,7 @@ export const Dashboard = () => {
   return (
     <div className="bg-gray-100 min-h-screen">
       <NavbarNew />
-      <div className="flex justify-center items-center mt-8">
+      <div className="flex justify-center items-center mt-8 mb-4">
         <div className="grid sm:flex grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
           <div className="flex items-center justify-center">
           <AttendanceDashboard presentPercentage={70} />

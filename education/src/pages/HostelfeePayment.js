@@ -1,12 +1,12 @@
 import React from 'react'
-import { Header } from '../components/Home/Header'
-import { Footer } from '../components/Footer'
+import  Footer  from '../components/Home/Footer'
 import HostelfeePayments from "../components/HostelFeePayments"
+import NavbarNew from '../components/NavbarNew'
 
 function HostelfeePayment() {
   return (
     <>
-      <Header/>
+      <NavbarNew/>
       <HostelfeePayments/>
       <Footer/>
     </>

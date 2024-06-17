@@ -14,13 +14,18 @@ import { BonafideCertificate } from "./pages/BonafideCertificate";
 import { EditProfile } from "./pages/EditProfile";
 import { About } from "./pages/About.js";
 import {ChangePassword} from "./components/ChangePassword.js";
+import {SemesterRegistration} from "./components/Semester/SemesterRegistration";
 import BonafideForm from "./pages/BonafideForm.js";
 import { GuestRoom } from "./pages/GuestRoom.js";
 import { Logout } from "./pages/Logout.js";
 import { HostelRoomRequest } from "./pages/HostelRoomRequest.js";
 import HostelfeePayment from './pages/HostelfeePayment.js'
-import SemesterRegistrationForm from "./pages/SemesterRegistration.js";
+import { SemSubject } from "./pages/SemSubject.js";
+import SemBranch from "./pages/SemBranch.js";
 import ComplaintForm from "./pages/Complain.js";
+import UnderDevelopment from "./pages/UnderDevelopment";
+import NoDuesForDegree from "./components/NoDuesForDegree/NoDuesForDegree.js"
+import { HostelNoDueReq } from "./pages/HostelNoDueReq.js";
 
 function App() {
   return (
@@ -44,14 +49,18 @@ function App() {
               element={<BonafideCertificate />}
             />
              <Route path="/change-password" element={<ChangePassword/>}/>
+             <Route path="/hostel-no-dues-request" element={<HostelNoDueReq/>}/>
              <Route
               path="/semesterRegistration"
-              element={<SemesterRegistrationForm />}
+              element={<SemesterRegistration />}
             />
+            <Route path="/sem-sub-register" element={<SemSubject/>}/>
+            <Route path="/sem-branch-register" element={<SemBranch/>}/>
             <Route path="/hostel-mess-fee-payment" element={<HostelfeePayment/>} />
             <Route path="/complaints" element={ <ComplaintForm/> } />
+            <Route path="/underDevelopment" element={ <UnderDevelopment/> } />
+            <Route path="/no-dues-for-degree" element={ <NoDuesForDegree/> } />
           </Routes>
-      
         </Router>
 
     </>
