@@ -31,10 +31,15 @@ const ComplaintForm = () => {
           }
         );
         const data = await response.json();
+        console.log(data);
+        console.log(data.academic_information.
+          registration_number);
         setProfileData({
-          registrationNo: data.registrationNo,
-          name: data.name,
-          branch: data.branch,
+          registrationNo: data.academic_information.
+          registration_number,
+          name: data.
+          personal_information.first_name,
+          branch: data.academic_information.current_year,
         });
       } catch (error) {
         console.error("Error fetching profile data:", error);
@@ -45,7 +50,7 @@ const ComplaintForm = () => {
     const fetchComplaints = async () => {
       try {
         const response = await fetch(
-          "https://amarnath013.pythonanywhere.com/api/user/complaints",
+          "https://amarnath013.pythonanywhere.com/api/user/complaint",
           {
             method: "GET",
             headers: {
@@ -78,7 +83,7 @@ const ComplaintForm = () => {
 
     try {
       const response = await fetch(
-        "https://amarnath013.pythonanywhere.com/api/user/complaints",
+        "https://amarnath013.pythonanywhere.com/api/user/complaint",
         {
           method: "POST",
           headers: {
