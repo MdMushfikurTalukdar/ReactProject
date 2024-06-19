@@ -25,21 +25,18 @@ const ComplaintForm = () => {
           {
             method: "GET",
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${localStorage.getItem('accesstoken')}`,
               "Content-Type": "application/json",
             },
           }
         );
         const data = await response.json();
         console.log(data);
-        console.log(data.academic_information.
-          registration_number);
+        console.log(data?.academic_information?.registration_number);
         setProfileData({
-          registrationNo: data.academic_information.
-          registration_number,
-          name: data.
-          personal_information.first_name,
-          branch: data.academic_information.current_year,
+          registrationNo: data?.academic_information?.registration_number,
+          name: data?.personal_information?.first_name,
+          branch: data?.academic_information?.current_year,
         });
       } catch (error) {
         console.error("Error fetching profile data:", error);
@@ -54,7 +51,7 @@ const ComplaintForm = () => {
           {
             method: "GET",
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${localStorage.getItem('accesstoken')}`,
               "Content-Type": "application/json",
             },
           }
@@ -88,7 +85,7 @@ const ComplaintForm = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${localStorage.getItem('accesstoken')}`,
           },
           body: JSON.stringify(newComplaint),
         }
@@ -121,7 +118,7 @@ const ComplaintForm = () => {
           <input
             type="text"
             className="mt-1 block w-60 bg-gray-100 p-2 rounded"
-            value={profileData.registrationNo}
+            value={profileData?.registrationNo}
             disabled
           />
         </div>
@@ -130,14 +127,14 @@ const ComplaintForm = () => {
           <input
             type="text"
             className="mt-1 block w-60 bg-gray-100 p-2 rounded"
-            value={profileData.name}
+            value={profileData?.name}
             disabled
           />
           <label className="block text-gray-700">Branch:</label>
           <input
             type="text"
             className="mt-1 block w-60 bg-gray-100 p-2 rounded"
-            value={profileData.branch}
+            value={profileData?.branch}
             disabled
           />
         </div>
@@ -186,16 +183,16 @@ const ComplaintForm = () => {
           complaints.map((complaint, index) => (
             <div key={index} className="bg-gray-100 p-4 mb-4 rounded shadow">
               <p>
-                <strong>Complaint Type:</strong> {complaint.type}
+                <strong>Complaint Type:</strong> {complaint?.type}
               </p>
               <p>
-                <strong>Subject:</strong> {complaint.subject}
+                <strong>Subject:</strong> {complaint?.subject}
               </p>
               <p>
-                <strong>Registered on:</strong> {complaint.registeredOn}
+                <strong>Registered on:</strong> {complaint?.registeredOn}
               </p>
               <p>
-                <strong>Status:</strong> {complaint.status}
+                <strong>Status:</strong> {complaint?.status}
               </p>
             </div>
           ))
