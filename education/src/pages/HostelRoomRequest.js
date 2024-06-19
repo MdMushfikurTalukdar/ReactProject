@@ -10,6 +10,15 @@ import {
   TextField,
   FormControl,
   FormHelperText,
+  TableCell,
+  TableRow,
+  TableBody,
+  TableContainer,
+  Table,
+  TableHead,
+  Paper,
+  CardContent,
+  Card,
 } from "@mui/material";
 import Footer from "../components/Home/Footer";
 import "../App.css";
@@ -63,10 +72,27 @@ export const HostelRoomRequest = () => {
     formState: { errors },
     trigger,
     setValue,
-    reset
+    reset,
   } = useForm({
     resolver: yupResolver(schema),
   });
+
+  const [result, setResult] = useState([]);
+  const [responsive, setResponsive] = useState(
+    window.innerWidth < 669 ? true : false
+  );
+
+  useEffect(() => {
+    window.addEventListener("resize", resize);
+
+    return () => {
+      window.removeEventListener("resize", resize);
+    };
+  }, []);
+
+  const resize = () => {
+    setResponsive(window.innerWidth < 669 ? true : false);
+  };
 
   useEffect(() => {
     if (localStorage?.getItem("accesstoken")) {
@@ -100,7 +126,26 @@ export const HostelRoomRequest = () => {
       });
   }, []);
 
-  useEffect(() => {});
+  useEffect(() => {
+    let config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: `https://amarnath013.pythonanywhere.com/api/user/hostel-allotments/?search=${localStorage.getItem('RollNumber')}`,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
+      },
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(response.data);
+        setResult(response.data.reverse());
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   const onSubmit = (data) => {
     console.log(data);
@@ -234,22 +279,21 @@ export const HostelRoomRequest = () => {
                   style={{ display: "none" }}
                 />
               </Button>
-              
             </Box>
             {previewUrl && (
-                <Box sx={{ marginTop: 2 }}>
-                  <img
-                    src={previewUrl}
-                    alt="Preview"
-                    style={{ width: "150px" }}
-                  />
-                </Box>
-              )}
-              {name && (
-                <Box sx={{ marginTop: 1, marginBottom: 1 }}>
-                  <p>{name}</p>
-                </Box>
-              )}
+              <Box sx={{ marginTop: 2 }}>
+                <img
+                  src={previewUrl}
+                  alt="Preview"
+                  style={{ width: "150px" }}
+                />
+              </Box>
+            )}
+            {name && (
+              <Box sx={{ marginTop: 1, marginBottom: 1 }}>
+                <p>{name}</p>
+              </Box>
+            )}
             {errors?.file && (
               <FormHelperText>{errors?.file?.message}</FormHelperText>
             )}
@@ -277,9 +321,94 @@ export const HostelRoomRequest = () => {
         >
           Previous Hostel Requests
         </Typography>
-        <Typography variant="body1" sx={{ marginTop: "10px" }}>
-          Nothing to show
-        </Typography>
+        <Box
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+          }}
+        >
+          {result.length === 0 && (
+            <p
+              style={{
+                marginBottom: "50px",
+                marginTop: "100px",
+                fontSize: "1.2rem",
+              }}
+            >
+              Nothing to show
+            </p>
+          )}
+
+          {responsive ? (
+            result?.length > 0 &&
+            result?.map((data, index) => (
+              <Box key={index}>
+                <Card
+                  sx={{
+                    minWidth: 275,
+                    marginBottom: 2,
+                    backgroundColor: "#D2E9E9",
+                  }}
+                >
+                  <CardContent>
+                    <Typography
+                      sx={{ fontSize: 14 }}
+                      color="text.secondary"
+                      gutterBottom
+                    >
+                      Bonafide Details
+                    </Typography>
+
+                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                      Status : {data?.status}
+                    </Typography>
+                    <Typography variant="body2">
+                      Marksheet:<br/>
+                      {data?.latest_marksheet!==null ? (<img
+                        src={`data:image/*;base64,${decodeURIComponent(
+                          data?.latest_marksheet
+                        )}`}
+                        alt="description"
+                        style={{width:"150px",height:"150px"}}
+                      />):(<p>Null</p>) }
+                      
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Box>
+            ))
+          ) : (
+            <Box>
+              {result?.length > 0 ? (
+                <TableContainer component={Paper} sx={{ marginTop: 3 }}>
+                  <Table sx={{ minWidth: 650 }} aria-label="bonafide table" style={{textAlign:"center"}}>
+                    <TableHead style={{ backgroundColor: "#D2E9E9" }}>
+                      <TableRow>
+                        <TableCell>Status</TableCell>
+                        <TableCell>Applied For</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody >
+                      {result?.map((data, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{data?.status}</TableCell>
+                          <TableCell>{data?.latest_marksheet!==null ? (<img
+                        src={`data:image/*;base64,${decodeURIComponent(
+                          data?.latest_marksheet
+                        )}`}
+                        alt="description"
+                        style={{width:"150px",height:"150px"}}
+                      />):(<p>Null</p>) }</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              ) : null}
+            </Box>
+          )}
+        </Box>
         <Divider sx={{ mb: 3 }} />
       </Box>
       <Footer />
