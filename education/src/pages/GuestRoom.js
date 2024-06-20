@@ -62,7 +62,7 @@ export const GuestRoom = () => {
       let config = {
         method: 'get',
         maxBodyLength: Infinity,
-        url: 'https://amarnath013.pythonanywhere.com/api/user/guest-room-allotments/',
+        url: `https://amarnath013.pythonanywhere.com/api/user/guest-room-allotments/?search=${localStorage?.getItem('RollNumber')}`,
         headers: { 
           Authorization: `Bearer ${localStorage.getItem('accesstoken')}`
         },
@@ -107,9 +107,9 @@ export const GuestRoom = () => {
         },
         autoHideDuration: 3000,
       });
-      // setTimeout(() => {
-      //   window.location.reload();
-      // }, 2500);
+      setTimeout(() => {
+        window.location.reload();
+      }, 2500);
     } catch (error) {
       console.error(error);
     }
@@ -232,16 +232,11 @@ export const GuestRoom = () => {
             flexDirection: "column",
           }}
         >
-          {result.length === 0 && (
-            <p style={{ marginBottom: "50px", marginTop: "100px", fontSize: "1.2rem" }}>
-              Nothing to show
-            </p>
-          )}
-
+        
           {responsive ? (
             result.length > 0 ? (
               result.map((data, index) => (
-                data.registration_number === localStorage.getItem('RollNumber') && (
+               
                   <Box key={index}>
                     <Card
                       sx={{
@@ -273,7 +268,7 @@ export const GuestRoom = () => {
                       </CardContent>
                     </Card>
                   </Box>
-                )
+                
               ))
             ) : (
               <p style={{ marginBottom: "50px", marginTop: "100px", fontSize: "1.2rem" }}>
