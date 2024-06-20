@@ -15,7 +15,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { enqueueSnackbar } from "notistack";
-import emailValidator from 'email-validator';
+import emailValidator from "email-validator";
 import NavbarNew from "../components/NavbarNew";
 
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
@@ -26,10 +26,18 @@ const schema = yup.object().shape({
   father_name: yup.string().required("Father name is required"),
   middle_name: yup.string(),
   gender: yup.string().required("Gender is required"),
-  email: yup.string().email("Invalid email format").test('valid-email', 'Invalid email format', value => emailValidator.validate(value)),
-  phone_number: yup.number().min(1000000000,'phone no. should be of 10 digit').max(9999999999,'phone no. should be of 10 digits').required("Phone number is required"),
-  alternate_phone_number: yup
-    .string(),
+  email: yup
+    .string()
+    .email("Invalid email format")
+    .test("valid-email", "Invalid email format", (value) =>
+      emailValidator.validate(value)
+    ),
+  phone_number: yup
+    .number()
+    .min(1000000000, "phone no. should be of 10 digit")
+    .max(9999999999, "phone no. should be of 10 digits")
+    .required("Phone number is required"),
+  alternate_phone_number: yup.string(),
   date_of_birth: yup
     .string()
     .matches(
@@ -40,7 +48,10 @@ const schema = yup.object().shape({
   address: yup.string().required("Address is required"),
   city: yup.string().required("City is required"),
   state: yup.string().required("State is required"),
-  postal_code: yup.number().min(100000,'should contain 6 digits').required("Postal code is required"),
+  postal_code: yup
+    .number()
+    .min(100000, "should contain 6 digits")
+    .required("Postal code is required"),
   country: yup.string().required("Country is required"),
   enrollment_date: yup
     .string()
@@ -52,15 +63,34 @@ const schema = yup.object().shape({
   program: yup.string().required("Program is required"),
   major: yup.string().required("Major is required"),
   department: yup.string().required("Department is required"),
-  current_year: yup.string().matches(
-    /^(1|2|3|4)$/,
-    "Current year should be 1, 2, 3, or 4"
-).required("Current year is required"),
+  batch: yup
+    .string()
+    .required("Batch is required")
+    .test("batch_valid","Format should be like YYYY-YYYY",(value) => {
+      console.log(value);
+      if (!value.includes("-")) {
+        return false;
+      }
+      let number1 = value.split("-")[0];
+      let number2 = value.split("-")[1];
+
+      if(number1.length!==4 && number2.length!==4)
+        {
+          return false;
+        }
+      if (isNaN(number1) || isNaN(number2)) {
+        return false;
+      }
+
+      return number2 - number1 === 4 || number2 - number1 === 3;
+    }),
+  current_year: yup
+    .string()
+    .matches(/^(1|2|3|4)$/, "Current year should be 1, 2, 3, or 4")
+    .required("Current year is required"),
   gpa: yup.number().required("GPA is required"),
   course_enrolled: yup.number().required("Course is required"),
 });
-
-
 
 export const EditProfile = () => {
   const navigate = useNavigate();
@@ -70,7 +100,7 @@ export const EditProfile = () => {
       const response = jwtDecode(localStorage?.getItem("accesstoken"));
       if (
         response.token_type !== "access" &&
-        response.exp<Math.floor(Date.now() / 1000)
+        response.exp < Math.floor(Date.now() / 1000)
       ) {
         navigate("/login");
       }
@@ -90,7 +120,7 @@ export const EditProfile = () => {
 
   console.log(errors);
   const [userProfile, setUserProfile] = useState([]);
-  const [file,setFile]=useState('');
+  const [file, setFile] = useState("");
 
   useEffect(() => {
     let config = {
@@ -156,7 +186,11 @@ export const EditProfile = () => {
           response.data.academic_information?.current_year || ""
         );
         setValue("gpa", response.data.academic_information?.gpa || "");
-        setValue("department", response.data.academic_information?.department || "");
+        setValue(
+          "department",
+          response.data.academic_information?.department || ""
+        );
+        setValue("batch", response.data.academic_information?.batch || "");
         setValue(
           "course_enrolled",
           response.data.academic_information?.course_enrolled || ""
@@ -169,10 +203,8 @@ export const EditProfile = () => {
   }, [setValue]);
 
   console.log(errors);
-  
-  const UpdateSubmit = (data) => {
 
-    
+  const UpdateSubmit = (data) => {
     // console.log(file);
     // formData.append("profile_picture",file.name);
 
@@ -203,7 +235,8 @@ export const EditProfile = () => {
         current_year: data.current_year,
         gpa: data.gpa,
         course_enrolled: data.course_enrolled,
-        department:data.department
+        department: data.department,
+        batch: data.batch,
       },
       user: {
         registration_number: "16900120125",
@@ -234,7 +267,7 @@ export const EditProfile = () => {
           },
           autoHideDuration: 3000,
         });
-        navigate('/profile')
+        navigate("/profile");
       })
       .catch((error) => {
         console.log(error);
@@ -244,7 +277,6 @@ export const EditProfile = () => {
     <Box style={{ fontFamily: "Math", minHeight: "100vh" }}>
       <NavbarNew />
       <Grid container>
-       
         <Grid item xs={12} sm={12} md={12} lg={12}>
           <Box
             className=" mt-3 w-full lg:p-10 sm:p-5 p-5"
@@ -257,17 +289,19 @@ export const EditProfile = () => {
             </Box>
 
             <Box className="text-center">
-              <label component='label'>
-              <img
-                src="https://mui.com/static/images/avatar/2.jpg"
-                alt=""
-                className="lg:w-[10%] w-[40%] sm:w-[25%] md:w-[15%] h-auto text-center"
-                style={{ borderRadius: "50%" }}
-              
-              />
-              <input type="file" accept="image/*" style={{display:"none"}}
-               onChange={(e)=>setFile(e.target.files[0])}
-              />
+              <label component="label">
+                <img
+                  src="https://mui.com/static/images/avatar/2.jpg"
+                  alt=""
+                  className="lg:w-[10%] w-[40%] sm:w-[25%] md:w-[15%] h-auto text-center"
+                  style={{ borderRadius: "50%" }}
+                />
+                <input
+                  type="file"
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  onChange={(e) => setFile(e.target.files[0])}
+                />
               </label>
             </Box>
 
@@ -367,8 +401,7 @@ export const EditProfile = () => {
                   </Grid>
 
                   <Divider style={{ width: "100%", margin: "10px 0" }} />
-                  
-                
+
                   <Grid
                     item
                     lg={4}
@@ -711,6 +744,26 @@ export const EditProfile = () => {
                     md={12}
                     style={{ marginTop: "10px" }}
                   >
+                    <Typography variant="p">Batch</Typography>
+                  </Grid>
+                  <Grid item lg={4} sm={12} xs={12} md={12}>
+                    <TextField
+                      type="text"
+                      {...register("batch")}
+                      error={!!errors.batch}
+                      helperText={errors.batch?.message}
+                    />
+                  </Grid>
+
+                  <Divider style={{ width: "100%", margin: "10px 0" }} />
+                  <Grid
+                    item
+                    lg={4}
+                    sm={12}
+                    xs={12}
+                    md={12}
+                    style={{ marginTop: "10px" }}
+                  >
                     <Typography variant="p">Course enrolled</Typography>
                   </Grid>
                   <Grid item lg={4} sm={12} xs={12} md={12}>
@@ -724,16 +777,18 @@ export const EditProfile = () => {
                 </Grid>
               </Box>
               <center>
-              <Button variant="contained" type="submit" style={{marginBottom:"40px"}}>
-                Update
-              </Button>
+                <Button
+                  variant="contained"
+                  type="submit"
+                  style={{ marginBottom: "40px" }}
+                >
+                  Update
+                </Button>
               </center>
             </form>
           </Box>
         </Grid>
       </Grid>
-
-     
     </Box>
   );
 };

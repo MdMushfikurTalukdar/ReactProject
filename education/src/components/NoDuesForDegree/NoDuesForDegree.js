@@ -4,297 +4,140 @@ import {
   Grid,
   TextField,
   Typography,
-  MenuItem,
-  Select,
   FormControl,
-  InputLabel,
   FormHelperText,
-  FormControlLabel, 
+  FormControlLabel,
   Checkbox,
   CardContent,
   Card,
-  Box
+  Box,
+  Divider,
 } from "@mui/material";
-import "../../App.css";
 import NavbarNew from "../NavbarNew";
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Footer from "../Home/Footer";
 import { enqueueSnackbar } from "notistack";
 
+// Validation schema
 const schema = yup.object().shape({
-  selectedSemester: yup.string().required("Semester is required"),
-  branch: yup.string().required("Branch is required"),
-  checkbox: yup.boolean().required("Please agree to the terms and conditions"),
+  Category: yup.string().required("Category is required"),
+  checkbox: yup.boolean().oneOf([true], "Please agree to the terms and conditions"),
 });
 
 export function NoDuesForDegree() {
   const navigate = useNavigate();
-  const [student, setStudent] = useState({});
-  const [branches, setBranches] = useState([]);
-  const [branches1, setBranches1] = useState([]);
-  const [branches2, setBranches2] = useState([]);
-  const [selectedSemester, setSelectedSemester] = useState("");
-  const [userProfile, setUserProfile] = useState([]);
-  const [subjects, setSubjects] = useState([]);
-  const [totalData, setTotalData] = useState([]);
-  const [uniqueCodes, setUniqueCodes] = useState([]);
-  const [uniqueSubjects, setUniqueSubjects] = useState([]);
+  const [userProfile, setUserProfile] = useState({});
   const [result, setResult] = useState([]);
-  const [checkedState, setCheckedState] = useState(false);
-  
-
-  const [responsive, setResponsive] = useState(
-    window.innerWidth < 669 ? true : false
-  );
-
-  useEffect(() => {
-    window.addEventListener("resize", resize);
-
-    return () => {
-      window.removeEventListener("resize", resize);
-    };
-  }, []);
-
-  const resize = () => {
-    setResponsive(window.innerWidth < 669 ? true : false);
-  };
+  const [responsive, setResponsive] = useState(window.innerWidth < 669);
 
   const {
     handleSubmit,
-    control,
-    setValue,
-    trigger,
+    register,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
   });
 
   useEffect(() => {
-    let config = {
-      method: "GET",
-      maxBodyLength: Infinity,
-      url: "https://amarnath013.pythonanywhere.com/api/user/profile/",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
-      },
-    };
+    window.addEventListener("resize", () => {
+      setResponsive(window.innerWidth < 669);
+    });
 
-    axios
-      .request(config)
-      .then((response) => {
-        setUserProfile(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
+    return () => {
+      window.removeEventListener("resize", () => {
+        setResponsive(window.innerWidth < 669);
       });
+    };
   }, []);
 
   useEffect(() => {
-    console.log(userProfile?.personal_information?.registration_number);
-    let config = {
-      method: "get",
-      maxBodyLength: Infinity,
-      url: `https://amarnath013.pythonanywhere.com/api/user/semester-registrations/?search=${userProfile?.personal_information?.registration_number}`,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
-      },
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("https://amarnath013.pythonanywhere.com/api/user/profile/", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
+          },
+        });
+        setUserProfile(response.data);
+      } catch (error) {
+        console.log(error);
+      }
     };
 
-    axios
-      .request(config)
-      .then((response) => {
-        console.log(response.data);
-        setResult(response.data.reverse());
-      })
-      .catch((error) => {
+    const fetchRequests = async () => {
+      try {
+        const response = await axios.get("https://amarnath013.pythonanywhere.com/api/user/overall-no-dues/", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
+          },
+        });
+        setResult(response.data);
+      } catch (error) {
         console.log(error);
-      });
-  }, [userProfile]);
+      }
+    };
 
-  useEffect(() => {
-    if (localStorage?.getItem("accesstoken")) {
-      const response = jwtDecode(localStorage?.getItem("accesstoken"));
-      if (response.exp < Math.floor(Date.now() / 1000)) {
+    if (localStorage.getItem("accesstoken")) {
+      const decodedToken = jwtDecode(localStorage.getItem("accesstoken"));
+      if (decodedToken.exp < Math.floor(Date.now() / 1000)) {
         navigate("/login");
+      } else {
+        fetchData();
+        fetchRequests();
       }
     } else {
       navigate("/login");
     }
-  }, []);
+  }, [navigate]);
 
-  useEffect(() => {
-    let config = {
-      method: "get",
-      maxBodyLength: Infinity,
-      url: `https://amarnath013.pythonanywhere.com/api/user/semester/?search`,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
-      },
+  const onSubmit = async (data) => {
+    const requestData = {
+      name: `${userProfile?.personal_information?.first_name} ${userProfile?.personal_information?.last_name}` ,
+      branch: userProfile?.academic_information?.department,
+      father_name: userProfile?.personal_information?.father_name,
+      category: data?.Category,
+      self_declaration: true,
+      status: "applied",
+      session: userProfile?.academic_information?.batch,
     };
 
-    axios
-      .request(config)
-      .then((response) => {
-        setTotalData(response.data);
-        const uniqueBranches = response.data.reduce((acc, current) => {
-          const x = acc.find(
-            (item) => item.semester_name === current.semester_name
-          );
-          if (!x) {
-            return acc.concat([current]);
-          } else {
-            return acc;
-          }
-        }, []);
-        setBranches(uniqueBranches);
-      })
-      .catch((error) => {
-        console.log(error);
+    try {
+      const response = await axios.post("https://amarnath013.pythonanywhere.com/api/user/overall-no-dues/", requestData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
+        },
       });
-  }, []);
 
-  const fetchBranches = (semester) => {
-    let config = {
-      method: "get",
-      maxBodyLength: Infinity,
-      url: `https://amarnath013.pythonanywhere.com/api/user/semester/?search=${semester}`,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
-      },
-    };
+      setTimeout(()=>{
+        window.location.reload();
+      },2000);
 
-    axios
-      .request(config)
-      .then((response) => {
-        const uniqueBranches = response.data.reduce((acc, current) => {
-          const x = acc.find(
-            (item) =>
-              item.semester_name === current.semester_name &&
-              item.branch === current.branch
-          );
-          if (!x) {
-            return acc.concat([current]);
-          } else {
-            return acc;
-          }
-        }, []);
-        setBranches1(uniqueBranches);
-      })
-      .catch((error) => {
-        console.log(error);
+      enqueueSnackbar("Request was applied successfully", {
+        variant: "success",
+        anchorOrigin: {
+          vertical: "bottom",
+          horizontal: "center",
+        },
+        autoHideDuration: 3000,
       });
-  };
 
-  const handleSemesterChange = (event) => {
-    const semester = event.target.value;
-    setSelectedSemester(semester);
-    setValue("selectedSemester", semester);
-    trigger("selectedSemester");
-    fetchBranches(semester);
-  };
-
-  const handleBranchChange = (event) => {
-    const branch = event.target.value;
-    setBranches2(branch);
-    setValue("branch", branch);
-    trigger("branch");
-  };
-
-  useEffect(() => {
-    if (selectedSemester && branches2) {
-      const filteredData = totalData.filter(
-        (item) =>
-          item.semester_name === selectedSemester && item.branch === branches2
-      );
-      const uniqueCodes = [
-        ...new Set(
-          filteredData
-            .map((item) => item.subjects.map((subject) => subject.subject_code))
-            .flat()
-        ),
-      ];
-      const uniqueSubjects = filteredData
-        .map((item) => item.subjects)
-        .flat()
-        .filter(
-          (v, i, a) =>
-            a.findIndex((t) => t.subject_name === v.subject_name) === i
-        );
-      setUniqueCodes(uniqueCodes);
-      setUniqueSubjects(uniqueSubjects);
+    } catch (error) {
+      console.log(error);
+      enqueueSnackbar("The request has already been made.", {
+        variant: "success",
+        anchorOrigin: {
+          vertical: "bottom",
+          horizontal: "center",
+        },
+        autoHideDuration: 3000,
+      });
     }
-  }, [selectedSemester, branches2]);
-
-  const onSubmit = (data) => {
-
-    let config = {
-      method: "get",
-      maxBodyLength: Infinity,
-      url: "https://amarnath013.pythonanywhere.com/api/user/semester/?search",
-      headers: {
-        Authorization: `Bearer ${localStorage?.getItem("accesstoken")}`,
-      },
-    };
-
-    axios
-      .request(config)
-      .then((response) => {
-        console.log(response.data);
-        const b = response.data.find((item) => {
-          return item?.subjects?.length!==0 &&  item?.semester_name ===  data?.selectedSemester && item?.branch === data?.branch;
-      })?.id;
-
-        let data1 = JSON.stringify({
-          semester: b,
-          student: `${jwtDecode(localStorage?.getItem("accesstoken")).user_id}`,
-        });
-
-        let config = {
-          method: "post",
-          maxBodyLength: Infinity,
-          url: "https://amarnath013.pythonanywhere.com/api/user/semester-registrations/",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage?.getItem("accesstoken")}`,
-          },
-          data: data1,
-        };
-
-        axios
-          .request(config)
-          .then((response) => {
-            console.log(response.data);
-
-            enqueueSnackbar("Request sent successfully", {
-              variant: "success",
-              anchorOrigin: {
-                vertical: "bottom",
-                horizontal: "center",
-              },
-              autoHideDuration: 1000,
-            });
-    
-            setTimeout(() => {
-              window.location.reload();
-            }, 3000);
-
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
   };
-
-  //check box
 
   return (
     <>
@@ -308,13 +151,11 @@ export function NoDuesForDegree() {
         <Grid item xs={12} sm={6}>
           <TextField
             type="text"
-            label="Name"
             value={`${userProfile?.personal_information?.first_name} ${userProfile?.personal_information?.middle_name} ${userProfile?.personal_information?.last_name}`}
             fullWidth
             disabled
           />
         </Grid>
-        {/* Other form fields */}
         <Grid item xs={12} sm={6}>
           <TextField
             type="text"
@@ -323,35 +164,13 @@ export function NoDuesForDegree() {
             disabled
           />
         </Grid>
-        
+
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth>
-            <InputLabel id="branch-label">Branch</InputLabel>
-            <Controller
-              name="branch"
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  labelId="branch-label"
-                  label="Branch"
-                  onChange={(e) => {
-                    field.onChange(e);
-                    handleBranchChange(e);
-                  }}
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-
-                  {branches1?.map((data, index) => (
-                    <MenuItem key={index} value={data.branch}>
-                      {data.branch}
-                    </MenuItem>
-                  ))}
-                </Select>
-              )}
+            <TextField
+              value={userProfile?.academic_information?.department || ""}
+              disabled
+              placeholder="Batch"
             />
             <FormHelperText>{errors.branch?.message}</FormHelperText>
           </FormControl>
@@ -360,46 +179,50 @@ export function NoDuesForDegree() {
         <Grid item xs={12} sm={6}>
           <TextField
             type="text"
-            label="Session"
-            value={userProfile?.personal_information?.session}
-            fullWidth
-            disabled
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            type="text"
             value={userProfile?.personal_information?.father_name}
             fullWidth
             disabled
+            placeholder="Father name"
           />
         </Grid>
+
+        <Grid item xs={12} sm={6}>
+          <TextField
+            type="text"
+            value={userProfile?.academic_information?.batch}
+            fullWidth
+            placeholder="Session"
+            disabled
+          />
+          <FormHelperText style={{ color: "red" }}>
+            {errors?.Session?.message}
+          </FormHelperText>
+        </Grid>
+
         <Grid item xs={12} sm={6}>
           <TextField
             type="text"
             label="Category"
-            value={userProfile?.personal_information?.category}
             fullWidth
-            disabled
+            {...register("Category")}
+           
           />
+          <FormHelperText style={{ color: "red" }}>
+            {errors?.Category?.message}
+          </FormHelperText>
         </Grid>
       </Grid>
 
-{/* check box */}
       <Grid item xs={12} sm={6}>
         <FormControlLabel
-        sx={{ marginLeft: '15%' }}
-          control={
-            <Checkbox
-              name="checkbox"
-              checked={checkedState}
-              onChange={(e) => setCheckedState(e.target.checked)}
-            />
-          }
-          label="I declare that all these information are correct and i have not any no dues in any department/section as per my knowledge."
+          sx={{ marginLeft: "2%" }}
+          control={<Checkbox name="checkbox" {...register("checkbox")} />}
+          label="I declare that all these information are correct and I have no dues in any department/section as per my knowledge."
         />
         {errors.checkbox && (
-          <FormHelperText style={{marginLeft:"16%"}} error>{errors.checkbox.message}</FormHelperText>
+          <FormHelperText style={{ marginLeft: "16%" }} error>
+            {errors.checkbox.message}
+          </FormHelperText>
         )}
       </Grid>
 
@@ -413,62 +236,66 @@ export function NoDuesForDegree() {
         </Button>
       </Grid>
 
-    {/* No dues request status */}
-    <Grid container spacing={3} style={{ padding: "20px",marginTop: "40px" }}>
-        <Grid item xs={12}>
-          <Typography variant="h5" gutterBottom style={{ width: "100%" }}>
-            No dues request status
-          </Typography>
-        </Grid>
-        <Box
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            flexDirection: "column",
-            padding: "20px",
-            alignItems: "center",
-            alignContent: "center",
-            width: "100vw",
-          }}
-        >
-          {result?.length === 0 && (
-            <p
-              style={{
-                marginBottom: "50px",
-                marginTop: "100px",
-                fontSize: "1.2rem",
-              }}
-            >
-              <div className="container2">
-      <div className="header1">No Dues Request</div>
-      <div className="info">View Status</div>
-      <div className="info1">Requested on:</div>
-      <div className="info1">Final Approved on:</div>
-    </div>
-            </p>
-          )}
+      <Typography
+        variant="h5"
+        align="center"
+        gutterBottom
+        style={{ marginTop: "20px" }}
+      >
+        No Dues Request Status
+      </Typography>
+      <Divider />
 
-          { result.length > 0 &&
-            result.map((data, index) => (
-              <Box key={index}>
-                <Card
-                  sx={{
-                    minWidth: 275,
-                    marginBottom: 2,
-                    backgroundColor: "#D2E9E9",
-                    height: 150,
-                  }}
-                >
-                  <CardContent>
-                    <Typography variant="h6" component="div">
-                      Department : {data?.name}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Box>
-            ))}
-        </Box>
-      </Grid>
+      <Box
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          flexDirection: "column",
+        }}
+      >
+        {result.length === 0 && (
+          <Typography
+            style={{
+              marginBottom: "50px",
+              marginTop: "100px",
+              fontSize: "1.2rem",
+              textAlign:"center"
+            }}
+          >
+            Nothing to show
+          </Typography>
+        )}
+        {result.length > 0 &&
+          result.map((data, index) => (
+            <Box key={index} style={{display:"flex",justifyContent:"center",flexDirection:"column",alignItems:"center",maxWidth:"100%",marginTop:"20px"}}>
+              <Card
+                sx={{
+                  minWidth: 275,
+                  width:'60vw',
+                  marginBottom: 2,
+                  backgroundColor: "#D2E9E9",
+                }}
+              >
+                <CardContent>
+                  <Typography
+                    sx={{ fontSize: 14 }}
+                    color="text.secondary"
+                    gutterBottom
+                  >
+                    Request Details
+                  </Typography>
+                  <Typography variant="body2">
+                    Registration Number: {data?.registration_number}
+                  </Typography>
+                  <Typography variant="h6" component="div">
+                    Name: {data?.name}
+                  </Typography>
+                  <Typography variant="body2">Status: {data?.status}</Typography>
+                </CardContent>
+              </Card>
+            </Box>
+          ))}
+      </Box>
       <Footer />
     </>
   );
