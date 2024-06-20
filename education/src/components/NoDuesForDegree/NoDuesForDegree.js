@@ -369,8 +369,7 @@ export function NoDuesForDegree() {
         <Grid item xs={12} sm={6}>
           <TextField
             type="text"
-            label="Father's Name"
-            value={userProfile?.personal_information?.fathers_name}
+            value={userProfile?.personal_information?.father_name}
             fullWidth
             disabled
           />

@@ -397,6 +397,24 @@ export const ProfileMainBody = () => {
               </Typography>
             </Grid>
 
+
+            <Divider style={{ width: "100%", margin: "10px 0" }} />
+            <Grid
+              item
+              lg={4}
+              sm={12}
+              xs={12}
+              md={12}
+              style={{ marginTop: "10px" }}
+            >
+              <Typography variant="p">Department</Typography>
+            </Grid>
+            <Grid item lg={4} sm={12} xs={12} md={12}>
+              <Typography variant="p">
+                {userProfile?.academic_information?.department}
+              </Typography>
+            </Grid>
+
             <Divider style={{ width: "100%", margin: "10px 0" }} />
             <Grid
               item

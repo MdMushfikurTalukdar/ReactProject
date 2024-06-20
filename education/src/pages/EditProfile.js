@@ -51,6 +51,7 @@ const schema = yup.object().shape({
     .required("Date is required."),
   program: yup.string().required("Program is required"),
   major: yup.string().required("Major is required"),
+  department: yup.string().required("Department is required"),
   current_year: yup.string().matches(
     /^(1|2|3|4)$/,
     "Current year should be 1, 2, 3, or 4"
@@ -155,6 +156,7 @@ export const EditProfile = () => {
           response.data.academic_information?.current_year || ""
         );
         setValue("gpa", response.data.academic_information?.gpa || "");
+        setValue("department", response.data.academic_information?.department || "");
         setValue(
           "course_enrolled",
           response.data.academic_information?.course_enrolled || ""
@@ -201,6 +203,7 @@ export const EditProfile = () => {
         current_year: data.current_year,
         gpa: data.gpa,
         course_enrolled: data.course_enrolled,
+        department:data.department
       },
       user: {
         registration_number: "16900120125",
@@ -676,6 +679,26 @@ export const EditProfile = () => {
                       {...register("gpa")}
                       error={!!errors.gpa}
                       helperText={errors.gpa?.message}
+                    />
+                  </Grid>
+
+                  <Divider style={{ width: "100%", margin: "10px 0" }} />
+                  <Grid
+                    item
+                    lg={4}
+                    sm={12}
+                    xs={12}
+                    md={12}
+                    style={{ marginTop: "10px" }}
+                  >
+                    <Typography variant="p">Department</Typography>
+                  </Grid>
+                  <Grid item lg={4} sm={12} xs={12} md={12}>
+                    <TextField
+                      type="text"
+                      {...register("department")}
+                      error={!!errors.department}
+                      helperText={errors.department?.message}
                     />
                   </Grid>
 

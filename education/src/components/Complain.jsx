@@ -1,6 +1,32 @@
 import React, { useState, useEffect } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  Paper,
+  TextField,
+  Typography,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
+} from "@mui/material";
+
+// Validation schema
+const complaintSchema = yup.object().shape({
+  type: yup.string().required("Complaint type is required"),
+  subject: yup.string().required("Subject is required"),
+  description: yup.string().required("Description is required"),
+});
 
 const ComplaintForm = () => {
   const [profileData, setProfileData] = useState({
@@ -9,15 +35,15 @@ const ComplaintForm = () => {
     branch: "",
   });
   const [complaints, setComplaints] = useState([]);
+  const [previousRecord, setPreviousRecord] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if the token is valid
     const token = localStorage.getItem("accesstoken");
     if (!token) {
       window.location.href = "/login";
     }
 
-    // Fetch user profile data from backend
     const fetchProfileData = async () => {
       try {
         const response = await fetch(
@@ -25,37 +51,36 @@ const ComplaintForm = () => {
           {
             method: "GET",
             headers: {
-              Authorization: `Bearer ${localStorage.getItem('accesstoken')}`,
+              Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
             },
           }
         );
+        if (!response.ok) throw new Error("Failed to fetch profile data");
         const data = await response.json();
-        console.log(data);
-        console.log(data?.academic_information?.registration_number);
         setProfileData({
           registrationNo: data?.academic_information?.registration_number,
           name: data?.personal_information?.first_name,
-          branch: data?.academic_information?.current_year,
+          branch: data?.academic_information?.department,
         });
       } catch (error) {
         console.error("Error fetching profile data:", error);
       }
     };
 
-    // Fetch complaints from backend
     const fetchComplaints = async () => {
       try {
         const response = await fetch(
-          "https://amarnath013.pythonanywhere.com/api/user/complaint",
+          "https://amarnath013.pythonanywhere.com/api/user/complaints",
           {
             method: "GET",
             headers: {
-              Authorization: `Bearer ${localStorage.getItem('accesstoken')}`,
+              Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
             },
           }
         );
+        if (!response.ok) throw new Error("Failed to fetch complaints");
         const data = await response.json();
         setComplaints(data);
       } catch (error) {
@@ -67,142 +92,228 @@ const ComplaintForm = () => {
     fetchComplaints();
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const newComplaint = {
-      type: formData.get("type"),
-      subject: formData.get("subject"),
-      description: formData.get("description"),
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: yupResolver(complaintSchema),
+  });
+
+  useEffect(() => {
+    let config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: "https://amarnath013.pythonanywhere.com/api/user/complaints/",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
+      },
     };
 
-    const token = localStorage.getItem("accesstoken");
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(response.data);
+        setPreviousRecord(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
-    try {
-      const response = await fetch(
-        "https://amarnath013.pythonanywhere.com/api/user/complaint",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem('accesstoken')}`,
-          },
-          body: JSON.stringify(newComplaint),
-        }
-      );
-      if (!response.ok) throw new Error("Failed to submit complaint");
-
-      const updatedComplaints = await response.json();
-      setComplaints(updatedComplaints);
-
-      toast.success("Complaint submitted successfully!");
-    } catch (error) {
-      console.error("Error submitting complaint:", error);
-      toast.error("Failed to submit complaint");
+    if (localStorage?.getItem("accesstoken")) {
+      const response = jwtDecode(localStorage?.getItem("accesstoken"));
+      if (response.exp < Math.floor(Date.now() / 1000)) {
+        navigate("/login");
+      }
+    } else {
+      navigate("/login");
     }
+  }, []);
 
-    e.target.reset();
+  const onSubmit = (data) => {
+    let data1 = JSON.stringify({
+      name: profileData?.name,
+      branch: "Computer Science",
+      status: "applied",
+      complaint_type: data.type.toLowerCase(),
+      complaint_description: data.description,
+    });
+
+    let config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: "https://amarnath013.pythonanywhere.com/api/user/complaints/",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
+      },
+      data: data1,
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(response.data);
+        toast.success("Complaint successfully created");
+        setPreviousRecord(response.data);
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <header className="text-center mb-4">
-        <h1 className="text-2xl font-bold">Complaints Form</h1>
-      </header>
-
-      <form className="bg-white p-4 shadow-md rounded" onSubmit={handleSubmit}>
-        <div className="mb-4 flex items-center justify-start gap-5">
-          <label className="block text-gray-700">
-            Registration/ Employee No:
-          </label>
-          <input
-            type="text"
-            className="mt-1 block w-60 bg-gray-100 p-2 rounded"
-            value={profileData?.registrationNo}
-            disabled
-          />
-        </div>
-        <div className="mb-4 flex gap-4 items-center flex-wrap">
-          <label className="block text-gray-700">Name:</label>
-          <input
-            type="text"
-            className="mt-1 block w-60 bg-gray-100 p-2 rounded"
-            value={profileData?.name}
-            disabled
-          />
-          <label className="block text-gray-700">Branch:</label>
-          <input
-            type="text"
-            className="mt-1 block w-60 bg-gray-100 p-2 rounded"
-            value={profileData?.branch}
-            disabled
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700">Complaint Type:</label>
-          <select
-            name="type"
-            className="mt-1 block w-60 bg-gray-100 p-2 rounded"
-          >
-            <option value="Ragging related">Ragging related</option>
-            <option value="Academic fees">Academic fees</option>
-            <option value="Classes related">Classes related</option>
-            <option value="Others">Others</option>
-          </select>
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Subject:</label>
-          <input
-            type="text"
-            name="subject"
-            className="mt-1 block w-60 bg-gray-100 p-2 rounded"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Complaint Description:</label>
-          <textarea
-            name="description"
-            className="mt-1 block w-80 bg-gray-100 p-2 rounded"
-            rows="4"
-          ></textarea>
-        </div>
-        <div className="text-center">
-          <button
-            type="submit"
-            className="bg-[#6BA9A9] text-white text-xl border-none hover:bg-[#558888] px-4 py-2 rounded"
-          >
-            Register Complaint
-          </button>
-        </div>
-      </form>
-
-      <section className="mt-8">
-        <h2 className="text-xl font-bold mb-4">Previous Complaints:</h2>
-        {complaints.length > 0 ? (
-          complaints.map((complaint, index) => (
-            <div key={index} className="bg-gray-100 p-4 mb-4 rounded shadow">
-              <p>
-                <strong>Complaint Type:</strong> {complaint?.type}
-              </p>
-              <p>
-                <strong>Subject:</strong> {complaint?.subject}
-              </p>
-              <p>
-                <strong>Registered on:</strong> {complaint?.registeredOn}
-              </p>
-              <p>
-                <strong>Status:</strong> {complaint?.status}
-              </p>
-            </div>
-          ))
-        ) : (
-          <p>No previous complaints.</p>
-        )}
-      </section>
-
+    <Container maxWidth="md">
       <ToastContainer />
-    </div>
+      <Box component={Paper} p={4} mt={4}>
+        <Typography variant="h4" align="center" gutterBottom>
+          Complaints Form
+        </Typography>
+
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                label="Registration/ Employee No"
+                fullWidth
+                value={profileData?.registrationNo}
+                disabled
+                variant="outlined"
+                margin="normal"
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Name"
+                fullWidth
+                value={profileData?.name}
+                disabled
+                variant="outlined"
+                margin="normal"
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Branch"
+                fullWidth
+                value={profileData?.branch}
+                disabled
+                variant="outlined"
+                margin="normal"
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <FormControl fullWidth margin="normal" variant="outlined">
+                <InputLabel>Complaint Type</InputLabel>
+                <Controller
+                  name="type"
+                  control={control}
+                  render={({ field }) => (
+                    <Select {...field} label="Complaint Type">
+                      <MenuItem value="Ragging related">Ragging related</MenuItem>
+                      <MenuItem value="Academic fees">Academic fees</MenuItem>
+                      <MenuItem value="Classes related">Classes related</MenuItem>
+                      <MenuItem value="Others">Others</MenuItem>
+                    </Select>
+                  )}
+                />
+                {errors.type && <Typography color="error">{errors.type.message}</Typography>}
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Controller
+                name="subject"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Subject"
+                    fullWidth
+                    variant="outlined"
+                    margin="normal"
+                  />
+                )}
+              />
+              {errors.subject && (
+                <Typography color="error">{errors.subject.message}</Typography>
+              )}
+            </Grid>
+
+            <Grid item xs={12}>
+              <Controller
+                name="description"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Complaint Description"
+                    multiline
+                    rows={4}
+                    fullWidth
+                    variant="outlined"
+                    margin="normal"
+                  />
+                )}
+              />
+              {errors.description && (
+                <Typography color="error">{errors.description.message}</Typography>
+              )}
+            </Grid>
+
+            <Grid item xs={12}>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                fullWidth
+                style={{
+                  backgroundColor:"rgb(107, 169, 169)"
+                }}
+              >
+                Register Complaint
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
+      </Box>
+
+      <Box mt={4}>
+        <Typography variant="h5" gutterBottom>
+          Previous Complaints
+        </Typography>
+        {complaints.length > 0 ? (
+          complaints.map((complaint, index) =>
+            complaint.registration_number === profileData.registrationNo ? (
+              <Box key={index} component={Paper} p={2} mb={2}>
+                <Typography variant="body1">
+                  <strong>Name:</strong> {complaint?.name}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Branch:</strong> {complaint?.branch}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Complaint Description:</strong> {complaint?.complaint_description}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Complaint Type:</strong> {complaint?.complaint_type}
+                </Typography>
+              </Box>
+            ) : null
+          )
+        ) : (
+          <Typography>No previous complaints.</Typography>
+        )}
+      </Box>
+    </Container>
   );
 };
 
