@@ -357,14 +357,14 @@ export const HostelRoomRequest = () => {
                       color="text.secondary"
                       gutterBottom
                     >
-                      Bonafide Details
+                      Previous Request Details
                     </Typography>
 
                     <Typography sx={{ mb: 1.5 }} color="text.secondary">
                       Status : {data?.status}
                     </Typography>
                     <Typography variant="body2">
-                      Marksheet:<br/>
+                      Marksheet Image:<br/>
                       {data?.latest_marksheet!==null ? (<img
                         src={`data:image/*;base64,${decodeURIComponent(
                           data?.latest_marksheet
@@ -386,7 +386,7 @@ export const HostelRoomRequest = () => {
                     <TableHead style={{ backgroundColor: "#D2E9E9" }}>
                       <TableRow>
                         <TableCell>Status</TableCell>
-                        <TableCell>Applied For</TableCell>
+                        <TableCell>Marksheet Image</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody >
