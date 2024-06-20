@@ -131,6 +131,8 @@ const ComplaintForm = () => {
     }
   }, []);
 
+  const currentDate = new Date();
+
   const onSubmit = (data) => {
     let data1 = JSON.stringify({
       name: profileData?.name,
@@ -138,6 +140,8 @@ const ComplaintForm = () => {
       status: "applied",
       complaint_type: data.type.toLowerCase(),
       complaint_description: data.description,
+      registered_date:`${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`
+
     });
 
     let config = {
@@ -293,12 +297,9 @@ const ComplaintForm = () => {
         {complaints.length > 0 ? (
           complaints.map((complaint, index) =>
             complaint.registration_number === profileData.registrationNo ? (
-              <Box key={index} component={Paper} p={2} mb={2}>
+              <Box key={index} component={Paper} p={3} mb={2} style={{ backgroundColor: "#D2E9E9"}}>
                 <Typography variant="body1">
-                  <strong>Name:</strong> {complaint?.name}
-                </Typography>
-                <Typography variant="body1">
-                  <strong>Branch:</strong> {complaint?.branch}
+                  <strong>Registered Date:</strong> {complaint?.registered_date}
                 </Typography>
                 <Typography variant="body1">
                   <strong>Complaint Description:</strong> {complaint?.complaint_description}
