@@ -54,8 +54,8 @@ export const RegisterUser = () => {
     role: yup
       .string()
       .oneOf(
-        ["student", "faculty", "admin","office","principal"],
-        "Invalid role, must be one of: student, faculty, admin,office,principal"
+        ["student", "faculty", "admin","office","principal","caretaker"],
+        "Invalid role, must be one of: student, faculty, admin,office,principal,caretaker"
       )
       .required("role is required"),
   });
