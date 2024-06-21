@@ -154,6 +154,7 @@ const CollegeForm = () => {
                 variant="contained"
                 component="label"
                 fullWidth
+                style={{backgroundColor: "rgb(107, 169, 169)"}}
               >
                 Upload College Logo
                 <input
@@ -174,6 +175,7 @@ const CollegeForm = () => {
                 variant="contained"
                 color="primary"
                 fullWidth
+                style={{backgroundColor: "rgb(107, 169, 169)"}}
               >
                 Submit
               </Button>
