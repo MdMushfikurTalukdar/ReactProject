@@ -178,6 +178,7 @@ export const HostelRoomRequest = () => {
     axios
       .request(config)
       .then((response) => {
+        localStorage.getItem('id',response?.data?.id);
         enqueueSnackbar("Request sent successfully", {
           variant: "success",
           anchorOrigin: {
@@ -191,8 +192,8 @@ export const HostelRoomRequest = () => {
       })
       .catch((error) => {
         console.log(error);
-        enqueueSnackbar(error?.data?.errors?.non_field_errors[0], {
-          variant: "success",
+        enqueueSnackbar(error?.response?.data?.errors?.non_field_errors[0], {
+          variant: "error",
           anchorOrigin: {
             vertical: "bottom",
             horizontal: "center",

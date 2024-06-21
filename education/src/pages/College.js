@@ -56,7 +56,7 @@ const CollegeForm = () => {
 
     try {
       const response = await axios.request(config);
-      console.log(JSON.stringify(response.data));
+      console.log(response.data);
      
       enqueueSnackbar("successfully created", {
         variant: "success",
