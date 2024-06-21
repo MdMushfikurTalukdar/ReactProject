@@ -26,6 +26,7 @@ import ComplaintForm from "./pages/Complain.js";
 import UnderDevelopment from "./pages/UnderDevelopment";
 import NoDuesForDegree from "./components/NoDuesForDegree/NoDuesForDegree.js"
 import { HostelNoDueReq } from "./pages/HostelNoDueReq.js";
+import CollegeForm from "./pages/College.js";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
             <Route path='/guest-room' element={<GuestRoom/>}/>
             <Route path="/logout" element={<Logout/>}/>
             <Route path="/hostel-room-request" element={<HostelRoomRequest/>}/>
+            <Route path="/add-college" element={<CollegeForm/>}/>
             <Route
               path="/bonafideCertificate"
               element={<BonafideCertificate />}

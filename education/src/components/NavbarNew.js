@@ -41,6 +41,7 @@ export const NavbarNew = () => {
   const other_responsibilities = [
     { name: "Add Subject", link: "/sem-sub-register" },
     { name: "Add Branch", link: "/sem-branch-register" },
+    { name: "Add College", link: "/add-college" },
   ];
 
   const fees_add = [{ name: "Add Fees", link: "/add-fees" }];

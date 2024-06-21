@@ -191,6 +191,14 @@ export const HostelRoomRequest = () => {
       })
       .catch((error) => {
         console.log(error);
+        enqueueSnackbar(error?.data?.errors?.non_field_errors[0], {
+          variant: "success",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 1000,
+        });
       });
   };
 
