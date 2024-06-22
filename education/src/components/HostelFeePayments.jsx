@@ -9,6 +9,7 @@ import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import dayjs from "dayjs";
+import { enqueueSnackbar } from "notistack";
 
 const schema = yup.object().shape({
   feeType: yup.string().required("Fee Type is required"),
@@ -25,7 +26,7 @@ const schema = yup.object().shape({
     .date()
     .when("startDate", (startDate, schema) => {
       return startDate
-        ? schema.min(startDate, "End date cannot be before start date")
+        ? schema.min(dayjs(startDate).add(1, "day").toDate(), "End date cannot be before start date")
         : schema;
     })
     .required("End date is required"),
@@ -39,7 +40,7 @@ function HostelFeePayment() {
   });
 
   const [fees, setFees] = useState([]);
-  const [result,setResult]=useState([]);
+  const [result, setResult] = useState([]);
 
   useEffect(() => {
     let config = {
@@ -59,7 +60,6 @@ function HostelFeePayment() {
       .catch((error) => {
         console.log(error);
       });
-
   }, []);
 
   const [total, setTotal] = useState(0);
@@ -79,6 +79,8 @@ function HostelFeePayment() {
   const noOfMonths = watch("noOfMonths");
   const monthlyCharges = watch("monthlyCharges");
   const feeType = watch("feeType");
+  const startDate = watch("startDate");
+  const endDate = watch("endDate");
 
   useEffect(() => {
     if (localStorage?.getItem("accesstoken")) {
@@ -119,26 +121,26 @@ function HostelFeePayment() {
     fetchProfileData();
   }, []);
 
-  useEffect(()=>{
-
+  useEffect(() => {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
       url: `https://amarnath013.pythonanywhere.com/api/user/hostel-room-allotments/?search=${localStorage.getItem('RollNumber')}`,
-      headers: { 
+      headers: {
         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`
       }
     };
-    
+
     axios.request(config)
-    .then((response) => {
-      console.log(response.data);
-      localStorage.setItem('id',response?.data[0]?.id)
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-  },[]);
+      .then((response) => {
+        console.log(response.data);
+        localStorage.setItem('id', response?.data[0]?.id)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   useEffect(() => {
     if (feeType) {
       const selectedFee = fees[feeType];
@@ -146,14 +148,23 @@ function HostelFeePayment() {
     }
   }, [feeType, fees, setValue]);
 
+  useEffect(() => {
+    if (startDate && endDate) {
+      const differenceInDays = dayjs(endDate).diff(dayjs(startDate), "day");
+      const calculatedMonths = Math.ceil(differenceInDays / 30);
+      setValue("noOfMonths", calculatedMonths);
+      setTotal(calculatedMonths * monthlyCharges);
+    }
+  }, [startDate, endDate, setValue, monthlyCharges]);
+
   const onSubmit = (data) => {
     let data1 = JSON.stringify({
       "registration_details": localStorage.getItem('id'),
       "from_date": dayjs(data.startDate).format("YYYY-MM-DD"),
       "to_date": dayjs(data.endDate).format("YYYY-MM-DD"),
-      "mess_fees": fees.mess_fees,
-      "maintainance_fees": fees.maintainance_fees,
-      "security_fees": fees.security_fees,
+      "mess_fees": data.feeType === "Mess_fees" ? fees.Mess_fees : null,
+      "maintainance_fees": data.feeType === "Maintainance_fees" ? fees.Maintainance_fees : null,
+      "security_fees": data.feeType === "Security_fees" ? fees.Security_fees : null,
       "total_fees": total
     });
 
@@ -171,35 +182,43 @@ function HostelFeePayment() {
     axios.request(config)
       .then((response) => {
         console.log(response.data);
-        
+        enqueueSnackbar("Amount Paid successfully", {
+          variant: "success",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 3000,
+        });
+
+        setTimeout(()=>{
+          window.location.reload();
+        },2000);
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
       url: 'https://amarnath013.pythonanywhere.com/api/user/mess-fees-payment/',
-      headers: { 
-        Authorization:`Bearer ${localStorage.getItem('accesstoken')}`
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('accesstoken')}`
       }
     };
-    
+
     axios.request(config)
-    .then((response) => {
-      console.log((response.data));
-      setResult(response.data);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-  },[]);
-  const calculate = () => {
-    setTotal(monthlyCharges * noOfMonths);
-  };
+      .then((response) => {
+        console.log((response.data));
+        setResult(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   return (
     <Container maxWidth="md">
@@ -240,7 +259,7 @@ function HostelFeePayment() {
                     startDate={field.value}
                     minDate={new Date()}
                     dateFormat="yyyy-MM-dd"
-                    customInput={<TextField label="From" variant="outlined" fullWidth style={{ zIndex: 1000 }}/>}
+                    customInput={<TextField label="From" variant="outlined" fullWidth />}
                   />
                 )}
               />
@@ -262,7 +281,7 @@ function HostelFeePayment() {
                     selectsEnd
                     startDate={watch("startDate")}
                     endDate={field.value}
-                    minDate={watch("startDate")}
+                    minDate={dayjs(watch("startDate")).add(1, "day").toDate()}
                     dateFormat="yyyy-MM-dd"
                     customInput={<TextField label="To" variant="outlined" fullWidth />}
                   />
@@ -288,7 +307,6 @@ function HostelFeePayment() {
                     error={!!errors.feeType}
                     helperText={errors.feeType?.message}
                   >
-                 
                     <MenuItem value="Maintainance_fees">Maintenance Fee</MenuItem>
                     <MenuItem value="Mess_fees">Mess Fee</MenuItem>
                     <MenuItem value="Security_Deposit">Security Money</MenuItem>
@@ -317,17 +335,9 @@ function HostelFeePayment() {
                 {...register("noOfMonths")}
                 error={!!errors.noOfMonths}
                 helperText={errors.noOfMonths?.message}
+                disabled
               />
             </Grid>
-          </Grid>
-          <Grid container justifyContent="flex-end" mb={2}>
-            <Button
-              onClick={calculate}
-              variant="contained"
-              color="primary"
-            >
-              Calculate Total
-            </Button>
           </Grid>
           <Typography variant="h6" align="right" gutterBottom>
             Total: {total}
