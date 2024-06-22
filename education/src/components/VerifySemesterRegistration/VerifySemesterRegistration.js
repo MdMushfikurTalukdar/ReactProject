@@ -3,6 +3,7 @@ import './VerifySemesterRegistration.css';
 import ApprovedList from './ApprovedList';
 import NavbarNew from "../NavbarNew";
 import Footer from "../Home/Footer";
+import { Link } from 'react-router-dom';
 
 const students = [
     {
@@ -35,26 +36,28 @@ const VerifySemesterRegistration = () => {
 
     return (
         <>
-         <NavbarNew />
+         {/* <NavbarNew /> */}
             <div className='printHide'>
             <h2 className='text1'>Semester Registration List</h2>
                 <div>
                     {students.map((student) => (
-                        <div key={student.id} className="id-card">
-                            <div className="info">
-                                <p>
-                                    <span className="label">Name:</span> {student.name}
-                                </p>
-                                <p>
-                                    <span className="label">Registration No:</span> {student.registrationNo}
-                                </p>
+                        <Link to={`/facultySemesterRegistration`} key={student.id}>
+                            <div key={student.id} className="id-card">
+                                <div className="info">
+                                    <p>
+                                        <span className="label">Name:</span> {student.name}
+                                    </p>
+                                    <p>
+                                        <span className="label">Registration No:</span> {student.registrationNo}
+                                    </p>
+                                </div>
+                                <div className="info2">
+                                    <p>
+                                        <span className="label">Semester:</span> {student.semester}
+                                    </p>
+                                </div>
                             </div>
-                            <div className="info2">
-                                <p>
-                                    <span className="label">Semester:</span> {student.semester}
-                                </p>
-                            </div>
-                        </div>
+                        </Link>
                     ))}
                 </div>
             </div>
