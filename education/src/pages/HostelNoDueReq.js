@@ -109,7 +109,22 @@ export const HostelNoDueReq = () => {
     };
   }, []);
 
+
+
   const onSubmit = (data) => {
+
+    if(maintainanceToDate===null || messToDate===null)
+    {
+      return enqueueSnackbar("Have not paid Maintainance or Mess", {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "bottom",
+          horizontal: "center",
+        },
+        autoHideDuration: 3000,
+      });
+    }
+
     let data1 = JSON.stringify({
       "semester": data.semester,
       "maintenance_fees_date": maintainanceToDate,
@@ -194,7 +209,7 @@ export const HostelNoDueReq = () => {
             Registration/Employee No:
           </Typography>
           <Typography variant="p" gutterBottom>
-            16900120124
+            {localStorage?.getItem('RollNumber')}
           </Typography>
           <FormControl
             fullWidth
