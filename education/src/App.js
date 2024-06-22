@@ -26,6 +26,7 @@ import ComplaintForm from "./pages/Complain.js";
 import UnderDevelopment from "./pages/UnderDevelopment";
 import NoDuesForDegree from "./components/NoDuesForDegree/NoDuesForDegree.js"
 import { HostelNoDueReq } from "./pages/HostelNoDueReq.js";
+import VerifySemesterRegistration from "./components/VerifySemesterRegistration/VerifySemesterRegistration"
 
 function App() {
   return (
@@ -60,6 +61,7 @@ function App() {
             <Route path="/complaints" element={ <ComplaintForm/> } />
             <Route path="/underDevelopment" element={ <UnderDevelopment/> } />
             <Route path="/no-dues-for-degree" element={ <NoDuesForDegree/> } />
+            <Route path="verifySemesterRegistration" element={<VerifySemesterRegistration/>} />
           </Routes>
         </Router>
 
