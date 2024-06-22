@@ -41,9 +41,13 @@ export const NavbarNew = () => {
   const other_responsibilities = [
     { name: "Add Subject", link: "/sem-sub-register" },
     { name: "Add Branch", link: "/sem-branch-register" },
+    { name: "Add College", link: "/add-college" },
   ];
 
-  const fees_add = [{ name: "Add Fees", link: "/add-fees" }];
+  const fees_add = [
+    { name: "Add Fees", link: "/add-fees" },
+    { name: "Hostel Room Allotment", link: "/hostel-room-allotment" }
+  ];
   const others = [
     { name: "Guest Room Request", link: "/guest-room" },
     { name: "Complaints", link: "/complaints" },

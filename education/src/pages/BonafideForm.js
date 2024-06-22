@@ -334,6 +334,19 @@ export const BonafideForm = () => {
                     <Typography variant="body2">
                       Applied Date: {data?.applied_date}
                     </Typography>
+                    {data?.status === "approved" ? (
+                              <Button
+                                size="small"
+                                variant="contained"
+                                color="primary"
+                                onClick={(e)=>navigate('/bonafideCertificate')}
+                                style={{marginTop:"10px"}}
+                              >
+                                View
+                              </Button>
+                            ) : (
+                             null
+                  )}
                   </CardContent>
                 </Card>
               </Box>
@@ -360,19 +373,21 @@ export const BonafideForm = () => {
                           <TableCell>{data?.status}</TableCell>
                           <TableCell>{data?.applied_date}</TableCell>
                           <TableCell>
-                            {/* {data?.status === "approved" ? (
+                            {data?.status === "approved" ? (
                               <Button
                                 size="small"
                                 variant="contained"
                                 color="primary"
+                                onClick={(e)=>navigate('/bonafideCertificate')}
                               >
                                 View
                               </Button>
-                            ) : ( */}
-                              <Typography variant="body2" color="textSecondary">
+                            ) : (
+                              <Typography variant="body2" color="textSecondary"
+                              >
                                 N/A
                               </Typography>
-                            {/* )} */}
+                            )}
                           </TableCell>
                         </TableRow>
                       ))}

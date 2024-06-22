@@ -26,14 +26,14 @@ const schema = yup.object().shape({
 
 export const SemBranch = () => {
   const navigate = useNavigate();
-  var array;
+ 
 
   useEffect(() => {
     if (localStorage?.getItem("accesstoken")) {
       const response = jwtDecode(localStorage?.getItem("accesstoken"));
       if (
-        response.exp < Math.floor(Date.now() / 1000) &&
-        response.role === "student"
+        response.exp < Math.floor(Date.now() / 1000) ||
+        response.role !== "faculty"
       ) {
         navigate("/login");
       }

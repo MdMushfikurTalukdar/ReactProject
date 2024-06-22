@@ -178,6 +178,7 @@ export const HostelRoomRequest = () => {
     axios
       .request(config)
       .then((response) => {
+      
         enqueueSnackbar("Request sent successfully", {
           variant: "success",
           anchorOrigin: {
@@ -187,10 +188,18 @@ export const HostelRoomRequest = () => {
           autoHideDuration: 1000,
         });
         console.log(response.data);
-        window.location.reload();
+        // window.location.reload();
       })
       .catch((error) => {
         console.log(error);
+        enqueueSnackbar(error?.response?.data?.errors?.non_field_errors[0], {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 1000,
+        });
       });
   };
 

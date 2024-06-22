@@ -26,7 +26,6 @@ import ComplaintForm from "./pages/Complain.js";
 import UnderDevelopment from "./pages/UnderDevelopment";
 import NoDuesForDegree from "./components/NoDuesForDegree/NoDuesForDegree.js"
 import { HostelNoDueReq } from "./pages/HostelNoDueReq.js";
-import VerifySemesterRegistration from "./components/VerifySemesterRegistration/VerifySemesterRegistration"
 
 function App() {
   return (
@@ -45,6 +44,7 @@ function App() {
             <Route path='/guest-room' element={<GuestRoom/>}/>
             <Route path="/logout" element={<Logout/>}/>
             <Route path="/hostel-room-request" element={<HostelRoomRequest/>}/>
+            <Route path="/add-college" element={<CollegeForm/>}/>
             <Route
               path="/bonafideCertificate"
               element={<BonafideCertificate />}
@@ -55,6 +55,8 @@ function App() {
               path="/semesterRegistration"
               element={<SemesterRegistration />}
             />
+            <Route path="/add-fees" element={<AddFeesCaretaker/>}/>
+            <Route path="/hostel-room-allotment" element={<HostelRoomAllotment/>}/>
             <Route path="/sem-sub-register" element={<SemSubject/>}/>
             <Route path="/sem-branch-register" element={<SemBranch/>}/>
             <Route path="/hostel-mess-fee-payment" element={<HostelfeePayment/>} />
