@@ -133,7 +133,7 @@ export const HostelNoDueReq = () => {
     });
     
     let config = {
-      method: 'get',
+      method: 'post',
       maxBodyLength: Infinity,
       url: 'https://amarnath013.pythonanywhere.com/api/user/hostel-no-dues/',
       headers: { 
