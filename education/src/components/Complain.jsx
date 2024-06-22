@@ -82,7 +82,7 @@ const ComplaintForm = () => {
         );
         if (!response.ok) throw new Error("Failed to fetch complaints");
         const data = await response.json();
-        setComplaints(data);
+        setComplaints(data.reverse());
       } catch (error) {
         console.error("Error fetching complaints:", error);
       }
@@ -136,8 +136,9 @@ const ComplaintForm = () => {
   const onSubmit = (data) => {
     let data1 = JSON.stringify({
       name: profileData?.name,
-      branch: "Computer Science",
-      status: "applied",
+      branch: profileData?.branch,
+      status: "registered",
+      subject:data.subject,
       complaint_type: data.type.toLowerCase(),
       complaint_description: data.description,
       registered_date:`${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`
@@ -308,7 +309,10 @@ const ComplaintForm = () => {
                   <strong>Complaint Type:</strong> {complaint?.complaint_type}
                 </Typography>
                 <Typography variant="body1">
-                  <strong>Status:</strong> Registered
+                  <strong>Subject:</strong> {complaint?.subject}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Status:</strong> {complaint?.status}
                 </Typography>
               </Box>
             ) : null

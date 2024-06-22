@@ -15,7 +15,6 @@ const schema = yup.object().shape({
   feeType: yup.string().required("Fee Type is required"),
   noOfMonths: yup
     .number()
-    .min(1, "Must be at least 1 month")
     .required("Number of months is required"),
   monthlyCharges: yup
     .number()
@@ -70,6 +69,7 @@ function HostelFeePayment() {
     handleSubmit,
     control,
     watch,
+    trigger,
     setValue,
     formState: { errors },
   } = useForm({
@@ -204,7 +204,7 @@ function HostelFeePayment() {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: 'https://amarnath013.pythonanywhere.com/api/user/mess-fees-payment/',
+      url: `https://amarnath013.pythonanywhere.com/api/user/mess-fees-payment/?search=${localStorage?.getItem('RollNumber')}`,
       headers: {
         Authorization: `Bearer ${localStorage.getItem('accesstoken')}`
       }

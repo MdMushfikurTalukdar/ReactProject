@@ -44,6 +44,40 @@ export const HostelNoDueReq = () => {
   const [responsive, setResponsive] = useState(window.innerWidth < 669);
   const navigate = useNavigate();
 
+  const [maintainanceToDate, setMaintainanceToDate] = useState(null);
+  const [messToDate, setMessToDate] = useState(null);
+
+  useEffect(() => {
+    
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `https://amarnath013.pythonanywhere.com/api/user/mess-fees-payment/?search=${localStorage?.getItem('RollNumber')}`,
+      headers: { 
+        Authorization: `Bearer ${localStorage.getItem('accesstoken')}`
+      }
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      const payments = response.data;
+     
+      const maintainancePayment = payments.find(payment => payment.maintainance_fees !== null);
+      const messPayment = payments.find(payment => payment.mess_fees !== null);
+
+      if (maintainancePayment) {
+        setMaintainanceToDate(maintainancePayment.to_date);
+      }
+      if (messPayment) {
+        setMessToDate(messPayment.to_date);
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }, []);
+
+
   const {
     register,
     handleSubmit,
@@ -76,8 +110,47 @@ export const HostelNoDueReq = () => {
   }, []);
 
   const onSubmit = (data) => {
-    console.log(data);
-    enqueueSnackbar("Request sent successfully", { variant: "success" });
+    let data1 = JSON.stringify({
+      "semester": data.semester,
+      "maintenance_fees_date": maintainanceToDate,
+      "mess_fees_date": messToDate,
+      "self_declaration": true
+    });
+    
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: 'https://amarnath013.pythonanywhere.com/api/user/hostel-no-dues/',
+      headers: { 
+        'Content-Type': 'application/json', 
+        Authorization: `Bearer ${localStorage?.getItem('accesstoken')}`
+      },
+      data : data1
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+
+      enqueueSnackbar("Request Sent Successfully", {
+        variant: "success",
+        anchorOrigin: {
+          vertical: "bottom",
+          horizontal: "center",
+        },
+        autoHideDuration: 3000,
+      });
+
+      setTimeout(()=>{
+        window.location.reload();
+      },2000);
+
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+    
+   
   };
 
   return (
@@ -161,7 +234,7 @@ export const HostelNoDueReq = () => {
             gutterBottom
             style={{ marginBottom: "20px" }}
           >
-            15th Aug, 2024
+            {maintainanceToDate ? maintainanceToDate:"Have not paid"}
           </Typography>
 
           <Typography
@@ -176,7 +249,7 @@ export const HostelNoDueReq = () => {
             gutterBottom
             style={{ marginBottom: "50px" }}
           >
-            15th Aug, 2024
+            {messToDate ? messToDate:"Have not paid"}
           </Typography>
 
           <FormControl
