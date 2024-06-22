@@ -340,13 +340,12 @@ export const BonafideForm = () => {
                                 variant="contained"
                                 color="primary"
                                 onClick={(e)=>navigate('/bonafideCertificate')}
+                                style={{marginTop:"10px"}}
                               >
                                 View
                               </Button>
                             ) : (
-                              <Typography variant="body2" color="textSecondary">
-                                N/A
-                              </Typography>
+                             null
                   )}
                   </CardContent>
                 </Card>
