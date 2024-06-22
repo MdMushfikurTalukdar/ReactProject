@@ -26,7 +26,7 @@ const schema = yup.object().shape({
 
 export const SemBranch = () => {
   const navigate = useNavigate();
-  var array;
+ 
 
   useEffect(() => {
     if (localStorage?.getItem("accesstoken")) {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -15,6 +15,8 @@ import {
 import { enqueueSnackbar } from 'notistack';
 import NavbarNew from '../components/NavbarNew';
 import Footer from '../components/Home/Footer';
+import { jwtDecode } from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
 
 // Define validation schema using Yup
 const schema = yup.object().shape({
@@ -34,6 +36,22 @@ const CollegeForm = () => {
     resolver: yupResolver(schema)
   });
 
+  const navigate=useNavigate();
+
+  useEffect(() => {
+    if (localStorage?.getItem("accesstoken")) {
+      const response = jwtDecode(localStorage?.getItem("accesstoken"));
+      if (
+        response.exp < Math.floor(Date.now() / 1000) ||
+        response.role !== "faculty"
+      ) {
+        navigate("/login");
+      }
+    } else {
+      navigate("/login");
+    }
+  }, []);
+  
   const onSubmit = async (data) => {
     const formData = new FormData();
     formData.append('college_code', data.college_code);

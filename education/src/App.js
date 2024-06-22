@@ -27,6 +27,8 @@ import UnderDevelopment from "./pages/UnderDevelopment";
 import NoDuesForDegree from "./components/NoDuesForDegree/NoDuesForDegree.js"
 import { HostelNoDueReq } from "./pages/HostelNoDueReq.js";
 import CollegeForm from "./pages/College.js";
+import AddFeesCaretaker from "./pages/AddFessCaretaker.js";
+import HostelRoomAllotment from "./pages/HostelRoomAllotment.js";
 
 function App() {
   return (
@@ -56,6 +58,8 @@ function App() {
               path="/semesterRegistration"
               element={<SemesterRegistration />}
             />
+            <Route path="/add-fees" element={<AddFeesCaretaker/>}/>
+            <Route path="/hostel-room-allotment" element={<HostelRoomAllotment/>}/>
             <Route path="/sem-sub-register" element={<SemSubject/>}/>
             <Route path="/sem-branch-register" element={<SemBranch/>}/>
             <Route path="/hostel-mess-fee-payment" element={<HostelfeePayment/>} />

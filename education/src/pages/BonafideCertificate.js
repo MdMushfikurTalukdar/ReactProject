@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 export const BonafideCertificate = () => {
   const [result, setResult] = useState([]);
+  const [profile, setProfile] = useState([]);
  
   const navigate = useNavigate();
 
@@ -33,7 +34,7 @@ export const BonafideCertificate = () => {
     axios
       .request(config)
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setResult(response.data);
       })
       .catch((error) => {
@@ -57,31 +58,25 @@ export const BonafideCertificate = () => {
       navigate("/login");
     }
 
-    // let config = {
-    //   method: "get",
-    //   maxBodyLength: Infinity,
-    //   url: "https://amarnath013.pythonanywhere.com/api/user/bonafide/",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
-    //   },
-    // };
+    let config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: "https://amarnath013.pythonanywhere.com/api/user/profile/",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
+      },
+    };
 
-    // axios
-    //   .request(config)
-    //   .then((response) => {
-    //     console.log(response?.data);
-    //     const res = response?.data?.find(
-    //       (item) =>
-    //         item?.roll_no ===
-    //         jwtDecode(localStorage?.getItem("accesstoken"))?.user_id
-    //     );
-    //     setResult(res);
-    //     console.log(res);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(response?.data);       
+        setProfile(response?.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, []);
 
   return (
@@ -138,12 +133,12 @@ export const BonafideCertificate = () => {
               {result?.student_details?.father_name?.slice(1)}
             </b>{" "}
             bearing College Roll No.-{" "}
-            {result?.student_details?.registration_number} is a bonafide student
-            of {result?.year_semester} Semester/Year. (Batch{" "}
-            <b>{result?.batch}</b>)
-            <b> {result?.department?.toUpperCase()} Department</b>, under B.Tech
+            <b> {result?.student_details?.registration_number}</b> is a bonafide student
+            of<b> {profile?.academic_information?.current_year} </b>Semester/Year. (Batch{" "}
+            <b>{profile?.academic_information?.batch}</b>)
+            <b> {profile?.academic_information?.department?.toUpperCase()} Department</b>, under B.Tech
             Programme of this Institute. Class starts from{" "}
-            <b>{result?.course_start_date}</b> After completing the usual
+            <b>{profile?.academic_information?.enrollment_date}</b> After completing the usual
             academic procedure, he/she has been enrolled under the 04 years
             B.Tech programme of the Institute.
           </p>
