@@ -121,9 +121,7 @@ export const HostelNoDueReq = () => {
               <MenuItem value="semester 1">
                 semester 1
               </MenuItem>
-              <MenuItem value="semester 1">
-                semester 1
-              </MenuItem>
+             
               <MenuItem value="semester 2">
                 semester 2
               </MenuItem>

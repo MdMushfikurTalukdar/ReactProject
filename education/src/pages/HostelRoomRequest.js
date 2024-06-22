@@ -188,7 +188,9 @@ export const HostelRoomRequest = () => {
           autoHideDuration: 1000,
         });
         console.log(response.data);
-        // window.location.reload();
+        setTimeout(()=>{
+          window.location.reload();
+        },2000);
       })
       .catch((error) => {
         console.log(error);
