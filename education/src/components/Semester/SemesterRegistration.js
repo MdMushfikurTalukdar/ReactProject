@@ -398,7 +398,7 @@ export function SemesterRegistration() {
         <Grid item xs={12} sm={6}>
           <TextField
             type="text"
-            label="2020-2024"
+            label={userProfile?.academic_information?.batch}
            
             fullWidth
             disabled

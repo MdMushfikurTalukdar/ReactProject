@@ -23,7 +23,7 @@ export const SemSubject = () => {
     useEffect(() => {
         if (localStorage?.getItem("accesstoken")) {
           const response = jwtDecode(localStorage?.getItem("accesstoken"));
-          if (response.exp < Math.floor(Date.now() / 1000) || response.role!=='faculty') {
+          if (response.exp < Math.floor(Date.now() / 1000) || response.role !== "admin") {
             navigate("/login");
           }
         } else {
