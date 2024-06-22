@@ -26,6 +26,10 @@ import ComplaintForm from "./pages/Complain.js";
 import UnderDevelopment from "./pages/UnderDevelopment";
 import NoDuesForDegree from "./components/NoDuesForDegree/NoDuesForDegree.js"
 import { HostelNoDueReq } from "./pages/HostelNoDueReq.js";
+import CollegeForm from "./pages/College.js";
+import HostelRoomAllotment from "./pages/HostelRoomAllotment.js";
+import AddFeesCaretaker from "./pages/AddFessCaretaker.js";
+import VerifySemesterRegistration from "./components/VerifySemesterRegistration/VerifySemesterRegistration.js";
 
 function App() {
   return (
