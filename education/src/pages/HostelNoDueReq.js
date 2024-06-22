@@ -153,6 +153,25 @@ export const HostelNoDueReq = () => {
    
   };
 
+  useEffect(()=>{
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `https://amarnath013.pythonanywhere.com/api/user/hostel-no-dues/?search=${localStorage?.getItem('RollNumber')}`,
+      headers: { 
+        'Authorization': `Bearer ${localStorage?.getItem('accesstoken')}`
+      }
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      setResult(response?.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  },[]);
   return (
     <div className="container-fluid" style={{ backgroundColor: "whitesmoke" }}>
       <NavbarNew />
@@ -326,20 +345,14 @@ export const HostelNoDueReq = () => {
                     >
                       No Dues Details
                     </Typography>
-                    <Typography variant="h6" component="div">
-                      No Due Number: {data?.no_due_number}
-                    </Typography>
-                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                      Student Information
+                    <Typography variant="body2" component="div">
+                    semester: {data?.semester}
                     </Typography>
                     <Typography variant="body2">
-                      Applied For: {data?.required_for}
+                      Requested Date: {data?.requested_date}
                     </Typography>
                     <Typography variant="body2">
-                      Status: {data?.status}
-                    </Typography>
-                    <Typography variant="body2">
-                      Applied Date: {data?.applied_date}
+                      Approved Date: {data?.approved_date===null ? "Not approved yet":data?.approved_date}
                     </Typography>
                   </CardContent>
                 </Card>
@@ -352,25 +365,20 @@ export const HostelNoDueReq = () => {
                   <Table sx={{ minWidth: 650 }} aria-label="no due table">
                     <TableHead style={{ backgroundColor: "#D2E9E9" }}>
                       <TableRow>
-                        <TableCell>No Due Number</TableCell>
-                        <TableCell>Applied For</TableCell>
-                        <TableCell>Status</TableCell>
-                        <TableCell>Applied Date</TableCell>
-                        <TableCell>Actions</TableCell>
+                        <TableCell>Semester</TableCell>
+                        <TableCell>Requested Date</TableCell>
+                        <TableCell>Approved Date</TableCell>
+                       
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {result.map((data, index) => (
                         <TableRow key={index}>
-                          <TableCell>{data?.no_due_number}</TableCell>
-                          <TableCell>{data?.required_for}</TableCell>
-                          <TableCell>{data?.status}</TableCell>
-                          <TableCell>{data?.applied_date}</TableCell>
-                          <TableCell>
-                            <Typography variant="body2" color="textSecondary">
-                              N/A
-                            </Typography>
-                          </TableCell>
+                          <TableCell>{data?.semester}</TableCell>
+                          <TableCell>{data?.requested_date}</TableCell>
+                         
+                          <TableCell>{data?.approved_date===null ? "Not approved yet":data?.approved_date}</TableCell>
+                         
                         </TableRow>
                       ))}
                     </TableBody>

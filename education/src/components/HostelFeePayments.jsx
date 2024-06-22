@@ -145,6 +145,7 @@ function HostelFeePayment() {
     if (feeType) {
       const selectedFee = fees[feeType];
       setValue("monthlyCharges", selectedFee ? parseFloat(selectedFee) : 0);
+      trigger("monthlyCharges");
     }
   }, [feeType, fees, setValue]);
 
@@ -153,6 +154,7 @@ function HostelFeePayment() {
       const differenceInDays = dayjs(endDate).diff(dayjs(startDate), "day");
       const calculatedMonths = Math.ceil(differenceInDays / 30);
       setValue("noOfMonths", calculatedMonths);
+      trigger("noOfMonths");
       setTotal(calculatedMonths * monthlyCharges);
     }
   }, [startDate, endDate, setValue, monthlyCharges]);
