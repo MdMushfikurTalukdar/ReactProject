@@ -307,6 +307,9 @@ const ComplaintForm = () => {
                 <Typography variant="body1">
                   <strong>Complaint Type:</strong> {complaint?.complaint_type}
                 </Typography>
+                <Typography variant="body1">
+                  <strong>Status:</strong> Registered
+                </Typography>
               </Box>
             ) : null
           )
