@@ -102,3 +102,47 @@
     display: none;
   }
 }
+/* Small screens (mobile) */
+@media only screen and (max-width: 600px) {
+  .id-card {
+    width: 90%;
+    margin: 2% auto;
+  }
+  .info{
+    font-size: 12px;
+  }
+  .info2 {
+    margin-left: 40%;
+    font-size: 12px;
+  }
+  .search-bar {
+    flex-direction: column;
+    width: 90%;
+    margin: 20px auto;
+  }
+  .search-bar input[type="search"] {
+    width: 100%;
+  }
+  .printbtn{
+    margin-left: 71%;
+  }
+}
+
+/* Medium screens (tablet) */
+@media only screen and (min-width: 601px) and (max-width: 900px) {
+  .id-card {
+    width: 70%;
+    margin: 2% auto;
+  }
+  .info2 {
+    margin-left: 41%;
+  }
+  .search-bar {
+    width: 70%;
+    margin: 20px auto;
+  }
+  .printbtn{
+    margin-left: 73%;
+  }
+}
+
