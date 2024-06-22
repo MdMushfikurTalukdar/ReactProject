@@ -60,7 +60,7 @@ export const HostelNoDueReq = () => {
     
     axios.request(config)
     .then((response) => {
-      const payments = response.data;
+      const payments = response.data.reverse();
      
       const maintainancePayment = payments.find(payment => payment.maintainance_fees !== null);
       const messPayment = payments.find(payment => payment.mess_fees !== null);
