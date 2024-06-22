@@ -184,7 +184,7 @@ function HostelFeePayment() {
     axios.request(config)
       .then((response) => {
         console.log(response.data);
-        enqueueSnackbar("Amount Paid successfully", {
+        enqueueSnackbar("Amount Paying Request successfull", {
           variant: "success",
           anchorOrigin: {
             vertical: "bottom",
