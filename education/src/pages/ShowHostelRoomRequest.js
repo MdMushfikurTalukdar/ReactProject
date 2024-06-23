@@ -54,6 +54,8 @@ const ShowHostelRoomRequest = () => {
   return (
     <>
     <NavbarNew />
+
+    {data.length===0 && <p style={{marginTop:"20%",textAlign:"center"}}>No Requests are present currently.</p>}
       <Box display="flex" justifyContent="center" alignItems="center" flexDirection="column" minHeight="80vh">
         {data.map((item, index) => (
             
