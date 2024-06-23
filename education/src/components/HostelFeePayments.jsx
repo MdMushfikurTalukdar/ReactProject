@@ -1,7 +1,7 @@
 import { Button, TextField, MenuItem, Container, Grid, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -25,7 +25,7 @@ const schema = yup.object().shape({
     .date()
     .when("startDate", (startDate, schema) => {
       return startDate
-        ? schema.min(dayjs(startDate).add(1, "day").toDate(), "End date cannot be before start date")
+        ? schema.min(dayjs(startDate).add(1, "month").toDate(), "End date cannot be before start date")
         : schema;
     })
     .required("End date is required"),
@@ -151,24 +151,29 @@ function HostelFeePayment() {
 
   useEffect(() => {
     if (startDate && endDate) {
-      const differenceInDays = dayjs(endDate).diff(dayjs(startDate), "day");
-      const calculatedMonths = Math.ceil(differenceInDays / 30);
+      const differenceInMonths = dayjs(endDate).diff(dayjs(startDate), "month");
+      const calculatedMonths = differenceInMonths ; // Including the start month
       setValue("noOfMonths", calculatedMonths);
       trigger("noOfMonths");
       setTotal(calculatedMonths * monthlyCharges);
     }
   }, [startDate, endDate, setValue, monthlyCharges]);
 
+  console.log(errors);
+
   const onSubmit = (data) => {
+
     let data1 = JSON.stringify({
       "registration_details": localStorage.getItem('id'),
-      "from_date": dayjs(data.startDate).format("YYYY-MM-DD"),
-      "to_date": dayjs(data.endDate).format("YYYY-MM-DD"),
+      "from_date": dayjs(data.startDate).format("YYYY-MM"),
+      "to_date": dayjs(data.endDate).format("YYYY-MM"),
       "mess_fees": data.feeType === "Mess_fees" ? fees.Mess_fees : null,
       "maintainance_fees": data.feeType === "Maintainance_fees" ? fees.Maintainance_fees : null,
       "security_fees": data.feeType === "Security_fees" ? fees.Security_fees : null,
       "total_fees": total
     });
+
+    console.log(data1);
 
     let config = {
       method: 'post',
@@ -199,6 +204,14 @@ function HostelFeePayment() {
       })
       .catch((error) => {
         console.log(error);
+        enqueueSnackbar("Not approved by caretaker now", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 3000,
+        });
       });
   };
 
@@ -260,7 +273,8 @@ function HostelFeePayment() {
                     selectsStart
                     startDate={field.value}
                     minDate={new Date()}
-                    dateFormat="yyyy-MM-dd"
+                    dateFormat="yyyy-MM"
+                    showMonthYearPicker
                     customInput={<TextField label="From" variant="outlined" fullWidth />}
                   />
                 )}
@@ -283,8 +297,9 @@ function HostelFeePayment() {
                     selectsEnd
                     startDate={watch("startDate")}
                     endDate={field.value}
-                    minDate={dayjs(watch("startDate")).add(1, "day").toDate()}
-                    dateFormat="yyyy-MM-dd"
+                    minDate={dayjs(watch("startDate")).add(1, "month").toDate()}
+                    dateFormat="yyyy-MM"
+                    showMonthYearPicker
                     customInput={<TextField label="To" variant="outlined" fullWidth />}
                   />
                 )}

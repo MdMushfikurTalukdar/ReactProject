@@ -1,9 +1,24 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import axios from "axios";
-import { TextField, Button, Container, Grid, Typography } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Container,
+  Grid,
+  Typography,
+  Divider,
+  TableContainer,
+  Paper,
+  Box,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+} from "@mui/material";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
@@ -14,9 +29,9 @@ import Footer from "../components/Home/Footer";
 const schema = yup.object().shape({
   Maintainance_fees: yup
     .number()
-    .typeError("Maintainance Fees must be a number")
-    .positive("Maintainance Fees must be positive")
-    .required("Maintainance Fees is required"),
+    .typeError("Maintenance Fees must be a number")
+    .positive("Maintenance Fees must be positive")
+    .required("Maintenance Fees is required"),
   Mess_fees: yup
     .number()
     .typeError("Mess Fees must be a number")
@@ -34,12 +49,14 @@ const AddFeesCaretaker = () => {
     control,
     handleSubmit,
     formState: { errors },
+    reset, // Reset function from react-hook-form
   } = useForm({
     resolver: yupResolver(schema),
   });
 
-
-  const navigate=useNavigate();
+  const [result, setResult] = useState([]);
+  const [editId, setEditId] = useState(null); // State to hold the id of the fee being edited
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (localStorage?.getItem("accesstoken")) {
@@ -55,22 +72,54 @@ const AddFeesCaretaker = () => {
     }
   }, []);
 
-  const onSubmit = async (data) => {
-    
-    const jsonData = JSON.stringify(data);
-    
-    const config = {
-      method: "post",
-      maxBodyLength: Infinity,
-      url: "https://amarnath013.pythonanywhere.com/api/user/fees/create/",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("accesstoken")}`, // Replace with actual token
-      },
-      data: jsonData,
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const config = {
+          method: "get",
+          url: "https://amarnath013.pythonanywhere.com/api/user/fees/",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
+          },
+        };
+
+        const response = await axios.request(config);
+        setResult(response.data);
+      } catch (error) {
+        console.log("Error fetching data:", error);
+      }
     };
 
+    fetchData(); // Call fetchData here to fetch data when component mounts
+  }, []);
+
+  const onSubmit = async (data) => {
+    const jsonData = JSON.stringify(data);
+
     try {
+      let config;
+      if (editId) {
+        config = {
+          method: "put",
+          url: `https://amarnath013.pythonanywhere.com/api/user/fees/update/${editId}/`,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
+          },
+          data: jsonData,
+        };
+      } else {
+        config = {
+          method: "post",
+          url: "https://amarnath013.pythonanywhere.com/api/user/fees/create/",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
+          },
+          data: jsonData,
+        };
+      }
+
       const response = await axios.request(config);
       console.log(response.data);
 
@@ -83,77 +132,148 @@ const AddFeesCaretaker = () => {
         autoHideDuration: 3000,
       });
 
+      // Clear form and reset editId state after submission
+      reset();
+      setEditId(null);
+
+      // Fetch updated data after submission
+      setTimeout(()=>{
+        window.location.reload();
+      },1500)
     } catch (error) {
-      console.error(error);
+      console.error("Error adding/updating data:", error);
     }
+  };
+
+  const handleEdit = (feeId) => {
+    // Find the fee with feeId in result state and populate the form fields
+   
+      reset({
+        Maintainance_fees: result.Maintainance_fees,
+        Mess_fees: result.Mess_fees,
+        Security_Deposit: result.Security_Deposit,
+      });
+      setEditId(feeId);
+    
   };
 
   return (
     <>
-    <NavbarNew/>
-    <Container maxWidth="sm" style={{marginBottom:"11%"}}>
-      <Typography variant="h4" align="center" gutterBottom style={{ marginTop: "20px", marginBottom: "36px" }}>
-        Add Fees
-      </Typography>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <Controller
-              name="Maintainance_fees"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Maintainance Fees"
-                  variant="outlined"
-                  fullWidth
-                  error={!!errors.Maintainance_fees}
-                  helperText={errors.Maintainance_fees?.message}
-                />
-              )}
-            />
+      <NavbarNew />
+      <Container maxWidth="sm" style={{ marginBottom: "11%" }}>
+        <Typography
+          variant="h4"
+          align="center"
+          gutterBottom
+          style={{ marginTop: "20px", marginBottom: "36px" }}
+        >
+          Add Fees
+        </Typography>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Controller
+                name="Maintainance_fees"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    placeholder="Maintenance Fees"
+                    variant="outlined"
+                    fullWidth
+                    error={!!errors.Maintainance_fees}
+                    helperText={errors.Maintainance_fees?.message}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Controller
+                name="Mess_fees"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    placeholder="Mess Fees"
+                    variant="outlined"
+                    fullWidth
+                    error={!!errors.Mess_fees}
+                    helperText={errors.Mess_fees?.message}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Controller
+                name="Security_Deposit"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    placeholder="Security Deposit"
+                    variant="outlined"
+                    fullWidth
+                    error={!!errors.Security_Deposit}
+                    helperText={errors.Security_Deposit?.message}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Button type="submit" variant="contained" color="primary" fullWidth>
+                {editId ? "Update" : "Submit"}
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <Controller
-              name="Mess_fees"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Mess Fees"
-                  variant="outlined"
-                  fullWidth
-                  error={!!errors.Mess_fees}
-                  helperText={errors.Mess_fees?.message}
-                />
-              )}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Controller
-              name="Security_Deposit"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Security Deposit"
-                  variant="outlined"
-                  fullWidth
-                  error={!!errors.Security_Deposit}
-                  helperText={errors.Security_Deposit?.message}
-                />
-              )}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Button type="submit" variant="contained" color="primary" fullWidth>
-              Submit
-            </Button>
-          </Grid>
-        </Grid>
-      </form>
-    </Container>
-    <Footer/>
+        </form>
+
+        <Box style={{ marginTop: "20px" }}>
+          <Divider />
+          <p style={{ textAlign: "center", marginTop: "10px" }}>
+            Previous Fees Structure
+          </p>
+        </Box>
+
+        {result.length === 0 ? (
+          <Typography variant="body1" align="center">
+            You have not added any fees structure.
+          </Typography>
+        ) : (
+          <Box>
+            <TableContainer component={Paper} sx={{ marginTop: 3 }}>
+              <Table sx={{ minWidth: "auto" }} aria-label="Fees table">
+                <TableHead style={{ backgroundColor: "#D2E9E9" }}>
+                  <TableRow>
+                    <TableCell>Maintenance</TableCell>
+                    <TableCell>Mess </TableCell>
+                    <TableCell>Security</TableCell>
+                    <TableCell>Edit</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  
+                    <TableRow key={result.id}>
+                      <TableCell>{result.Maintainance_fees}</TableCell>
+                      <TableCell>{result.Mess_fees}</TableCell>
+                      <TableCell>{result.Security_Deposit}</TableCell>
+                      <TableCell>
+                        <Button
+                          variant="outlined"
+                          color="primary"
+                          onClick={() => handleEdit(result.id)}
+                        >
+                          Edit
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
+        )}
+      </Container>
+      <Footer />
     </>
   );
 };

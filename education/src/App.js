@@ -31,6 +31,7 @@ import HostelRoomAllotment from "./pages/HostelRoomAllotment.js";
 import AddFeesCaretaker from "./pages/AddFessCaretaker.js";
 import VerifySemesterRegistration from "./components/VerifySemesterRegistration/VerifySemesterRegistration.js";
 import FacultySemesterRegistration from "./components/VerifySemesterRegistration/FacultySemesterRegistration.js";
+import ShowHostelRoomRequest from "./pages/ShowHostelRoomRequest.js";
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
             <Route path="/logout" element={<Logout/>}/>
             <Route path="/hostel-room-request" element={<HostelRoomRequest/>}/>
             <Route path="/add-college" element={<CollegeForm/>}/>
+            <Route path="/hostel-room-allotment-requests" element={<ShowHostelRoomRequest/>}/>
             <Route
               path="/bonafideCertificate"
               element={<BonafideCertificate />}
