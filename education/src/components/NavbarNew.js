@@ -14,6 +14,7 @@ export const NavbarNew = () => {
     "Other Responsibilities",
     "Actions",
     "Others",
+    "HOD"
   ];
   const general = [
     { name: "Profile", link: "/profile" },
@@ -49,10 +50,24 @@ export const NavbarNew = () => {
     { name: "Hostel Room Allotment", link: "/hostel-room-allotment" },
     { name: "Show Hostel Room Requests", link: "/hostel-room-allotment-requests" }
   ];
+
+
   const others = [
     { name: "Guest Room Request", link: "/guest-room" },
     { name: "Complaints", link: "/complaints" },
   ];
+
+  const facultyAcadamic = [
+    { name: "Upload/Check Assignment", link: "/underDevelopment" },
+    { name: "Upload Internal Sem Marks", link: "/underDevelopment" }
+  ];
+
+  const hod = [
+    { name: "Verify Semester Registration", link: "/verifySemesterRegistration" },
+    { name: "Update Branch Subjects", link: "/underDevelopment" },
+    { name: "Sign No Dues(for TC)", link: "/underDevelopment" }
+  ];
+
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isNestedDropdownGeneralOpen, setIsNestedDropdownGeneralOpen] =
@@ -67,6 +82,8 @@ export const NavbarNew = () => {
     isNestedDropdownOther_responsibilitiesOpen,
     setIsNestedDropdownOther_responsibilitiesOpen,
   ] = useState(false);
+  const [isNestedDropdownFacultyAcadamicOpen, setIsNestedDropdownFacultyAcadamicOpen] = useState(false);
+  const [isNestedDropdownHODOpen, setIsNestedDropdownHODOpen] = useState(false);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -78,7 +95,9 @@ export const NavbarNew = () => {
     setIsNestedDropdownAcademicOpen(false);
     setIsNestedDropdownResidentialOpen(false);
     setIsNestedDropdownOther_responsibilitiesOpen(false);
+    setIsNestedDropdownFacultyAcadamicOpen(false);
     setIsNestedDropdownOthersOpen(false);
+    setIsNestedDropdownHODOpen(false);
   };
   const toggleNestedDropdownAcademic = (e) => {
     e.stopPropagation();
@@ -86,7 +105,9 @@ export const NavbarNew = () => {
     setIsNestedDropdownAcademicOpen(!isNestedDropdownAcademicOpen);
     setIsNestedDropdownResidentialOpen(false);
     setIsNestedDropdownOther_responsibilitiesOpen(false);
+    setIsNestedDropdownFacultyAcadamicOpen(false);
     setIsNestedDropdownOthersOpen(false);
+    setIsNestedDropdownHODOpen(false);
   };
   const toggleNestedDropdownResidential = (e) => {
     e.stopPropagation();
@@ -94,7 +115,9 @@ export const NavbarNew = () => {
     setIsNestedDropdownAcademicOpen(false);
     setIsNestedDropdownResidentialOpen(!isNestedDropdownResidentialOpen);
     setIsNestedDropdownOther_responsibilitiesOpen(false);
+    setIsNestedDropdownFacultyAcadamicOpen(false);
     setIsNestedDropdownOthersOpen(false);
+    setIsNestedDropdownHODOpen(false);
   };
   const toggleNestedDropdownOthers = (e) => {
     e.stopPropagation();
@@ -102,7 +125,9 @@ export const NavbarNew = () => {
     setIsNestedDropdownAcademicOpen(false);
     setIsNestedDropdownResidentialOpen(false);
     setIsNestedDropdownOthersOpen(!isNestedDropdownOthersOpen);
+    setIsNestedDropdownFacultyAcadamicOpen(false);
     setIsNestedDropdownOther_responsibilitiesOpen(false);
+    setIsNestedDropdownHODOpen(false);
   };
   const toggleNestedDropdownOther_responsibilities = (e) => {
     e.stopPropagation();
@@ -113,6 +138,28 @@ export const NavbarNew = () => {
     setIsNestedDropdownOther_responsibilitiesOpen(
       !isNestedDropdownOther_responsibilitiesOpen
     );
+    setIsNestedDropdownFacultyAcadamicOpen(false);
+    setIsNestedDropdownHODOpen(false);
+  };
+  const toggleNestedDropdownFacultyAcademic = (e) => {
+    e.stopPropagation();
+    setIsNestedDropdownGeneralOpen(false);
+    setIsNestedDropdownAcademicOpen(false);
+    setIsNestedDropdownResidentialOpen(false);
+    setIsNestedDropdownOthersOpen(false);
+    setIsNestedDropdownOther_responsibilitiesOpen(false);
+    setIsNestedDropdownFacultyAcadamicOpen(!isNestedDropdownFacultyAcadamicOpen);
+    setIsNestedDropdownHODOpen(false);
+  };
+  const toggleNestedDropdownHOD = (e) => {
+    e.stopPropagation();
+    setIsNestedDropdownGeneralOpen(false);
+    setIsNestedDropdownAcademicOpen(false);
+    setIsNestedDropdownResidentialOpen(false);
+    setIsNestedDropdownOthersOpen(false);  
+    setIsNestedDropdownOther_responsibilitiesOpen(false);
+    setIsNestedDropdownFacultyAcadamicOpen(false);
+    setIsNestedDropdownHODOpen(!isNestedDropdownHODOpen);
   };
 
   return (
@@ -262,6 +309,55 @@ export const NavbarNew = () => {
                         )}
                       </div>
                     )}
+
+                    {/* Faculty common */}
+                    {roll === "faculty" && (
+                      <div
+                        className="hover:bg-purple-200 px-4 py-2 cursor-pointer"
+                        onClick={toggleNestedDropdownFacultyAcademic}
+                      >
+                        {mainOptions[1]}
+                        {isNestedDropdownFacultyAcadamicOpen && (
+                          <div className="mt-2 bg-white rounded-lg shadow-md">
+                            {facultyAcadamic.map((item, index) => (
+                              <Link
+                                key={index}
+                                className="block px-4 py-2 text-gray-800 hover:bg-purple-100"
+                                to={item.link}
+                                style={{ textDecoration: "none" }}
+                              >
+                                {item.name}
+                              </Link>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    {/* Faculty HOD */}
+                    {roll === "faculty" && (
+                      <div
+                        className="hover:bg-purple-200 px-4 py-2 cursor-pointer"
+                        onClick={toggleNestedDropdownHOD}
+                      >
+                        {mainOptions[6]}
+                        {isNestedDropdownHODOpen && (
+                          <div className="mt-2 bg-white rounded-lg shadow-md">
+                            {hod.map((item, index) => (
+                              <Link
+                                key={index}
+                                className="block px-4 py-2 text-gray-800 hover:bg-purple-100"
+                                to={item.link}
+                                style={{ textDecoration: "none" }}
+                              >
+                                {item.name}
+                              </Link>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    {/* faculty hod end */}
+
                   </div>
                 </div>
               )}

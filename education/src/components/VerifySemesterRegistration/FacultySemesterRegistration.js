@@ -4,7 +4,12 @@ import {
   Button,
   Grid,
   TextField,
-  Typography
+  Typography,
+  Radio,
+  FormControlLabel,
+  RadioGroup,
+  FormLabel,
+  FormControl
 } from "@mui/material";
 import "../../App.css";
 import NavbarNew from "../NavbarNew";
@@ -28,6 +33,21 @@ const FacultySemesterRegistration = () => {
   const [branches1, setBranches1] = useState([]);
   const [branches2, setBranches2] = useState([]);
   const [selectedSemester, setSelectedSemester] = useState("");
+
+
+  // Radio button
+  const [remark, setremark] = useState('no');
+  const [isTextFieldDisabled, setIsTextFieldDisabled] = useState(true);
+
+  const handleRadioChange = (event) => {
+    setremark(event.target.value);
+    if (event.target.value === 'no') {
+      setIsTextFieldDisabled(true);
+    } else {
+      setIsTextFieldDisabled(false);
+    }
+  };
+  // radio button end
   const [userProfile, setUserProfile] = useState({
     personal_information: {
       first_name: "John",
@@ -265,7 +285,7 @@ const FacultySemesterRegistration = () => {
 
   return (
     <>
-      {/* <NavbarNew /> */}
+      <NavbarNew />
       <Grid container spacing={3} style={{ padding: "20px" }}>
           <Grid item xs={12}>
             <Typography variant="h5" gutterBottom style={{ width: "100%" }}>
@@ -362,24 +382,75 @@ const FacultySemesterRegistration = () => {
         </Grid>
       </Grid>
       
-
-      <Grid containerjustifyContent="center" style={{ padding: "20px" }}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleSubmit(onSubmit)}
-        >
-          Approve
-        </Button>
+      {/* Any remarks  */}
+      <Grid container>
+      <Grid item xs={12} sm={6} style={{ paddingLeft: "40px" }}>
+        <FormControl component="fieldset">
+          <Grid container alignItems="center">
+            <Grid item>
+              <FormLabel component="legend">Any Remarks?</FormLabel>
+            </Grid>
+            <Grid item style={{ paddingLeft: "40px" }}>
+              <FormControlLabel
+                value="yes"
+                control={<Radio />}
+                label="Yes"
+                onChange={handleRadioChange}
+                checked={remark === 'yes'}
+              />
+            </Grid>
+            <Grid item style={{ paddingLeft: "40px" }}>
+              <FormControlLabel
+                value="no"
+                control={<Radio />}
+                label="No"
+                onChange={handleRadioChange}
+                checked={remark === 'no'}
+              />
+            </Grid>
+          </Grid>
+        </FormControl>
       </Grid>
-      <Grid container justifyContent="center" style={{ padding: "20px" }}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleSubmit(onSubmit)}
-        >
-          Reject
-        </Button>
+
+      <Grid item xs={12} sm={6} >
+        <Box
+            sx={{
+              marginLeft: "-100%",
+              marginTop: "4%",
+              padding: "40px"
+            }}
+          >
+          <TextField
+            type="text"
+            label="Medical Condition Details"
+            fullWidth
+            multiline
+            rows={3}
+            disabled={isTextFieldDisabled}
+            style={{
+              backgroundColor: isTextFieldDisabled ? '#F8F6F4' : '#E3F4F4',
+              borderColor: isTextFieldDisabled ? '#ccc' : '#E3F4F4',
+            }}
+          />
+        </Box>
+      </Grid>
+
+    </Grid>
+
+      {/* Any remarks  end */}
+
+{/* Button  */}
+      <Grid container justify="center" spacing={2} style={{ padding: "40px" }}>
+        <Grid item>
+          <Button variant="contained" color="primary">
+            Approve
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button variant="contained" color="primary">
+            Reject
+          </Button>
+        </Grid>
       </Grid>
       <Footer />
     </>
