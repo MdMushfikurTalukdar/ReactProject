@@ -4,21 +4,14 @@ import {
   Button,
   Grid,
   TextField,
-  Typography,
-  MenuItem,
-  Select,
-  FormControl,
-  InputLabel,
-  FormHelperText,
-  Card,
-  CardContent
+  Typography
 } from "@mui/material";
 import "../../App.css";
 import NavbarNew from "../NavbarNew";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useForm, Controller } from "react-hook-form";
+import { useForm} from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Footer from "../Home/Footer";
@@ -35,15 +28,103 @@ const FacultySemesterRegistration = () => {
   const [branches1, setBranches1] = useState([]);
   const [branches2, setBranches2] = useState([]);
   const [selectedSemester, setSelectedSemester] = useState("");
-  const [userProfile, setUserProfile] = useState([]);
-  const [totalData, setTotalData] = useState([]);
-  const [uniqueCodes, setUniqueCodes] = useState([]);
-  const [uniqueSubjects, setUniqueSubjects] = useState([]);
-  const [result, setResult] = useState([]);
-  
+  const [userProfile, setUserProfile] = useState({
+    personal_information: {
+      first_name: "John",
+      middle_name: "Doe",
+      last_name: "Smith",
+      registration_number: "123456"
+    }
+  });
+  const [totalData, setTotalData] = useState([
+    {
+      semester_name: "Semester 1",
+      branch: "Barccg 1",
+      subjects: [
+        {
+          subject_code: "SUB101",
+          subject_name: "Subject 1"
+        },
+        {
+          subject_code: "SUB102",
+          subject_name: "Subject 2"
+        }
+      ]
+    },
+    {
+      semester_name: "Semester 2",
+      branch: "Barccg 2",
+      subjects: [
+        {
+          subject_code: "SUB201",
+          subject_name: "Subject 3"
+        },
+        {
+          subject_code: "SUB202",
+          subject_name: "Subject 4"
+        }
+      ]
+    }
+  ]);
+  const [uniqueCodes, setUniqueCodes] = useState([
+    "SUB101",
+    "SUB102",
+    "SUB201",
+    "SUB202"
+  ]);
+  const [uniqueSubjects, setUniqueSubjects] = useState([
+    {
+      subject_code: "SUB101",
+      subject_name: "Subject 1"
+    },
+    {
+      subject_code: "SUB102",
+      subject_name: "Subject 2"
+    },
+    {
+      subject_code: "SUB201",
+      subject_name: "Subject 3"
+    },
+    {
+      subject_code: "SUB202",
+      subject_name: "Subject 4"
+    }
+  ]);
+  const [result, setResult] = useState([
+    {
+      id: 1,
+      semester_name: "Semester 1",
+      branch: "Barccg 1",
+      subjects: [
+        {
+          subject_code: "SUB101",
+          subject_name: "Subject 1"
+        },
+        {
+          subject_code: "SUB102",
+          subject_name: "Subject 2"
+        }
+      ]
+    },
+    {
+      id: 2,
+      semester_name: "Semester 2",
+      branch: "Barccg 2",
+      subjects: [
+        {
+          subject_code: "SUB201",
+          subject_name: "Subject 3"
+        },
+        {
+          subject_code: "SUB202",
+          subject_name: "Subject 4"
+        }
+      ]
+    }
+  ]);
 
   const [responsive, setResponsive] = useState(
-    window.innerWidth < 669 ? true : false
+    window.innerWidth < 669? true : false
   );
 
   useEffect(() => {
@@ -55,12 +136,11 @@ const FacultySemesterRegistration = () => {
   }, []);
 
   const resize = () => {
-    setResponsive(window.innerWidth < 669 ? true : false);
+    setResponsive(window.innerWidth < 669? true : false);
   };
 
   const {
     handleSubmit,
-    control,
     setValue,
     trigger,
     formState: { errors },
@@ -69,136 +149,8 @@ const FacultySemesterRegistration = () => {
   });
 
   useEffect(() => {
-    let config = {
-      method: "GET",
-      maxBodyLength: Infinity,
-      url: "https://amarnath013.pythonanywhere.com/api/user/profile/",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
-      },
-    };
-
-    axios
-      .request(config)
-      .then((response) => {
-        setUserProfile(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
-
-  useEffect(() => {
     console.log(userProfile?.personal_information?.registration_number);
-    let config = {
-      method: "get",
-      maxBodyLength: Infinity,
-      url: `https://amarnath013.pythonanywhere.com/api/user/semester-registrations/?search=${userProfile?.personal_information?.registration_number}`,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
-      },
-    };
-
-    axios
-      .request(config)
-      .then((response) => {
-        console.log(response.data);
-        setResult(response.data.reverse());
-      })
-      .catch((error) => {
-        console.log(error);
-      });
   }, [userProfile]);
-
-  useEffect(() => {
-    if (localStorage?.getItem("accesstoken")) {
-      const response = jwtDecode(localStorage?.getItem("accesstoken"));
-      if (response.exp < Math.floor(Date.now() / 1000)) {
-        navigate("/login");
-      }
-    } else {
-      navigate("/login");
-    }
-  }, []);
-
-  useEffect(() => {
-    let config = {
-      method: "get",
-      maxBodyLength: Infinity,
-      url: `https://amarnath013.pythonanywhere.com/api/user/semester/?search`,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
-      },
-    };
-
-    axios
-      .request(config)
-      .then((response) => {
-        setTotalData(response.data);
-        const uniqueBranches = response.data.reduce((acc, current) => {
-          const x = acc.find(
-            (item) => item.semester_name === current.semester_name
-          );
-          if (!x) {
-            return acc.concat([current]);
-          } else {
-            return acc;
-          }
-        }, []);
-        setBranches(uniqueBranches);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
-
-  const fetchBranches = (semester) => {
-    let config = {
-      method: "get",
-      maxBodyLength: Infinity,
-      url: `https://amarnath013.pythonanywhere.com/api/user/semester/?search=${semester}`,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
-      },
-    };
-
-    axios
-      .request(config)
-      .then((response) => {
-        const uniqueBranches = response.data.reduce((acc, current) => {
-          const x = acc.find(
-            (item) =>
-              item.semester_name === current.semester_name &&
-              item.branch === current.branch
-          );
-          if (!x) {
-            return acc.concat([current]);
-          } else {
-            return acc;
-          }
-        }, []);
-        setBranches1(uniqueBranches);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  const handleSemesterChange = (event) => {
-    const semester = event.target.value;
-    setSelectedSemester(semester);
-    setValue("selectedSemester", semester);
-    trigger("selectedSemester");
-    fetchBranches(semester);
-  };
-
-  const handleBranchChange = (event) => {
-    const branch = event.target.value;
-    setBranches2(branch);
-    setValue("branch", branch);
-    trigger("branch");
-  };
 
   useEffect(() => {
     if (selectedSemester && branches2) {
@@ -207,16 +159,16 @@ const FacultySemesterRegistration = () => {
           item.semester_name === selectedSemester && item.branch === branches2
       );
       const uniqueCodes = [
-        ...new Set(
+       ...new Set(
           filteredData
-            .map((item) => item.subjects.map((subject) => subject.subject_code))
-            .flat()
+           .map((item) => item.subjects.map((subject) => subject.subject_code))
+           .flat()
         ),
       ];
       const uniqueSubjects = filteredData
-        .map((item) => item.subjects)
-        .flat()
-        .filter(
+       .map((item) => item.subjects)
+       .flat()
+       .filter(
           (v, i, a) =>
             a.findIndex((t) => t.subject_name === v.subject_name) === i
         );
@@ -225,127 +177,174 @@ const FacultySemesterRegistration = () => {
     }
   }, [selectedSemester, branches2]);
 
+  // useEffect(() => {
+  //   if (localStorage?.getItem("accesstoken")) {
+  //     const response = jwtDecode(localStorage?.getItem("accesstoken"));
+  //     if (response.exp < Math.floor(Date.now() / 1000)) {
+  //       navigate("/login");
+  //     }
+  //   } else {
+  //     navigate("/login");
+  //   }
+  // }, []);
+
+  useEffect(() => {
+    const uniqueBranches = totalData.reduce((acc, current) => {
+      const x = acc.find(
+        (item) => item.semester_name === current.semester_name
+      );
+      if (!x) {
+        return acc.concat([current]);
+      } else {
+        return acc;
+      }
+    }, []);
+    setBranches(uniqueBranches);
+  }, []);
+
+  const fetchBranches = (semester) => {
+    const uniqueBranches = totalData.reduce((acc, current) => {
+      const x = acc.find(
+        (item) =>
+          item.semester_name === semester && item.branch === current.branch
+      );
+      if (!x) {
+        return acc.concat([current]);
+      } else {
+        return acc;
+      }
+    }, []);
+    setBranches1(uniqueBranches);
+  };
+
   const onSubmit = (data) => {
     console.log(data);
 
+    const b = result.find((item) => {
+      return item?.subjects?.length!==0 &&  item?.semester_name ===  data?.selectedSemester && item?.branch === data?.branch;
+    })?.id;
+
+    let data1 = JSON.stringify({
+      semester: b,
+      student: `${jwtDecode(localStorage?.getItem("accesstoken")).user_id}`,
+    });
+
     let config = {
-      method: "get",
+      method: "post",
       maxBodyLength: Infinity,
-      url: "https://amarnath013.pythonanywhere.com/api/user/semester/?search",
+      url: "https://amarnath013.pythonanywhere.com/api/user/semester-registrations/",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage?.getItem("accesstoken")}`,
       },
+      data: data1,
     };
 
     axios
-      .request(config)
-      .then((response) => {
+     .request(config)
+     .then((response) => {
         console.log(response.data);
-        const b = response.data.find((item) => {
-          return item?.subjects?.length!==0 &&  item?.semester_name ===  data?.selectedSemester && item?.branch === data?.branch;
-      })?.id;
 
-        let data1 = JSON.stringify({
-          semester: b,
-          student: `${jwtDecode(localStorage?.getItem("accesstoken")).user_id}`,
+        enqueueSnackbar("Request sent successfully", {
+          variant: "success",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 1000,
         });
 
-        let config = {
-          method: "post",
-          maxBodyLength: Infinity,
-          url: "https://amarnath013.pythonanywhere.com/api/user/semester-registrations/",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage?.getItem("accesstoken")}`,
-          },
-          data: data1,
-        };
-
-        axios
-          .request(config)
-          .then((response) => {
-            console.log(response.data);
-
-            enqueueSnackbar("Request sent successfully", {
-              variant: "success",
-              anchorOrigin: {
-                vertical: "bottom",
-                horizontal: "center",
-              },
-              autoHideDuration: 1000,
-            });
-    
-            setTimeout(() => {
-              window.location.reload();
-            }, 3000);
-
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
       })
-      .catch((error) => {
+     .catch((error) => {
         console.log(error);
       });
   };
+
   return (
     <>
-      <NavbarNew />
+      {/* <NavbarNew /> */}
       <Grid container spacing={3} style={{ padding: "20px" }}>
-        <Grid item xs={12}>
-          <Typography variant="h5" gutterBottom style={{ width: "100%" }}>
-            Semester Registration
-          </Typography>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            type="text"
-            label="Student Name"
-            value={`${userProfile?.personal_information?.first_name} ${userProfile?.personal_information?.middle_name} ${userProfile?.personal_information?.last_name}`}
-            fullWidth
-            disabled
-          />
-        </Grid>
-        {/* Other form fields */}
-        <Grid item xs={12} sm={6}>
-          <TextField
-            type="text"
-            value={userProfile?.personal_information?.registration_number}
-            fullWidth
-            disabled
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            type="text"
-            label="Semester"
-            value={`semester 1`}
-            fullWidth
-            disabled
-          />
-        </Grid>
+          <Grid item xs={12}>
+            <Typography variant="h5" gutterBottom style={{ width: "100%" }}>
+              Semester Registration
+            </Typography>
+          </Grid>
 
-        <Grid item xs={12} sm={6}>
-          <TextField
-            type="text"
-            label="Branch"
-            value={`barccg 1`}
-            fullWidth
-            disabled
-          />
-        </Grid>
+          <Grid item xs={8} sm={8}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  type="text"
+                  label="Student Name"
+                  value={`${userProfile?.personal_information?.first_name} ${userProfile?.personal_information?.middle_name} ${userProfile?.personal_information?.last_name}`}
+                  fullWidth
+                  disabled
+                />
+              </Grid>
 
-        <Grid item xs={12} sm={6}>
-          <TextField
-            type="text"
-            label="2020-2024"
-           
-            fullWidth
-            disabled
-          />
-          
-        </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  type="text"
+                  value={userProfile?.personal_information?.registration_number}
+                  fullWidth
+                  disabled
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  type="text"
+                  label="Semester"
+                  value={totalData[0].semester_name}
+                  fullWidth
+                  disabled
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  type="text"
+                  label="Branch"
+                  value={totalData[0].branch}
+                  fullWidth
+                  disabled
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  type="text"
+                  label="2020-2024"
+                  fullWidth
+                  disabled
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+
+          <Grid item xs={4} sm={4}>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '250px',
+                width: '250px',
+                border: '1px solid #ddd',
+              }}
+            >
+              <img
+                src={userProfile.profile_picture}
+                alt="Profile Picture"
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+            </Box>
+          </Grid>
       </Grid>
+
       {/* Subject List */}
       <Grid container spacing={2} style={{ padding: "20px" }}>
         <Grid item xs={12}>
@@ -364,7 +363,7 @@ const FacultySemesterRegistration = () => {
       </Grid>
       
 
-      <Grid container justifyContent="center" style={{ padding: "20px" }}>
+      <Grid containerjustifyContent="center" style={{ padding: "20px" }}>
         <Button
           variant="contained"
           color="primary"
@@ -384,7 +383,7 @@ const FacultySemesterRegistration = () => {
       </Grid>
       <Footer />
     </>
-  )
-}
+  );
+};
 
-export default FacultySemesterRegistration
+export default FacultySemesterRegistration;

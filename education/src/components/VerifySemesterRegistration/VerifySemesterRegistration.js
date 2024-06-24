@@ -36,7 +36,7 @@ const VerifySemesterRegistration = () => {
 
     return (
         <>
-         <NavbarNew />
+         {/* <NavbarNew /> */}
             <div className='printHide'>
             <h2 className='text1'>Semester Registration List</h2>
                 <div>
