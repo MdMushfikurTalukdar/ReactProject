@@ -78,6 +78,7 @@ export const HostelRoomRequest = () => {
   });
 
   const [result, setResult] = useState([]);
+  const [allotedRoom,setAllotedRoom]=useState([]);
   const [responsive, setResponsive] = useState(
     window.innerWidth < 669 ? true : false
   );
@@ -105,6 +106,29 @@ export const HostelRoomRequest = () => {
     }
   }, []);
 
+  useEffect(()=>{
+   
+   
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: 'https://amarnath013.pythonanywhere.com/api/user/hostel-room-allotments/',
+      headers: { 
+        'Content-Type': 'application/json', 
+        'Authorization': `Bearer ${localStorage.getItem("accesstoken")}`
+      },
+  
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(response?.data);
+      setAllotedRoom(response?.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  },[])
   useEffect(() => {
     let config = {
       method: "GET",
@@ -324,6 +348,17 @@ export const HostelRoomRequest = () => {
             Send Request
           </Button>
         </form>
+        <Divider sx={{ my:3 }}/>
+        <p style={{margin:"10px 0px 10px 0px",fontSize:"1.2rem"}}>Alloted Rooms to you</p>
+        {allotedRoom && allotedRoom?.map((data,index)=>(
+                     data?.registration_details?.registration_number===localStorage?.getItem('RollNumber') ? (
+                     <Box key={index}>
+                        <Typography variant="body2" color="text.secondary">{index+1}.{"  "} Alloted Room No : {data?.hostel_room}</Typography>
+                     </Box>):
+                     (null)
+
+        ))}
+                    
         <Divider sx={{ my: 3 }} />
         <Typography
           variant="h6"
@@ -360,31 +395,35 @@ export const HostelRoomRequest = () => {
                     minWidth: 275,
                     marginBottom: 2,
                     backgroundColor: "#D2E9E9",
+
                   }}
                 >
                   <CardContent>
                     <Typography
-                      sx={{ fontSize: 14 }}
+                      sx={{ fontSize: 14,marginLeft:"40px" }}
                       color="text.secondary"
                       gutterBottom
                     >
                       Previous Request Details
                     </Typography>
 
-                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                    <Typography color="text.secondary" style={{marginLeft:"10px"}}>
                       Status : {data?.status}
                     </Typography>
-                    <Typography variant="body2">
+                   
+                    <Typography variant="body2" color="text.secondary" style={{marginLeft:"10px"}}>
                       Marksheet Image:<br/>
                       {data?.latest_marksheet!==null ? (<img
                         src={`data:image/*;base64,${decodeURIComponent(
                           data?.latest_marksheet
                         )}`}
                         alt="description"
-                        style={{width:"150px",height:"150px"}}
+                        style={{width:"150px",height:"150px",margin:"10px 0px 10px 40px",borderRadius:"10px"}}
                       />):(<p>Null</p>) }
                       
                     </Typography>
+                    
+                    
                   </CardContent>
                 </Card>
               </Box>

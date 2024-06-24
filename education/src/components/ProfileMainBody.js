@@ -7,15 +7,16 @@ import {
   Typography,
 } from "@mui/material";
 import "../App.css";
+import { CiEdit } from "react-icons/ci";
 
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import FormData from "form-data";
 
 export const ProfileMainBody = () => {
   const [userProfile, setUserProfile] = useState([]);
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     let config = {
@@ -36,7 +37,41 @@ export const ProfileMainBody = () => {
         console.log(error);
       });
   }, []);
- 
+
+  const handleChange=(e)=>{
+
+    const formData=new FormData();
+    console.log(e.target.files[0]);
+    formData.append("profile_picture",e.target.files[0]);
+     
+    let data = JSON.stringify({
+      "personal_information": {
+        "profile_picture":formData
+      },
+      "contact_information": {},
+      "academic_information": {}
+    });
+    
+    let config = {
+      method: 'put',
+      maxBodyLength: Infinity,
+      url: 'https://amarnath013.pythonanywhere.com/api/user/profile/',
+      headers: { 
+        'Content-Type': 'application/json', 
+        'Authorization': `Bearer ${localStorage.getItem('accesstoken')}`
+      },
+      data : data
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
+  }
   return (
     <>
       <Box
@@ -53,9 +88,14 @@ export const ProfileMainBody = () => {
           <img
             src="https://mui.com/static/images/avatar/2.jpg"
             alt=""
-            className="lg:w-[10%] w-[40%] sm:w-[25%] md:w-[15%] h-auto text-center"
+            id="profilePic"
+            className=" lg:w-[10%] w-[40%] sm:w-[25%] md:w-[15%] h-auto text-center"
             style={{ borderRadius: "50%" }}
           />
+          < Typography varient="span" component="label">
+            <CiEdit style={{ fontSize: "1.2rem" }} />
+            <input type="file" style={{display:"none"}} onChange={handleChange}/>
+          </Typography>
         </Box>
 
         <Box className="lg:p-10 sm:p-5 p-5">
@@ -63,7 +103,10 @@ export const ProfileMainBody = () => {
             <Typography variant="p text-xl mx-auto mb-10">
               Basic details
             </Typography>
-            <Button variant="contained" onClick={(e)=>navigate('/profileEdit')}>
+            <Button
+              variant="contained"
+              onClick={(e) => navigate("/profileEdit")}
+            >
               Edit
             </Button>
           </div>
@@ -459,7 +502,14 @@ export const ProfileMainBody = () => {
             >
               <Typography variant="p">Country</Typography>
             </Grid>
-            <Grid item lg={4} sm={12} xs={12} md={12} style={{marginBottom:"40px"}}>
+            <Grid
+              item
+              lg={4}
+              sm={12}
+              xs={12}
+              md={12}
+              style={{ marginBottom: "40px" }}
+            >
               <Typography variant="p">
                 {userProfile?.contact_information?.country}
               </Typography>
