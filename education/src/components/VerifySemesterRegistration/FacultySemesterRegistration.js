@@ -197,8 +197,8 @@ const FacultySemesterRegistration = () => {
           </Grid>
         </Grid>
 
-        <Grid container spacing={2} style={{ marginTop: "20px" }}>
-          <Grid item xs={12} sm={6}>
+        <Box>
+         
             <FormControl component="fieldset">
               <FormLabel component="legend">Any Remarks?</FormLabel>
               <RadioGroup row value={remark} onChange={handleRadioChange}>
@@ -206,8 +206,8 @@ const FacultySemesterRegistration = () => {
                 <FormControlLabel value="no" control={<Radio />} label="No" />
               </RadioGroup>
             </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6}>
+         </Box>
+          <Box>
             <TextField
               type="text"
               label="Remarks Details"
@@ -221,8 +221,8 @@ const FacultySemesterRegistration = () => {
               }}
               onChange={(e) => setText(e.target.value)}
             />
-          </Grid>
-        </Grid>
+          </Box>
+        
 
         <Grid container justifyContent="center" spacing={2} style={{ marginTop: "40px" }}>
           <Grid item>
