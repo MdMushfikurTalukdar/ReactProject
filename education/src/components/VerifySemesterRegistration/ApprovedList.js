@@ -75,7 +75,7 @@ const ApprovedList = () => {
       <div className="print">
         <h2 className="text1">Approved List</h2>
 
-        <div className="search-bar">
+        {/* <div className="search-bar">
           <input
             type="search"
             id="search-input"
@@ -84,7 +84,7 @@ const ApprovedList = () => {
             onChange={handleSearch}
           />
           <ul id="search-results"></ul>
-        </div>
+        </div> */}
 
         <button className="printbtn" onClick={handlePrint}>
           Download
