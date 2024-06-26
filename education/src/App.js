@@ -70,8 +70,8 @@ function App() {
             <Route path="/complaints" element={ <ComplaintForm/> } />
             <Route path="/underDevelopment" element={ <UnderDevelopment/> } />
             <Route path="/no-dues-for-degree" element={ <NoDuesForDegree/> } />
-            <Route path="verifySemesterRegistration" element={<VerifySemesterRegistration/>} />
-            <Route path="facultySemesterRegistration" element={<FacultySemesterRegistration/>} />
+            <Route path="/verifySemesterRegistration" element={<VerifySemesterRegistration/>} />
+            <Route path="/facultySemesterRegistration" element={<FacultySemesterRegistration/>} />
           </Routes>
         </Router>
 

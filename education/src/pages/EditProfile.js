@@ -304,7 +304,7 @@ export const EditProfile = () => {
                 userProfile?.personal_information?.profile_picture !== null ? (
                   <img
                     src={userProfile?.personal_information?.profile_picture}
-                    alt="description"
+                    alt="Loading..."
                     style={{
                       width: "150px",
                       height: "150px",

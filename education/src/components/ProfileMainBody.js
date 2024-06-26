@@ -88,7 +88,7 @@ export const ProfileMainBody = () => {
           {userProfile?.personal_information?.profile_picture !== null ? (
             <img
               src={userProfile?.personal_information?.profile_picture}
-              alt="description"
+              alt="Loading..."
               style={{
                 width: "150px",
                 height: "150px",
@@ -99,7 +99,7 @@ export const ProfileMainBody = () => {
           ) : (
             <img
               src="https://mui.com/static/images/avatar/2.jpg"
-              alt=""
+              alt="Loading..."
               className="lg:w-[10%] w-[40%] sm:w-[25%] md:w-[15%] h-auto text-center"
               style={{ borderRadius: "50%" }}
             />
