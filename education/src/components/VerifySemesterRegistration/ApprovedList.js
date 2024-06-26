@@ -104,7 +104,7 @@ const ApprovedList = () => {
                 <div className="info">
                   <p>
                     <span className="label">Name:</span>{" "}
-                    {student?.registration_details_info?.student_details?.personal_information?.first_name}
+                    {student?.registration_details_info?.student_details?.personal_information?.first_name}{" "}{student?.registration_details_info?.student_details?.personal_information?.last_name}
                   </p>
                   <p>
                     <span className="label">Registration No:</span>{" "}
