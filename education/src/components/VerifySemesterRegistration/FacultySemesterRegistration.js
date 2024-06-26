@@ -14,7 +14,7 @@ import {
 import "../../App.css";
 import NavbarNew from "../NavbarNew";
 import { jwtDecode } from "jwt-decode";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useForm} from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -36,6 +36,8 @@ const FacultySemesterRegistration = () => {
 
 
   // Radio button
+  const { id, reg } = useParams();
+  const [profileDetails, setProfileDetails] = useState(null);
   const [remark, setremark] = useState('no');
   const [isTextFieldDisabled, setIsTextFieldDisabled] = useState(true);
 
@@ -47,15 +49,34 @@ const FacultySemesterRegistration = () => {
       setIsTextFieldDisabled(false);
     }
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        let config = {
+          method: 'get',
+          maxBodyLength: Infinity,
+          url: `https://amarnath013.pythonanywhere.com/api/user/semester-registrations/${id}`,
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem("accesstoken")}`
+          }
+        };
+
+        const response = await axios.request(config);
+        setProfileDetails(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, [id]);
+
+
   // radio button end
-  const [userProfile, setUserProfile] = useState({
-    personal_information: {
-      first_name: "John",
-      middle_name: "Doe",
-      last_name: "Smith",
-      registration_number: "123456"
-    }
-  });
+  const [userProfile, setUserProfile] = useState();
+  
+ 
   const [totalData, setTotalData] = useState([
     {
       semester_name: "Semester 1",
@@ -147,6 +168,7 @@ const FacultySemesterRegistration = () => {
     window.innerWidth < 669? true : false
   );
 
+
   useEffect(() => {
     window.addEventListener("resize", resize);
 
@@ -168,9 +190,6 @@ const FacultySemesterRegistration = () => {
     resolver: yupResolver(schema),
   });
 
-  useEffect(() => {
-    console.log(userProfile?.personal_information?.registration_number);
-  }, [userProfile]);
 
   useEffect(() => {
     if (selectedSemester && branches2) {
@@ -283,6 +302,10 @@ const FacultySemesterRegistration = () => {
       });
   };
 
+  
+  if (!profileDetails) return <div>Loading...</div>;
+
+  const { personal_information, contact_information, academic_information } = profileDetails.student_details;
   return (
     <>
       <NavbarNew />
@@ -299,7 +322,7 @@ const FacultySemesterRegistration = () => {
                 <TextField
                   type="text"
                   label="Student Name"
-                  value={`${userProfile?.personal_information?.first_name} ${userProfile?.personal_information?.middle_name} ${userProfile?.personal_information?.last_name}`}
+                  value={`${personal_information?.first_name}  ${personal_information?.last_name}`}
                   fullWidth
                   disabled
                 />
@@ -308,7 +331,7 @@ const FacultySemesterRegistration = () => {
               <Grid item xs={12} sm={6}>
                 <TextField
                   type="text"
-                  value={userProfile?.personal_information?.registration_number}
+                  value={personal_information?.registration_number}
                   fullWidth
                   disabled
                 />
@@ -318,7 +341,7 @@ const FacultySemesterRegistration = () => {
                 <TextField
                   type="text"
                   label="Semester"
-                  value={totalData[0].semester_name}
+                  value={academic_information?.semester_name}
                   fullWidth
                   disabled
                 />
@@ -327,8 +350,8 @@ const FacultySemesterRegistration = () => {
               <Grid item xs={12} sm={6}>
                 <TextField
                   type="text"
-                  label="Branch"
-                  value={totalData[0].branch}
+                  placeholder="Branch"
+                  value={academic_information?.department}
                   fullWidth
                   disabled
                 />
@@ -356,11 +379,7 @@ const FacultySemesterRegistration = () => {
                 border: '1px solid #ddd',
               }}
             >
-              <img
-                src={userProfile.profile_picture}
-                alt="Profile Picture"
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-              />
+             <img src={personal_information?.profile_picture} style={{width:"250px",height:"250px"}} alt=""/>
             </Box>
           </Grid>
       </Grid>

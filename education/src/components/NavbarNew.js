@@ -43,6 +43,7 @@ export const NavbarNew = () => {
     { name: "Add Subject", link: "/sem-sub-register" },
     { name: "Add Branch", link: "/sem-branch-register" },
     { name: "Add College", link: "/add-college" },
+    { name: "Semester Registration Request", link: "/verifySemesterRegistration" }
   ];
 
   const fees_add = [
