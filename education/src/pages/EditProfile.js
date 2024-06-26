@@ -121,6 +121,7 @@ export const EditProfile = () => {
   console.log(errors);
   const [userProfile, setUserProfile] = useState([]);
   const [file, setFile] = useState("");
+  const [imgPreview, setImgPreview] = useState("");
 
   useEffect(() => {
     let config = {
@@ -214,7 +215,9 @@ export const EditProfile = () => {
     formData.append("personal_information.middle_name", data.middle_name);
     formData.append("personal_information.date_of_birth", data.date_of_birth);
     formData.append("personal_information.gender", data.gender);
-    formData.append("personal_information.profile_picture", file);
+    if (file) {
+      formData.append("personal_information.profile_picture", file);
+    }
 
     // Append contact information
     formData.append("contact_information.email", data.email);
@@ -274,6 +277,12 @@ export const EditProfile = () => {
         console.log(error);
       });
   };
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+    let url = URL.createObjectURL(e.target.files[0]);
+    setImgPreview(url);
+  };
   return (
     <Box style={{ fontFamily: "Math", minHeight: "100vh" }}>
       <NavbarNew />
@@ -291,9 +300,21 @@ export const EditProfile = () => {
 
             <Box className="text-center">
               <label component="label">
-                {userProfile?.personal_information?.profile_picture !== null ? (
+                {!imgPreview &&
+                userProfile?.personal_information?.profile_picture !== null ? (
                   <img
                     src={userProfile?.personal_information?.profile_picture}
+                    alt="description"
+                    style={{
+                      width: "150px",
+                      height: "150px",
+                      margin: "10px 0px 10px 40px",
+                      borderRadius: "50%",
+                    }}
+                  />
+                ) : imgPreview ? (
+                  <img
+                    src={imgPreview}
                     alt="description"
                     style={{
                       width: "150px",
@@ -315,7 +336,7 @@ export const EditProfile = () => {
                   type="file"
                   accept="image/*"
                   style={{ display: "none" }}
-                  onChange={(e) => setFile(e.target.files[0])}
+                  onChange={handleFileChange}
                 />
               </label>
             </Box>
