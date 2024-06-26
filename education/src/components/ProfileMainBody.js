@@ -38,40 +38,40 @@ export const ProfileMainBody = () => {
       });
   }, []);
 
-  const handleChange=(e)=>{
+  // const handleChange=(e)=>{
 
-    const formData=new FormData();
-    console.log(e.target.files[0]);
-    formData.append("profile_picture",e.target.files[0]);
-     
-    let data = JSON.stringify({
-      "personal_information": {
-        "profile_picture":formData
-      },
-      "contact_information": {},
-      "academic_information": {}
-    });
-    
-    let config = {
-      method: 'put',
-      maxBodyLength: Infinity,
-      url: 'https://amarnath013.pythonanywhere.com/api/user/profile/',
-      headers: { 
-        'Content-Type': 'application/json', 
-        'Authorization': `Bearer ${localStorage.getItem('accesstoken')}`
-      },
-      data : data
-    };
-    
-    axios.request(config)
-    .then((response) => {
-      console.log(JSON.stringify(response.data));
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  //   const formData=new FormData();
+  //   console.log(e.target.files[0]);
+  //   formData.append("profile_picture",e.target.files[0]);
 
-  }
+  //   let data = JSON.stringify({
+  //     "personal_information": {
+  //       "profile_picture":formData
+  //     },
+  //     "contact_information": {},
+  //     "academic_information": {}
+  //   });
+
+  //   let config = {
+  //     method: 'put',
+  //     maxBodyLength: Infinity,
+  //     url: 'https://amarnath013.pythonanywhere.com/api/user/profile/',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       'Authorization': `Bearer ${localStorage.getItem('accesstoken')}`
+  //     },
+  //     data : data
+  //   };
+
+  //   axios.request(config)
+  //   .then((response) => {
+  //     console.log(JSON.stringify(response.data));
+  //   })
+  //   .catch((error) => {
+  //     console.log(error);
+  //   });
+
+  // }
   return (
     <>
       <Box
@@ -85,16 +85,27 @@ export const ProfileMainBody = () => {
         </Box>
 
         <Box className="text-center">
-          <img
-            src="https://mui.com/static/images/avatar/2.jpg"
-            alt=""
-            id="profilePic"
-            className=" lg:w-[10%] w-[40%] sm:w-[25%] md:w-[15%] h-auto text-center"
-            style={{ borderRadius: "50%" }}
-          />
-          < Typography varient="span" component="label">
-            <CiEdit style={{ fontSize: "1.2rem" }} />
-            <input type="file" style={{display:"none"}} onChange={handleChange}/>
+          {userProfile?.personal_information?.profile_picture !== null ? (
+            <img
+              src={userProfile?.personal_information?.profile_picture}
+              alt="description"
+              style={{
+                width: "150px",
+                height: "150px",
+                margin: "10px 0px 10px 40px",
+                borderRadius: "50%",
+              }}
+            />
+          ) : (
+            <img
+              src="https://mui.com/static/images/avatar/2.jpg"
+              alt=""
+              className="lg:w-[10%] w-[40%] sm:w-[25%] md:w-[15%] h-auto text-center"
+              style={{ borderRadius: "50%" }}
+            />
+          )}
+          <Typography varient="span" component="label">
+            <input type="file" style={{ display: "none" }} />
           </Typography>
         </Box>
 

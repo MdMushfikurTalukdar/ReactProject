@@ -17,6 +17,7 @@ import * as yup from "yup";
 import { enqueueSnackbar } from "notistack";
 import emailValidator from "email-validator";
 import NavbarNew from "../components/NavbarNew";
+import { CiEdit } from "react-icons/ci";
 
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -66,7 +67,7 @@ const schema = yup.object().shape({
   batch: yup
     .string()
     .required("Batch is required")
-    .test("batch_valid","Format should be like YYYY-YYYY",(value) => {
+    .test("batch_valid", "Format should be like YYYY-YYYY", (value) => {
       console.log(value);
       if (!value.includes("-")) {
         return false;
@@ -74,10 +75,9 @@ const schema = yup.object().shape({
       let number1 = value.split("-")[0];
       let number2 = value.split("-")[1];
 
-      if(number1.length!==4 && number2.length!==4)
-        {
-          return false;
-        }
+      if (number1.length !== 4 && number2.length !== 4) {
+        return false;
+      }
       if (isNaN(number1) || isNaN(number2)) {
         return false;
       }
@@ -202,57 +202,58 @@ export const EditProfile = () => {
       });
   }, [setValue]);
 
-  console.log(errors);
+  // console.log(errors);
 
   const UpdateSubmit = (data) => {
-    // console.log(file);
-    // formData.append("profile_picture",file.name);
+    console.log(file);
 
-    let data2 = JSON.stringify({
-      personal_information: {
-        first_name: data.first_name,
-        last_name: data.last_name,
-        father_name: data.father_name,
-        middle_name: data.middle_name,
-        date_of_birth: data.date_of_birth,
-        gender: data.gender,
-        // profile_picture:formData
-      },
-      contact_information: {
-        email: data.email,
-        phone_number: data.phone_number,
-        alternate_phone_number: data.alternate_phone_number,
-        address: data.address,
-        city: data.city,
-        state: data.state,
-        postal_code: data.postal_code,
-        country: data.country,
-      },
-      academic_information: {
-        enrollment_date: data.enrollment_date,
-        program: data.program,
-        major: data.major,
-        current_year: data.current_year,
-        gpa: data.gpa,
-        course_enrolled: data.course_enrolled,
-        department: data.department,
-        batch: data.batch,
-      },
-      user: {
-        registration_number: "16900120125",
-        role: "student",
-      },
-    });
+    const formData = new FormData();
+    formData.append("personal_information.first_name", data.first_name);
+    formData.append("personal_information.last_name", data.last_name);
+    formData.append("personal_information.father_name", data.father_name);
+    formData.append("personal_information.middle_name", data.middle_name);
+    formData.append("personal_information.date_of_birth", data.date_of_birth);
+    formData.append("personal_information.gender", data.gender);
+    formData.append("personal_information.profile_picture", file);
+
+    // Append contact information
+    formData.append("contact_information.email", data.email);
+    formData.append("contact_information.phone_number", data.phone_number);
+    formData.append(
+      "contact_information.alternate_phone_number",
+      data.alternate_phone_number
+    );
+    formData.append("contact_information.address", data.address);
+    formData.append("contact_information.city", data.city);
+    formData.append("contact_information.state", data.state);
+    formData.append("contact_information.postal_code", data.postal_code);
+    formData.append("contact_information.country", data.country);
+
+    // Append academic information
+    formData.append(
+      "academic_information.enrollment_date",
+      data.enrollment_date
+    );
+    formData.append("academic_information.program", data.program);
+    formData.append("academic_information.major", data.major);
+    formData.append("academic_information.current_year", data.current_year);
+    formData.append("academic_information.gpa", data.gpa);
+    formData.append("academic_information.department", data.department);
+    formData.append("academic_information.batch", data.batch);
+    formData.append(
+      "academic_information.course_enrolled",
+      data.course_enrolled
+    );
 
     let config = {
       method: "put",
       maxBodyLength: Infinity,
       url: "https://amarnath013.pythonanywhere.com/api/user/profile/",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
       },
-      data: data2,
+      data: formData,
     };
 
     axios
@@ -290,12 +291,26 @@ export const EditProfile = () => {
 
             <Box className="text-center">
               <label component="label">
-                <img
-                  src="https://mui.com/static/images/avatar/2.jpg"
-                  alt=""
-                  className="lg:w-[10%] w-[40%] sm:w-[25%] md:w-[15%] h-auto text-center"
-                  style={{ borderRadius: "50%" }}
-                />
+                {userProfile?.personal_information?.profile_picture !== null ? (
+                  <img
+                    src={userProfile?.personal_information?.profile_picture}
+                    alt="description"
+                    style={{
+                      width: "150px",
+                      height: "150px",
+                      margin: "10px 0px 10px 40px",
+                      borderRadius: "50%",
+                    }}
+                  />
+                ) : (
+                  <img
+                    src="https://mui.com/static/images/avatar/2.jpg"
+                    alt=""
+                    className="lg:w-[10%] w-[40%] sm:w-[25%] md:w-[15%] h-auto text-center"
+                    style={{ borderRadius: "50%" }}
+                  />
+                )}
+                <CiEdit style={{ fontSize: "1.2rem" }} />
                 <input
                   type="file"
                   accept="image/*"
