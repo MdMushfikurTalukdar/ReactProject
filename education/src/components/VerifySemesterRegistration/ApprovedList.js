@@ -110,13 +110,12 @@ const ApprovedList = () => {
                     <span className="label">Registration No:</span>{" "}
                     {student?.registration_details_info?.student_details?.personal_information?.registration_number}
                   </p>
-                </div>
-                <div className="info2">
                   <p>
                     <span className="label">Semester:</span>{" "}
                     {student?.registration_details_info?.semester?.semester_name}
                   </p>
                 </div>
+                
               </div>
             );
           })}

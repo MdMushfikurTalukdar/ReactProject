@@ -53,13 +53,13 @@ const VerifySemesterRegistration = () => {
                   <span className="label">Registration No:</span>{" "}
                   {data.student_details.personal_information.registration_number}
                 </p>
-              </div>
-              <div className="info2">
                 <p>
                   <span className="label">Semester:</span>{" "}
                   {data.semester.semester_name}
                 </p>
               </div>
+              <br/>
+             
             </div>
           ))}
         </div>
