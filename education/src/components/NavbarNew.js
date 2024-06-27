@@ -415,7 +415,7 @@ export const NavbarNew = () => {
                   <Divider style={{marginTop:"5px"}}/>
                   {notifications.length > 0 ? (
                     notifications.map(notification => (
-                      <div key={notification.id} className="flex justify-between items-center py-2">
+                      <div key={notification.id} className="flex justify-between items-center py-2 font-semibold">
                         <div>
                           <p>{notification.text}</p>
                           <p className="text-xs text-gray-500">{notification.time}</p>
