@@ -13,10 +13,22 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import FormData from "form-data";
+import { jwtDecode } from "jwt-decode";
 
 export const ProfileMainBody = () => {
   const [userProfile, setUserProfile] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (localStorage?.getItem("accesstoken")) {
+      const response = jwtDecode(localStorage?.getItem("accesstoken"));
+      if (response.exp < Math.floor(Date.now() / 1000)) {
+        navigate("/login");
+      }
+    } else {
+      navigate("/login");
+    }
+  }, []);
 
   useEffect(() => {
     let config = {

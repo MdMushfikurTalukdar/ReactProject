@@ -2,6 +2,11 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./NavbarNew.css"; // If you have custom CSS, keep this import
 import { jwtDecode } from "jwt-decode";
+import { IoIosNotificationsOutline } from "react-icons/io";
+import { CgProfile } from "react-icons/cg";
+import { Box, Button, Divider } from "@mui/material";
+import zIndex from "@mui/material/styles/zIndex";
+import { Height, Padding } from "@mui/icons-material";
 
 export const NavbarNew = () => {
   const response = jwtDecode(localStorage?.getItem("accesstoken"));
@@ -162,6 +167,30 @@ export const NavbarNew = () => {
     setIsNestedDropdownFacultyAcadamicOpen(false);
     setIsNestedDropdownHODOpen(!isNestedDropdownHODOpen);
   };
+  const  [hide,setHide]=useState(false);
+  const [notifications, setNotifications] = useState([
+    { id: 1, text: "Hello User! Ready to begin your journey with us?", time: "5 min ago" },
+    { id: 2, text: "You have successfully enrolled in this semester. Happy Learning!", time: "8 min ago" },
+    { id: 3, text: "Your profile has been updated successfully.", time: "10 min ago" },
+    { id: 4, text: "Reminder: Your assignment for [Course Name] is due on [Date].", time: "14 min ago" },
+    { id: 5, text: "You have a new message from [Instructor Name].", time: "15 min ago" },
+    { id: 6, text: "Reminder: Your subscription will renew on [Date].", time: "25 min ago" },
+    { id: 7, text: "Reminder: Your subscription will end on [Date].", time: "26 min ago" },
+  ]);
+
+  const [showNotifications, setShowNotifications] = useState(false);
+
+  const deleteNotification = (id) => {
+    setNotifications(notifications.filter(notification => notification.id !== id));
+  };
+
+  const deleteAllNotifications = () => {
+    setNotifications([]);
+  };
+
+
+
+
 
   return (
     <>
@@ -365,16 +394,48 @@ export const NavbarNew = () => {
             </div>
             <h1 className="text-2xl font-bold ml-4">Campus</h1>
           </div>
-          <div className="flex items-center">
-            <Link
-              to="/profile"
-              style={{ textDecoration: "none" }}
-              className="flex items-center space-x-2"
-            >
-              <span className="text-xl">Profile</span>
-              <i className="fas fa-user" style={{ marginTop: "0.9px" }}></i>
-            </Link>
+          <div className="flex items-center space-x-4">
+            <div className="relative cursor-pointer" onClick={() => setShowNotifications(!showNotifications)}>
+              <IoIosNotificationsOutline size={24} />
+              {notifications.length > 0 && (
+                <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full text-xs px-1">
+                  {notifications.length}
+                </span>
+              )}
+            </div>
+            {showNotifications && (
+              <div className="bg-white shadow-lg rounded-md z-10" style={{position:"absolute",top:"54px",right:"24px",width:"16.7rem",backgroundColor:"whitesmoke"}}>
+                <Box p={2} style={{overflowY:'scroll',height:"450px"}}>
+                  <div className="flex justify-between items-center">
+                    <h4>Notifications</h4>
+                    <Button variant="outlined" size="small" onClick={deleteAllNotifications} style={{color:"rgb(107, 169, 169)"}}>
+                      Clear All
+                    </Button>
+                  </div>
+                  <Divider style={{marginTop:"5px"}}/>
+                  {notifications.length > 0 ? (
+                    notifications.map(notification => (
+                      <div key={notification.id} className="flex justify-between items-center py-2">
+                        <div>
+                          <p>{notification.text}</p>
+                          <p className="text-xs text-gray-500">{notification.time}</p>
+                        </div>
+                        <Button size="small" onClick={() => deleteNotification(notification.id)} style={{color:"rgb(107, 169, 169)"}}>
+                          Delete
+                        </Button>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-center py-2 text-gray-500" style={{marginTop:"100px"}}>No notifications</p>
+                  )}
+                </Box>
+              </div>
+            )}
+            <div className="relative">
+              <CgProfile size={24} className="cursor-pointer" />
+            </div>
           </div>
+        
         </div>
       </nav>
     </>
