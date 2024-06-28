@@ -64,10 +64,7 @@ export const NavbarNew = () => {
   const fees_add = [
     { name: "Add Fees", link: "/add-fees" },
     { name: "Hostel Room Allotment", link: "/hostel-room-allotment" },
-    {
-      name: "Show Hostel Room Requests",
-      link: "/hostel-room-allotment-requests",
-    },
+    // { name: "Show Hostel Room Requests", link: "/hostel-room-allotment-requests" },
   ];
 
   const others = [
