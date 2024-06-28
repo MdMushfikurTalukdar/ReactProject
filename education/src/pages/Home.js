@@ -8,6 +8,8 @@ import Testimonials from "../components/Home/Testonomials.jsx"
 
 export const Home = () => {
   
+
+
   return (
     <div className="App overflow-x-hidden">
       <Header />

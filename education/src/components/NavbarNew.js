@@ -1,16 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./NavbarNew.css"; // If you have custom CSS, keep this import
 import { jwtDecode } from "jwt-decode";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { CgProfile } from "react-icons/cg";
 import { Box, Button, Divider } from "@mui/material";
-import zIndex from "@mui/material/styles/zIndex";
-import { Height, Padding } from "@mui/icons-material";
+
 
 export const NavbarNew = () => {
-  const response = jwtDecode(localStorage?.getItem("accesstoken"));
-  const roll = response?.role;
+  const navigate = useNavigate();
+  const [roll, setRoll] = useState("");
+
+  useEffect(() => {
+
+    if (localStorage.getItem("accesstoken") === null) {
+      navigate("/login");
+    } else {
+      const response = jwtDecode(localStorage?.getItem("accesstoken"));
+
+      setRoll(response?.role);
+    }
+  }, []);
 
   const mainOptions = [
     "General",
@@ -19,7 +29,7 @@ export const NavbarNew = () => {
     "Other Responsibilities",
     "Actions",
     "Others",
-    "HOD"
+    "HOD",
   ];
   const general = [
     { name: "Profile", link: "/profile" },
@@ -54,9 +64,11 @@ export const NavbarNew = () => {
   const fees_add = [
     { name: "Add Fees", link: "/add-fees" },
     { name: "Hostel Room Allotment", link: "/hostel-room-allotment" },
-    { name: "Show Hostel Room Requests", link: "/hostel-room-allotment-requests" }
+    {
+      name: "Show Hostel Room Requests",
+      link: "/hostel-room-allotment-requests",
+    },
   ];
-
 
   const others = [
     { name: "Guest Room Request", link: "/guest-room" },
@@ -65,15 +77,17 @@ export const NavbarNew = () => {
 
   const facultyAcadamic = [
     { name: "Upload/Check Assignment", link: "/underDevelopment" },
-    { name: "Upload Internal Sem Marks", link: "/underDevelopment" }
+    { name: "Upload Internal Sem Marks", link: "/underDevelopment" },
   ];
 
   const hod = [
-    { name: "Verify Semester Registration", link: "/verifySemesterRegistration" },
+    {
+      name: "Verify Semester Registration",
+      link: "/verifySemesterRegistration",
+    },
     { name: "Update Branch Subjects", link: "/underDevelopment" },
-    { name: "Sign No Dues(for TC)", link: "/underDevelopment" }
+    { name: "Sign No Dues(for TC)", link: "/underDevelopment" },
   ];
-
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isNestedDropdownGeneralOpen, setIsNestedDropdownGeneralOpen] =
@@ -88,7 +102,10 @@ export const NavbarNew = () => {
     isNestedDropdownOther_responsibilitiesOpen,
     setIsNestedDropdownOther_responsibilitiesOpen,
   ] = useState(false);
-  const [isNestedDropdownFacultyAcadamicOpen, setIsNestedDropdownFacultyAcadamicOpen] = useState(false);
+  const [
+    isNestedDropdownFacultyAcadamicOpen,
+    setIsNestedDropdownFacultyAcadamicOpen,
+  ] = useState(false);
   const [isNestedDropdownHODOpen, setIsNestedDropdownHODOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -154,7 +171,9 @@ export const NavbarNew = () => {
     setIsNestedDropdownResidentialOpen(false);
     setIsNestedDropdownOthersOpen(false);
     setIsNestedDropdownOther_responsibilitiesOpen(false);
-    setIsNestedDropdownFacultyAcadamicOpen(!isNestedDropdownFacultyAcadamicOpen);
+    setIsNestedDropdownFacultyAcadamicOpen(
+      !isNestedDropdownFacultyAcadamicOpen
+    );
     setIsNestedDropdownHODOpen(false);
   };
   const toggleNestedDropdownHOD = (e) => {
@@ -162,35 +181,61 @@ export const NavbarNew = () => {
     setIsNestedDropdownGeneralOpen(false);
     setIsNestedDropdownAcademicOpen(false);
     setIsNestedDropdownResidentialOpen(false);
-    setIsNestedDropdownOthersOpen(false);  
+    setIsNestedDropdownOthersOpen(false);
     setIsNestedDropdownOther_responsibilitiesOpen(false);
     setIsNestedDropdownFacultyAcadamicOpen(false);
     setIsNestedDropdownHODOpen(!isNestedDropdownHODOpen);
   };
-  const  [hide,setHide]=useState(false);
+  const [hide, setHide] = useState(false);
   const [notifications, setNotifications] = useState([
-    { id: 1, text: "Hello User! Ready to begin your journey with us?", time: "5 min ago" },
-    { id: 2, text: "You have successfully enrolled in this semester. Happy Learning!", time: "8 min ago" },
-    { id: 3, text: "Your profile has been updated successfully.", time: "10 min ago" },
-    { id: 4, text: "Reminder: Your assignment for [Course Name] is due on [Date].", time: "14 min ago" },
-    { id: 5, text: "You have a new message from [Instructor Name].", time: "15 min ago" },
-    { id: 6, text: "Reminder: Your subscription will renew on [Date].", time: "25 min ago" },
-    { id: 7, text: "Reminder: Your subscription will end on [Date].", time: "26 min ago" },
+    {
+      id: 1,
+      text: "Hello User! Ready to begin your journey with us?",
+      time: "5 min ago",
+    },
+    {
+      id: 2,
+      text: "You have successfully enrolled in this semester. Happy Learning!",
+      time: "8 min ago",
+    },
+    {
+      id: 3,
+      text: "Your profile has been updated successfully.",
+      time: "10 min ago",
+    },
+    {
+      id: 4,
+      text: "Reminder: Your assignment for [Course Name] is due on [Date].",
+      time: "14 min ago",
+    },
+    {
+      id: 5,
+      text: "You have a new message from [Instructor Name].",
+      time: "15 min ago",
+    },
+    {
+      id: 6,
+      text: "Reminder: Your subscription will renew on [Date].",
+      time: "25 min ago",
+    },
+    {
+      id: 7,
+      text: "Reminder: Your subscription will end on [Date].",
+      time: "26 min ago",
+    },
   ]);
 
   const [showNotifications, setShowNotifications] = useState(false);
 
   const deleteNotification = (id) => {
-    setNotifications(notifications.filter(notification => notification.id !== id));
+    setNotifications(
+      notifications.filter((notification) => notification.id !== id)
+    );
   };
 
   const deleteAllNotifications = () => {
     setNotifications([]);
   };
-
-  const navigate=useNavigate();
-
-
 
   return (
     <>
@@ -387,7 +432,6 @@ export const NavbarNew = () => {
                       </div>
                     )}
                     {/* faculty hod end */}
-
                   </div>
                 </div>
               )}
@@ -395,7 +439,10 @@ export const NavbarNew = () => {
             <h1 className="text-2xl font-bold ml-4">Campus</h1>
           </div>
           <div className="flex items-center space-x-4">
-            <div className="relative cursor-pointer" onClick={() => setShowNotifications(!showNotifications)}>
+            <div
+              className="relative cursor-pointer"
+              onClick={() => setShowNotifications(!showNotifications)}
+            >
               <IoIosNotificationsOutline size={24} />
               {notifications.length > 0 && (
                 <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full text-xs px-1">
@@ -404,38 +451,71 @@ export const NavbarNew = () => {
               )}
             </div>
             {showNotifications && (
-              <div className="bg-white shadow-lg rounded-md z-10" style={{position:"absolute",top:"54px",right:"24px",width:"16.7rem",backgroundColor:"whitesmoke"}}>
-                <Box p={2} style={{overflowY:'scroll',height:"450px"}}>
+              <div
+                className="bg-white shadow-lg rounded-md z-10"
+                style={{
+                  position: "absolute",
+                  top: "54px",
+                  right: "24px",
+                  width: "16.7rem",
+                  backgroundColor: "whitesmoke",
+                }}
+              >
+                <Box p={2} style={{ overflowY: "scroll", height: "450px" }}>
                   <div className="flex justify-between items-center">
                     <h4>Notifications</h4>
-                    <Button variant="outlined" size="small" onClick={deleteAllNotifications} style={{color:"rgb(107, 169, 169)"}}>
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      onClick={deleteAllNotifications}
+                      style={{ color: "rgb(107, 169, 169)" }}
+                    >
                       Clear All
                     </Button>
                   </div>
-                  <Divider style={{marginTop:"5px"}}/>
+                  <Divider style={{ marginTop: "5px" }} />
                   {notifications.length > 0 ? (
-                    notifications.map(notification => (
-                      <div key={notification.id} className="flex justify-between items-center py-2 font-semibold">
+                    notifications.map((notification) => (
+                      <div
+                        key={notification.id}
+                        className="flex justify-between items-center py-2 font-semibold"
+                      >
                         <div>
                           <p>{notification.text}</p>
-                          <p className="text-xs text-gray-500">{notification.time}</p>
+                          <p className="text-xs text-gray-500">
+                            {notification.time}
+                          </p>
                         </div>
-                        <Button size="small" onClick={() => deleteNotification(notification.id)} style={{color:"rgb(107, 169, 169)"}}>
+                        <Button
+                          size="small"
+                          onClick={() => deleteNotification(notification.id)}
+                          style={{ color: "rgb(107, 169, 169)" }}
+                        >
                           Delete
                         </Button>
                       </div>
                     ))
                   ) : (
-                    <p className="text-center py-2 text-gray-500" style={{marginTop:"100px"}}>No notifications</p>
+                    <p
+                      className="text-center py-2 text-gray-500"
+                      style={{ marginTop: "100px" }}
+                    >
+                      No notifications
+                    </p>
                   )}
                 </Box>
               </div>
             )}
             <div className="relative">
-              <CgProfile size={24} className="cursor-pointer" onClick={(e)=>{navigate('/profile')}}/>
+              <CgProfile
+                size={24}
+                className="cursor-pointer"
+                onClick={(e) => {
+                  navigate("/profile");
+                }}
+              />
             </div>
           </div>
-        
         </div>
       </nav>
     </>

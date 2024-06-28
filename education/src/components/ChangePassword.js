@@ -226,9 +226,9 @@ export const ChangePassword = () => {
               fullWidth
               sx={{
                 marginTop: 2,
-                backgroundColor: 'skyblue',
                 color: '#fff',
-                '&:hover': { backgroundColor: 'deepskyblue' },
+                backgroundColor: "rgb(107, 169, 169)",
+                "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
                 transition: 'background-color 0.3s ease-in-out',
               }}
             >

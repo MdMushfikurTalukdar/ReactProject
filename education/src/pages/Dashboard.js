@@ -18,41 +18,48 @@ export const Dashboard = () => {
     { date: "2024-05-04", description: "Paid semester fee" },
   ];
 
-  function regenerateToken() {
-    let data = JSON.stringify({
-      refresh: localStorage.getItem("refreshtoken"),
-    });
+  // function regenerateToken() {
+  //   let data = JSON.stringify({
+  //     refresh: localStorage.getItem("refreshtoken"),
+  //   });
 
-    let config = {
-      method: "post",
-      maxBodyLength: Infinity,
-      url: "https://amarnath013.pythonanywhere.com/api/user/token/refresh/",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: data,
-    };
+  //   let config = {
+  //     method: "post",
+  //     maxBodyLength: Infinity,
+  //     url: "https://amarnath013.pythonanywhere.com/api/user/token/refresh/",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     data: data,
+  //   };
 
-    axios
-      .request(config)
-      .then((response) => {
-        console.log(JSON.stringify(response.data));
-        localStorage.setItem("accesstoken", response.data.refresh);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
+  //   axios
+  //     .request(config)
+  //     .then((response) => {
+  //       console.log(JSON.stringify(response.data));
+  //       localStorage.setItem("accesstoken", response.data.refresh);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // }
 
+  
   useEffect(() => {
-    if (localStorage?.getItem("accesstoken")) {
-      const response = jwtDecode(localStorage?.getItem("accesstoken"));
-      if (response.exp < Math.floor(Date.now() / 1000)) {
-        navigate("/login");
-      }
-    } else {
-      navigate("/login");
-    }
+  
+    console.log(localStorage.getItem("accesstoken"))
+    // if(localStorage?.getItem("accesstoken")===null){
+    //   navigate("/login");
+    // }
+    // else if (localStorage?.getItem("accesstoken")) {
+    //   const response = jwtDecode(localStorage?.getItem("accesstoken"));
+    //   if (response.exp < Math.floor(Date.now() / 1000)) {
+    //     navigate("/login");
+    //   }
+    // } else {
+     
+    //   navigate("/login");
+    // }
   }, []);
 
   return (
