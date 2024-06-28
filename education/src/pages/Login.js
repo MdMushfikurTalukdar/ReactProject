@@ -84,7 +84,7 @@ export const LoginPage = () => {
             <input type="hidden" name="remember" defaultValue="true" />
             <div className="rounded-md shadow-sm -space-y-px">
               <div>
-                <label htmlFor="roll-number" className="sr-only">Registration no</label>
+                <label htmlFor="roll-number" className="sr-only">Registration no.</label>
                 <TextField
                   id="roll-number"
                   type="text"

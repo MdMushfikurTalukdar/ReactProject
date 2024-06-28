@@ -41,7 +41,10 @@ export const Header = () => {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" sx={{
+      backgroundColor:"#e8e8e8",
+      color:"black"
+    }}>
       <Container maxWidth="xl" >
         <Toolbar disableGutters>
           <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
@@ -67,10 +70,11 @@ export const Header = () => {
               sx={{
                 mr: 'auto',
                 fontWeight: 700,
-                letterSpacing: '.3rem',
+                letterSpacing: '.1rem',
                 color: 'inherit',
                 textDecoration: 'none',
                 display: { xs: 'none', md: 'block' },
+                
               }}
             >
               Smart Campus
@@ -92,6 +96,7 @@ export const Header = () => {
               onClose={handleCloseNavMenu}
               sx={{
                 display: { xs: 'block', md: 'none' },
+                color:"black"
               }}
             >
               {pages.map((page) => (
@@ -108,7 +113,7 @@ export const Header = () => {
               <Button
                 key={page}
                 onClick={() => handleNavigate(page)}
-                sx={{ mx: 1, color: 'white' }}
+                sx={{ mx: 1, color: 'black' }}
               >
                 {page}
               </Button>
@@ -116,14 +121,16 @@ export const Header = () => {
           </Box>
 
           {/* Settings Menu */}
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center',color:"black" }}>
             <Menu
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
                 vertical: 'top',
                 horizontal: 'right',
+                
               }}
+             
               keepMounted
               transformOrigin={{
                 vertical: 'top',
