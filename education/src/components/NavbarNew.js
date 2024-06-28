@@ -206,19 +206,19 @@ export const NavbarNew = () => {
                 <div className="absolute left-0 mt-2 w-64 bg-white text-black rounded-lg shadow-lg z-50">
                   <div className="py-2">
                     <div
-                      className="hover:bg-purple-200 px-4 py-2 cursor-pointer"
+                      className=" px-4 py-2 cursor-pointer"
                       onClick={toggleNestedDropdownGeneral}
                     >
                       {mainOptions[0]}
                       {isNestedDropdownGeneralOpen && (
                         <div
-                          className="mt-2 bg-white rounded-lg shadow-md"
+                          className="hover:bg-blue-50 mt-2 bg-white rounded-lg shadow-md"
                           style={{ textDecoration: "none" }}
                         >
                           {general.map((item, index) => (
                             <Link
                               key={index}
-                              className="block px-4 py-2 text-gray-800 hover:bg-purple-100 "
+                              className="block px-4 py-2 text-gray-800 hover:bg-blue-100 "
                               to={item.link}
                               style={{ textDecoration: "none" }}
                             >
@@ -231,16 +231,16 @@ export const NavbarNew = () => {
                     {roll === "student" && (
                       <>
                         <div
-                          className="hover:bg-purple-200 px-4 py-2 cursor-pointer"
+                          className=" px-4 py-2 cursor-pointer"
                           onClick={toggleNestedDropdownAcademic}
                         >
                           {mainOptions[1]}
                           {isNestedDropdownAcademicOpen && (
-                            <div className="mt-2 bg-white rounded-lg shadow-md">
+                            <div className="hover:bg-blue-50 mt-2 bg-white rounded-lg shadow-md">
                               {academic.map((item, index) => (
                                 <Link
                                   key={index}
-                                  className="block px-4 py-2 text-gray-800 hover:bg-purple-100"
+                                  className="block px-4 py-2 text-gray-800 hover:bg-blue-100"
                                   to={item.link}
                                   style={{ textDecoration: "none" }}
                                 >
@@ -251,7 +251,7 @@ export const NavbarNew = () => {
                           )}
                         </div>
                         <div
-                          className="hover:bg-purple-200 px-4 py-2 cursor-pointer"
+                          className="hover:bg-blue-50 px-4 py-2 cursor-pointer"
                           onClick={toggleNestedDropdownResidential}
                         >
                           {mainOptions[2]}
@@ -260,7 +260,7 @@ export const NavbarNew = () => {
                               {residential.map((item, index) => (
                                 <Link
                                   key={index}
-                                  className="block px-4 py-2 text-gray-800 hover:bg-purple-100"
+                                  className="block px-4 py-2 text-gray-800 hover:bg-blue-100"
                                   to={item.link}
                                   style={{ textDecoration: "none" }}
                                 >
@@ -274,7 +274,7 @@ export const NavbarNew = () => {
                     )}
                     {roll !== "student" && roll !== "caretaker" && (
                       <div
-                        className="hover:bg-purple-200 px-4 py-2 cursor-pointer"
+                        className="hover:bg-blue-50 px-4 py-2 cursor-pointer"
                         onClick={toggleNestedDropdownOther_responsibilities}
                       >
                         {mainOptions[3]}
@@ -283,7 +283,7 @@ export const NavbarNew = () => {
                             {other_responsibilities.map((item, index) => (
                               <Link
                                 key={index}
-                                className="block px-4 py-2 text-gray-800 hover:bg-purple-100"
+                                className="block px-4 py-2 text-gray-800 hover:bg-blue-100"
                                 to={item.link}
                                 style={{ textDecoration: "none" }}
                               >
@@ -296,7 +296,7 @@ export const NavbarNew = () => {
                     )}
                     {roll === "caretaker" && (
                       <div
-                        className="hover:bg-purple-200 px-4 py-2 cursor-pointer"
+                        className="hover:bg-blue-50 px-4 py-2 cursor-pointer"
                         onClick={toggleNestedDropdownOther_responsibilities}
                       >
                         {mainOptions[4]}
@@ -305,7 +305,7 @@ export const NavbarNew = () => {
                             {fees_add.map((item, index) => (
                               <Link
                                 key={index}
-                                className="block px-4 py-2 text-gray-800 hover:bg-purple-100"
+                                className="block px-4 py-2 text-gray-800 hover:bg-blue-100"
                                 to={item.link}
                                 style={{ textDecoration: "none" }}
                               >
@@ -319,7 +319,7 @@ export const NavbarNew = () => {
 
                     {roll === "student" && (
                       <div
-                        className="hover:bg-purple-200 px-4 py-2 cursor-pointer"
+                        className="hover:bg-blue-50 px-4 py-2 cursor-pointer"
                         onClick={toggleNestedDropdownOthers}
                       >
                         {mainOptions[5]}
@@ -328,7 +328,7 @@ export const NavbarNew = () => {
                             {others.map((item, index) => (
                               <Link
                                 key={index}
-                                className="block px-4 py-2 text-gray-800 hover:bg-purple-100"
+                                className="block px-4 py-2 text-gray-800 hover:bg-blue-100"
                                 to={item.link}
                                 style={{ textDecoration: "none" }}
                               >
@@ -343,7 +343,7 @@ export const NavbarNew = () => {
                     {/* Faculty common */}
                     {roll === "faculty" && (
                       <div
-                        className="hover:bg-purple-200 px-4 py-2 cursor-pointer"
+                        className="hover:bg-blue-50 px-4 py-2 cursor-pointer"
                         onClick={toggleNestedDropdownFacultyAcademic}
                       >
                         {mainOptions[1]}
@@ -352,7 +352,7 @@ export const NavbarNew = () => {
                             {facultyAcadamic.map((item, index) => (
                               <Link
                                 key={index}
-                                className="block px-4 py-2 text-gray-800 hover:bg-purple-100"
+                                className="block px-4 py-2 text-gray-800 hover:bg-blue-100"
                                 to={item.link}
                                 style={{ textDecoration: "none" }}
                               >
@@ -366,7 +366,7 @@ export const NavbarNew = () => {
                     {/* Faculty HOD */}
                     {roll === "faculty" && (
                       <div
-                        className="hover:bg-purple-200 px-4 py-2 cursor-pointer"
+                        className="hover:bg-blue-50 px-4 py-2 cursor-pointer"
                         onClick={toggleNestedDropdownHOD}
                       >
                         {mainOptions[6]}
@@ -375,7 +375,7 @@ export const NavbarNew = () => {
                             {hod.map((item, index) => (
                               <Link
                                 key={index}
-                                className="block px-4 py-2 text-gray-800 hover:bg-purple-100"
+                                className="block px-4 py-2 text-gray-800 hover:bg-blue-100"
                                 to={item.link}
                                 style={{ textDecoration: "none" }}
                               >
