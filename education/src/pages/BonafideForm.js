@@ -270,7 +270,7 @@ export const BonafideForm = () => {
               <Box sx={{
                 marginTop:{lg:"5%",md:"15%"}
                 }}>
-              <img src="./images/Bonafide.png" alt="" style={{width:"55%",marginLeft:"20%"}} />
+              <img src="./images/Bonafide.png" alt="" style={{width:"55%",marginLeft:"20%"}}  />
               </Box>
             </Grid>    
               <Box sx={{marginLeft:{lg:"20%",md:"20%"},
@@ -526,7 +526,7 @@ export const BonafideForm = () => {
                       </TableRow>
                     )}
                   </TableBody>
-                  <TableFooter>
+                  <TableFooter style={{ backgroundColor: "#D2E9E9" }}>
                     <TableRow>
                       <TablePagination
                         rowsPerPageOptions={[
