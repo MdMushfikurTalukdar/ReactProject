@@ -5,8 +5,7 @@ import { jwtDecode } from "jwt-decode";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { CgProfile } from "react-icons/cg";
 import { Box, Button, Divider } from "@mui/material";
-import zIndex from "@mui/material/styles/zIndex";
-import { Height, Padding } from "@mui/icons-material";
+
 
 export const NavbarNew = () => {
   const navigate = useNavigate();
