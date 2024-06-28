@@ -70,7 +70,7 @@ export const LoginPage = () => {
     <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 loginBody">
       <div className="max-w-md w-full space-y-8">
         <div>
-          <p className="mt-6 text-center text-3xl text-gray-900 textSign">Sign in to your account</p>
+          <h2 className="mt-6 text-center text-3xl text-gray-900 textSign">Sign in to your account</h2>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <input type="hidden" name="remember" defaultValue="true" />
@@ -86,7 +86,7 @@ export const LoginPage = () => {
                 autoComplete="off"
                 className={`appearance-none rounded-none relative block w-full px-3 py-2 border ${errors.rollNumber ? 'border-red-500' : 'border-gray-300'} placeholder-blue-300 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
                 placeholder="Registration no./Employee ID."
-               
+                sx={{marginBottom:"10px"}}
               />
               {errors.rollNumber && <p className="text-black-500 text-xs mt-1 textSign">Roll Number is required</p>}
             </div>
@@ -99,7 +99,7 @@ export const LoginPage = () => {
                 {...register("password", { required: true })}
                 fullWidth
                 autoComplete="current-password"
-                sx={{marginTop:"10px"}}
+                
                 placeholder="Password"
               />
               {errors.password && <p className="text-black-500 text-xs mt-1 textSign">Password is required</p>}
