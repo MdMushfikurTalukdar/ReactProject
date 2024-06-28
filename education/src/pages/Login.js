@@ -113,7 +113,7 @@ export const LoginPage = () => {
                   {...register("password", { required: true })}
                   fullWidth
                   autoComplete="current-password"
-                  sx={{ marginTop: "10px" }}
+                  sx={{ marginTop: "14px" }}
                   placeholder="Password"
                   InputProps={{
                     startAdornment: (
