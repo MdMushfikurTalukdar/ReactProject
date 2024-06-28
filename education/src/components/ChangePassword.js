@@ -135,11 +135,12 @@ export const ChangePassword = () => {
           display: 'flex',
           flexDirection: 'column',
           minHeight: '100vh',
-          background: 'linear-gradient(to bottom, #b5eded 30%, white 70%)',
           justifyContent: 'center',
           alignItems: 'center',
-          marginTop: "5px",
-          animation: 'fadeInScale 0.5s ease-in-out',
+          marginTop: "2px",
+          background: 'linear-gradient(to bottom, #b5eded 30%, white 70%)',
+          backgroundSize: '200% 200%',
+          animation: 'backgroundTransition 15s ease infinite',
         }}
       >
         <Box
@@ -147,7 +148,7 @@ export const ChangePassword = () => {
             backgroundColor: 'white',
             borderRadius: '16px',
             padding: '32px',
-            boxShadow: 3,
+            boxShadow: { lg: 3, md: 3, sm: 3, xs: 0 },
             width: '100%',
             maxWidth: '400px',
             transition: 'transform 0.3s ease-in-out',
@@ -246,6 +247,17 @@ export const ChangePassword = () => {
           100% {
             opacity: 1;
             transform: scale(1);
+          }
+        }
+        @keyframes backgroundTransition {
+          0% {
+            background-position: 0% 90%;
+          }
+          50% {
+            background-position: 90% 50%;
+          }
+          100% {
+            background-position: 0% 90%;
           }
         }
       `}</style>
