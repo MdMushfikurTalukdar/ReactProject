@@ -2,16 +2,17 @@ import React from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import { Box, Card, CardContent, CardMedia, Container, Grid, Typography } from '@mui/material';
 
 const Products = () => {
   const settings = {
     dots: false,
     infinite: true,
-    speed: 500,
+    speed: 1500,
     slidesToShow: 3,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 2500,
+    autoplaySpeed: 3500,
     arrows: false,
     responsive: [
       {
@@ -31,37 +32,53 @@ const Products = () => {
 
   const products = [
     {
-      image: 'https://via.placeholder.com/150',
-      description: 'Product 1: A fantastic product that solves all your problems.',
+      image: 'product_intro1.jpg',
+      description: 'Semester Registration where you can register your semester.',
     },
     {
-      image: 'https://via.placeholder.com/150',
-      description: 'Product 2: Another great product that you  will love will love.',
+      image: 'product_intro2.jpg',
+      description: 'Certificates: Now you can get your precious certificates online.',
     },
     {
-      image: 'https://via.placeholder.com/150',
-      description: 'Product 3: This product is the best thing since sliced bread.',
+      image: 'product_intro3.jpg',
+      description: 'Hostel/Mess: You can apply online for Hostel/Mess rooms.',
     },
     {
-      image: 'https://via.placeholder.com/150',
-      description: 'Product 4: An innovative product that changes the game.',
+      image: 'product_intro4.jpg',
+      description: 'Results: Also now you can download your results online.',
     },
   ];
 
   return (
-    <section className="products bg-gray-100 py-6">
-      <div className="container mx-auto">
-        <h2 className="text-3xl mx-auto bg-sky-500 hover:bg-sky-700 mt-5 mb-8  px-4  py-2 text-white w-fit font-light  rounded-lg cursor-pointer ">Our Products</h2>
-        <Slider {...settings}>
-          {products.map((product, index) => (
-            <div key={index} className="product-card bg-white p-4 shadow-lg rounded-lg text-center flex gap-4">
-              <img src={product.image} alt={`Product ${index + 1}`} className="mx-auto mb-4 w-40 h-40 object-cover " />
-              <p className="text-gray-700">{product.description}</p>
-            </div>
-          ))}
-        </Slider>
-      </div>
-    </section>
+    <Box py={8} bgcolor="grey.100">
+    <Container>
+      <center><p style={{fontSize:"1.8rem"}}>
+       Our Products
+      </p></center>
+      <Slider {...settings}>
+        {products.map((testimonial, index) => (
+          <Grid key={index} container justifyContent="center">
+            <Card sx={{ maxWidth: 345, m: 2 }}>
+              <CardMedia
+                component="img"
+                height="240"
+                style={{objectFit:"contain"}}
+                image={`./images/${testimonial.image}`}
+              
+                alt={testimonial.name}
+              />
+              <CardContent>
+               
+                <Typography variant="body2" color="textSecondary">
+                  {testimonial.description.length>80 ? `${testimonial.description.slice(0,80)}...`:(testimonial.description)}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Slider>
+    </Container>
+  </Box>
   );
 };
 

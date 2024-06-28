@@ -3,6 +3,7 @@ import React from 'react';
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { Box, Card, CardContent, CardMedia, Container, Grid, Typography } from '@mui/material';
 
 export const Clients = () => {
   const clients = [
@@ -55,29 +56,36 @@ export const Clients = () => {
   };
 
   return (
-    <section className="bg-gray-100 py-12">
-      <div className="container mx-auto">
-        <center>
-          <h2 className="text-3xl mx-auto bg-sky-500 hover:bg-sky-700 mt-5 mb-8 px-4 py-2 text-white w-fit font-light rounded-lg cursor-pointer">
-            Our Clients
-          </h2>
-        </center>
-        <Slider {...settings}>
-          {clients.map((client, index) => (
-            <div key={index} className="p-4">
-              <div className="bg-white p-4 shadow-lg rounded-lg text-center hover:bg-gray-200">
-                <img
-                  src={client.logo}
-                  alt={client.name}
-                  className="mx-auto h-32 w-32 object-cover rounded-full mb-4"
-                />
-                <h3 className="text-xl font-semibold mb-2">{client.name}</h3>
-                <p className="text-gray-700 text-sm opacity-80">{client.description}</p>
-              </div>
-            </div>
-          ))}
-        </Slider>
-      </div>
-    </section>
+    <Box py={8} bgcolor="grey.100">
+    <Container>
+      <Typography variant="h4" align="center" gutterBottom>
+        Clients
+      </Typography>
+      <Slider {...settings}>
+        {clients.map((testimonial, index) => (
+          <Grid key={index} container justifyContent="center">
+            <Card sx={{ maxWidth: 345, m: 2 }}>
+              <CardMedia
+                component="img"
+                height="240"
+                style={{objectFit:"scale-down"}}
+                image={testimonial.logo}
+                alt={testimonial.name}
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  {testimonial.name}
+                </Typography>
+               
+                <Typography variant="body2" color="textSecondary">
+                  {testimonial.description.length>80 ? `${testimonial.description.slice(0,80)}...`:(testimonial.description)}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Slider>
+    </Container>
+  </Box>
   );
 };
