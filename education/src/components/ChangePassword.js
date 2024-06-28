@@ -138,7 +138,8 @@ export const ChangePassword = () => {
           background: 'linear-gradient(to bottom, #b5eded 30%, white 70%)',
           justifyContent: 'center',
           alignItems: 'center',
-          marginTop:"5px"
+          marginTop: "5px",
+          animation: 'fadeInScale 0.5s ease-in-out',
         }}
       >
         <Box
@@ -149,6 +150,10 @@ export const ChangePassword = () => {
             boxShadow: 3,
             width: '100%',
             maxWidth: '400px',
+            transition: 'transform 0.3s ease-in-out',
+            '&:hover': {
+              transform: 'scale(1.05)',
+            },
           }}
         >
           <center>
@@ -179,6 +184,13 @@ export const ChangePassword = () => {
                 ),
               }}
               required
+              sx={{
+                transition: 'border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+                '&:focus': {
+                  borderColor: 'skyblue',
+                  boxShadow: '0 0 10px skyblue',
+                },
+              }}
             />
             <TextField
               id="confirmPassword"
@@ -198,6 +210,13 @@ export const ChangePassword = () => {
               error={!!errors.confirmPassword}
               helperText={errors.confirmPassword?.message}
               required
+              sx={{
+                transition: 'border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+                '&:focus': {
+                  borderColor: 'skyblue',
+                  boxShadow: '0 0 10px skyblue',
+                },
+              }}
             />
             <Button
               type="submit"
@@ -209,6 +228,7 @@ export const ChangePassword = () => {
                 backgroundColor: 'skyblue',
                 color: '#fff',
                 '&:hover': { backgroundColor: 'deepskyblue' },
+                transition: 'background-color 0.3s ease-in-out',
               }}
             >
               Change Password
@@ -217,6 +237,18 @@ export const ChangePassword = () => {
         </Box>
       </Box>
       <Footer />
+      <style jsx="true">{`
+        @keyframes fadeInScale {
+          0% {
+            opacity: 0;
+            transform: scale(0.9);
+          }
+          100% {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+      `}</style>
     </>
   );
 };
