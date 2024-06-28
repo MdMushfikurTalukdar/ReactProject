@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
-import { Box, TextField, Button, Grid, Typography, Paper, InputAdornment } from '@mui/material';
+import { Box, TextField, Button, Typography, InputAdornment } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import axios from 'axios';
 import { useSnackbar } from 'notistack';
-import { jwtDecode } from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 import { HiOutlineExclamationCircle } from "react-icons/hi2";
 import NavbarNew from './NavbarNew';
-import { Footer } from './Footer';
-
+import Footer from './Home/Footer';
+import { RiLockPasswordFill } from "react-icons/ri";
 
 const validationSchema = yup.object({
   newPassword: yup
@@ -24,9 +24,8 @@ const validationSchema = yup.object({
 });
 
 export const ChangePassword = () => {
-
   const { enqueueSnackbar } = useSnackbar();
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -35,30 +34,29 @@ export const ChangePassword = () => {
     resolver: yupResolver(validationSchema),
   });
 
-  function regenerateToken(){
+  function regenerateToken() {
     let data = JSON.stringify({
       "refresh": localStorage.getItem('refreshtoken')
     });
-    
+
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
       url: 'https://amarnath013.pythonanywhere.com/api/user/token/refresh/',
-      headers: { 
+      headers: {
         'Content-Type': 'application/json'
       },
-      data : data
+      data: data
     };
-    
+
     axios.request(config)
-    .then((response) => {
-      console.log(JSON.stringify(response.data));
-      localStorage.setItem('refreshtoken', response.data.refresh);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-    
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        localStorage.setItem('refreshtoken', response.data.refresh);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   useEffect(() => {
@@ -76,55 +74,53 @@ export const ChangePassword = () => {
       navigate("/login");
     }
   }, []);
+
   const onSubmit = (data) => {
     let data1 = JSON.stringify({
-        "password": data.newPassword,
-        "password2": data.confirmPassword
-      });
-      
-      let config = {
-        method: 'post',
-        maxBodyLength: Infinity,
-        url: 'https://amarnath013.pythonanywhere.com/api/user/change-password/',
-        headers: { 
-          'Content-Type': 'application/json', 
-          'Authorization': `Bearer ${localStorage.getItem('accesstoken')}`
-        },
-        data : data1
-      };
-      
-      axios.request(config)
+      "password": data.newPassword,
+      "password2": data.confirmPassword
+    });
+
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'https://amarnath013.pythonanywhere.com/api/user/change-password/',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('accesstoken')}`
+      },
+      data: data1
+    };
+
+    axios.request(config)
       .then((response) => {
-        
-        setTimeout(()=>{
-            enqueueSnackbar(response.data.message, {
-                variant: "success",
-                anchorOrigin: {
-                  vertical: "bottom",
-                  horizontal: "center",
-                },
-                autoHideDuration: 3000,
-              });
-        },1000); 
+        setTimeout(() => {
+          enqueueSnackbar(response.data.message, {
+            variant: "success",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 3000,
+          });
+        }, 1000);
 
-        setTimeout(()=>{
-            enqueueSnackbar('Logging out', {
-                variant: "info",
-                anchorOrigin: {
-                  vertical: "bottom",
-                  horizontal: "center",
-                },
-                autoHideDuration: 3000,
-              });
-              localStorage?.removeItem('accesstoken');
-              localStorage?.removeItem('refreshtoken');
+        setTimeout(() => {
+          enqueueSnackbar('Logging out', {
+            variant: "info",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 3000,
+          });
+          localStorage?.removeItem('accesstoken');
+          localStorage?.removeItem('refreshtoken');
+        }, 2000);
 
-        },2000); 
-
-        setTimeout(()=>{
-            navigate('/login');
-        },3000)
-       
+        setTimeout(() => {
+          navigate('/login');
+        }, 3000);
       })
       .catch((error) => {
         console.log(error);
@@ -133,55 +129,95 @@ export const ChangePassword = () => {
 
   return (
     <>
-    <NavbarNew/>
-    <div className="flex justify-center items-center min-h-screen font-sans bg-gray-100">
-    <div className="w-full max-w-md lg:bg-white md:bg-white p-8 rounded-2xl">
-      <center>
-        <HiOutlineExclamationCircle style={{fontSize:"3.4rem",marginBottom:"20px"}}/>
-      </center>
-      <h2 className="text-3xl font-semibold text-center mb-6 ">Change Password</h2>
-      <p style={{textAlign:"center"}}>Enter new password and confirm password</p><p style={{textAlign:"center",marginBottom:"20px"}}>to change your password</p>
-      
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="mb-4">
-         
-          <TextField
-            id="newPassword"
-            name="newPassword"
-            type="password"
-             label='password'
-            {...register('newPassword')}
-            sx={{
-              width: "100%",
-            }}
-          
-            required
-          />
-          {errors.newPassword && <p className="mt-2 text-sm text-red-600">{errors.newPassword.message}</p>}
-        </div>
-        <div className="mb-4">
-         
-          <TextField
-            id="confirmPassword"
-            name="confirmPassword"
-            type="password"
-            {...register('confirmPassword')}
-            label='Confirm-password'
-            sx={{
-              width: "100%",
-            }}
-            required
-          />
-          {errors.confirmPassword && <p className="mt-2 text-sm text-red-600">{errors.confirmPassword.message}</p>}
-        </div>
-        <Button type="submit" variant='contained' className="w-full py-2 px-4 bg-blue-500 text-white font-medium text-sm rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-          Change Password
-        </Button>
-      </form>
-    </div>
-  </div>
-  <Footer/>
-  </>
+      <NavbarNew />
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: '100vh',
+          background: 'linear-gradient(to bottom, #b5eded 30%, white 70%)',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginTop:"5px"
+        }}
+      >
+        <Box
+          sx={{
+            backgroundColor: 'white',
+            borderRadius: '16px',
+            padding: '32px',
+            boxShadow: 3,
+            width: '100%',
+            maxWidth: '400px',
+          }}
+        >
+          <center>
+            <HiOutlineExclamationCircle style={{ fontSize: "3.4rem", marginBottom: "20px" }} />
+          </center>
+          <Typography variant="h4" textAlign="center" mb={2}>
+            Change Password
+          </Typography>
+          <Typography variant="body1" textAlign="center" mb={2}>
+            Enter new password and confirm password to change your existing password
+          </Typography>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <TextField
+              id="newPassword"
+              name="newPassword"
+              type="password"
+              label="New Password"
+              {...register('newPassword')}
+              fullWidth
+              margin="normal"
+              error={!!errors.newPassword}
+              helperText={errors.newPassword?.message}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <RiLockPasswordFill />
+                  </InputAdornment>
+                ),
+              }}
+              required
+            />
+            <TextField
+              id="confirmPassword"
+              name="confirmPassword"
+              type="password"
+              label="Confirm Password"
+              {...register('confirmPassword')}
+              fullWidth
+              margin="normal"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <RiLockPasswordFill />
+                  </InputAdornment>
+                ),
+              }}
+              error={!!errors.confirmPassword}
+              helperText={errors.confirmPassword?.message}
+              required
+            />
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              sx={{
+                marginTop: 2,
+                backgroundColor: 'skyblue',
+                color: '#fff',
+                '&:hover': { backgroundColor: 'deepskyblue' },
+              }}
+            >
+              Change Password
+            </Button>
+          </form>
+        </Box>
+      </Box>
+      <Footer />
+    </>
   );
 };
 
