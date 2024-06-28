@@ -135,7 +135,7 @@ export const ChangePassword = () => {
     <>
     <NavbarNew/>
     <div className="flex justify-center items-center min-h-screen font-sans bg-gray-100">
-    <div className="w-full max-w-md bg-white p-8 rounded-2xl">
+    <div className="w-full max-w-md lg:bg-white md:bg-white p-8 rounded-2xl">
       <center>
         <HiOutlineExclamationCircle style={{fontSize:"3.4rem",marginBottom:"20px"}}/>
       </center>
