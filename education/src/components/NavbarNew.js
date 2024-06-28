@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./NavbarNew.css"; // If you have custom CSS, keep this import
 import { jwtDecode } from "jwt-decode";
 import { IoIosNotificationsOutline } from "react-icons/io";
@@ -188,7 +188,7 @@ export const NavbarNew = () => {
     setNotifications([]);
   };
 
-
+  const navigate=useNavigate();
 
 
 
@@ -432,7 +432,7 @@ export const NavbarNew = () => {
               </div>
             )}
             <div className="relative">
-              <CgProfile size={24} className="cursor-pointer" />
+              <CgProfile size={24} className="cursor-pointer" onClick={(e)=>{navigate('/profile')}}/>
             </div>
           </div>
         
