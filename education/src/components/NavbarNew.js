@@ -44,12 +44,12 @@ export const NavbarNew = () => {
     { name: "Hostel No Dues Request", link: "/hostel-no-dues-request" },
     { name: "Security Money Return Request", link: "/underDevelopment" },
   ];
-  const other_responsibilities = [
-    { name: "Add Subject", link: "/sem-sub-register" },
-    { name: "Add Branch", link: "/sem-branch-register" },
-    { name: "Add College", link: "/add-college" },
-    { name: "Semester Registration Request", link: "/verifySemesterRegistration" }
-  ];
+  // const other_responsibilities = [
+  //   { name: "Add Subject", link: "/sem-sub-register" },
+  //    { name: "Add Branch", link: "/sem-branch-register" },
+  //    { name: "Add College", link: "/add-college" },
+  //   { name: "Semester Registration Request", link: "/verifySemesterRegistration" }
+  // ];
 
   const fees_add = [
     { name: "Add Fees", link: "/add-fees" },
@@ -272,7 +272,7 @@ export const NavbarNew = () => {
                         </div>
                       </>
                     )}
-                    {roll !== "student" && roll !== "caretaker" && (
+                    {/* {roll !== "student" && roll !== "caretaker" && (
                       <div
                         className="hover:bg-blue-50 px-4 py-2 cursor-pointer"
                         onClick={toggleNestedDropdownOther_responsibilities}
@@ -293,7 +293,7 @@ export const NavbarNew = () => {
                           </div>
                         )}
                       </div>
-                    )}
+                    )} */}
                     {roll === "caretaker" && (
                       <div
                         className="hover:bg-blue-50 px-4 py-2 cursor-pointer"

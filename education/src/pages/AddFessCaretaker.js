@@ -24,6 +24,7 @@ import { useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 import NavbarNew from "../components/NavbarNew";
 import Footer from "../components/Home/Footer";
+import addfee from "../components/img/addfee.jpg";
 
 // Validation schema using yup
 const schema = yup.object().shape({
@@ -160,72 +161,80 @@ const AddFeesCaretaker = () => {
   return (
     <>
       <NavbarNew />
-      <Container maxWidth="sm" style={{ marginBottom: "11%" }}>
-        <Typography
-          variant="h4"
-          align="center"
-          gutterBottom
-          style={{ marginTop: "20px", marginBottom: "36px" }}
-        >
-          Add Fees
-        </Typography>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <Controller
-                name="Maintainance_fees"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    placeholder="Maintenance Fees"
-                    variant="outlined"
-                    fullWidth
-                    error={!!errors.Maintainance_fees}
-                    helperText={errors.Maintainance_fees?.message}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Controller
-                name="Mess_fees"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    placeholder="Mess Fees"
-                    variant="outlined"
-                    fullWidth
-                    error={!!errors.Mess_fees}
-                    helperText={errors.Mess_fees?.message}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Controller
-                name="Security_Deposit"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    placeholder="Security Deposit"
-                    variant="outlined"
-                    fullWidth
-                    error={!!errors.Security_Deposit}
-                    helperText={errors.Security_Deposit?.message}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Button type="submit" variant="contained" color="primary" fullWidth>
-                {editId ? "Update" : "Submit"}
-              </Button>
-            </Grid>
+      <Container style={{ marginBottom: "11%" }}>
+  <Typography
+    variant="h4"
+    align="center"
+    gutterBottom
+    style={{ marginTop: "20px", marginBottom: "36px" }}
+  >
+    Add Fees
+  </Typography>
+  <Grid container spacing={8}>
+    <Grid item xs={6}>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Grid container spacing={2} >
+          <Grid item xs={12}>
+            <Controller
+              name="Maintainance_fees"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  placeholder="Maintenance Fees"
+                  variant="outlined"
+                  fullWidth
+                  error={!!errors.Maintainance_fees}
+                  helperText={errors.Maintainance_fees?.message}
+                />
+              )}
+            />
           </Grid>
-        </form>
+          <Grid item xs={12}>
+            <Controller
+              name="Mess_fees"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  placeholder="Mess Fees"
+                  variant="outlined"
+                  fullWidth
+                  error={!!errors.Mess_fees}
+                  helperText={errors.Mess_fees?.message}
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Controller
+              name="Security_Deposit"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  placeholder="Security Deposit"
+                  variant="outlined"
+                  fullWidth
+                  error={!!errors.Security_Deposit}
+                  helperText={errors.Security_Deposit?.message}
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Button type="submit" variant="contained" color="primary" fullWidth>
+              {editId ? "Update" : "Submit"}
+            </Button>
+          </Grid>
+        </Grid>
+      </form>
+    </Grid>
+    <Grid item xs={6}>
+      <img src={addfee} alt="image" style={{ width: "100%", height: "100%" }} />
+    </Grid>
+  </Grid>
+
 
         <Box style={{ marginTop: "20px" }}>
           <Divider />
