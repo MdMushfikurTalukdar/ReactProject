@@ -21,9 +21,15 @@ export const Hero = () => {
   const slides = [
     {
       image:
-        "homepage_intro1.jpg",
+        "homepage_intro5.jpg",
       title: "Welcome to Smart Campus",
       subtitle: "Your journey to excellence starts here",
+    },
+    {
+      image:
+        "homepage_intro1.jpg",
+      title: "Revolutionizing Campus Life with Smart Tech",
+      subtitle: "Revolutionizing the campus experience with smart technology and seamless connectivity.",
     },
     {
       image:
