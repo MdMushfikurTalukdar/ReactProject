@@ -5,7 +5,11 @@ import { jwtDecode } from "jwt-decode";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { CgProfile } from "react-icons/cg";
 import { Box, Button, Divider } from "@mui/material";
+import axios from "axios";
+import dayjs from "dayjs";
+import relativeTime from 'dayjs/plugin/relativeTime';
 
+dayjs.extend(relativeTime);
 
 export const NavbarNew = () => {
   const navigate = useNavigate();
@@ -184,54 +188,74 @@ export const NavbarNew = () => {
     setIsNestedDropdownHODOpen(!isNestedDropdownHODOpen);
   };
   const [hide, setHide] = useState(false);
-  const [notifications, setNotifications] = useState([
-    {
-      id: 1,
-      text: "Hello User! Ready to begin your journey with us?",
-      time: "5 min ago",
-    },
-    {
-      id: 2,
-      text: "You have successfully enrolled in this semester. Happy Learning!",
-      time: "8 min ago",
-    },
-    {
-      id: 3,
-      text: "Your profile has been updated successfully.",
-      time: "10 min ago",
-    },
-    {
-      id: 4,
-      text: "Reminder: Your assignment for [Course Name] is due on [Date].",
-      time: "14 min ago",
-    },
-    {
-      id: 5,
-      text: "You have a new message from [Instructor Name].",
-      time: "15 min ago",
-    },
-    {
-      id: 6,
-      text: "Reminder: Your subscription will renew on [Date].",
-      time: "25 min ago",
-    },
-    {
-      id: 7,
-      text: "Reminder: Your subscription will end on [Date].",
-      time: "26 min ago",
-    },
-  ]);
+  const [notifications, setNotifications] = useState([]);
+
+  useEffect(()=>{
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `https://amarnath013.pythonanywhere.com/api/user/notification/?search=${localStorage?.getItem('RollNumber')}`,
+      headers: { 
+        'Authorization': `Bearer ${localStorage?.getItem('accesstoken')}`
+      }
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      setNotifications(response?.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  },[]);
 
   const [showNotifications, setShowNotifications] = useState(false);
 
   const deleteNotification = (id) => {
-    setNotifications(
-      notifications.filter((notification) => notification.id !== id)
-    );
+
+    let config = {
+      method: 'delete',
+      maxBodyLength: Infinity,
+      url: `https://amarnath013.pythonanywhere.com/api/user/notification/${id}/`,
+      headers: { 
+        'Authorization': `Bearer ${localStorage?.getItem('accesstoken')}`
+      }
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      setNotifications(
+        notifications.filter((notification) => notification.id !== id)
+      );
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+   
   };
 
-  const deleteAllNotifications = () => {
-    setNotifications([]);
+  const deleteAllNotifications = async () => {
+
+    const deleteRequests = notifications.map(notification => {
+      let config = {
+        method: 'delete',
+        maxBodyLength: Infinity,
+        url: `https://amarnath013.pythonanywhere.com/api/user/notification/${notification.id}/`,
+        headers: { 
+          'Authorization': `Bearer ${localStorage?.getItem('accesstoken')}`
+        }
+      };
+      return axios.request(config);
+    });
+
+    try {
+      await Promise.all(deleteRequests);
+      setNotifications([]);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -478,9 +502,9 @@ export const NavbarNew = () => {
                         className="flex justify-between items-center py-2 font-semibold"
                       >
                         <div>
-                          <p>{notification.text}</p>
+                          <p>{notification.message}</p>
                           <p className="text-xs text-gray-500">
-                            {notification.time}
+                            {dayjs(notification.time).fromNow()}
                           </p>
                         </div>
                         <Button
