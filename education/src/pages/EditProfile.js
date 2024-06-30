@@ -459,13 +459,9 @@ export const EditProfile = () => {
           <Grid item xs={12} sm={12} md={12} lg={12}>
             <Box
               className=" mt-3 w-full lg:p-10 sm:p-5 p-5"
-              style={{ height: "calc(100vh - 5px)", overflowY: "scroll" }}
+              style={{ height: "calc(100vh - 5px)" }}
             >
-              <Box>
-                <Typography variant="p" className="text-xl">
-                  Profile
-                </Typography>
-              </Box>
+             
 
               <Box className="text-center">
                 <label component="label">

@@ -410,7 +410,7 @@ export const BonafideForm = () => {
           </Box>}
         {responsive ? (
          
-          result.length > 0 &&
+          result.length > 0 ?
           result.map((data, index) => (
             <Box key={index}>
               <Card
@@ -458,7 +458,8 @@ export const BonafideForm = () => {
                 </CardContent>
               </Card>
             </Box>
-          ))
+          )):( <center>
+              <img src="./images/No_data.png" alt="" style={{width:"320px",borderRadius:"10px",marginTop:"30px"}}/></center>)
         ) : (
           <Grid container>
             <Grid item lg={6} md={4} sx={{
@@ -554,12 +555,8 @@ export const BonafideForm = () => {
                 </Table>
               </TableContainer>
             ) : (
-              <Typography
-                variant="body1"
-                sx={{ marginTop: 3, textAlign: "center" }}
-              >
-                No Bonafide Requests Found
-              </Typography>
+              <center>
+              <img src="./images/No_data.png" alt="" style={{width:"320px",borderRadius:"10px",marginTop:"30px"}}/></center>
             )}
           </Box>
           </Grid>

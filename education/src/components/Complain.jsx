@@ -122,12 +122,19 @@ function TablePaginationActions(props) {
 
 const slides = [
   {
+    image: "complaints1.png",
+    title: "Revolutionizing Campus Life with Smart Tech",
+    subtitle:
+      "Revolutionizing the campus experience with smart technology and seamless connectivity.",
+  },
+  {
     image: "complaints.jpg",
     title: "Welcome to Smart Campus",
     subtitle: "Your journey to excellence starts here",
   },
+  
   {
-    image: "complaints1.png",
+    image: "complaints2.png",
     title: "Revolutionizing Campus Life with Smart Tech",
     subtitle:
       "Revolutionizing the campus experience with smart technology and seamless connectivity.",
@@ -336,7 +343,7 @@ const ComplaintForm = () => {
             >
               <Slider {...settings}>
                 {slides.map((slide, index) => (
-                  <img src={`./images/${slide.image}`} alt="" />
+                  <img src={`./images/${slide.image}`} alt="" style={{borderRadius:"10px"}} />
                 ))}
               </Slider>
             </Box>
@@ -463,11 +470,12 @@ const ComplaintForm = () => {
                 display: { xs: "none", sm: "none", md: "block", lg: "block" },
                 width: "300px",
                 marginTop: "50px",
+                borderRadius:"15px"
               }}
             >
               <Slider {...settings}>
                 {slides.map((slide, index) => (
-                  <img src={`./images/${slide.image}`} alt="" key={index} />
+                  <img src={`./images/${slide.image}`} alt="" key={index}  />
                 ))}
               </Slider>
             </Box>
@@ -480,9 +488,8 @@ const ComplaintForm = () => {
             </Typography>
             </Box>
             {previousRecord.length === 0 ? (
-              <Typography variant="body1" sx={{ textAlign: "center",marginTop:"80px" }}>
-                No previous complaints found.
-              </Typography>
+               <center>
+              <img src="./images/No_data.png" alt="" style={{width:"310px",borderRadius:"10px",marginTop:"30px"}}/></center>
             ) : responsive ? (
               previousRecord
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -522,9 +529,8 @@ const ComplaintForm = () => {
                   <TableBody>
                     {previousRecord.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={5} align="center">
-                          No records found.
-                        </TableCell>
+                        <center>
+                        <img src="./images/No_data.png" alt="" style={{width:"340px",borderRadius:"10px",marginTop:"30px"}}/></center>
                       </TableRow>
                     ) : (
                       previousRecord

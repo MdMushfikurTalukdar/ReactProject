@@ -473,7 +473,7 @@ export function NoDuesForDegree() {
                   minWidth: 275,
                   width:'60vw',
                   marginBottom: 2,
-                  backgroundColor: "#D2E9E9",
+                  backgroundColor: "whitesmoke",
                 }}
               >
                 <CardContent>

@@ -230,6 +230,10 @@ export const HostelRoomRequest = () => {
   return (
     <div className="container-fluid">
       <NavbarNew />
+      <Box
+        className="bonafide-form"
+        sx={{ bgcolor: "whitesmoke", borderRadius: 3 , padding: 0 }}
+      >
       <Typography
         variant="h5"
         align="center"
@@ -579,6 +583,8 @@ export const HostelRoomRequest = () => {
           </Box>
         </Grid>
       </Grid>
+    
+      </Box>
       <Footer />
     </div>
   );

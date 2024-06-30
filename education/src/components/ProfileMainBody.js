@@ -98,12 +98,7 @@ export const ProfileMainBody = () => {
         className=" mt-3 w-full lg:p-10 sm:p-5 p-5"
         style={{ height: "calc(100vh - 5px)", overflowY: "scroll",zIndex:"6" }}
       >
-        <Box>
-          <Typography variant="p" className="text-2xl">
-            Profile
-          </Typography>
-        </Box>
-
+        
         <Box className="text-center" >
           {userProfile?.personal_information?.profile_picture !== null ? (
             <img

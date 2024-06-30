@@ -457,7 +457,7 @@ function HostelFeePayment() {
             {result.length === 0 ? (
               <Grid item xs={12}>
                 <center style={{ marginTop: "20px" }}>
-                  <img src="./images/nodata.jpg" alt="" style={{width:"320px",borderRadius:"15px",marginRight:"15px"}}/>
+                  <img src="./images/No_data.png" alt="" style={{width:"320px",borderRadius:"15px",marginRight:"15px"}}/>
                 </center>
               </Grid>
             ) : (

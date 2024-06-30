@@ -338,15 +338,8 @@ export const GuestRoom = () => {
                 </Box>
               ))
             ) : (
-              <p
-                style={{
-                  marginBottom: "50px",
-                  marginTop: "100px",
-                  fontSize: "1.2rem",
-                }}
-              >
-                No matching records found
-              </p>
+              <center>
+              <img src="./images/No_data.png" alt="" style={{width:"320px",borderRadius:"10px",marginTop:"30px"}}/></center>
             )
           ) : (
             <Box>
