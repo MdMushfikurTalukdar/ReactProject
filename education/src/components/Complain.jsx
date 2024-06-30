@@ -312,7 +312,7 @@ const ComplaintForm = () => {
       : 0;
 
   return (
-    <div className="container-fluid" style={{borderRadius:"20px",border:"1px solid whitesmoke"}}>
+    <div className="container-fluid" style={{borderRadius:"20px"}}>
       <Box
         className="complaint-form"
         sx={{ bgcolor: "", borderRadius: 3, padding: 3 }}
@@ -471,14 +471,16 @@ const ComplaintForm = () => {
                 ))}
               </Slider>
             </Box>
+            <Box sx={{marginTop:"50px"}}>
             <Typography
-              variant="h5"
-              sx={{ marginBottom: "2%", textAlign: "center", marginTop: "5%" }}
+              variant="p"
+              sx={{ marginBottom: "2%", textAlign: "center", marginTop: "10px",fontSize:"1.2rem" }}
             >
               Previous Complaints
             </Typography>
+            </Box>
             {previousRecord.length === 0 ? (
-              <Typography variant="body1" sx={{ textAlign: "center" }}>
+              <Typography variant="body1" sx={{ textAlign: "center",marginTop:"80px" }}>
                 No previous complaints found.
               </Typography>
             ) : responsive ? (

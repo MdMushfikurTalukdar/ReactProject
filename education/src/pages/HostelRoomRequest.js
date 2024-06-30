@@ -7,26 +7,34 @@ import {
   Button,
   Divider,
   Typography,
-  TextField,
   FormControl,
+  TextField,
   FormHelperText,
-  TableCell,
-  TableRow,
-  TableBody,
-  TableContainer,
-  Table,
-  TableHead,
-  Paper,
-  CardContent,
+  IconButton,
   Card,
+  CardContent,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableFooter,
+  TablePagination,
+  TableRow,
+  Paper,
+  TableHead,
+  Grid,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import FirstPageIcon from "@mui/icons-material/FirstPage";
+import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
+import LastPageIcon from "@mui/icons-material/LastPage";
 import Footer from "../components/Home/Footer";
-import "../App.css";
-import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import { enqueueSnackbar } from "notistack";
 
 // Validation schema
 const exactTwoDecimalRegex = /^\d+\.\d{2}$/;
@@ -47,43 +55,48 @@ const schema = yup.object().shape({
       }
       return true;
     }),
-  file: yup
+    file: yup
     .mixed()
-    .test("fileRequired", "File is required", (value) => {
-      return !!value.length;
-    })
-    .test("fileType", "Only image files are allowed", (value) => {
-      return (
-        !value ||
-        (value.length > 0 &&
-          ["image/jpeg", "image/png"].includes(value[0].type))
-      );
-    }),
+    // .test("fileType", "Only image files are allowed", (value) => {
+    //   if (!value) return true; // No file selected is valid
+  
+    //   const acceptedFormats = ["image/jpeg", "image/png", "image/jpg"];
+    //   const file = value?.[0];
+    //   return acceptedFormats?.includes(file?.type);
+    // })
+    .required("image file is required"),
+  
 });
 
+// Component
 export const HostelRoomRequest = () => {
   const navigate = useNavigate();
   const [previewUrl, setPreviewUrl] = useState(null);
   const [name, setName] = useState(null);
-  const [userProfile, setUserProfile] = useState([]);
+  const [userProfile, setUserProfile] = useState(null);
+  const [result, setResult] = useState([]);
+  const [allotedRoom, setAllotedRoom] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [responsive, setResponsive] = useState(window.innerWidth < 669);
+
+  const theme = useTheme();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-    trigger,
     setValue,
     reset,
   } = useForm({
     resolver: yupResolver(schema),
   });
 
-  const [result, setResult] = useState([]);
-  const [allotedRoom,setAllotedRoom]=useState([]);
-  const [responsive, setResponsive] = useState(
-    window.innerWidth < 669 ? true : false
-  );
-
   useEffect(() => {
+    const resize = () => {
+      setResponsive(window.innerWidth < 669);
+    };
+
     window.addEventListener("resize", resize);
 
     return () => {
@@ -91,379 +104,546 @@ export const HostelRoomRequest = () => {
     };
   }, []);
 
-  const resize = () => {
-    setResponsive(window.innerWidth < 669 ? true : false);
-  };
-
   useEffect(() => {
-    if (localStorage?.getItem("accesstoken")) {
-      const response = jwtDecode(localStorage?.getItem("accesstoken"));
-      if (response.exp < Math.floor(Date.now() / 1000)) {
-        navigate("/login");
-      }
-    } else {
+    const accessToken = localStorage.getItem("accesstoken");
+
+    if (!accessToken) {
+      navigate("/login");
+      return;
+    }
+
+    const decodedToken = jwtDecode(accessToken);
+
+    if (decodedToken.exp < Math.floor(Date.now() / 1000)) {
       navigate("/login");
     }
-  }, []);
 
-  useEffect(()=>{
-   
-   
-    let config = {
-      method: 'get',
-      maxBodyLength: Infinity,
-      url: 'https://amarnath013.pythonanywhere.com/api/user/hostel-room-allotments/',
-      headers: { 
-        'Content-Type': 'application/json', 
-        'Authorization': `Bearer ${localStorage.getItem("accesstoken")}`
-      },
-  
-    };
-    
-    axios.request(config)
-    .then((response) => {
-      console.log(response?.data);
-      setAllotedRoom(response?.data);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-  },[])
-  useEffect(() => {
-    let config = {
-      method: "GET",
-      maxBodyLength: Infinity,
-      url: "https://amarnath013.pythonanywhere.com/api/user/profile/",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
-      },
-    };
+    const fetchData = async () => {
+      try {
+        const userProfileResponse = await axios.get(
+          "https://amarnath013.pythonanywhere.com/api/user/profile/",
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        setUserProfile(userProfileResponse.data);
 
-    axios
-      .request(config)
-      .then((response) => {
-        console.log(response);
-        setUserProfile(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+        const hostelAllotmentsResponse = await axios.get(
+          `https://amarnath013.pythonanywhere.com/api/user/hostel-allotments/?search=${localStorage.getItem(
+            "RollNumber"
+          )}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+       
+        setResult(hostelAllotmentsResponse.data.reverse());
 
-  useEffect(() => {
-    let config = {
-      method: "get",
-      maxBodyLength: Infinity,
-      url: `https://amarnath013.pythonanywhere.com/api/user/hostel-allotments/?search=${localStorage.getItem('RollNumber')}`,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
-      },
+        const hostelRoomAllotmentsResponse = await axios.get(
+          `https://amarnath013.pythonanywhere.com/api/user/hostel-room-allotments/?search=${localStorage?.getItem("RollNumber")}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        console.log(hostelRoomAllotmentsResponse.data)
+        setAllotedRoom(hostelRoomAllotmentsResponse.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     };
 
-    axios
-      .request(config)
-      .then((response) => {
-        console.log(response.data);
-        setResult(response.data.reverse());
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+    fetchData();
+  }, [navigate]);
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
 
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setName(file.name);
+    setValue("file", file);
+    setPreviewUrl(URL.createObjectURL(file));
+  };
+
+  const onSubmit = async (data) => {
     const formData = new FormData();
+    formData.append(
+      "registration_number",
+      userProfile?.academic_information?.registration_number
+    );
+    formData.append("status", "applied");
+    formData.append("cgpa", data.cgpa);
+    formData.append("latest_marksheet", data.file);
 
-    let data1 = {
-      registration_number:
-        userProfile?.academic_information?.registration_number,
-      status: "applied",
-      cgpa: data.cgpa,
-    };
-
-    for (const key in data1) {
-      formData.append(key, data1[key]);
-    }
-
-    formData.append("latest_marksheet", data.file[0]);
-
-    let config = {
-      method: "post",
-      maxBodyLength: Infinity,
-      url: "https://amarnath013.pythonanywhere.com/api/user/hostel-allotments/",
-      headers: {
-        Authorization: `Bearer ${localStorage?.getItem("accesstoken")}`,
-      },
-      data: formData,
-    };
-
-    axios
-      .request(config)
-      .then((response) => {
-      
-        enqueueSnackbar("Request sent successfully", {
-          variant: "success",
-          anchorOrigin: {
-            vertical: "bottom",
-            horizontal: "center",
+    try {
+      const response = await axios.post(
+        "https://amarnath013.pythonanywhere.com/api/user/hostel-allotments/",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
+            "Content-Type": "multipart/form-data",
           },
-          autoHideDuration: 1000,
-        });
-        console.log(response.data);
-        setTimeout(()=>{
-          window.location.reload();
-        },2000);
-      })
-      .catch((error) => {
-        console.log(error);
-        enqueueSnackbar(error?.response?.data?.errors?.non_field_errors[0], {
+        }
+      );
+      console.log("Request sent successfully:", response.data);
+      enqueueSnackbar("Request sent successfully", {
+        variant: "success",
+        anchorOrigin: {
+          vertical: "bottom",
+          horizontal: "center",
+        },
+        autoHideDuration: 1000,
+      });
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    } catch (error) {
+      console.error("Error sending request:", error);
+      enqueueSnackbar(
+        error?.response?.data?.errors?.non_field_errors[0] ||
+          "Failed to send request",
+        {
           variant: "error",
           anchorOrigin: {
             vertical: "bottom",
             horizontal: "center",
           },
           autoHideDuration: 1000,
-        });
-      });
-  };
-
-  const handleFileChange = async (e) => {
-    const file = e.target.files[0];
-    setName(file.name);
-    setValue("file", [file]);
-    setPreviewUrl(URL.createObjectURL(file));
-    await trigger("file");
+        }
+      );
+    }
   };
 
   return (
     <div className="container-fluid">
       <NavbarNew />
-      <Box
-        className="bonafide-form"
-        sx={{
-          padding: 4,
-          borderRadius: 2,
-          maxWidth: 600,
-          margin: "auto",
-        }}
+      <Typography
+        variant="h5"
+        align="center"
+        gutterBottom
+        sx={{ color: "rgb(107, 169, 169)", fontWeight: "bold",marginTop:"20px" }}
       >
-        <Typography
-          variant="h5"
-          align="center"
-          gutterBottom
-          sx={{ color: "rgb(107, 169, 169)", fontWeight: "bold" }}
-        >
-          Hostel Room Allotment Request
-        </Typography>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <FormControl fullWidth variant="outlined" margin="normal">
-            <Typography variant="h6">Registration / Employee Number</Typography>
-            <Typography variant="body1" sx={{ marginBottom: "10px" }}>
-              {userProfile?.academic_information?.registration_number}
-            </Typography>
-          </FormControl>
-
-          <FormControl
-            fullWidth
-            variant="outlined"
-            error={!!errors?.cgpa?.message}
-            margin="normal"
-          >
-            <TextField
-              label="Current CGPA"
-              type="text"
-              {...register("cgpa")}
-              error={!!errors.cgpa}
-              helperText={errors?.cgpa?.message}
-            />
-          </FormControl>
-
-          <FormControl fullWidth error={!!errors.file?.message} margin="normal">
+        Hostel Room Allotment Request
+      </Typography>
+      <Grid
+        container
+        sx={{ padding: { lg: 5, md: 5, xs: 3, sm: 3 } }}
+      >
+        <Grid item xs={12} sm={12} md={12} lg={7} sx={{padding:{lg:2},
+        position:"relative",left:{lg:"90px"},
+        top:{lg:"50px"}
+        }}>
+          <Box>
             <Box
               sx={{
                 display: {
-                  lg: "flex",
-                  sm: "initial",
-                  md: "flex",
-                  xs: "initial",
+                  md: "block",
+                  lg: "none",
+                  xs: "block",
+                  sm: "block",
                 },
-                gap: "15px",
               }}
             >
-              <Typography variant="h6" gutterBottom>
-                Latest Semester Marksheet
-              </Typography>
+              <center>
+                <img
+                  src="./images/hostelRoom.jpg"
+                  alt=""
+                  style={{
+                    width: "310px",
+                    textAlign: "center",
+                    borderRadius: "9px",
+                  }}
+                />
+              </center>
+            </Box>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <FormControl fullWidth variant="outlined" margin="normal">
+                <Typography variant="h6">
+                  Registration / Employee Number
+                </Typography>
+                <Typography variant="body1" sx={{ marginBottom: "10px" }}>
+                  {userProfile?.academic_information?.registration_number}
+                </Typography>
+              </FormControl>
+
+              <FormControl
+                fullWidth
+                variant="outlined"
+                error={!!errors?.cgpa?.message}
+                margin="normal"
+              >
+                <TextField
+                  label="Current CGPA"
+                  type="text"
+                  {...register("cgpa")}
+                  error={!!errors.cgpa}
+                  helperText={errors?.cgpa?.message}
+                  sx={{
+                    width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
+                  }}
+                />
+              </FormControl>
+
+              <FormControl
+                fullWidth
+                error={!!errors.file?.message}
+                margin="normal"
+              >
+                <Box
+                  sx={{
+                    gap: "15px",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography variant="h6" gutterBottom>
+                    Latest Semester Marksheet
+                  </Typography>
+                  <Button
+                    component="label"
+                    variant="contained"
+                    sx={{
+                      backgroundColor: "rgb(107, 169, 169)",
+                      color: "#fff",
+                      "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
+                      
+                        width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
+                      
+                    }}
+                  >
+                    Upload File
+                    <input
+                      type="file"
+                      {...register("file")}
+                      onChange={handleFileChange}
+                      style={{ display: "none" }}
+                    />
+                  </Button>
+                </Box>
+                {previewUrl && (
+                  <Box sx={{ marginTop: 2 }}>
+                    <img
+                      src={previewUrl}
+                      alt="Preview"
+                      style={{ width: "150px" }}
+                    />
+                  </Box>
+                )}
+                {name && (
+                  <Box sx={{ marginTop: 1, marginBottom: 1 }}>
+                    <Typography>{name}</Typography>
+                  </Box>
+                )}
+                {errors?.file && (
+                  <FormHelperText>{errors?.file?.message}</FormHelperText>
+                )}
+              </FormControl>
+
               <Button
-                component="label"
                 variant="contained"
+                type="submit"
+                fullWidth
                 sx={{
+                  marginTop: 2,
                   backgroundColor: "rgb(107, 169, 169)",
                   color: "#fff",
                   "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
-                  width: "50%",
+                  
+                    width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
+                  
                 }}
               >
-                Upload File
-                <input
-                  type="file"
-                  name="file"
-                  {...register("file")}
-                  onChange={handleFileChange}
-                  style={{ display: "none" }}
-                />
+                Send Request
               </Button>
-            </Box>
-            {previewUrl && (
-              <Box sx={{ marginTop: 2 }}>
-                <img
-                  src={previewUrl}
-                  alt="Preview"
-                  style={{ width: "150px" }}
-                />
-              </Box>
-            )}
-            {name && (
-              <Box sx={{ marginTop: 1, marginBottom: 1 }}>
-                <p>{name}</p>
-              </Box>
-            )}
-            {errors?.file && (
-              <FormHelperText>{errors?.file?.message}</FormHelperText>
-            )}
-          </FormControl>
+            </form>
+          </Box>
+        </Grid>
 
-          <Button
-            variant="contained"
-            type="submit"
-            fullWidth
-            sx={{
-              marginTop: 2,
-              backgroundColor: "rgb(107, 169, 169)",
-              color: "#fff",
-              "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
-            }}
-          >
-            Send Request
-          </Button>
-        </form>
-        <Divider sx={{ my:3 }}/>
-        <p style={{margin:"10px 0px 10px 0px",fontSize:"1.2rem"}}>Alloted Rooms to you</p>
-        {allotedRoom && allotedRoom?.map((data,index)=>(
-                     data?.registration_details?.registration_number===localStorage?.getItem('RollNumber') ? (
-                     <Box key={index}>
-                        <Typography variant="body2" color="text.secondary">{index+1}.{"  "} Alloted Room No : {data?.hostel_room}</Typography>
-                     </Box>):
-                     (null)
+        <Grid item xs={12} sm={12} md={12} lg={5} sx={{textAlign:"-webkit-center"}}>
+          <Box>
+            <Divider
+              sx={{
+                display: {
+                  lg: "none",
+                  md: "block",
+                  sm: "block",
+                  xs: "block",
+                },
+                my: 3,
+              }}
+            />
 
-        ))}
-                    
-        <Divider sx={{ my: 3 }} />
-        <Typography
-          variant="h6"
-          gutterBottom
-          sx={{ color: "rgb(107, 169, 169)" }}
-        >
-          Previous Hostel Requests
-        </Typography>
-        <Box
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            flexDirection: "column",
-          }}
-        >
-          {result.length === 0 && (
-            <p
-              style={{
-                marginBottom: "50px",
-                marginTop: "100px",
-                fontSize: "1.2rem",
+            <Box
+              sx={{
+                display: {
+                  md: "none",
+                  lg: "block",
+                  xs: "none",
+                  sm: "none",
+                },
               }}
             >
-              Nothing to show
-            </p>
-          )}
-
-          {responsive ? (
-            result?.length > 0 &&
-            result?.map((data, index) => (
-              <Box key={index}>
-                <Card
-                  sx={{
-                    minWidth: 275,
-                    marginBottom: 2,
-                    backgroundColor: "#D2E9E9",
-
+              <center>
+                <img
+                  src="./images/hostelRoom.jpg"
+                  alt=""
+                  style={{
+                    width: "310px",
+                    textAlign: "center",
+                    borderRadius: "9px",
                   }}
-                >
-                  <CardContent>
-                    <Typography
-                      sx={{ fontSize: 14,marginLeft:"40px" }}
-                      color="text.secondary"
-                      gutterBottom
-                    >
-                      Previous Request Details
-                    </Typography>
+                />
+              </center>
+            </Box>
 
-                    <Typography color="text.secondary" style={{marginLeft:"10px"}}>
-                      Status : {data?.status}
-                    </Typography>
-                   
-                    <Typography variant="body2" color="text.secondary" style={{marginLeft:"10px"}}>
-                      Marksheet Image:<br/>
-                      {data?.latest_marksheet!==null ? (<img
-                        src={`data:image/*;base64,${decodeURIComponent(
-                          data?.latest_marksheet
-                        )}`}
-                        alt="description"
-                        style={{width:"150px",height:"150px",margin:"10px 0px 10px 40px",borderRadius:"10px"}}
-                      />):(<p>Null</p>) }
-                      
-                    </Typography>
-                    
-                    
-                  </CardContent>
-                </Card>
-              </Box>
-            ))
-          ) : (
-            <Box>
-              {result?.length > 0 ? (
+            <Typography
+              variant="h6"
+              gutterBottom
+              sx={{ color: "rgb(107, 169, 169)",textAlign:"center",marginBottom:"10px",marginTop:"20px" }}
+            >
+              Previous Hostel Requests
+            </Typography>
+
+            <Box
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                flexDirection: "column",
+              }}
+            >
+              {result.length === 0 && (
+                <Typography
+                  variant="body1"
+                  sx={{ marginTop: 3, textAlign: "center" }}
+                >
+                  No previous hostel requests found.
+                </Typography>
+              )}
+
+              {responsive ? (
+                result.length > 0 &&
+                result.map((data, index) => (
+                  <Card
+                    key={index}
+                    sx={{
+                      minWidth: 275,
+                      marginBottom: 2,
+                      backgroundColor: "#D2E9E9",
+                    }}
+                  >
+                    <CardContent>
+                      <Typography
+                        sx={{ fontSize: 14,textAlign:"center" }}
+                        color="text.secondary"
+                        gutterBottom
+                        
+                      >
+                        Previous Request Details
+                      </Typography>
+                      <Typography color="text.secondary" sx={{ fontSize: 13 }}>
+                        Status: {data?.status}
+                      </Typography>
+                      <Typography color="text.secondary" sx={{ fontSize: 13,textAlign:"center" }}>
+                      Alloted Room No: 
+                        {allotedRoom.length>0 ? (
+                              <Typography
+                               
+                                variant="p"
+                                color="text.secondary"
+                              >
+                                {" "}{allotedRoom?.[0]?.hostel_room}
+                              </Typography>
+                            ) : <p>Not alloted by now.</p>
+                          }
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ fontSize: 13 }}
+                      >
+                        Marksheet Image:
+                        <br />
+                        {data?.latest_marksheet !== null ? (
+                          <img
+                            src={`data:image/*;base64,${decodeURIComponent(
+                              data?.latest_marksheet
+                            )}`}
+                            alt="Marksheet"
+                            style={{
+                              width: "150px",
+                              height: "150px",
+                              margin: "10px 0px",
+                              borderRadius: "10px",
+                              textAlign: "center",
+                            }}
+                          />
+                        ) : (
+                          <p>Null</p>
+                        )}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                ))
+              ) : (
                 <TableContainer component={Paper} sx={{ marginTop: 3 }}>
-                  <Table sx={{ minWidth: 650 }} aria-label="bonafide table" style={{textAlign:"center"}}>
+                  <Table
+                    sx={{ minWidth: 650 }}
+                    aria-label="previous hostel requests"
+                    style={{ textAlign: "center" }}
+                  >
                     <TableHead style={{ backgroundColor: "#D2E9E9" }}>
                       <TableRow>
-                        <TableCell>Status</TableCell>
-                        <TableCell>Marksheet Image</TableCell>
+                        <TableCell style={{textAlign:"center"}}>Status</TableCell>
+                        <TableCell style={{textAlign:"center"}}>Marksheet Image</TableCell>
+                        <TableCell style={{textAlign:"center"}}>Alloted Room</TableCell>
                       </TableRow>
                     </TableHead>
-                    <TableBody >
-                      {result?.map((data, index) => (
-                        <TableRow key={index}>
-                          <TableCell>{data?.status}</TableCell>
-                          <TableCell>{data?.latest_marksheet!==null ? (<img
-                        src={`data:image/*;base64,${decodeURIComponent(
-                          data?.latest_marksheet
-                        )}`}
-                        alt="description"
-                        style={{width:"150px",height:"150px"}}
-                      />):(<p>Null</p>) }</TableCell>
-                        </TableRow>
-                      ))}
+                    <TableBody>
+                      {result
+                        .slice(
+                          page * rowsPerPage,
+                          page * rowsPerPage + rowsPerPage
+                        )
+                        .map((data, index) => (
+                          <TableRow key={index}>
+                            <TableCell style={{textAlign:"center"}}>{data?.status}</TableCell>
+                            <TableCell style={{textAlign:"center"}}>
+                              {data?.latest_marksheet !== null ? (
+                                <img
+                                  src={`data:image/*;base64,${decodeURIComponent(
+                                    data?.latest_marksheet
+                                  )}`}
+                                  alt="Marksheet"
+                                  style={{ width: "150px", height: "150px" }}
+                                />
+                              ) : (
+                                <p>Null</p>
+                              )}
+                            </TableCell>
+                            <TableCell style={{textAlign:"center"}}>
+                            {allotedRoom.length>0 ? (
+                              <Typography
+                               
+                                variant="p"
+                                color="text.secondary"
+                              >
+                                {" "}{allotedRoom?.[0]?.hostel_room}
+                              </Typography>
+                            ) : <p>Not alloted by now.</p>
+                          }
+                            </TableCell>
+                          </TableRow>
+                        ))}
                     </TableBody>
+                    <TableFooter style={{ backgroundColor: "#D2E9E9" }}>
+                      <TableRow>
+                        <TablePagination
+                          rowsPerPageOptions={[
+                            5,
+                            10,
+                            25,
+                            { label: "All", value: -1 },
+                          ]}
+                          colSpan={3}
+                          count={result.length}
+                          rowsPerPage={rowsPerPage}
+                          page={page}
+                          SelectProps={{
+                            inputProps: { "aria-label": "rows per page" },
+                            native: true,
+                          }}
+                          onPageChange={handleChangePage}
+                          onRowsPerPageChange={handleChangeRowsPerPage}
+                          ActionsComponent={TablePaginationActions}
+                        />
+                      </TableRow>
+                    </TableFooter>
                   </Table>
                 </TableContainer>
-              ) : null}
+              )}
             </Box>
-          )}
-        </Box>
-        <Divider sx={{ mb: 3 }} />
-      </Box>
+
+            
+          </Box>
+        </Grid>
+      </Grid>
       <Footer />
     </div>
   );
 };
 
 export default HostelRoomRequest;
+
+function TablePaginationActions(props) {
+  const theme = useTheme();
+  const { count, page, rowsPerPage, onPageChange } = props;
+
+  const handleFirstPageButtonClick = (event) => {
+    onPageChange(event, 0);
+  };
+
+  const handleBackButtonClick = (event) => {
+    onPageChange(event, page - 1);
+  };
+
+  const handleNextButtonClick = (event) => {
+    onPageChange(event, page + 1);
+  };
+
+  const handleLastPageButtonClick = (event) => {
+    onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
+  };
+
+  return (
+    <Box sx={{ flexShrink: 0, ml: 2.5 }}>
+      <IconButton
+        onClick={handleFirstPageButtonClick}
+        disabled={page === 0}
+        aria-label="first page"
+      >
+        {theme.direction === "rtl" ? <LastPageIcon /> : <FirstPageIcon />}
+      </IconButton>
+      <IconButton
+        onClick={handleBackButtonClick}
+        disabled={page === 0}
+        aria-label="previous page"
+      >
+        {theme.direction === "rtl" ? (
+          <KeyboardArrowRight />
+        ) : (
+          <KeyboardArrowLeft />
+        )}
+      </IconButton>
+      <IconButton
+        onClick={handleNextButtonClick}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        aria-label="next page"
+      >
+        {theme.direction === "rtl" ? (
+          <KeyboardArrowLeft />
+        ) : (
+          <KeyboardArrowRight />
+        )}
+      </IconButton>
+      <IconButton
+        onClick={handleLastPageButtonClick}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        aria-label="last page"
+      >
+        {theme.direction === "rtl" ? <FirstPageIcon /> : <LastPageIcon />}
+      </IconButton>
+    </Box>
+  );
+}
