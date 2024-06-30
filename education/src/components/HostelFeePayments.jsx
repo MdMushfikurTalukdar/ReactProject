@@ -247,36 +247,25 @@ function HostelFeePayment() {
               />
             </Grid>
             <Grid item xs={12} sm={6} lg={12} md={12}>
-              <Controller
-                control={control}
-                name="startDate"
-                render={({ field }) => (
-                  <DatePicker
-                    {...field}
-                    selected={field.value}
-                    onChange={handleStartDateChange}
-                    selectsStart
-                    startDate={field.value}
-                    minDate={new Date()}
-                    dateFormat="yyyy-MM"
-                    showMonthYearPicker
-                    customInput={
-                      <TextField
-                        label="From"
-                        variant="outlined"
-                        sx={{
-                          width: {
-                            lg: "353%",
-                            md: "353%",
-                            xs: "100%",
-                            sm: "130%",
-                          },
-                        }}
-                      />
-                    }
-                  />
-                )}
+            <Controller
+          control={control}
+          name="startDate"
+          render={({ field }) => (
+            <div style={{ width: '100%' }}>
+              <DatePicker
+                {...field}
+                selected={field.value}
+                onChange={handleStartDateChange}
+                selectsStart
+                startDate={field.value}
+                minDate={new Date()}
+                dateFormat="yyyy-MM"
+                showMonthYearPicker
+                className="full-width-datepicker"
               />
+            </div>
+          )}
+        />
               {errors.startDate && (
                 <Typography color="error" variant="body2">
                   {errors.startDate.message}
