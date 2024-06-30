@@ -12,7 +12,7 @@ import { CiEdit } from "react-icons/ci";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import '../pages/logout.css';
+import "../pages/logout.css";
 import { jwtDecode } from "jwt-decode";
 import { Opacity } from "@mui/icons-material";
 
@@ -96,10 +96,17 @@ export const ProfileMainBody = () => {
 
       <Box
         className=" mt-3 w-full lg:p-10 sm:p-5 p-5"
-        style={{ height: "calc(100vh - 5px)", overflowY: "scroll",zIndex:"6" }}
+        style={{
+          height: "calc(100vh - 5px)",
+          overflowY: "scroll",
+          zIndex: "6",
+          overflowX:"hidden"
+        }}
       >
+        <center>
         
-        <Box className="text-center" >
+        </center>
+        <Box className="text-center">
           {userProfile?.personal_information?.profile_picture !== null ? (
             <img
               src={userProfile?.personal_information?.profile_picture}
@@ -109,8 +116,9 @@ export const ProfileMainBody = () => {
                 height: "150px",
                 margin: "10px 0px 10px 40px",
                 borderRadius: "50%",
-                filter:"opacity(1)",
-                border:"2px solid whitesmoke"
+                filter: "opacity(1)",
+                border: "2px solid whitesmoke",
+                objectFit:"cover"
               }}
             />
           ) : (
@@ -121,6 +129,7 @@ export const ProfileMainBody = () => {
               style={{ borderRadius: "50%" }}
             />
           )}
+
           <Typography varient="span" component="label">
             <input type="file" style={{ display: "none" }} />
           </Typography>
@@ -285,7 +294,9 @@ export const ProfileMainBody = () => {
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
                 <Typography variant="p">
-                  {userProfile?.personal_information?.date_of_birth || <p>NA</p>}
+                  {userProfile?.personal_information?.date_of_birth || (
+                    <p>NA</p>
+                  )}
                 </Typography>
               </Grid>
 
@@ -357,7 +368,9 @@ export const ProfileMainBody = () => {
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
                 <Typography variant="p">
-                  {userProfile?.personal_information?.permanent_address || <p>NA</p>}
+                  {userProfile?.personal_information?.permanent_address || (
+                    <p>NA</p>
+                  )}
                 </Typography>
               </Grid>
 
@@ -385,16 +398,17 @@ export const ProfileMainBody = () => {
                 }}
               >
                 <Typography variant="p" style={{ fontSize: "1.2rem" }}>
-                Correspndance Address
+                  Correspndance Address
                 </Typography>
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
                 <Typography variant="p">
-                  {userProfile?.personal_information?.correspndance_address || <p>NA</p>}
+                  {userProfile?.personal_information?.correspndance_address || (
+                    <p>NA</p>
+                  )}
                 </Typography>
               </Grid>
             </Grid>
-            
           </Box>
         </Box>
         <Box className="lg:p-10 sm:p-5 xs:p-0 md:p-5 mb-6">
@@ -491,8 +505,6 @@ export const ProfileMainBody = () => {
                   )}
                 </Typography>
               </Grid>
-
-            
             </Grid>
           </Box>
         </Box>
@@ -517,7 +529,9 @@ export const ProfileMainBody = () => {
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
                 <Typography variant="p">
-                  {userProfile?.academic_information?.registration_number || <p>NA</p>}
+                  {userProfile?.academic_information?.registration_number || (
+                    <p>NA</p>
+                  )}
                 </Typography>
               </Grid>
 
@@ -544,14 +558,15 @@ export const ProfileMainBody = () => {
                   marginBottom: "5px",
                 }}
               >
-               
                 <Typography variant="p" style={{ fontSize: "1.2rem" }}>
                   Enrollment_date
                 </Typography>
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
                 <Typography variant="p">
-                  {userProfile?.academic_information?.registration_year || <p>NA</p>}
+                  {userProfile?.academic_information?.registration_year || (
+                    <p>NA</p>
+                  )}
                 </Typography>
               </Grid>
 
@@ -612,7 +627,7 @@ export const ProfileMainBody = () => {
                 }}
               >
                 <Typography variant="p" style={{ fontSize: "1.2rem" }}>
-                 Branch
+                  Branch
                 </Typography>
               </Grid>
               <Grid
@@ -627,10 +642,6 @@ export const ProfileMainBody = () => {
                   {userProfile?.academic_information?.branch || <p>NA</p>}
                 </Typography>
               </Grid>
-            
-
-
-
 
               <Divider
                 sx={{
@@ -661,7 +672,9 @@ export const ProfileMainBody = () => {
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
                 <Typography variant="p">
-                  {userProfile?.academic_information?.last_qualification || <p>NA</p>}
+                  {userProfile?.academic_information?.last_qualification || (
+                    <p>NA</p>
+                  )}
                 </Typography>
               </Grid>
 
@@ -760,7 +773,9 @@ export const ProfileMainBody = () => {
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
                 <Typography variant="p">
-                  {userProfile?.academic_information?.merir_serial_number || <p>NA</p>}
+                  {userProfile?.academic_information?.merir_serial_number || (
+                    <p>NA</p>
+                  )}
                 </Typography>
               </Grid>
 
@@ -866,10 +881,11 @@ export const ProfileMainBody = () => {
                 style={{ marginBottom: "10px" }}
               >
                 <Typography variant="p">
-                  {userProfile?.academic_information?.date_of_admission|| <p>NA</p>}
+                  {userProfile?.academic_information?.date_of_admission || (
+                    <p>NA</p>
+                  )}
                 </Typography>
               </Grid>
-
 
               <Divider
                 sx={{
@@ -908,7 +924,7 @@ export const ProfileMainBody = () => {
                 style={{ marginBottom: "10px" }}
               >
                 <Typography variant="p">
-                  {userProfile?.academic_information?.session|| <p>NA</p>}
+                  {userProfile?.academic_information?.session || <p>NA</p>}
                 </Typography>
               </Grid>
 
@@ -936,7 +952,7 @@ export const ProfileMainBody = () => {
                 }}
               >
                 <Typography variant="p" style={{ fontSize: "1.2rem" }}>
-                University Registration Number
+                  University Registration Number
                 </Typography>
               </Grid>
               <Grid
@@ -948,7 +964,9 @@ export const ProfileMainBody = () => {
                 style={{ marginBottom: "20px" }}
               >
                 <Typography variant="p">
-                  {userProfile?.academic_information?.university_reg_no|| <p>NA</p>}
+                  {userProfile?.academic_information?.university_reg_no || (
+                    <p>NA</p>
+                  )}
                 </Typography>
               </Grid>
             </Grid>
@@ -978,7 +996,7 @@ export const ProfileMainBody = () => {
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
                 <Typography variant="p">
-                  {userProfile?.tc_information?.TC_or_CL_no|| <p>NA</p>}
+                  {userProfile?.tc_information?.TC_or_CL_no || <p>NA</p>}
                 </Typography>
               </Grid>
 
@@ -1006,12 +1024,12 @@ export const ProfileMainBody = () => {
                 }}
               >
                 <Typography variant="p" style={{ fontSize: "1.2rem" }}>
-                Issuing Date TC
+                  Issuing Date TC
                 </Typography>
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
                 <Typography variant="p">
-                  {userProfile?.tc_information?.issuing_date_tc|| <p>NA</p>}
+                  {userProfile?.tc_information?.issuing_date_tc || <p>NA</p>}
                 </Typography>
               </Grid>
 
@@ -1039,14 +1057,12 @@ export const ProfileMainBody = () => {
                 }}
               >
                 <Typography variant="p" style={{ fontSize: "1.2rem" }}>
-                Purpose
+                  Purpose
                 </Typography>
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
                 <Typography variant="p">
-                  {userProfile?.tc_information?.purpose || (
-                    <p>NA</p>
-                  )}
+                  {userProfile?.tc_information?.purpose || <p>NA</p>}
                 </Typography>
               </Grid>
               <Divider
@@ -1073,7 +1089,7 @@ export const ProfileMainBody = () => {
                 }}
               >
                 <Typography variant="p" style={{ fontSize: "1.2rem" }}>
-                Character Certificate Issued
+                  Character Certificate Issued
                 </Typography>
               </Grid>
               <Grid
@@ -1085,7 +1101,8 @@ export const ProfileMainBody = () => {
                 style={{ marginBottom: "10px" }}
               >
                 <Typography variant="p">
-                  {userProfile?.tc_information?.character_certificate_issued|| <p>NA</p>}
+                  {userProfile?.tc_information
+                    ?.character_certificate_issued || <p>NA</p>}
                 </Typography>
               </Grid>
               <Divider
@@ -1112,7 +1129,7 @@ export const ProfileMainBody = () => {
                 }}
               >
                 <Typography variant="p" style={{ fontSize: "1.2rem" }}>
-                Character Certificate No.
+                  Character Certificate No.
                 </Typography>
               </Grid>
               <Grid
@@ -1124,10 +1141,12 @@ export const ProfileMainBody = () => {
                 style={{ marginBottom: "10px" }}
               >
                 <Typography variant="p">
-                  {userProfile?.tc_information?.character_certificate_no|| <p>NA</p>}
+                  {userProfile?.tc_information?.character_certificate_no || (
+                    <p>NA</p>
+                  )}
                 </Typography>
               </Grid>
-            
+
               <Divider
                 sx={{
                   width: "100%",
@@ -1164,11 +1183,9 @@ export const ProfileMainBody = () => {
                 style={{ marginBottom: "10px" }}
               >
                 <Typography variant="p">
-                  {userProfile?.tc_information?.issuing_date_cr|| <p>NA</p>}
+                  {userProfile?.tc_information?.issuing_date_cr || <p>NA</p>}
                 </Typography>
               </Grid>
-            
-            
             </Grid>
           </Box>
         </Box>

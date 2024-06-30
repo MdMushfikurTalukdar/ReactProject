@@ -476,7 +476,8 @@ export const EditProfile = () => {
                         height: "150px",
                         margin: "10px 0px 10px 40px",
                         borderRadius: "50%",
-                        border:"2px solid whitesmoke"
+                        border:"2px solid whitesmoke",
+                        objectFit:"cover"
                       }}
                     />
                   ) : imgPreview ? (
@@ -488,6 +489,7 @@ export const EditProfile = () => {
                         height: "150px",
                         margin: "10px 0px 10px 40px",
                         borderRadius: "50%",
+                         objectFit:"cover"
                       }}
                     />
                   ) : (
