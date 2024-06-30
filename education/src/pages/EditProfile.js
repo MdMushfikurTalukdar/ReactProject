@@ -107,7 +107,13 @@ const schema = yup.object().shape({
     .required("Date Of Admission is required"),
   session: yup.string(),
   university_reg_no: yup.string(),
-  TC_or_CL_no: yup.string(),
+  TC_or_CL_no: yup
+    .string()
+    .test(
+      "is-numeric",
+      "TC or CL number must be a number",
+      (value) => !isNaN(value) || /^\d+$/.test(value)
+    ),
   issuing_date_tc: yup
     .string()
     .test(
@@ -123,7 +129,13 @@ const schema = yup.object().shape({
       "Only accept true or false",
       (value) => !value || ["true", "false"].includes(value)
     ),
-  character_certificate_no: yup.string(),
+  character_certificate_no: yup
+  .string()
+  .test(
+    "is-numeric",
+    "Character certificate number must be a number",
+    (value) => !isNaN(value) || /^\d+$/.test(value)
+  ),
   issuing_date_cr: yup
     .string()
     .test(
@@ -468,7 +480,7 @@ export const EditProfile = () => {
                         height: "150px",
                         margin: "10px 0px 10px 40px",
                         borderRadius: "50%",
-                        border:"1px solid black"
+                        border:"2px solid whitesmoke"
                       }}
                     />
                   ) : imgPreview ? (
@@ -1146,7 +1158,7 @@ export const EditProfile = () => {
                     </Grid>
                     <Grid item lg={4} sm={12} xs={12} md={12}>
                       <TextField
-                        type="number"
+                        type="text"
                         fullWidth
                         style={{marginTop:"10px"}}
                         {...register("purpose")}

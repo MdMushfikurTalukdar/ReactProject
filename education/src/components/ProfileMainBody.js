@@ -114,7 +114,8 @@ export const ProfileMainBody = () => {
                 height: "150px",
                 margin: "10px 0px 10px 40px",
                 borderRadius: "50%",
-                filter:"opacity(1)"
+                filter:"opacity(1)",
+                border:"2px solid whitesmoke"
               }}
             />
           ) : (
@@ -190,7 +191,7 @@ export const ProfileMainBody = () => {
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
                 <Typography variant="p">
-                  {userProfile?.personal_information?.first_name}
+                  {userProfile?.personal_information?.first_name || <p>NA</p>}
                 </Typography>
               </Grid>
 
@@ -256,7 +257,7 @@ export const ProfileMainBody = () => {
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
                 <Typography variant="p">
-                  {userProfile?.personal_information?.last_name}
+                  {userProfile?.personal_information?.last_name || <p>NA</p>}
                 </Typography>
               </Grid>
 
@@ -289,7 +290,7 @@ export const ProfileMainBody = () => {
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
                 <Typography variant="p">
-                  {userProfile?.personal_information?.date_of_birth}
+                  {userProfile?.personal_information?.date_of_birth || <p>NA</p>}
                 </Typography>
               </Grid>
 
@@ -329,7 +330,7 @@ export const ProfileMainBody = () => {
                 style={{ marginBottom: "10px" }}
               >
                 <Typography variant="p">
-                  {userProfile?.personal_information?.gender}
+                  {userProfile?.personal_information?.gender || <p>NA</p>}
                 </Typography>
               </Grid>
               <Divider
@@ -351,7 +352,7 @@ export const ProfileMainBody = () => {
                 xs={12}
                 md={12}
                 sx={{
-                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
+                  marginTop: { xs: "5px", sm: "5px", md: "5px", lg: "0px" },
                   marginBottom: "5px",
                 }}
               >
@@ -361,7 +362,7 @@ export const ProfileMainBody = () => {
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
                 <Typography variant="p">
-                  {userProfile?.personal_information?.permanent_address}
+                  {userProfile?.personal_information?.permanent_address || <p>NA</p>}
                 </Typography>
               </Grid>
 
@@ -394,7 +395,7 @@ export const ProfileMainBody = () => {
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
                 <Typography variant="p">
-                  {userProfile?.personal_information?.correspndance_address}
+                  {userProfile?.personal_information?.correspndance_address || <p>NA</p>}
                 </Typography>
               </Grid>
             </Grid>
@@ -521,7 +522,7 @@ export const ProfileMainBody = () => {
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
                 <Typography variant="p">
-                  {userProfile?.academic_information?.registration_number}
+                  {userProfile?.academic_information?.registration_number || <p>NA</p>}
                 </Typography>
               </Grid>
 
@@ -555,7 +556,7 @@ export const ProfileMainBody = () => {
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
                 <Typography variant="p">
-                  {userProfile?.academic_information?.registration_year}
+                  {userProfile?.academic_information?.registration_year || <p>NA</p>}
                 </Typography>
               </Grid>
 
@@ -588,7 +589,7 @@ export const ProfileMainBody = () => {
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
                 <Typography variant="p">
-                  {userProfile?.academic_information?.year}
+                  {userProfile?.academic_information?.year || <p>NA</p>}
                 </Typography>
               </Grid>
 
@@ -611,7 +612,7 @@ export const ProfileMainBody = () => {
                 xs={12}
                 md={12}
                 sx={{
-                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
+                  marginTop: { xs: "10px", sm: "10px", md: "10px", lg: "0px" },
                   marginBottom: "5px",
                 }}
               >
@@ -625,10 +626,10 @@ export const ProfileMainBody = () => {
                 sm={12}
                 xs={12}
                 md={12}
-                style={{ marginBottom: "20px" }}
+                style={{ marginBottom: "5px" }}
               >
                 <Typography variant="p">
-                  {userProfile?.academic_information?.branch}
+                  {userProfile?.academic_information?.branch || <p>NA</p>}
                 </Typography>
               </Grid>
             
@@ -665,7 +666,7 @@ export const ProfileMainBody = () => {
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
                 <Typography variant="p">
-                  {userProfile?.academic_information?.last_qualification}
+                  {userProfile?.academic_information?.last_qualification || <p>NA</p>}
                 </Typography>
               </Grid>
 
@@ -698,7 +699,7 @@ export const ProfileMainBody = () => {
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
                 <Typography variant="p">
-                  {userProfile?.academic_information?.school}
+                  {userProfile?.academic_information?.school || <p>NA</p>}
                 </Typography>
               </Grid>
 
@@ -731,7 +732,7 @@ export const ProfileMainBody = () => {
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
                 <Typography variant="p">
-                  {userProfile?.academic_information?.board}
+                  {userProfile?.academic_information?.board || <p>NA</p>}
                 </Typography>
               </Grid>
 
@@ -764,7 +765,7 @@ export const ProfileMainBody = () => {
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
                 <Typography variant="p">
-                  {userProfile?.academic_information?.merir_serial_number}
+                  {userProfile?.academic_information?.merir_serial_number || <p>NA</p>}
                 </Typography>
               </Grid>
 
@@ -797,7 +798,7 @@ export const ProfileMainBody = () => {
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
                 <Typography variant="p">
-                  {userProfile?.academic_information?.category}
+                  {userProfile?.academic_information?.category || <p>NA</p>}
                 </Typography>
               </Grid>
 
@@ -830,7 +831,7 @@ export const ProfileMainBody = () => {
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
                 <Typography variant="p">
-                  {userProfile?.academic_information?.college_name}
+                  {userProfile?.academic_information?.college_name || <p>NA</p>}
                 </Typography>
               </Grid>
 
@@ -853,7 +854,7 @@ export const ProfileMainBody = () => {
                 xs={12}
                 md={12}
                 sx={{
-                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
+                  marginTop: { xs: "10px", sm: "10px", md: "10px", lg: "0px" },
                   marginBottom: "5px",
                 }}
               >
@@ -867,10 +868,10 @@ export const ProfileMainBody = () => {
                 sm={12}
                 xs={12}
                 md={12}
-                style={{ marginBottom: "20px" }}
+                style={{ marginBottom: "10px" }}
               >
                 <Typography variant="p">
-                  {userProfile?.academic_information?.date_of_admission}
+                  {userProfile?.academic_information?.date_of_admission|| <p>NA</p>}
                 </Typography>
               </Grid>
 
@@ -895,7 +896,7 @@ export const ProfileMainBody = () => {
                 xs={12}
                 md={12}
                 sx={{
-                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
+                  marginTop: { xs: "10px", sm: "10px", md: "10px", lg: "0px" },
                   marginBottom: "5px",
                 }}
               >
@@ -909,10 +910,10 @@ export const ProfileMainBody = () => {
                 sm={12}
                 xs={12}
                 md={12}
-                style={{ marginBottom: "20px" }}
+                style={{ marginBottom: "10px" }}
               >
                 <Typography variant="p">
-                  {userProfile?.academic_information?.session}
+                  {userProfile?.academic_information?.session|| <p>NA</p>}
                 </Typography>
               </Grid>
 
@@ -952,15 +953,15 @@ export const ProfileMainBody = () => {
                 style={{ marginBottom: "20px" }}
               >
                 <Typography variant="p">
-                  {userProfile?.academic_information?.university_reg_no}
+                  {userProfile?.academic_information?.university_reg_no|| <p>NA</p>}
                 </Typography>
               </Grid>
             </Grid>
           </Box>
         </Box>
 
-        <Box className="lg:p-10 sm:p-5 xs:p-0 md:p-5 mb-6">
-          <Typography variant="p" className="text-2xl mx-auto mb-5">
+        <Box className="lg:p-10 sm:p-5 xs:p-0 md:p-5 mb-5 mt-5">
+          <Typography variant="p" className="text-2xl mx-auto">
             TC Information
           </Typography>
           <Box className="bg-gray-100 p-3 rounded-2xl mt-6">
@@ -982,7 +983,7 @@ export const ProfileMainBody = () => {
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
                 <Typography variant="p">
-                  {userProfile?.tc_information?.TC_or_CL_no}
+                  {userProfile?.tc_information?.TC_or_CL_no|| <p>NA</p>}
                 </Typography>
               </Grid>
 
@@ -1015,7 +1016,7 @@ export const ProfileMainBody = () => {
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
                 <Typography variant="p">
-                  {userProfile?.tc_information?.issuing_date_tc}
+                  {userProfile?.tc_information?.issuing_date_tc|| <p>NA</p>}
                 </Typography>
               </Grid>
 
@@ -1072,7 +1073,7 @@ export const ProfileMainBody = () => {
                 xs={12}
                 md={12}
                 sx={{
-                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
+                  marginTop: { xs: "10px", sm: "10px", md: "10px", lg: "0px" },
                   marginBottom: "5px",
                 }}
               >
@@ -1086,10 +1087,10 @@ export const ProfileMainBody = () => {
                 sm={12}
                 xs={12}
                 md={12}
-                style={{ marginBottom: "20px" }}
+                style={{ marginBottom: "10px" }}
               >
                 <Typography variant="p">
-                  {userProfile?.tc_information?.character_certificate_issued}
+                  {userProfile?.tc_information?.character_certificate_issued|| <p>NA</p>}
                 </Typography>
               </Grid>
               <Divider
@@ -1111,7 +1112,7 @@ export const ProfileMainBody = () => {
                 xs={12}
                 md={12}
                 sx={{
-                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
+                  marginTop: { xs: "5px", sm: "5px", md: "5px", lg: "0px" },
                   marginBottom: "5px",
                 }}
               >
@@ -1125,10 +1126,10 @@ export const ProfileMainBody = () => {
                 sm={12}
                 xs={12}
                 md={12}
-                style={{ marginBottom: "20px" }}
+                style={{ marginBottom: "10px" }}
               >
                 <Typography variant="p">
-                  {userProfile?.tc_information?.character_certificate_no}
+                  {userProfile?.tc_information?.character_certificate_no|| <p>NA</p>}
                 </Typography>
               </Grid>
             
@@ -1151,7 +1152,7 @@ export const ProfileMainBody = () => {
                 xs={12}
                 md={12}
                 sx={{
-                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
+                  marginTop: { xs: "5px", sm: "5px", md: "5px", lg: "0px" },
                   marginBottom: "5px",
                 }}
               >
@@ -1165,10 +1166,10 @@ export const ProfileMainBody = () => {
                 sm={12}
                 xs={12}
                 md={12}
-                style={{ marginBottom: "20px" }}
+                style={{ marginBottom: "10px" }}
               >
                 <Typography variant="p">
-                  {userProfile?.tc_information?.issuing_date_cr}
+                  {userProfile?.tc_information?.issuing_date_cr|| <p>NA</p>}
                 </Typography>
               </Grid>
             
