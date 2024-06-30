@@ -39,7 +39,7 @@ import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 
 // Validation schema
 const schema = yup.object().shape({
-  Category: yup.string().required("Category is required"),
+  
   checkbox: yup
     .boolean()
     .oneOf([true], "Please agree to the terms and conditions"),
@@ -182,12 +182,12 @@ export function NoDuesForDegree() {
   const onSubmit = async (data) => {
     const requestData = {
       name: `${userProfile?.personal_information?.first_name} ${userProfile?.personal_information?.last_name}`,
-      branch: userProfile?.academic_information?.department,
+      branch: userProfile?.academic_information?.branch,
       father_name: userProfile?.personal_information?.father_name,
-      category: data?.Category,
+      category: userProfile?.academic_information?.category,
       self_declaration: true,
       status: "applied",
-      session: userProfile?.academic_information?.batch,
+      session: userProfile?.academic_information?.session,
     };
 
     try {
@@ -325,7 +325,7 @@ export function NoDuesForDegree() {
                 </Typography>
                 <FormControl fullWidth>
                   <TextField
-                    value={userProfile?.academic_information?.department || ""}
+                    value={userProfile?.academic_information?.branch || ""}
                     disabled
                     placeholder="Branch"
                     sx={{
@@ -363,7 +363,7 @@ export function NoDuesForDegree() {
 
                 <TextField
                   type="text"
-                  value={userProfile?.academic_information?.batch}
+                  value={userProfile?.academic_information?.session}
                   sx={{
                     width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
                   }}
@@ -389,24 +389,20 @@ export function NoDuesForDegree() {
                   margin="normal"
                   error={!!errors.Category?.message}
                 >
-                  <TextField label="Category" {...register("Category")} />
-                  {errors.Category && (
-                    <FormHelperText>{errors.Category.message}</FormHelperText>
-                  )}
+                  <TextField  
+                  value={userProfile?.academic_information?.category}
+                  disabled
+                  />
+                 
                 </FormControl>
                 <br />
 
-                <Typography
-                  variant="h6"
-                  gutterBottom
-                  sx={{ marginTop: "30px",fontSize:"1rem" }}
-                >
-                  Self Declaration
-                </Typography>
+              
                 <FormControlLabel
                   control={
                     <Checkbox name="checkbox" {...register("checkbox")} />
                   }
+                  sx={{marginTop:"15px"}}
                   label="I declare that all these information are correct and I have no dues in any department/section as per my knowledge."
                 />
                 {errors.checkbox && (

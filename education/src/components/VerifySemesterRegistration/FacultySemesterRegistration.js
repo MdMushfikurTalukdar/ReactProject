@@ -148,7 +148,7 @@ const FacultySemesterRegistration = () => {
                 <TextField
                   type="text"
                   label="Branch"
-                  value={academic_information?.department}
+                  value={academic_information?.branch}
                   fullWidth
                   disabled
                 />

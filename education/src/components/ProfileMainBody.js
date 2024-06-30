@@ -332,7 +332,73 @@ export const ProfileMainBody = () => {
                   {userProfile?.personal_information?.gender}
                 </Typography>
               </Grid>
+              <Divider
+                sx={{
+                  width: "100%",
+                  margin: "10px 0",
+                  display: {
+                    xs: "none",
+                    sm: "none",
+                    lg: "block",
+                    md: "block",
+                  },
+                }}
+              />
+              <Grid
+                item
+                lg={4}
+                sm={12}
+                xs={12}
+                md={12}
+                sx={{
+                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
+                  marginBottom: "5px",
+                }}
+              >
+                <Typography variant="p" style={{ fontSize: "1.2rem" }}>
+                  Permanent Address
+                </Typography>
+              </Grid>
+              <Grid item lg={4} sm={12} xs={12} md={12}>
+                <Typography variant="p">
+                  {userProfile?.personal_information?.permanent_address}
+                </Typography>
+              </Grid>
+
+              <Divider
+                sx={{
+                  width: "100%",
+                  margin: "10px 0",
+                  display: {
+                    xs: "none",
+                    sm: "none",
+                    lg: "block",
+                    md: "block",
+                  },
+                }}
+              />
+              <Grid
+                item
+                lg={4}
+                sm={12}
+                xs={12}
+                md={12}
+                sx={{
+                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
+                  marginBottom: "5px",
+                }}
+              >
+                <Typography variant="p" style={{ fontSize: "1.2rem" }}>
+                Correspndance Address
+                </Typography>
+              </Grid>
+              <Grid item lg={4} sm={12} xs={12} md={12}>
+                <Typography variant="p">
+                  {userProfile?.personal_information?.correspndance_address}
+                </Typography>
+              </Grid>
             </Grid>
+            
           </Box>
         </Box>
         <Box className="lg:p-10 sm:p-5 xs:p-0 md:p-5 mb-6">
@@ -358,7 +424,7 @@ export const ProfileMainBody = () => {
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
                 <Typography variant="p">
-                  {userProfile?.contact_information?.email}
+                  {userProfile?.contact_information?.student_email}
                 </Typography>
               </Grid>
 
@@ -386,12 +452,12 @@ export const ProfileMainBody = () => {
                 }}
               >
                 <Typography variant="p" style={{ fontSize: "1.2rem" }}>
-                  Phone no.
+                  Student's Phone no.
                 </Typography>
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
                 <Typography variant="p">
-                  {userProfile?.contact_information?.phone_number}
+                  {userProfile?.contact_information?.student_phone_number}
                 </Typography>
               </Grid>
 
@@ -419,188 +485,18 @@ export const ProfileMainBody = () => {
                 }}
               >
                 <Typography variant="p" style={{ fontSize: "1.2rem" }}>
-                  Alternate phone no
+                  Father's phone no
                 </Typography>
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
                 <Typography variant="p">
-                  {userProfile?.contact_information?.alternate_phone_number || (
+                  {userProfile?.contact_information?.fathers_mobile_number || (
                     <p>NA</p>
                   )}
                 </Typography>
               </Grid>
 
-              <Divider
-                sx={{
-                  width: "100%",
-                  margin: "10px 0",
-                  display: {
-                    xs: "none",
-                    sm: "none",
-                    lg: "block",
-                    md: "block",
-                  },
-                }}
-              />
-              <Grid
-                item
-                lg={4}
-                sm={12}
-                xs={12}
-                md={12}
-                sx={{
-                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
-                  marginBottom: "5px",
-                }}
-              >
-                <Typography variant="p" style={{ fontSize: "1.2rem" }}>
-                  Address
-                </Typography>
-              </Grid>
-              <Grid item lg={4} sm={12} xs={12} md={12}>
-                <Typography variant="p">
-                  {userProfile?.contact_information?.address}
-                </Typography>
-              </Grid>
-
-              <Divider
-                sx={{
-                  width: "100%",
-                  margin: "10px 0",
-                  display: {
-                    xs: "none",
-                    sm: "none",
-                    lg: "block",
-                    md: "block",
-                  },
-                }}
-              />
-              <Grid
-                item
-                lg={4}
-                sm={12}
-                xs={12}
-                md={12}
-                sx={{
-                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
-                  marginBottom: "5px",
-                }}
-              >
-                <Typography variant="p" style={{ fontSize: "1.2rem" }}>
-                  City
-                </Typography>
-              </Grid>
-              <Grid item lg={4} sm={12} xs={12} md={12}>
-                <Typography variant="p">
-                  {userProfile?.contact_information?.city}
-                </Typography>
-              </Grid>
-
-              <Divider
-                sx={{
-                  width: "100%",
-                  margin: "10px 0",
-                  display: {
-                    xs: "none",
-                    sm: "none",
-                    lg: "block",
-                    md: "block",
-                  },
-                }}
-              />
-              <Grid
-                item
-                lg={4}
-                sm={12}
-                xs={12}
-                md={12}
-                sx={{
-                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
-                  marginBottom: "5px",
-                }}
-              >
-                <Typography variant="p" style={{ fontSize: "1.2rem" }}>
-                  State
-                </Typography>
-              </Grid>
-              <Grid item lg={4} sm={12} xs={12} md={12}>
-                <Typography variant="p">
-                  {userProfile?.contact_information?.state}
-                </Typography>
-              </Grid>
-
-              <Divider
-                sx={{
-                  width: "100%",
-                  margin: "10px 0",
-                  display: {
-                    xs: "none",
-                    sm: "none",
-                    lg: "block",
-                    md: "block",
-                  },
-                }}
-              />
-              <Grid
-                item
-                lg={4}
-                sm={12}
-                xs={12}
-                md={12}
-                sx={{
-                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
-                  marginBottom: "5px",
-                }}
-              >
-                <Typography variant="p" style={{ fontSize: "1.2rem" }}>
-                  Postal Code
-                </Typography>
-              </Grid>
-              <Grid item lg={4} sm={12} xs={12} md={12}>
-                <Typography variant="p">
-                  {userProfile?.contact_information?.postal_code}
-                </Typography>
-              </Grid>
-
-              <Divider
-                sx={{
-                  width: "100%",
-                  margin: "10px 0",
-                  display: {
-                    xs: "none",
-                    sm: "none",
-                    lg: "block",
-                    md: "block",
-                  },
-                }}
-              />
-              <Grid
-                item
-                lg={4}
-                sm={12}
-                xs={12}
-                md={12}
-                sx={{
-                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
-                  marginBottom: "5px",
-                }}
-              >
-                <Typography variant="p" style={{ fontSize: "1.2rem" }}>
-                  Country
-                </Typography>
-              </Grid>
-              <Grid
-                item
-                lg={4}
-                sm={12}
-                xs={12}
-                md={12}
-                style={{ marginBottom: "5px" }}
-              >
-                <Typography variant="p">
-                  {userProfile?.contact_information?.country}
-                </Typography>
-              </Grid>
+            
             </Grid>
           </Box>
         </Box>
@@ -659,7 +555,7 @@ export const ProfileMainBody = () => {
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
                 <Typography variant="p">
-                  {userProfile?.academic_information?.enrollment_date}
+                  {userProfile?.academic_information?.registration_year}
                 </Typography>
               </Grid>
 
@@ -687,12 +583,12 @@ export const ProfileMainBody = () => {
                 }}
               >
                 <Typography variant="p" style={{ fontSize: "1.2rem" }}>
-                  Program
+                  Year
                 </Typography>
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
                 <Typography variant="p">
-                  {userProfile?.academic_information?.program}
+                  {userProfile?.academic_information?.year}
                 </Typography>
               </Grid>
 
@@ -720,205 +616,7 @@ export const ProfileMainBody = () => {
                 }}
               >
                 <Typography variant="p" style={{ fontSize: "1.2rem" }}>
-                  Major
-                </Typography>
-              </Grid>
-              <Grid item lg={4} sm={12} xs={12} md={12}>
-                <Typography variant="p">
-                  {userProfile?.academic_information?.major}
-                </Typography>
-              </Grid>
-
-              <Divider
-                sx={{
-                  width: "100%",
-                  margin: "10px 0",
-                  display: {
-                    xs: "none",
-                    sm: "none",
-                    lg: "block",
-                    md: "block",
-                  },
-                }}
-              />
-              <Grid
-                item
-                lg={4}
-                sm={12}
-                xs={12}
-                md={12}
-                sx={{
-                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
-                  marginBottom: "5px",
-                }}
-              >
-                <Typography variant="p" style={{ fontSize: "1.2rem" }}>
-                  Current year
-                </Typography>
-              </Grid>
-              <Grid item lg={4} sm={12} xs={12} md={12}>
-                <Typography variant="p">
-                  {userProfile?.academic_information?.current_year}
-                </Typography>
-              </Grid>
-
-              <Divider
-                sx={{
-                  width: "100%",
-                  margin: "10px 0",
-                  display: {
-                    xs: "none",
-                    sm: "none",
-                    lg: "block",
-                    md: "block",
-                  },
-                }}
-              />
-              <Grid
-                item
-                lg={4}
-                sm={12}
-                xs={12}
-                md={12}
-                sx={{
-                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
-                  marginBottom: "5px",
-                }}
-              >
-                <Typography variant="p" style={{ fontSize: "1.2rem" }}>
-                  GPA
-                </Typography>
-              </Grid>
-              <Grid item lg={4} sm={12} xs={12} md={12}>
-                <Typography variant="p">
-                  {userProfile?.academic_information?.gpa}
-                </Typography>
-              </Grid>
-
-              <Divider
-                sx={{
-                  width: "100%",
-                  margin: "10px 0",
-                  display: {
-                    xs: "none",
-                    sm: "none",
-                    lg: "block",
-                    md: "block",
-                  },
-                }}
-              />
-              <Grid
-                item
-                lg={4}
-                sm={12}
-                xs={12}
-                md={12}
-                sx={{
-                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
-                  marginBottom: "5px",
-                }}
-              >
-                <Typography variant="p" style={{ fontSize: "1.2rem" }}>
-                  Batch
-                </Typography>
-              </Grid>
-              <Grid item lg={4} sm={12} xs={12} md={12}>
-                <Typography variant="p">
-                  {userProfile?.academic_information?.batch}
-                </Typography>
-              </Grid>
-
-              <Divider
-                sx={{
-                  width: "100%",
-                  margin: "10px 0",
-                  display: {
-                    xs: "none",
-                    sm: "none",
-                    lg: "block",
-                    md: "block",
-                  },
-                }}
-              />
-              <Grid
-                item
-                lg={4}
-                sm={12}
-                xs={12}
-                md={12}
-                sx={{
-                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
-                  marginBottom: "5px",
-                }}
-              >
-                <Typography variant="p" style={{ fontSize: "1.2rem" }}>
-                  Department
-                </Typography>
-              </Grid>
-              <Grid item lg={4} sm={12} xs={12} md={12}>
-                <Typography variant="p">
-                  {userProfile?.academic_information?.department}
-                </Typography>
-              </Grid>
-
-              <Divider
-                sx={{
-                  width: "100%",
-                  margin: "10px 0",
-                  display: {
-                    xs: "none",
-                    sm: "none",
-                    lg: "block",
-                    md: "block",
-                  },
-                }}
-              />
-              <Grid
-                item
-                lg={4}
-                sm={12}
-                xs={12}
-                md={12}
-                sx={{
-                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
-                  marginBottom: "5px",
-                }}
-              >
-                <Typography variant="p" style={{ fontSize: "1.2rem" }}>
-                  Course_enrolled
-                </Typography>
-              </Grid>
-              <Grid item lg={4} sm={12} xs={12} md={12}>
-                <Typography variant="p">
-                  {userProfile?.academic_information?.course_enrolled}
-                </Typography>
-              </Grid>
-
-              <Divider
-                sx={{
-                  width: "100%",
-                  margin: "10px 0",
-                  display: {
-                    xs: "none",
-                    sm: "none",
-                    lg: "block",
-                    md: "block",
-                  },
-                }}
-              />
-              <Grid
-                item
-                lg={4}
-                sm={12}
-                xs={12}
-                md={12}
-                sx={{
-                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
-                  marginBottom: "5px",
-                }}
-              >
-                <Typography variant="p" style={{ fontSize: "1.2rem" }}>
-                  Country
+                 Branch
                 </Typography>
               </Grid>
               <Grid
@@ -930,9 +628,551 @@ export const ProfileMainBody = () => {
                 style={{ marginBottom: "20px" }}
               >
                 <Typography variant="p">
-                  {userProfile?.contact_information?.country}
+                  {userProfile?.academic_information?.branch}
                 </Typography>
               </Grid>
+            
+
+
+
+
+              <Divider
+                sx={{
+                  width: "100%",
+                  margin: "10px 0",
+                  display: {
+                    xs: "none",
+                    sm: "none",
+                    lg: "block",
+                    md: "block",
+                  },
+                }}
+              />
+              <Grid
+                item
+                lg={4}
+                sm={12}
+                xs={12}
+                md={12}
+                sx={{
+                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
+                  marginBottom: "5px",
+                }}
+              >
+                <Typography variant="p" style={{ fontSize: "1.2rem" }}>
+                  Last Qualification
+                </Typography>
+              </Grid>
+              <Grid item lg={4} sm={12} xs={12} md={12}>
+                <Typography variant="p">
+                  {userProfile?.academic_information?.last_qualification}
+                </Typography>
+              </Grid>
+
+              <Divider
+                sx={{
+                  width: "100%",
+                  margin: "10px 0",
+                  display: {
+                    xs: "none",
+                    sm: "none",
+                    lg: "block",
+                    md: "block",
+                  },
+                }}
+              />
+              <Grid
+                item
+                lg={4}
+                sm={12}
+                xs={12}
+                md={12}
+                sx={{
+                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
+                  marginBottom: "5px",
+                }}
+              >
+                <Typography variant="p" style={{ fontSize: "1.2rem" }}>
+                  School
+                </Typography>
+              </Grid>
+              <Grid item lg={4} sm={12} xs={12} md={12}>
+                <Typography variant="p">
+                  {userProfile?.academic_information?.school}
+                </Typography>
+              </Grid>
+
+              <Divider
+                sx={{
+                  width: "100%",
+                  margin: "10px 0",
+                  display: {
+                    xs: "none",
+                    sm: "none",
+                    lg: "block",
+                    md: "block",
+                  },
+                }}
+              />
+              <Grid
+                item
+                lg={4}
+                sm={12}
+                xs={12}
+                md={12}
+                sx={{
+                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
+                  marginBottom: "5px",
+                }}
+              >
+                <Typography variant="p" style={{ fontSize: "1.2rem" }}>
+                  Board
+                </Typography>
+              </Grid>
+              <Grid item lg={4} sm={12} xs={12} md={12}>
+                <Typography variant="p">
+                  {userProfile?.academic_information?.board}
+                </Typography>
+              </Grid>
+
+              <Divider
+                sx={{
+                  width: "100%",
+                  margin: "10px 0",
+                  display: {
+                    xs: "none",
+                    sm: "none",
+                    lg: "block",
+                    md: "block",
+                  },
+                }}
+              />
+              <Grid
+                item
+                lg={4}
+                sm={12}
+                xs={12}
+                md={12}
+                sx={{
+                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
+                  marginBottom: "5px",
+                }}
+              >
+                <Typography variant="p" style={{ fontSize: "1.2rem" }}>
+                  Merit Serial Number
+                </Typography>
+              </Grid>
+              <Grid item lg={4} sm={12} xs={12} md={12}>
+                <Typography variant="p">
+                  {userProfile?.academic_information?.merir_serial_number}
+                </Typography>
+              </Grid>
+
+              <Divider
+                sx={{
+                  width: "100%",
+                  margin: "10px 0",
+                  display: {
+                    xs: "none",
+                    sm: "none",
+                    lg: "block",
+                    md: "block",
+                  },
+                }}
+              />
+              <Grid
+                item
+                lg={4}
+                sm={12}
+                xs={12}
+                md={12}
+                sx={{
+                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
+                  marginBottom: "5px",
+                }}
+              >
+                <Typography variant="p" style={{ fontSize: "1.2rem" }}>
+                  Category
+                </Typography>
+              </Grid>
+              <Grid item lg={4} sm={12} xs={12} md={12}>
+                <Typography variant="p">
+                  {userProfile?.academic_information?.category}
+                </Typography>
+              </Grid>
+
+              <Divider
+                sx={{
+                  width: "100%",
+                  margin: "10px 0",
+                  display: {
+                    xs: "none",
+                    sm: "none",
+                    lg: "block",
+                    md: "block",
+                  },
+                }}
+              />
+              <Grid
+                item
+                lg={4}
+                sm={12}
+                xs={12}
+                md={12}
+                sx={{
+                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
+                  marginBottom: "5px",
+                }}
+              >
+                <Typography variant="p" style={{ fontSize: "1.2rem" }}>
+                  College Name
+                </Typography>
+              </Grid>
+              <Grid item lg={4} sm={12} xs={12} md={12}>
+                <Typography variant="p">
+                  {userProfile?.academic_information?.college_name}
+                </Typography>
+              </Grid>
+
+              <Divider
+                sx={{
+                  width: "100%",
+                  margin: "10px 0",
+                  display: {
+                    xs: "none",
+                    sm: "none",
+                    lg: "block",
+                    md: "block",
+                  },
+                }}
+              />
+              <Grid
+                item
+                lg={4}
+                sm={12}
+                xs={12}
+                md={12}
+                sx={{
+                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
+                  marginBottom: "5px",
+                }}
+              >
+                <Typography variant="p" style={{ fontSize: "1.2rem" }}>
+                  Date Of Admission
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                lg={4}
+                sm={12}
+                xs={12}
+                md={12}
+                style={{ marginBottom: "20px" }}
+              >
+                <Typography variant="p">
+                  {userProfile?.academic_information?.date_of_admission}
+                </Typography>
+              </Grid>
+
+
+              <Divider
+                sx={{
+                  width: "100%",
+                  margin: "10px 0",
+                  display: {
+                    xs: "none",
+                    sm: "none",
+                    lg: "block",
+                    md: "block",
+                  },
+                }}
+              />
+
+              <Grid
+                item
+                lg={4}
+                sm={12}
+                xs={12}
+                md={12}
+                sx={{
+                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
+                  marginBottom: "5px",
+                }}
+              >
+                <Typography variant="p" style={{ fontSize: "1.2rem" }}>
+                  Session
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                lg={4}
+                sm={12}
+                xs={12}
+                md={12}
+                style={{ marginBottom: "20px" }}
+              >
+                <Typography variant="p">
+                  {userProfile?.academic_information?.session}
+                </Typography>
+              </Grid>
+
+              <Divider
+                sx={{
+                  width: "100%",
+                  margin: "10px 0",
+                  display: {
+                    xs: "none",
+                    sm: "none",
+                    lg: "block",
+                    md: "block",
+                  },
+                }}
+              />
+              <Grid
+                item
+                lg={4}
+                sm={12}
+                xs={12}
+                md={12}
+                sx={{
+                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
+                  marginBottom: "5px",
+                }}
+              >
+                <Typography variant="p" style={{ fontSize: "1.2rem" }}>
+                University Registration Number
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                lg={4}
+                sm={12}
+                xs={12}
+                md={12}
+                style={{ marginBottom: "20px" }}
+              >
+                <Typography variant="p">
+                  {userProfile?.academic_information?.university_reg_no}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Box>
+        </Box>
+
+        <Box className="lg:p-10 sm:p-5 xs:p-0 md:p-5 mb-6">
+          <Typography variant="p" className="text-2xl mx-auto mb-5">
+            TC Information
+          </Typography>
+          <Box className="bg-gray-100 p-3 rounded-2xl mt-6">
+            <Grid container className="mt-3">
+              <Grid
+                item
+                lg={4}
+                sm={12}
+                xs={12}
+                md={12}
+                sx={{
+                  marginTop: { xs: "0px", sm: "0px", md: "0px", lg: "0px" },
+                  marginBottom: "5px",
+                }}
+              >
+                <Typography variant="p" style={{ fontSize: "1.2rem" }}>
+                  TC/CL no.
+                </Typography>
+              </Grid>
+              <Grid item lg={4} sm={12} xs={12} md={12}>
+                <Typography variant="p">
+                  {userProfile?.tc_information?.TC_or_CL_no}
+                </Typography>
+              </Grid>
+
+              <Divider
+                sx={{
+                  width: "100%",
+                  margin: "10px 0",
+                  display: {
+                    xs: "none",
+                    sm: "none",
+                    lg: "block",
+                    md: "block",
+                  },
+                }}
+              />
+              <Grid
+                item
+                lg={4}
+                sm={12}
+                xs={12}
+                md={12}
+                sx={{
+                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
+                  marginBottom: "5px",
+                }}
+              >
+                <Typography variant="p" style={{ fontSize: "1.2rem" }}>
+                Issuing Date TC
+                </Typography>
+              </Grid>
+              <Grid item lg={4} sm={12} xs={12} md={12}>
+                <Typography variant="p">
+                  {userProfile?.tc_information?.issuing_date_tc}
+                </Typography>
+              </Grid>
+
+              <Divider
+                sx={{
+                  width: "100%",
+                  margin: "10px 0",
+                  display: {
+                    xs: "none",
+                    sm: "none",
+                    lg: "block",
+                    md: "block",
+                  },
+                }}
+              />
+              <Grid
+                item
+                lg={4}
+                sm={12}
+                xs={12}
+                md={12}
+                sx={{
+                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
+                  marginBottom: "5px",
+                }}
+              >
+                <Typography variant="p" style={{ fontSize: "1.2rem" }}>
+                Purpose
+                </Typography>
+              </Grid>
+              <Grid item lg={4} sm={12} xs={12} md={12}>
+                <Typography variant="p">
+                  {userProfile?.tc_information?.purpose || (
+                    <p>NA</p>
+                  )}
+                </Typography>
+              </Grid>
+              <Divider
+                sx={{
+                  width: "100%",
+                  margin: "10px 0",
+                  display: {
+                    xs: "none",
+                    sm: "none",
+                    lg: "block",
+                    md: "block",
+                  },
+                }}
+              />
+              <Grid
+                item
+                lg={4}
+                sm={12}
+                xs={12}
+                md={12}
+                sx={{
+                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
+                  marginBottom: "5px",
+                }}
+              >
+                <Typography variant="p" style={{ fontSize: "1.2rem" }}>
+                Character Certificate Issued
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                lg={4}
+                sm={12}
+                xs={12}
+                md={12}
+                style={{ marginBottom: "20px" }}
+              >
+                <Typography variant="p">
+                  {userProfile?.tc_information?.character_certificate_issued}
+                </Typography>
+              </Grid>
+              <Divider
+                sx={{
+                  width: "100%",
+                  margin: "10px 0",
+                  display: {
+                    xs: "none",
+                    sm: "none",
+                    lg: "block",
+                    md: "block",
+                  },
+                }}
+              />
+              <Grid
+                item
+                lg={4}
+                sm={12}
+                xs={12}
+                md={12}
+                sx={{
+                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
+                  marginBottom: "5px",
+                }}
+              >
+                <Typography variant="p" style={{ fontSize: "1.2rem" }}>
+                Character Certificate No.
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                lg={4}
+                sm={12}
+                xs={12}
+                md={12}
+                style={{ marginBottom: "20px" }}
+              >
+                <Typography variant="p">
+                  {userProfile?.tc_information?.character_certificate_no}
+                </Typography>
+              </Grid>
+            
+              <Divider
+                sx={{
+                  width: "100%",
+                  margin: "10px 0",
+                  display: {
+                    xs: "none",
+                    sm: "none",
+                    lg: "block",
+                    md: "block",
+                  },
+                }}
+              />
+              <Grid
+                item
+                lg={4}
+                sm={12}
+                xs={12}
+                md={12}
+                sx={{
+                  marginTop: { xs: "15px", sm: "15px", md: "15px", lg: "0px" },
+                  marginBottom: "5px",
+                }}
+              >
+                <Typography variant="p" style={{ fontSize: "1.2rem" }}>
+                  Issuing Date Creation
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                lg={4}
+                sm={12}
+                xs={12}
+                md={12}
+                style={{ marginBottom: "20px" }}
+              >
+                <Typography variant="p">
+                  {userProfile?.tc_information?.issuing_date_cr}
+                </Typography>
+              </Grid>
+            
+            
             </Grid>
           </Box>
         </Box>

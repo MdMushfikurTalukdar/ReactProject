@@ -2,7 +2,11 @@ import {
   Box,
   Button,
   Divider,
+  FormControl,
+  FormControlLabel,
   Grid,
+  Radio,
+  RadioGroup,
   TextField,
   Typography,
 } from "@mui/material";
@@ -11,7 +15,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { enqueueSnackbar } from "notistack";
@@ -20,76 +24,113 @@ import NavbarNew from "../components/NavbarNew";
 import { CiEdit } from "react-icons/ci";
 
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+const phoneNumberRegex = /^\d{10}$/;
 
 const schema = yup.object().shape({
   first_name: yup.string().required("First name is required"),
   last_name: yup.string().required("Last name is required"),
   father_name: yup.string().required("Father name is required"),
   middle_name: yup.string(),
-  gender: yup.string().required("Gender is required"),
-  email: yup
+  gender: yup.string(),
+  student_email: yup
     .string()
     .email("Invalid email format")
     .test("valid-email", "Invalid email format", (value) =>
       emailValidator.validate(value)
     ),
-  phone_number: yup
-    .number()
-    .min(1000000000, "phone no. should be of 10 digit")
-    .max(9999999999, "phone no. should be of 10 digits")
-    .required("Phone number is required"),
-  alternate_phone_number: yup.string(),
+  student_phone_number: yup
+    .string()
+    .test(
+      "valid-phoneNumber",
+      "Invalid phone number, must be exactly 10 digits",
+      (value) => !value || phoneNumberRegex.test(value)
+    ),
+
   date_of_birth: yup
     .string()
     .matches(
       dateRegex,
       "Date has wrong format. Use one of these formats instead: YYYY-MM-DD."
-    )
-    .required("Date is required."),
-  address: yup.string().required("Address is required"),
-  city: yup.string().required("City is required"),
-  state: yup.string().required("State is required"),
-  postal_code: yup
+    ),
+  permanent_address: yup.string(),
+  isCorrespndance_same: yup.string(),
+  correspndance_address: yup.string(),
+  fathers_mobile_number: yup
+    .string()
+    .test(
+      "valid-phoneNumber",
+      "Invalid phone number, must be exactly 10 digits",
+      (value) => !value || phoneNumberRegex.test(value)
+    ),
+
+  last_qualification: yup
+    .string()
+    .test(
+      "is-valid-last_qualification",
+      "Values must be between Matric, Intermediate, Polytechnic",
+      (value) =>
+        !value || ["Matric", "Intermediate", "Polytechnic"].includes(value)
+    ),
+
+  registration_year: yup
     .number()
-    .min(100000, "should contain 6 digits")
-    .required("Postal code is required"),
-  country: yup.string().required("Country is required"),
-  enrollment_date: yup
+    .integer("Registration year must be an integer")
+    .min(1000, "Registration year must be a of 4 digit")
+    .max(9999, "Registration year must be a of 4 digit")
+    .required("Registration year is required"),
+
+  year: yup
+    .number()
+    .integer("Registration year must be an integer")
+    .min(1000, "year must be a of 4 digit")
+    .max(9999, "year must be a of 4 digit")
+    .required("year is required"),
+
+  school: yup.string(),
+  board: yup
+    .string()
+    .test(
+      "is-valid-board",
+      "Values must be between CBSE, ICSE, BSEB, Others",
+      (value) => !value || ["CBSE", "ICSE", "BSEB", "Others"].includes(value)
+    ),
+  branch: yup.string().required("Branch is required"),
+  merit_serial_number: yup.string(),
+  category: yup.string().required("category is required"),
+  college_name: yup.string().required("College Name is required"),
+  date_of_admission: yup
     .string()
     .matches(
       dateRegex,
-      "Enrollment date has wrong format. Use one of these formats instead: YYYY-MM-DD."
+      "Date has wrong format. Use one of these formats instead: YYYY-MM-DD."
     )
-    .required("Date is required."),
-  program: yup.string().required("Program is required"),
-  major: yup.string().required("Major is required"),
-  department: yup.string().required("Department is required"),
-  batch: yup
+    .required("Date Of Admission is required"),
+  session: yup.string(),
+  university_reg_no: yup.string(),
+  TC_or_CL_no: yup.string(),
+  issuing_date_tc: yup
     .string()
-    .required("Batch is required")
-    .test("batch_valid", "Format should be like YYYY-YYYY", (value) => {
-      console.log(value);
-      if (!value.includes("-")) {
-        return false;
-      }
-      let number1 = value.split("-")[0];
-      let number2 = value.split("-")[1];
-
-      if (number1.length !== 4 && number2.length !== 4) {
-        return false;
-      }
-      if (isNaN(number1) || isNaN(number2)) {
-        return false;
-      }
-
-      return number2 - number1 === 4 || number2 - number1 === 3;
-    }),
-  current_year: yup
+    .test(
+      "is-valid-date",
+      "Date has wrong format. Use one of these formats instead: YYYY-MM-DD.",
+      (value) => !value || dateRegex.test(value)
+    ),
+  purpose: yup.string(),
+  character_certificate_issued: yup
     .string()
-    .matches(/^(1|2|3|4)$/, "Current year should be 1, 2, 3, or 4")
-    .required("Current year is required"),
-  gpa: yup.number().required("GPA is required"),
-  course_enrolled: yup.number().required("Course is required"),
+    .test(
+      "is_valid_ character_certificate_issued",
+      "Only accept true or false",
+      (value) => !value || ["true", "false"].includes(value)
+    ),
+  character_certificate_no: yup.string(),
+  issuing_date_cr: yup
+    .string()
+    .test(
+      "is-valid-date",
+      "Date has wrong format. Use one of these formats instead: YYYY-MM-DD.",
+      (value) => !value || dateRegex.test(value)
+    ),
 });
 
 export const EditProfile = () => {
@@ -113,10 +154,24 @@ export const EditProfile = () => {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
   });
+
+  const [isCorrespndanceSame, setIsCorrespndanceSame] = useState();
+  const permanentAddress = watch("permanent_address");
+
+  useEffect(() => {
+    if (isCorrespndanceSame) {
+      setValue("correspndance_address", permanentAddress);
+    }
+  }, [isCorrespndanceSame, permanentAddress, setValue]);
+
+  const handleRadioChange = (event) => {
+    setIsCorrespndanceSame(event.target.value === "true");
+  };
 
   console.log(errors);
   const [userProfile, setUserProfile] = useState([]);
@@ -138,6 +193,9 @@ export const EditProfile = () => {
       .then((response) => {
         console.log(response.data);
         setUserProfile(response?.data);
+        setIsCorrespndanceSame(
+          response?.data?.personal_information?.isCorrespndance_same
+        );
         setValue(
           "first_name",
           response.data.personal_information?.first_name || ""
@@ -161,40 +219,87 @@ export const EditProfile = () => {
         setValue("gender", response.data.personal_information?.gender || "");
         setValue("email", response.data.contact_information?.email || "");
         setValue(
-          "phone_number",
-          response.data.contact_information?.phone_number || ""
+          "permanent_address",
+          response.data.personal_information?.permanent_address || ""
         );
         setValue(
-          "alternate_phone_number",
-          response.data.contact_information?.alternate_phone_number || ""
+          "isCorrespndance_same",
+          response.data.personal_information?.isCorrespndance_same || "false"
         );
-        setValue("address", response.data.contact_information?.address || "");
-        setValue("city", response.data.contact_information?.city || "");
-        setValue("state", response.data.contact_information?.state || "");
         setValue(
-          "postal_code",
-          response.data.contact_information?.postal_code || ""
+          "correspndance_address",
+          response.data.personal_information?.correspndance_address || ""
         );
-        setValue("country", response.data.contact_information?.country || "");
         setValue(
-          "enrollment_date",
-          response.data.academic_information?.enrollment_date || ""
+          "permanent_address",
+          response.data.personal_information?.permanent_address || ""
         );
-        setValue("program", response.data.academic_information?.program || "");
-        setValue("major", response.data.academic_information?.major || "");
         setValue(
-          "current_year",
-          response.data.academic_information?.current_year || ""
+          "student_email",
+          response.data.contact_information?.student_email || ""
         );
-        setValue("gpa", response.data.academic_information?.gpa || "");
         setValue(
-          "department",
-          response.data.academic_information?.department || ""
+          "student_phone_number",
+          response.data.contact_information?.student_phone_number || ""
         );
-        setValue("batch", response.data.academic_information?.batch || "");
         setValue(
-          "course_enrolled",
-          response.data.academic_information?.course_enrolled || ""
+          "fathers_mobile_number",
+          response.data.contact_information?.fathers_mobile_number || ""
+        );
+
+        setValue(
+          "registration_year",
+          response.data.academic_information?.registration_year || ""
+        );
+        setValue("year", response.data.academic_information?.year || "");
+        setValue(
+          "last_qualification",
+          response.data.academic_information?.last_qualification || ""
+        );
+        setValue("school", response.data.academic_information?.school || "");
+        setValue("board", response.data.academic_information?.board || "");
+        setValue("branch", response.data.academic_information?.branch || "");
+        setValue(
+          "merit_serial_number",
+          response.data.academic_information?.merit_serial_number || ""
+        );
+        setValue(
+          "category",
+          response.data.academic_information?.category || ""
+        );
+        setValue(
+          "college_name",
+          response.data.academic_information?.college_name || ""
+        );
+        setValue(
+          "date_of_admission",
+          response.data.academic_information?.date_of_admission || ""
+        );
+        setValue("session", response.data.academic_information?.session || "");
+        setValue(
+          "university_reg_no",
+          response.data.academic_information?.university_reg_no || ""
+        );
+        setValue(
+          "TC_or_CL_no",
+          response.data.tc_information?.TC_or_CL_no || ""
+        );
+        setValue(
+          "issuing_date_tc",
+          response.data.tc_information?.issuing_date_tc || ""
+        );
+        setValue("purpose", response.data.tc_information?.purpose || "");
+        setValue(
+          "character_certificate_issued",
+          response.data.tc_information?.character_certificate_issued || ""
+        );
+        setValue(
+          "character_certificate_no",
+          response.data.tc_information?.character_certificate_no || ""
+        );
+        setValue(
+          "issuing_date_cr",
+          response.data.tc_information?.issuing_date_cr || ""
         );
       })
 
@@ -215,39 +320,81 @@ export const EditProfile = () => {
     formData.append("personal_information.middle_name", data.middle_name);
     formData.append("personal_information.date_of_birth", data.date_of_birth);
     formData.append("personal_information.gender", data.gender);
+    formData.append(
+      "personal_information.permanent_address",
+      data.permanent_address
+    );
+    formData.append(
+      "personal_information.isCorrespndance_same",
+      isCorrespndanceSame
+    );
+    formData.append(
+      "personal_information.correspndance_address",
+      data.correspndance_address
+    );
+
     if (file) {
       formData.append("personal_information.profile_picture", file);
     }
 
     // Append contact information
-    formData.append("contact_information.email", data.email);
-    formData.append("contact_information.phone_number", data.phone_number);
+    formData.append("contact_information.student_email", data.student_email);
     formData.append(
-      "contact_information.alternate_phone_number",
-      data.alternate_phone_number
+      "contact_information.student_phone_number",
+      data.student_phone_number
     );
-    formData.append("contact_information.address", data.address);
-    formData.append("contact_information.city", data.city);
-    formData.append("contact_information.state", data.state);
-    formData.append("contact_information.postal_code", data.postal_code);
-    formData.append("contact_information.country", data.country);
+    formData.append(
+      "contact_information.fathers_mobile_number",
+      data.fathers_mobile_number
+    );
 
     // Append academic information
     formData.append(
-      "academic_information.enrollment_date",
-      data.enrollment_date
+      "academic_information.registration_number",
+      data.registration_number
     );
-    formData.append("academic_information.program", data.program);
-    formData.append("academic_information.major", data.major);
-    formData.append("academic_information.current_year", data.current_year);
-    formData.append("academic_information.gpa", data.gpa);
-    formData.append("academic_information.department", data.department);
-    formData.append("academic_information.batch", data.batch);
     formData.append(
-      "academic_information.course_enrolled",
-      data.course_enrolled
+      "academic_information.registration_year",
+      data.registration_year
+    );
+    formData.append("academic_information.year", data.year);
+    formData.append(
+      "academic_information.last_qualification",
+      data.last_qualification
+    );
+    formData.append("academic_information.school", data.school);
+    formData.append("academic_information.board", data.board);
+    formData.append("academic_information.branch", data.branch);
+    formData.append(
+      "academic_information.merit_serial_number",
+      data.merit_serial_number
+    );
+    formData.append("academic_information.category", data.category);
+    formData.append("academic_information.college_name", data.college_name);
+    formData.append(
+      "academic_information.date_of_admission",
+      data.date_of_admission
+    );
+    formData.append("academic_information.session", data.session);
+    formData.append(
+      "academic_information.university_reg_no",
+      data.university_reg_no
     );
 
+    formData.append("tc_information.TC_or_CL_no", data.TC_or_CL_no);
+    formData.append("tc_information.issuing_date_tc", data.issuing_date_tc);
+    formData.append("tc_information.purpose", data.purpose);
+    formData.append(
+      "tc_information.character_certificate_issued",
+      data.character_certificate_issued
+    );
+    formData.append(
+      "tc_information.character_certificate_no",
+      data.character_certificate_no
+    );
+    formData.append("tc_information.issuing_date_cr", data.issuing_date_cr);
+
+    console.log(isCorrespndanceSame);
     let config = {
       method: "put",
       maxBodyLength: Infinity,
@@ -284,547 +431,822 @@ export const EditProfile = () => {
     setImgPreview(url);
   };
   return (
-    <Box style={{ fontFamily: "Math", minHeight: "100vh" }}>
-      <NavbarNew />
-      <Grid container>
-        <Grid item xs={12} sm={12} md={12} lg={12}>
-          <Box
-            className=" mt-3 w-full lg:p-10 sm:p-5 p-5"
-            style={{ height: "calc(100vh - 5px)", overflowY: "scroll" }}
-          >
-            <Box>
-              <Typography variant="p" className="text-xl">
-                Profile
-              </Typography>
-            </Box>
+    <Box className="logout-container">
+      <div className="circle circle1"></div>
+      <div className="rectangle circle2"></div>
+      <div className="circle circle3"></div>
+      <div className="rectangle circle4"></div>
+      <div className="rectangle circle5"></div>
+      <div className="circle circle6"></div>
+      <Box
+        className="z-10"
+        style={{ height: "calc(100vh - 2px)", overflowY: "scroll" }}
+      >
+      <Box >
+        <NavbarNew />
+        <Grid container>
+          <Grid item xs={12} sm={12} md={12} lg={12}>
+            <Box
+              className=" mt-3 w-full lg:p-10 sm:p-5 p-5"
+              style={{ height: "calc(100vh - 5px)", overflowY: "scroll" }}
+            >
+              <Box>
+                <Typography variant="p" className="text-xl">
+                  Profile
+                </Typography>
+              </Box>
 
-            <Box className="text-center">
-              <label component="label">
-                {!imgPreview &&
-                userProfile?.personal_information?.profile_picture !== null ? (
-                  <img
-                    src={userProfile?.personal_information?.profile_picture}
-                    alt="Loading..."
-                    style={{
-                      width: "150px",
-                      height: "150px",
-                      margin: "10px 0px 10px 40px",
-                      borderRadius: "50%",
-                    }}
+              <Box className="text-center">
+                <label component="label">
+                  {!imgPreview &&
+                  userProfile?.personal_information?.profile_picture !==
+                    null ? (
+                    <img
+                      src={userProfile?.personal_information?.profile_picture}
+                      alt="Loading..."
+                      style={{
+                        width: "150px",
+                        height: "150px",
+                        margin: "10px 0px 10px 40px",
+                        borderRadius: "50%",
+                      }}
+                    />
+                  ) : imgPreview ? (
+                    <img
+                      src={imgPreview}
+                      alt="description"
+                      style={{
+                        width: "150px",
+                        height: "150px",
+                        margin: "10px 0px 10px 40px",
+                        borderRadius: "50%",
+                      }}
+                    />
+                  ) : (
+                    <img
+                      src="https://mui.com/static/images/avatar/2.jpg"
+                      alt=""
+                      className="lg:w-[10%] w-[40%] sm:w-[25%] md:w-[15%] h-auto text-center"
+                      style={{ borderRadius: "50%" }}
+                    />
+                  )}
+                  <CiEdit style={{ fontSize: "1.2rem" }} />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    style={{ display: "none" }}
+                    onChange={handleFileChange}
                   />
-                ) : imgPreview ? (
-                  <img
-                    src={imgPreview}
-                    alt="description"
-                    style={{
-                      width: "150px",
-                      height: "150px",
-                      margin: "10px 0px 10px 40px",
-                      borderRadius: "50%",
-                    }}
-                  />
-                ) : (
-                  <img
-                    src="https://mui.com/static/images/avatar/2.jpg"
-                    alt=""
-                    className="lg:w-[10%] w-[40%] sm:w-[25%] md:w-[15%] h-auto text-center"
-                    style={{ borderRadius: "50%" }}
-                  />
-                )}
-                <CiEdit style={{ fontSize: "1.2rem" }} />
-                <input
-                  type="file"
-                  accept="image/*"
-                  style={{ display: "none" }}
-                  onChange={handleFileChange}
-                />
-              </label>
-            </Box>
+                </label>
+              </Box>
 
-            <form onSubmit={handleSubmit(UpdateSubmit)}>
-              <Box className="lg:p-10 sm:p-5 p-5">
-                <div className="flex justify-between">
-                  <Box className="flex justify-between">
-                    <Typography variant="p text-xl mx-auto mb-10">
-                      Basic details
-                    </Typography>
+              <form onSubmit={handleSubmit(UpdateSubmit)}>
+                <Box className="lg:p-10 sm:p-5 xs:p-0 md:p-5 mb-4">
+                  <div className="flex justify-between">
+                    <Box className="flex justify-between">
+                      <Typography variant="p text-xl mx-auto mb-10">
+                        Basic details
+                      </Typography>
+                    </Box>
+                  </div>
+                  <Box className="bg-gray-100 p-3 rounded-2xl mt-6">
+                    <Grid container className="mt-3">
+                      <Grid
+                        item
+                        lg={4}
+                        sm={12}
+                        xs={12}
+                        md={12}
+                        sx={{ marginTop: "0px", marginBottom: "5px" }}
+                      >
+                        <Typography variant="p" style={{ fontSize: "1.2rem" }}>
+                          Registration No.
+                        </Typography>
+                      </Grid>
+                      <Grid item lg={4} sm={12} xs={12} md={12}>
+                        {userProfile.personal_information?.registration_number}
+                      </Grid>
+
+                      <Divider style={{ width: "100%", margin: "10px 0" }} />
+                      <Grid
+                        item
+                        lg={4}
+                        sm={12}
+                        xs={12}
+                        md={12}
+                        style={{ marginTop: "10px" }}
+                      >
+                        <Typography variant="p">First Name</Typography>
+                      </Grid>
+                      <Grid item lg={4} sm={12} xs={12} md={12}>
+                        <TextField
+                          type="text"
+                          {...register("first_name")}
+                          fullWidth
+                          error={!!errors.first_name}
+                          helperText={errors.first_name?.message}
+                          sx={{marginTop:"10px"}}
+                        />
+                      </Grid>
+                      <Divider style={{ width: "100%", margin: "10px 0" }} />
+                      <Grid
+                        item
+                        lg={4}
+                        sm={12}
+                        xs={12}
+                        md={12}
+                        style={{ marginTop: "10px" }}
+                      >
+                        <Typography variant="p">Middle Name</Typography>
+                      </Grid>
+                      <Grid item lg={4} sm={12} xs={12} md={12}>
+                        <TextField
+                          type="text"
+                          sx={{marginTop:"10px"}}
+                          fullWidth
+                          {...register("middle_name")}
+                          error={!!errors.middle_name}
+                          helperText={errors.middle_name?.message}
+                        />
+                      </Grid>
+
+                      <Divider style={{ width: "100%", margin: "10px 0" }} />
+                      <Grid
+                        item
+                        lg={4}
+                        sm={12}
+                        xs={12}
+                        md={12}
+                        style={{ marginTop: "10px" }}
+                      >
+                        <Typography variant="p">Last Name</Typography>
+                      </Grid>
+                      <Grid item lg={4} sm={12} xs={12} md={12}>
+                        <TextField
+                          type="text"
+                          {...register("last_name")}
+                          fullWidth
+                          sx={{marginTop:"10px"}}
+                          error={!!errors.last_name}
+                          helperText={errors.last_name?.message}
+                        />
+                      </Grid>
+                      <Divider style={{ width: "100%", margin: "10px 0" }} />
+                      <Grid
+                        item
+                        lg={4}
+                        sm={12}
+                        xs={12}
+                        md={12}
+                        style={{ marginTop: "10px" }}
+                      >
+                        <Typography variant="p">Father Name</Typography>
+                      </Grid>
+                      <Grid item lg={4} sm={12} xs={12} md={12}>
+                        <TextField
+                          type="text"
+                          fullWidth
+                          sx={{marginTop:"10px"}}
+                          {...register("father_name")}
+                          error={!!errors.father_name}
+                          helperText={errors.father_name?.message}
+                        />
+                      </Grid>
+
+                      <Divider style={{ width: "100%", margin: "10px 0" }} />
+
+                      <Grid
+                        item
+                        lg={4}
+                        sm={12}
+                        xs={12}
+                        md={12}
+                        style={{ marginTop: "10px" }}
+                      >
+                        <Typography variant="p">DOB</Typography>
+                      </Grid>
+                      <Grid item lg={4} sm={12} xs={12} md={12}>
+                        <TextField
+                          type="text"
+                          fullWidth
+                          sx={{marginTop:"10px"}}
+                          {...register("date_of_birth")}
+                          error={!!errors.date_of_birth}
+                          helperText={errors.date_of_birth?.message}
+                        />
+                      </Grid>
+
+                      <Divider style={{ width: "100%", margin: "10px 0" }} />
+                      <Grid
+                        item
+                        lg={4}
+                        sm={12}
+                        xs={12}
+                        md={12}
+                        style={{ marginTop: "10px" }}
+                      >
+                        <Typography variant="p">Gender</Typography>
+                      </Grid>
+                      <Grid item lg={4} sm={12} xs={12} md={12}>
+                        <TextField
+                          type="text"
+                          fullWidth
+                          sx={{marginTop:"10px"}}
+                          {...register("gender")}
+                          error={!!errors.gender}
+                          helperText={errors.gender?.message}
+                        />
+                      </Grid>
+                      <Divider style={{ width: "100%", margin: "10px 0" }} />
+                      <Grid
+                        item
+                        lg={4}
+                        sm={12}
+                        xs={12}
+                        md={12}
+                        style={{ marginTop: "10px" }}
+                      >
+                        <Typography variant="p">Permanent Address</Typography>
+                      </Grid>
+                      <Grid item lg={4} sm={12} xs={12} md={12}>
+                        <TextField
+                          type="text"
+                          fullWidth
+                          sx={{marginTop:"10px"}}
+                          {...register("permanent_address")}
+                          error={!!errors.permanent_address}
+                          helperText={errors.permanent_address?.message}
+                        />
+                      </Grid>
+                      <Divider style={{ width: "100%", margin: "10px 0" }} />
+                      <Grid
+                        item
+                        lg={4}
+                        sm={12}
+                        xs={12}
+                        md={12}
+                        style={{ marginTop: "10px" }}
+                      >
+                        <Typography variant="p">
+                          Is Correspndance same
+                        </Typography>
+                      </Grid>
+                      <Grid item lg={4} sm={12} xs={12} md={12}>
+                        <FormControl component="fieldset">
+                          <RadioGroup
+                            row
+                            {...register("isCorrespondence_same")}
+                            value={isCorrespndanceSame ? "true" : "false"}
+                            onChange={handleRadioChange}
+                          >
+                            <FormControlLabel
+                              value="true"
+                              control={<Radio />}
+                              label="Yes"
+                            />
+                            <FormControlLabel
+                              value="false"
+                              control={<Radio />}
+                              label="No"
+                            />
+                          </RadioGroup>
+                        </FormControl>
+                      </Grid>
+                      <Divider style={{ width: "100%", margin: "10px 0" }} />
+                      <Grid
+                        item
+                        lg={4}
+                        sm={12}
+                        xs={12}
+                        md={12}
+                        style={{ marginTop: "10px" }}
+                      >
+                        <Typography variant="p">
+                          Correspndance Address
+                        </Typography>
+                      </Grid>
+                      <Grid item lg={4} sm={12} xs={12} md={12}>
+                        <TextField
+                          type="text"
+                          fullWidth
+                          sx={{marginTop:"10px"}}
+                          {...register("correspndance_address")}
+                          error={!!errors.correspndance_address}
+                          helperText={errors.correspndance_address?.message}
+                          disabled={isCorrespndanceSame}
+                        />
+                      </Grid>
+                    </Grid>
                   </Box>
-                </div>
-                <Grid container className="mt-10">
-                  <Grid item lg={4} sm={12} xs={12} md={12}>
-                    <Typography variant="p">Registration No.</Typography>
-                  </Grid>
-                  <Grid item lg={4} sm={12} xs={12} md={12}>
-                    {userProfile.personal_information?.registration_number}
-                  </Grid>
+                </Box>
+                <Box style={{marginBottom:"15px"}}>
+                  <Typography variant="p text-xl mx-auto mb-10" >
+                    Contact Information
+                  </Typography>
+                  <Box className="bg-gray-100 p-3 rounded-2xl mt-6">
+                  <Grid container className="mt-3">
+                    <Grid item lg={4} sm={12} xs={12} md={12} style={{marginBottom:"5px"}}>
+                      <Typography variant="p">Student Email</Typography>
+                    </Grid>
+                    <Grid item lg={4} sm={12} xs={12} md={12}>
+                      <TextField
+                        type="email"
+                        fullWidth
+                        sx={{marginTop:"10px"}}
+                        {...register("student_email")}
+                        error={!!errors.student_email}
+                        helperText={errors.student_email?.message}
+                      />
+                    </Grid>
 
-                  <Divider style={{ width: "100%", margin: "10px 0" }} />
-                  <Grid
-                    item
-                    lg={4}
-                    sm={12}
-                    xs={12}
-                    md={12}
-                    style={{ marginTop: "10px" }}
-                  >
-                    <Typography variant="p">First Name</Typography>
-                  </Grid>
-                  <Grid item lg={4} sm={12} xs={12} md={12}>
-                    <TextField
-                      type="text"
-                      {...register("first_name")}
-                      error={!!errors.first_name}
-                      helperText={errors.first_name?.message}
-                    />
-                  </Grid>
-                  <Divider style={{ width: "100%", margin: "10px 0" }} />
-                  <Grid
-                    item
-                    lg={4}
-                    sm={12}
-                    xs={12}
-                    md={12}
-                    style={{ marginTop: "10px" }}
-                  >
-                    <Typography variant="p">Middle Name</Typography>
-                  </Grid>
-                  <Grid item lg={4} sm={12} xs={12} md={12}>
-                    <TextField
-                      type="text"
-                      {...register("middle_name")}
-                      error={!!errors.middle_name}
-                      helperText={errors.middle_name?.message}
-                    />
-                  </Grid>
+                    <Divider style={{ width: "100%", margin: "10px 0" }} />
+                    <Grid
+                      item
+                      lg={4}
+                      sm={12}
+                      xs={12}
+                      md={12}
+                      fullWidth
+                      style={{ marginTop: "10px" }}
+                    >
+                      <Typography variant="p">Student's Phone no.</Typography>
+                    </Grid>
+                    <Grid item lg={4} sm={12} xs={12} md={12}>
+                      <TextField
+                        type="text"
+                        fullWidth
+                        sx={{marginTop:"10px"}}
+                        {...register("student_phone_number")}
+                        error={!!errors.student_phone_number}
+                        helperText={errors.student_phone_number?.message}
+                      />
+                    </Grid>
 
-                  <Divider style={{ width: "100%", margin: "10px 0" }} />
-                  <Grid
-                    item
-                    lg={4}
-                    sm={12}
-                    xs={12}
-                    md={12}
-                    style={{ marginTop: "10px" }}
-                  >
-                    <Typography variant="p">Last Name</Typography>
+                    <Divider style={{ width: "100%", margin: "10px 0" }} />
+                    <Grid
+                      item
+                      lg={4}
+                      sm={12}
+                      xs={12}
+                      md={12}
+                      style={{ marginTop: "10px" }}
+                    >
+                      <Typography variant="p">Father's phone no</Typography>
+                    </Grid>
+                    <Grid item lg={4} sm={12} xs={12} md={12}>
+                      <TextField
+                        type="text"
+                        fullWidth
+                        sx={{marginTop:"10px"}}
+                        {...register("fathers_mobile_number")}
+                        error={!!errors.fathers_mobile_number}
+                        helperText={errors.fathers_mobile_number?.message}
+                      />
+                    </Grid>
                   </Grid>
-                  <Grid item lg={4} sm={12} xs={12} md={12}>
-                    <TextField
-                      type="text"
-                      {...register("last_name")}
-                      error={!!errors.last_name}
-                      helperText={errors.last_name?.message}
-                    />
-                  </Grid>
-                  <Divider style={{ width: "100%", margin: "10px 0" }} />
-                  <Grid
-                    item
-                    lg={4}
-                    sm={12}
-                    xs={12}
-                    md={12}
-                    style={{ marginTop: "10px" }}
-                  >
-                    <Typography variant="p">Father Name</Typography>
-                  </Grid>
-                  <Grid item lg={4} sm={12} xs={12} md={12}>
-                    <TextField
-                      type="text"
-                      {...register("father_name")}
-                      error={!!errors.father_name}
-                      helperText={errors.father_name?.message}
-                    />
-                  </Grid>
+                  </Box>
+                </Box>
 
-                  <Divider style={{ width: "100%", margin: "10px 0" }} />
+                <Box className="">
+                  <Typography variant="p" style={{fontSize:"1.2rem"}}>
+                    Academic Information
+                  </Typography>
+                  <Box className="bg-gray-100 p-3 rounded-2xl mt-6 mb-6">
+                  <Grid container className="mt-3">
+                    <Grid item lg={4} sm={12} xs={12} md={12} style={{marginBottom:"5px"}}>
+                      <Typography variant="p" >Registration_number</Typography>
+                    </Grid>
+                    <Grid item lg={4} sm={12} xs={12} md={12}>
+                      <Typography variant="p">
+                        {userProfile?.academic_information?.registration_number}
+                      </Typography>
+                    </Grid>
 
-                  <Grid
-                    item
-                    lg={4}
-                    sm={12}
-                    xs={12}
-                    md={12}
-                    style={{ marginTop: "10px" }}
+                    <Divider style={{ width: "100%", margin: "10px 0" }} />
+                    <Grid
+                      item
+                      lg={4}
+                      sm={12}
+                      xs={12}
+                      md={12}
+                      style={{ marginTop: "10px" }}
+                    >
+                      <Typography variant="p">Registration Year</Typography>
+                    </Grid>
+                    <Grid item lg={4} sm={12} xs={12} md={12}>
+                      <TextField
+                        type="text"
+                        fullWidth
+                        style={{marginTop:"10px"}}
+                        {...register("registration_year")}
+                        error={!!errors.registration_year}
+                        helperText={errors.registration_year?.message}
+                      />
+                    </Grid>
+
+                    <Divider style={{ width: "100%", margin: "10px 0" }} />
+                    <Grid
+                      item
+                      lg={4}
+                      sm={12}
+                      xs={12}
+                      md={12}
+                      style={{ marginTop: "10px" }}
+                    >
+                      <Typography variant="p">Year</Typography>
+                    </Grid>
+                    <Grid item lg={4} sm={12} xs={12} md={12}>
+                      <TextField
+                        type="text"
+                        fullWidth
+                        style={{marginTop:"10px"}}
+                        {...register("year")}
+                        error={!!errors.year}
+                        helperText={errors.year?.message}
+                      />
+                    </Grid>
+
+                    <Divider style={{ width: "100%", margin: "10px 0" }} />
+                    <Grid
+                      item
+                      lg={4}
+                      sm={12}
+                      xs={12}
+                      md={12}
+                      style={{ marginTop: "10px" }}
+                    >
+                      <Typography variant="p">Last Qualification</Typography>
+                    </Grid>
+                    <Grid item lg={4} sm={12} xs={12} md={12}>
+                      <TextField
+                        type="text"
+                        fullWidth
+                        style={{marginTop:"10px"}}
+                        {...register("last_qualification")}
+                        error={!!errors.last_qualification}
+                        helperText={errors.last_qualification?.message}
+                      />
+                    </Grid>
+
+                    <Divider style={{ width: "100%", margin: "10px 0" }} />
+                    <Grid
+                      item
+                      lg={4}
+                      sm={12}
+                      xs={12}
+                      md={12}
+                      style={{ marginTop: "10px" }}
+                    >
+                      <Typography variant="p">School</Typography>
+                    </Grid>
+                    <Grid item lg={4} sm={12} xs={12} md={12}>
+                      <TextField
+                        type="text"
+                        fullWidth
+                        style={{marginTop:"10px"}}
+                        {...register("school")}
+                        error={!!errors.school}
+                        helperText={errors.school?.message}
+                      />
+                    </Grid>
+
+                    <Divider style={{ width: "100%", margin: "10px 0" }} />
+                    <Grid
+                      item
+                      lg={4}
+                      sm={12}
+                      xs={12}
+                      md={12}
+                      style={{ marginTop: "10px" }}
+                    >
+                      <Typography variant="p">Board</Typography>
+                    </Grid>
+                    <Grid item lg={4} sm={12} xs={12} md={12}>
+                      <TextField
+                        type="text"
+                        fullWidth
+                        style={{marginTop:"10px"}}
+                        {...register("board")}
+                        error={!!errors.board}
+                        helperText={errors.board?.message}
+                      />
+                    </Grid>
+
+                    <Divider style={{ width: "100%", margin: "10px 0" }} />
+                    <Grid
+                      item
+                      lg={4}
+                      sm={12}
+                      xs={12}
+                      md={12}
+                      style={{ marginTop: "10px" }}
+                    >
+                      <Typography variant="p">Branch</Typography>
+                    </Grid>
+                    <Grid item lg={4} sm={12} xs={12} md={12}>
+                      <TextField
+                        type="text"
+                        fullWidth
+                        style={{marginTop:"10px"}}
+                        {...register("branch")}
+                        error={!!errors.branch}
+                        helperText={errors.branch?.message}
+                      />
+                    </Grid>
+
+                    <Divider style={{ width: "100%", margin: "10px 0" }} />
+                    <Grid
+                      item
+                      lg={4}
+                      sm={12}
+                      xs={12}
+                      md={12}
+                      style={{ marginTop: "10px" }}
+                    >
+                      <Typography variant="p">Merit Serial Number</Typography>
+                    </Grid>
+                    <Grid item lg={4} sm={12} xs={12} md={12}>
+                      <TextField
+                        type="text"
+                        fullWidth
+                        style={{marginTop:"10px"}}
+                        {...register("merit_serial_number")}
+                        error={!!errors.merit_serial_number}
+                        helperText={errors.merit_serial_number?.message}
+                      />
+                    </Grid>
+
+                    <Divider style={{ width: "100%", margin: "10px 0" }} />
+                    <Grid
+                      item
+                      lg={4}
+                      sm={12}
+                      xs={12}
+                      md={12}
+                      style={{ marginTop: "10px" }}
+                    >
+                      <Typography variant="p">Category</Typography>
+                    </Grid>
+                    <Grid item lg={4} sm={12} xs={12} md={12}>
+                      <TextField
+                        type="string"
+                        fullWidth
+                        style={{marginTop:"10px"}}
+                        {...register("category")}
+                        error={!!errors.category}
+                        helperText={errors.category?.message}
+                      />
+                    </Grid>
+                    <Divider style={{ width: "100%", margin: "10px 0" }} />
+                    <Grid
+                      item
+                      lg={4}
+                      sm={12}
+                      xs={12}
+                      md={12}
+                      style={{ marginTop: "10px" }}
+                    >
+                      <Typography variant="p">College Name</Typography>
+                    </Grid>
+                    <Grid item lg={4} sm={12} xs={12} md={12}>
+                      <TextField
+                        type="text"
+                        fullWidth
+                        style={{marginTop:"10px"}}
+                        {...register("college_name")}
+                        error={!!errors.college_name}
+                        helperText={errors.college_name?.message}
+                      />
+                    </Grid>
+
+                    <Divider style={{ width: "100%", margin: "10px 0" }} />
+                    <Grid
+                      item
+                      lg={4}
+                      sm={12}
+                      xs={12}
+                      md={12}
+                      style={{ marginTop: "10px" }}
+                    >
+                      <Typography variant="p">Date Of Admission</Typography>
+                    </Grid>
+                    <Grid item lg={4} sm={12} xs={12} md={12}>
+                      <TextField
+                        type="text"
+                        fullWidth
+                        style={{marginTop:"10px"}}
+                        {...register("date_of_admission")}
+                        error={!!errors.date_of_admission}
+                        helperText={errors.date_of_admission?.message}
+                      />
+                    </Grid>
+
+                    <Divider style={{ width: "100%", margin: "10px 0" }} />
+                    <Grid
+                      item
+                      lg={4}
+                      sm={12}
+                      xs={12}
+                      md={12}
+                      style={{ marginTop: "10px" }}
+                    >
+                      <Typography variant="p">Session</Typography>
+                    </Grid>
+                    <Grid item lg={4} sm={12} xs={12} md={12}>
+                      <TextField
+                        type="text"
+                        fullWidth
+                        style={{marginTop:"10px"}}
+                        {...register("session")}
+                        error={!!errors.session}
+                        helperText={errors.session?.message}
+                      />
+                    </Grid>
+
+                    <Divider style={{ width: "100%", margin: "10px 0" }} />
+                    <Grid
+                      item
+                      lg={4}
+                      sm={12}
+                      xs={12}
+                      md={12}
+                      style={{ marginTop: "10px" }}
+                    >
+                      <Typography variant="p">
+                        University Registration no.
+                      </Typography>
+                    </Grid>
+                    <Grid item lg={4} sm={12} xs={12} md={12}>
+                      <TextField
+                        type="text"
+                        fullWidth
+                        style={{marginTop:"10px"}}
+                        {...register("university_reg_no")}
+                        error={!!errors.university_reg_no}
+                        helperText={errors.university_reg_no?.message}
+                      />
+                    </Grid>
+                  </Grid>
+                  </Box>
+                </Box>
+
+                <Box>
+                  <Typography variant="p text-xl mx-auto mb-10">
+                    Tc Information
+                  </Typography>
+                  <Box className="bg-gray-100 p-3 rounded-2xl mt-6 mb-3">
+                  <Grid container className="mt-3">
+                
+                    <Grid item lg={4} sm={12} xs={12} md={12}>
+                      <Typography variant="p">TC/CL number</Typography>
+                    </Grid>
+                    <Grid item lg={4} sm={12} xs={12} md={12}>
+                      <TextField
+                        type="text"
+                        fullWidth
+                        style={{marginTop:"10px"}}
+                        {...register("TC_or_CL_no")}
+                        error={!!errors.TC_or_CL_no}
+                        helperText={errors.TC_or_CL_no?.message}
+                      />
+                    </Grid>
+
+                    <Divider style={{ width: "100%", margin: "10px 0" }} />
+                    <Grid
+                      item
+                      lg={4}
+                      sm={12}
+                      xs={12}
+                      md={12}
+                      style={{ marginTop: "10px" }}
+                    >
+                      <Typography variant="p">Issuing Date Tc</Typography>
+                    </Grid>
+                    <Grid item lg={4} sm={12} xs={12} md={12}>
+                      <TextField
+                        type="string"
+                        fullWidth
+                        style={{marginTop:"10px"}}
+                        {...register("issuing_date_tc")}
+                        error={!!errors.issuing_date_tc}
+                        helperText={errors.issuing_date_tc?.message}
+                      />
+                    </Grid>
+
+                    <Divider style={{ width: "100%", margin: "10px 0" }} />
+                    <Grid
+                      item
+                      lg={4}
+                      sm={12}
+                      xs={12}
+                      md={12}
+                      style={{ marginTop: "10px" }}
+                    >
+                      <Typography variant="p">Purpose</Typography>
+                    </Grid>
+                    <Grid item lg={4} sm={12} xs={12} md={12}>
+                      <TextField
+                        type="number"
+                        fullWidth
+                        style={{marginTop:"10px"}}
+                        {...register("purpose")}
+                        error={!!errors.purpose}
+                        helperText={errors.purpose?.message}
+                      />
+                    </Grid>
+                    <Divider style={{ width: "100%", margin: "10px 0" }} />
+                    <Grid
+                      item
+                      lg={4}
+                      sm={12}
+                      xs={12}
+                      md={12}
+                      style={{ marginTop: "10px" }}
+                    >
+                      <Typography variant="p">
+                        Character Certificate Issued
+                      </Typography>
+                    </Grid>
+                    <Grid item lg={4} sm={12} xs={12} md={12}>
+                      <TextField
+                        type="text"
+                        fullWidth
+                        style={{marginTop:"10px"}}
+                        {...register("character_certificate_issued")}
+                        error={!!errors.character_certificate_issued}
+                        helperText={
+                          errors.character_certificate_issued?.message
+                        }
+                      />
+                    </Grid>
+
+                    <Divider style={{ width: "100%", margin: "10px 0" }} />
+                    <Grid
+                      item
+                      lg={4}
+                      sm={12}
+                      xs={12}
+                      md={12}
+                      style={{ marginTop: "10px" }}
+                    >
+                      <Typography variant="p">
+                        Character Certificate No
+                      </Typography>
+                    </Grid>
+                    <Grid item lg={4} sm={12} xs={12} md={12}>
+                      <TextField
+                        type="text"
+                        fullWidth
+                        style={{marginTop:"10px"}}
+                        {...register("character_certificate_no")}
+                        error={!!errors.character_certificate_no}
+                        helperText={errors.character_certificate_no?.message}
+                      />
+                    </Grid>
+
+                    <Divider style={{ width: "100%", margin: "10px 0" }} />
+                    <Grid
+                      item
+                      lg={4}
+                      sm={12}
+                      xs={12}
+                      md={12}
+                      style={{ marginTop: "10px" }}
+                    >
+                      <Typography variant="p">Issuing Date creation</Typography>
+                    </Grid>
+                    <Grid item lg={4} sm={12} xs={12} md={12}>
+                      <TextField
+                        type="text"
+                        fullWidth
+                        style={{marginTop:"10px"}}
+                        {...register("issuing_date_cr")}
+                        error={!!errors.issuing_date_cr}
+                        helperText={errors.issuing_date_cr?.message}
+                      />
+                    </Grid>
+                  </Grid>
+                  </Box>
+                </Box>
+
+                <center>
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    style={{ marginBottom: "40px" }}
+                    sx={{
+                      width: { lg: "30%", md: "70%", xs: "100%", sm: "90%" },
+                    }}
                   >
-                    <Typography variant="p">DOB</Typography>
-                  </Grid>
-                  <Grid item lg={4} sm={12} xs={12} md={12}>
-                    <TextField
-                      type="text"
-                      {...register("date_of_birth")}
-                      error={!!errors.date_of_birth}
-                      helperText={errors.date_of_birth?.message}
-                    />
-                  </Grid>
-
-                  <Divider style={{ width: "100%", margin: "10px 0" }} />
-                  <Grid
-                    item
-                    lg={4}
-                    sm={12}
-                    xs={12}
-                    md={12}
-                    style={{ marginTop: "10px" }}
-                  >
-                    <Typography variant="p">Gender</Typography>
-                  </Grid>
-                  <Grid item lg={4} sm={12} xs={12} md={12}>
-                    <TextField
-                      type="text"
-                      {...register("gender")}
-                      error={!!errors.gender}
-                      helperText={errors.gender?.message}
-                    />
-                  </Grid>
-                </Grid>
-              </Box>
-              <Box className="lg:p-10 sm:p-5 p-5">
-                <Typography variant="p text-xl mx-auto mb-10">
-                  Contact Information
-                </Typography>
-                <Grid container className="mt-10">
-                  <Grid item lg={4} sm={12} xs={12} md={12}>
-                    <Typography variant="p">Email</Typography>
-                  </Grid>
-                  <Grid item lg={4} sm={12} xs={12} md={12}>
-                    <TextField
-                      type="email"
-                      {...register("email")}
-                      error={!!errors.email}
-                      helperText={errors.email?.message}
-                    />
-                  </Grid>
-
-                  <Divider style={{ width: "100%", margin: "10px 0" }} />
-                  <Grid
-                    item
-                    lg={4}
-                    sm={12}
-                    xs={12}
-                    md={12}
-                    style={{ marginTop: "10px" }}
-                  >
-                    <Typography variant="p">Phone no.</Typography>
-                  </Grid>
-                  <Grid item lg={4} sm={12} xs={12} md={12}>
-                    <TextField
-                      type="number"
-                      {...register("phone_number")}
-                      error={!!errors.phone_number}
-                      helperText={errors.phone_number?.message}
-                    />
-                  </Grid>
-
-                  <Divider style={{ width: "100%", margin: "10px 0" }} />
-                  <Grid
-                    item
-                    lg={4}
-                    sm={12}
-                    xs={12}
-                    md={12}
-                    style={{ marginTop: "10px" }}
-                  >
-                    <Typography variant="p">Alternate phone no</Typography>
-                  </Grid>
-                  <Grid item lg={4} sm={12} xs={12} md={12}>
-                    <TextField
-                      type="number"
-                      {...register("alternate_phone_number")}
-                      error={!!errors.alternate_phone_number}
-                      helperText={errors.alternate_phone_number?.message}
-                    />
-                  </Grid>
-
-                  <Divider style={{ width: "100%", margin: "10px 0" }} />
-                  <Grid
-                    item
-                    lg={4}
-                    sm={12}
-                    xs={12}
-                    md={12}
-                    style={{ marginTop: "10px" }}
-                  >
-                    <Typography variant="p">Address</Typography>
-                  </Grid>
-                  <Grid item lg={4} sm={12} xs={12} md={12}>
-                    <TextField
-                      type="text"
-                      {...register("address")}
-                      error={!!errors.address}
-                      helperText={errors.address?.message}
-                    />
-                  </Grid>
-
-                  <Divider style={{ width: "100%", margin: "10px 0" }} />
-                  <Grid
-                    item
-                    lg={4}
-                    sm={12}
-                    xs={12}
-                    md={12}
-                    style={{ marginTop: "10px" }}
-                  >
-                    <Typography variant="p">City</Typography>
-                  </Grid>
-                  <Grid item lg={4} sm={12} xs={12} md={12}>
-                    <TextField
-                      type="text"
-                      {...register("city")}
-                      error={!!errors.city}
-                      helperText={errors.city?.message}
-                    />
-                  </Grid>
-
-                  <Divider style={{ width: "100%", margin: "10px 0" }} />
-                  <Grid
-                    item
-                    lg={4}
-                    sm={12}
-                    xs={12}
-                    md={12}
-                    style={{ marginTop: "10px" }}
-                  >
-                    <Typography variant="p">State</Typography>
-                  </Grid>
-                  <Grid item lg={4} sm={12} xs={12} md={12}>
-                    <TextField
-                      type="text"
-                      {...register("state")}
-                      error={!!errors.state}
-                      helperText={errors.state?.message}
-                    />
-                  </Grid>
-
-                  <Divider style={{ width: "100%", margin: "10px 0" }} />
-                  <Grid
-                    item
-                    lg={4}
-                    sm={12}
-                    xs={12}
-                    md={12}
-                    style={{ marginTop: "10px" }}
-                  >
-                    <Typography variant="p">Postal Code</Typography>
-                  </Grid>
-                  <Grid item lg={4} sm={12} xs={12} md={12}>
-                    <TextField
-                      type="text"
-                      {...register("postal_code")}
-                      error={!!errors.postal_code}
-                      helperText={errors.postal_code?.message}
-                    />
-                  </Grid>
-
-                  <Divider style={{ width: "100%", margin: "10px 0" }} />
-                  <Grid
-                    item
-                    lg={4}
-                    sm={12}
-                    xs={12}
-                    md={12}
-                    style={{ marginTop: "10px" }}
-                  >
-                    <Typography variant="p">Country</Typography>
-                  </Grid>
-                  <Grid item lg={4} sm={12} xs={12} md={12}>
-                    <TextField
-                      type="text"
-                      {...register("country")}
-                      error={!!errors.country}
-                      helperText={errors.country?.message}
-                    />
-                  </Grid>
-                </Grid>
-              </Box>
-
-              <Box className="lg:p-10 sm:p-5 p-5">
-                <Typography variant="p text-xl mx-auto mb-10">
-                  Academic Information
-                </Typography>
-                <Grid container className="mt-10">
-                  <Grid item lg={4} sm={12} xs={12} md={12}>
-                    <Typography variant="p">Registration_number</Typography>
-                  </Grid>
-                  <Grid item lg={4} sm={12} xs={12} md={12}>
-                    <Typography variant="p">
-                      {userProfile?.academic_information?.registration_number}
-                    </Typography>
-                  </Grid>
-
-                  <Divider style={{ width: "100%", margin: "10px 0" }} />
-                  <Grid
-                    item
-                    lg={4}
-                    sm={12}
-                    xs={12}
-                    md={12}
-                    style={{ marginTop: "10px" }}
-                  >
-                    <Typography variant="p">Enrollment_date</Typography>
-                  </Grid>
-                  <Grid item lg={4} sm={12} xs={12} md={12}>
-                    <TextField
-                      type="text"
-                      {...register("enrollment_date")}
-                      error={!!errors.enrollment_date}
-                      helperText={errors.enrollment_date?.message}
-                    />
-                  </Grid>
-
-                  <Divider style={{ width: "100%", margin: "10px 0" }} />
-                  <Grid
-                    item
-                    lg={4}
-                    sm={12}
-                    xs={12}
-                    md={12}
-                    style={{ marginTop: "10px" }}
-                  >
-                    <Typography variant="p">Program</Typography>
-                  </Grid>
-                  <Grid item lg={4} sm={12} xs={12} md={12}>
-                    <TextField
-                      type="text"
-                      {...register("program")}
-                      error={!!errors.program}
-                      helperText={errors.program?.message}
-                    />
-                  </Grid>
-
-                  <Divider style={{ width: "100%", margin: "10px 0" }} />
-                  <Grid
-                    item
-                    lg={4}
-                    sm={12}
-                    xs={12}
-                    md={12}
-                    style={{ marginTop: "10px" }}
-                  >
-                    <Typography variant="p">Major</Typography>
-                  </Grid>
-                  <Grid item lg={4} sm={12} xs={12} md={12}>
-                    <TextField
-                      type="text"
-                      {...register("major")}
-                      error={!!errors.major}
-                      helperText={errors.major?.message}
-                    />
-                  </Grid>
-
-                  <Divider style={{ width: "100%", margin: "10px 0" }} />
-                  <Grid
-                    item
-                    lg={4}
-                    sm={12}
-                    xs={12}
-                    md={12}
-                    style={{ marginTop: "10px" }}
-                  >
-                    <Typography variant="p">Current year</Typography>
-                  </Grid>
-                  <Grid item lg={4} sm={12} xs={12} md={12}>
-                    <TextField
-                      type="text"
-                      {...register("current_year")}
-                      error={!!errors.current_year}
-                      helperText={errors.current_year?.message}
-                    />
-                  </Grid>
-
-                  <Divider style={{ width: "100%", margin: "10px 0" }} />
-                  <Grid
-                    item
-                    lg={4}
-                    sm={12}
-                    xs={12}
-                    md={12}
-                    style={{ marginTop: "10px" }}
-                  >
-                    <Typography variant="p">GPA</Typography>
-                  </Grid>
-                  <Grid item lg={4} sm={12} xs={12} md={12}>
-                    <TextField
-                      type="text"
-                      {...register("gpa")}
-                      error={!!errors.gpa}
-                      helperText={errors.gpa?.message}
-                    />
-                  </Grid>
-
-                  <Divider style={{ width: "100%", margin: "10px 0" }} />
-                  <Grid
-                    item
-                    lg={4}
-                    sm={12}
-                    xs={12}
-                    md={12}
-                    style={{ marginTop: "10px" }}
-                  >
-                    <Typography variant="p">Department</Typography>
-                  </Grid>
-                  <Grid item lg={4} sm={12} xs={12} md={12}>
-                    <TextField
-                      type="text"
-                      {...register("department")}
-                      error={!!errors.department}
-                      helperText={errors.department?.message}
-                    />
-                  </Grid>
-
-                  <Divider style={{ width: "100%", margin: "10px 0" }} />
-                  <Grid
-                    item
-                    lg={4}
-                    sm={12}
-                    xs={12}
-                    md={12}
-                    style={{ marginTop: "10px" }}
-                  >
-                    <Typography variant="p">Batch</Typography>
-                  </Grid>
-                  <Grid item lg={4} sm={12} xs={12} md={12}>
-                    <TextField
-                      type="text"
-                      {...register("batch")}
-                      error={!!errors.batch}
-                      helperText={errors.batch?.message}
-                    />
-                  </Grid>
-
-                  <Divider style={{ width: "100%", margin: "10px 0" }} />
-                  <Grid
-                    item
-                    lg={4}
-                    sm={12}
-                    xs={12}
-                    md={12}
-                    style={{ marginTop: "10px" }}
-                  >
-                    <Typography variant="p">Course enrolled</Typography>
-                  </Grid>
-                  <Grid item lg={4} sm={12} xs={12} md={12}>
-                    <TextField
-                      type="number"
-                      {...register("course_enrolled")}
-                      error={!!errors.course_enrolled}
-                      helperText={errors.course_enrolled?.message}
-                    />
-                  </Grid>
-                </Grid>
-              </Box>
-              <center>
-                <Button
-                  variant="contained"
-                  type="submit"
-                  style={{ marginBottom: "40px" }}
-                >
-                  Update
-                </Button>
-              </center>
-            </form>
-          </Box>
+                    Update
+                  </Button>
+                </center>
+              </form>
+            </Box>
+          </Grid>
         </Grid>
-      </Grid>
+      </Box>
+      </Box>
     </Box>
   );
 };

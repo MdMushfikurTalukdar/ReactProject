@@ -181,7 +181,7 @@ const ComplaintForm = () => {
         setProfileData({
           registrationNo: data?.academic_information?.registration_number,
           name: data?.personal_information?.first_name,
-          branch: data?.academic_information?.department,
+          branch: data?.academic_information?.branch,
         });
       } catch (error) {
         console.error("Error fetching profile data:", error);
