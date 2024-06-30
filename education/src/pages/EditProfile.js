@@ -15,13 +15,13 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { enqueueSnackbar } from "notistack";
 import emailValidator from "email-validator";
 import NavbarNew from "../components/NavbarNew";
-import { CiEdit } from "react-icons/ci";
+import { FaCameraRetro } from "react-icons/fa";
 
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 const phoneNumberRegex = /^\d{10}$/;
@@ -173,7 +173,6 @@ export const EditProfile = () => {
     setIsCorrespndanceSame(event.target.value === "true");
   };
 
-  console.log(errors);
   const [userProfile, setUserProfile] = useState([]);
   const [file, setFile] = useState("");
   const [imgPreview, setImgPreview] = useState("");
@@ -469,6 +468,7 @@ export const EditProfile = () => {
                         height: "150px",
                         margin: "10px 0px 10px 40px",
                         borderRadius: "50%",
+                        border:"1px solid black"
                       }}
                     />
                   ) : imgPreview ? (
@@ -490,7 +490,7 @@ export const EditProfile = () => {
                       style={{ borderRadius: "50%" }}
                     />
                   )}
-                  <CiEdit style={{ fontSize: "1.2rem" }} />
+                  <FaCameraRetro style={{ fontSize: "1.7rem",position:"relative","top":"-25px",left:"-25px", }} />
                   <input
                     type="file"
                     accept="image/*"
