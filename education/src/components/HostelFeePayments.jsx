@@ -8,7 +8,9 @@ import {
   Typography,
   Paper,
   Box,
+  InputAdornment,
 } from "@mui/material";
+import { MdDateRange } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -58,7 +60,6 @@ function HostelFeePayment() {
   const {
     control,
     handleSubmit,
-    register,
     watch,
     setValue,
     formState: { errors },
@@ -76,6 +77,7 @@ function HostelFeePayment() {
           },
         }
       );
+      console.log(response.data);
       setFees(response.data);
     } catch (error) {
       console.error("Failed to fetch fees:", error);
@@ -126,10 +128,10 @@ function HostelFeePayment() {
 
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post(
+      await axios.post(
         "https://amarnath013.pythonanywhere.com/api/user/mess-fees-payment/",
         {
-          registration_details: localStorage.getItem("id"),
+          registration_details: fees.id,
           from_date: dayjs(data.startDate).format("YYYY-MM"),
           to_date: dayjs(data.endDate).format("YYYY-MM"),
           mess_fees: data.feeType === "Mess_fees" ? fees.Mess_fees : null,
@@ -138,7 +140,7 @@ function HostelFeePayment() {
               ? fees.Maintainance_fees
               : null,
           security_fees:
-            data.feeType === "Security_Deposit" ? fees.Security_fees : null,
+            data.feeType === "Security_Deposit" ? fees.Security_Deposit : null,
           total_fees: total,
         },
         {
@@ -204,27 +206,41 @@ function HostelFeePayment() {
 
   useEffect(() => {
     if (watch("startDate") && watch("endDate")) {
-      const differenceInMonths =
-        dayjs(watch("endDate")).diff(dayjs(watch("startDate")), "month") + 1;
+      const differenceInMonths = dayjs(watch("endDate")).diff(
+        dayjs(watch("startDate")),
+        "month"
+      );
       setValue("noOfMonths", differenceInMonths, { shouldValidate: true });
-      setTotal(differenceInMonths * watch("monthlyCharges"));
+      const feeType = watch("feeType");
+      let monthlyCharge = 0;
+      if (feeType === "Mess_fees") monthlyCharge = fees.Mess_fees;
+      else if (feeType === "Maintainance_fees")
+        monthlyCharge = fees.Maintainance_fees;
+      else if (feeType === "Security_Deposit")
+        monthlyCharge = fees.Security_Deposit;
+
+      setValue("monthlyCharges", monthlyCharge, { shouldValidate: true });
+      setTotal(differenceInMonths * monthlyCharge);
     }
-  }, [watch, setValue]);
+  }, [watch("startDate"), watch("endDate"), watch("feeType"), setValue, fees]);
 
   return (
     <Container maxWidth="md">
-      <Paper elevation={3} sx={{ p: 4, mt: 4 }}>
-        <p
-          style={{
-            textAlign: "center",
-            fontSize: "1.7rem",
-            marginBottom: "20px",
-          }}
+      <Paper elevation={0} sx={{ p: { lg: 4, md: 4 }, mt: 4 }}>
+        <Typography
+          variant="h5"
+          align="center"
+          gutterBottom
+          style={{ marginBottom: "30px" }}
         >
           Hostel/Mess Fee Payment
-        </p>
+        </Typography>
         <center style={{ marginBottom: "16px" }}>
-          <img src="./images/payment.jpg" alt="" style={{ width: "250px" }} />
+          <img
+            src="./images/payment.png"
+            alt="Payment"
+            style={{ width: "250px", marginLeft: "15px" }}
+          />
         </center>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={2}>
@@ -246,82 +262,7 @@ function HostelFeePayment() {
                 disabled
               />
             </Grid>
-            <Grid item xs={12} sm={6} lg={12} md={12}>
-              <Controller
-                control={control}
-                name="startDate"
-                render={({ field }) => (
-                  <DatePicker
-                    {...field}
-                    selected={field.value}
-                    onChange={handleStartDateChange}
-                    selectsStart
-                    startDate={field.value}
-                    minDate={new Date()}
-                    dateFormat="yyyy-MM"
-                    showMonthYearPicker
-                    customInput={
-                      <TextField
-                        label="From"
-                        variant="outlined"
-                        sx={{
-                          width: {
-                            lg: "353%",
-                            md: "353%",
-                            xs: "100%",
-                            sm: "130%",
-                          },
-                        }}
-                      />
-                    }
-                  />
-                )}
-              />
-              {errors.startDate && (
-                <Typography color="error" variant="body2">
-                  {errors.startDate.message}
-                </Typography>
-              )}
-            </Grid>
-            <Grid item xs={12} sm={6} lg={12} md={12}>
-              <Controller
-                control={control}
-                name="endDate"
-                render={({ field }) => (
-                  <DatePicker
-                    {...field}
-                    selected={field.value}
-                    onChange={handleEndDateChange}
-                    selectsEnd
-                    startDate={watch("startDate")}
-                    endDate={field.value}
-                    minDate={dayjs(watch("startDate")).add(1, "month").toDate()}
-                    dateFormat="yyyy-MM"
-                    showMonthYearPicker
-                    customInput={
-                      <TextField
-                        label="To"
-                        variant="outlined"
-                        sx={{
-                          width: {
-                            lg: "353%",
-                            md: "353%",
-                            xs: "100%",
-                            sm: "90%",
-                          },
-                        }}
-                      />
-                    }
-                  />
-                )}
-              />
-              {errors.endDate && (
-                <Typography color="error" variant="body2">
-                  {errors.endDate.message}
-                </Typography>
-              )}
-            </Grid>
-            <Grid item xs={12} sm={12} lg={12} md={12}>
+            <Grid item xs={12}>
               <Controller
                 name="feeType"
                 control={control}
@@ -344,46 +285,139 @@ function HostelFeePayment() {
                 )}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                type="number"
-                placeholder="Monthly Charges"
-                variant="outlined"
-                fullWidth
-                {...register("monthlyCharges")}
-                error={!!errors.monthlyCharges}
-                helperText={errors.monthlyCharges?.message}
-                disabled
+            <Grid item xs={6} sm={6} md={12} lg={12}>
+              <Controller
+                control={control}
+                name="startDate"
+                render={({ field }) => (
+                  <DatePicker
+                    {...field}
+                    selected={field.value}
+                    onChange={handleStartDateChange}
+                    dateFormat="MMMM yyyy"
+                    showMonthYearPicker
+                    customInput={
+                      <TextField
+                        label="Start Date"
+                        variant="outlined"
+                        fullWidth
+                        error={!!errors.startDate}
+                        helperText={errors.startDate?.message}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <MdDateRange />
+                            </InputAdornment>
+                          ),
+                        }}
+                        sx={{
+                          width: {
+                            lg: "320%",
+                            md: "320%",
+                            xs: "100%",
+                            sm: "100%",
+                          },
+                        }}
+                      />
+                    }
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={6} sm={6} md={12} lg={12}>
+              <Controller
+                control={control}
+                name="endDate"
+                render={({ field }) => (
+                  <DatePicker
+                    {...field}
+                    selected={field.value}
+                    onChange={handleEndDateChange}
+                    dateFormat="MMMM yyyy"
+                    showMonthYearPicker
+                    customInput={
+                      <TextField
+                        label="End Date"
+                        variant="outlined"
+                        fullWidth
+                        error={!!errors.endDate}
+                        helperText={errors.endDate?.message}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <MdDateRange />
+                            </InputAdornment>
+                          ),
+                        }}
+                        sx={{
+                          width: {
+                            lg: "320%",
+                            md: "320%",
+                            xs: "100%",
+                            sm: "100%",
+                          },
+                        }}
+                      />
+                    }
+                  />
+                )}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                type="number"
-                placeholder="No. of Months"
-                variant="outlined"
-                fullWidth
-                {...register("noOfMonths")}
-                error={!!errors.noOfMonths}
-                helperText={errors.noOfMonths?.message}
-                disabled
+              <Controller
+                name="noOfMonths"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    placeholder="Number of Months"
+                    variant="outlined"
+                    fullWidth
+                    error={!!errors.noOfMonths}
+                    helperText={errors.noOfMonths?.message}
+                    disabled
+                  />
+                )}
               />
             </Grid>
-          </Grid>
-          <Box mt={2}>
-            <Typography variant="h6" align="right" gutterBottom>
-              Total: {total}
-            </Typography>
-            <Grid container justifyContent="center">
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="monthlyCharges"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    placeholder="Monthly Charges"
+                    variant="outlined"
+                    fullWidth
+                    error={!!errors.monthlyCharges}
+                    helperText={errors.monthlyCharges?.message}
+                    disabled
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Typography variant="subtitle1">Total Amount:</Typography>
+                <Typography variant="h6">Rs: {total}/-</Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12}>
               <Button
                 type="submit"
                 variant="contained"
-                color="primary"
-                style={{ marginBottom: "20px" }}
+                style={{ backgroundColor: "#8ecccc" }}
+                fullWidth
               >
-                Pay & Request to Verify
+                Request For Payment
               </Button>
             </Grid>
-          </Box>
+          </Grid>
         </form>
         <Box mt={4}>
           <p
@@ -395,30 +429,40 @@ function HostelFeePayment() {
           >
             Previous Fee Payments
           </p>
-          <Grid container spacing={2}>
-            <Grid item xs={4}>
-              <Typography variant="subtitle1" fontWeight="bold">
-                Fee Type:
-              </Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography variant="subtitle1" fontWeight="bold">
-                From:
-              </Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography variant="subtitle1" fontWeight="bold">
-                To:
-              </Typography>
-            </Grid>
+          <Grid
+            container
+            spacing={1}
+            className="shadow-xl mb-5 lg:p-5 md:p-5 p-2 rounded-lg "
+            style={{ textAlign: "center" }}
+          >
+            {result.length !== 0 && (
+              <>
+                <Grid item xs={4}>
+                  <Typography variant="subtitle1" fontWeight="bold">
+                    Fee Type:
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography variant="subtitle1" fontWeight="bold">
+                    From:
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography variant="subtitle1" fontWeight="bold">
+                    To:
+                  </Typography>
+                </Grid>
+              </>
+            )}
             {result.length === 0 ? (
               <Grid item xs={12}>
                 <center style={{ marginTop: "20px" }}>
-                  <p>No payment records found.</p>
+                  <img src="./images/nodata.jpg" alt="" style={{width:"320px",borderRadius:"15px",marginRight:"15px"}}/>
                 </center>
               </Grid>
             ) : (
               result.map((payment) => (
+              
                 <React.Fragment key={payment.id}>
                   <Grid item xs={4}>
                     {payment.maintainance_fees && "Maintenance Fee"}
@@ -432,6 +476,7 @@ function HostelFeePayment() {
                     {payment.to_date}
                   </Grid>
                 </React.Fragment>
+                
               ))
             )}
           </Grid>
@@ -442,5 +487,3 @@ function HostelFeePayment() {
 }
 
 export default HostelFeePayment;
-
-
