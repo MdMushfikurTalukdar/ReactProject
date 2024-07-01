@@ -19,12 +19,12 @@ import {
   TableCell,
   TableBody,
 } from "@mui/material";
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 import NavbarNew from "../components/NavbarNew";
 import Footer from "../components/Home/Footer";
-import addfee from "../components/img/addfee.jpg";
+
 
 // Validation schema using yup
 const schema = yup.object().shape({
@@ -71,7 +71,7 @@ const AddFeesCaretaker = () => {
     } else {
       navigate("/login");
     }
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -138,9 +138,9 @@ const AddFeesCaretaker = () => {
       setEditId(null);
 
       // Fetch updated data after submission
-      setTimeout(()=>{
+      setTimeout(() => {
         window.location.reload();
-      },1500)
+      }, 1500);
     } catch (error) {
       console.error("Error adding/updating data:", error);
     }
@@ -148,140 +148,154 @@ const AddFeesCaretaker = () => {
 
   const handleEdit = (feeId) => {
     // Find the fee with feeId in result state and populate the form fields
-   
-      reset({
-        Maintainance_fees: result.Maintainance_fees,
-        Mess_fees: result.Mess_fees,
-        Security_Deposit: result.Security_Deposit,
-      });
-      setEditId(feeId);
-    
+
+    reset({
+      Maintainance_fees: result.Maintainance_fees,
+      Mess_fees: result.Mess_fees,
+      Security_Deposit: result.Security_Deposit,
+    });
+    setEditId(feeId);
   };
 
   return (
     <>
       <NavbarNew />
-      <Container style={{ marginBottom: "11%" }}>
-  <Typography
-    variant="h4"
-    align="center"
-    gutterBottom
-    style={{ marginTop: "20px", marginBottom: "36px" }}
-  >
-    Add Fees
-  </Typography>
-  <Grid container spacing={8}>
-    <Grid item xs={6}>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Grid container spacing={2} >
-          <Grid item xs={12}>
-            <Controller
-              name="Maintainance_fees"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  placeholder="Maintenance Fees"
-                  variant="outlined"
-                  fullWidth
-                  error={!!errors.Maintainance_fees}
-                  helperText={errors.Maintainance_fees?.message}
-                />
-              )}
-            />
+      <Container style={{ marginBottom: "11%",padding:"10px"}}>
+        <p style={{ marginTop: "20px", marginBottom: "36px",textAlign:"center",fontSize:"1.4rem"}}
+        >
+          Fees Structure
+        </p>
+        <Grid container spacing={12}>
+          <Grid item xs={12} sm={12} md={6} lg={7} sx={{
+            marginTop:{lg:"70px",md:"70px",xs:"0px",sm:"0px" }
+            }}>
+            <Box sx={{
+                display:{sm:"block",xs:"block",md:"none",lg:"none"},
+                textAlign:"center"
+              }}>
+              <img src={`./images/addCarefee.png`} alt="" style={{width:"250px"}}/>
+            </Box>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <Controller
+                name="Maintainance_fees"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    placeholder="Maintenance Fees"
+                    variant="outlined"
+                    fullWidth
+                    error={!!errors.Maintainance_fees}
+                    helperText={errors.Maintainance_fees?.message}
+                    style={{ marginTop: "20px" }}
+                  />
+                )}
+              />
+
+              <Controller
+                name="Mess_fees"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    placeholder="Mess Fees"
+                    variant="outlined"
+                    fullWidth
+                    error={!!errors.Mess_fees}
+                    helperText={errors.Mess_fees?.message}
+                    style={{ marginTop: "20px" }}
+                  />
+                )}
+              />
+
+              <Controller
+                name="Security_Deposit"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    placeholder="Security Deposit"
+                    variant="outlined"
+                    fullWidth
+                    error={!!errors.Security_Deposit}
+                    helperText={errors.Security_Deposit?.message}
+                    style={{ marginTop: "20px" }}
+                  />
+                )}
+              />
+
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                fullWidth
+                style={{ marginTop: "20px" }}
+              >
+                {editId ? "Update" : "Submit"}
+              </Button>
+            </form>
           </Grid>
-          <Grid item xs={12}>
-            <Controller
-              name="Mess_fees"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  placeholder="Mess Fees"
-                  variant="outlined"
-                  fullWidth
-                  error={!!errors.Mess_fees}
-                  helperText={errors.Mess_fees?.message}
-                />
-              )}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Controller
-              name="Security_Deposit"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  placeholder="Security Deposit"
-                  variant="outlined"
-                  fullWidth
-                  error={!!errors.Security_Deposit}
-                  helperText={errors.Security_Deposit?.message}
-                />
-              )}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Button type="submit" variant="contained" color="primary" fullWidth>
-              {editId ? "Update" : "Submit"}
-            </Button>
+
+          <Grid item xs={12} sm={12} md={6} lg={5} sx={{
+           display:"flex",flexDirection:"column",justifyContent:'center', textAlign:"-webkit-center"
+          }}>
+
+             <Box sx={{
+                display:{sm:"none",xs:"none",md:"block",lg:"block"},
+                textAlign:"center"
+              }}>
+             <img src={`./images/addCarefee.png`} alt="" style={{width:"300px"}}/>
+              
+            </Box>  
+
+            <Box style={{ marginTop: "20px" }}>
+              <Divider />
+              <p style={{ marginTop: "20px", marginBottom: "36px",textAlign:"center",fontSize:"1.4rem"}}
+        >
+          Previous Fees Records
+        </p>
+            </Box>
+
+            {result.length === 0 ? (
+              <Typography variant="body1" align="center">
+                You have not added any fees structure.
+              </Typography>
+            ) : (
+              <Box>
+                <TableContainer component={Paper} sx={{ marginTop: 3 }}>
+                  <Table sx={{ minWidth: 300 }} aria-label="Fees table">
+                    <TableHead style={{ backgroundColor: "#D2E9E9" }}>
+                      <TableRow>
+                        <TableCell>Maintenance</TableCell>
+                        <TableCell>Mess </TableCell>
+                        <TableCell>Security</TableCell>
+                        <TableCell>Edit</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow key={result.id}>
+                        <TableCell>{result.Maintainance_fees}</TableCell>
+                        <TableCell>{result.Mess_fees}</TableCell>
+                        <TableCell>{result.Security_Deposit}</TableCell>
+                        <TableCell>
+                          <Button
+                            variant="outlined"
+                            color="primary"
+                            onClick={() => handleEdit(result.id)}
+                          >
+                            Edit
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Box>
+            )}
           </Grid>
         </Grid>
-      </form>
-    </Grid>
-    <Grid item xs={6}>
-      <img src={addfee} alt="image" style={{ width: "100%", height: "100%" }} />
-    </Grid>
-  </Grid>
-
-
-        <Box style={{ marginTop: "20px" }}>
-          <Divider />
-          <p style={{ textAlign: "center", marginTop: "10px" }}>
-            Previous Fees Structure
-          </p>
-        </Box>
-
-        {result.length === 0 ? (
-          <Typography variant="body1" align="center">
-            You have not added any fees structure.
-          </Typography>
-        ) : (
-          <Box>
-            <TableContainer component={Paper} sx={{ marginTop: 3 }}>
-              <Table sx={{ minWidth: "auto" }} aria-label="Fees table">
-                <TableHead style={{ backgroundColor: "#D2E9E9" }}>
-                  <TableRow>
-                    <TableCell>Maintenance</TableCell>
-                    <TableCell>Mess </TableCell>
-                    <TableCell>Security</TableCell>
-                    <TableCell>Edit</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  
-                    <TableRow key={result.id}>
-                      <TableCell>{result.Maintainance_fees}</TableCell>
-                      <TableCell>{result.Mess_fees}</TableCell>
-                      <TableCell>{result.Security_Deposit}</TableCell>
-                      <TableCell>
-                        <Button
-                          variant="outlined"
-                          color="primary"
-                          onClick={() => handleEdit(result.id)}
-                        >
-                          Edit
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Box>
-        )}
       </Container>
+
       <Footer />
     </>
   );
