@@ -14,19 +14,13 @@ import {
   CircularProgress,
   Divider,
   CardMedia,
-  Box
+  Box,
 } from "@mui/material";
 import { useSnackbar } from "notistack";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import NavbarNew from "../components/NavbarNew";
 import Footer from "../components/Home/Footer";
-
-// Validation schema using yup
-const schema = yup.object().shape({
-  registration_number: yup.string().required("Registration Number is required"),
-  hostel_room: yup.string().required("Hostel Room is required"),
-});
 
 const HostelRoomAllotment = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -34,30 +28,25 @@ const HostelRoomAllotment = () => {
   const [loading, setLoading] = useState(true);
   const [data1, setData1] = useState([]);
   const [loading1, setLoading1] = useState(true);
-
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
+  const [hostel_room, setHostel_room] = useState("");
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const config = {
-      method: 'get',
+      method: "get",
       maxBodyLength: Infinity,
-      url: 'https://amarnath013.pythonanywhere.com/api/user/hostel-allotments/?search=applied',
-      headers: { 
-        'Authorization': `Bearer ${localStorage?.getItem('accesstoken')}`
-      }
+      url: "https://amarnath013.pythonanywhere.com/api/user/hostel-allotments/?search=applied",
+      headers: {
+        Authorization: `Bearer ${localStorage?.getItem("accesstoken")}`,
+      },
     };
 
-    axios.request(config)
+    axios
+      .request(config)
       .then((response) => {
         setData1(response.data);
+
         setLoading1(false);
         console.log(response.data);
       })
@@ -71,7 +60,10 @@ const HostelRoomAllotment = () => {
     const token = localStorage.getItem("accesstoken");
     if (token) {
       const response = jwtDecode(token);
-      if (response.exp < Math.floor(Date.now() / 1000) || response.role !== "caretaker") {
+      if (
+        response.exp < Math.floor(Date.now() / 1000) ||
+        response.role !== "caretaker"
+      ) {
         navigate("/login");
       }
     } else {
@@ -80,14 +72,18 @@ const HostelRoomAllotment = () => {
   }, [navigate]);
 
   const onSubmit = async (data) => {
-    const jsonData = JSON.stringify(data);
+    const jsonData = {
+      registration_number: data,
+      hostel_room: hostel_room,
+    };
+    console.log(jsonData);
     const config = {
       method: "post",
       maxBodyLength: Infinity,
       url: "https://amarnath013.pythonanywhere.com/api/user/hostel-room-allotments/",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem('accesstoken')}`,
+        Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
       },
       data: jsonData,
     };
@@ -97,39 +93,42 @@ const HostelRoomAllotment = () => {
       console.log(response.data);
       const data2 = JSON.stringify({ status: "approved" });
       const configUpdate = {
-        method: 'put',
+        method: "put",
         maxBodyLength: Infinity,
         url: `https://amarnath013.pythonanywhere.com/api/user/hostel-allotments/${response?.data?.id}/update-status/`,
-        headers: { 
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('accesstoken')}`
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
         },
-        data: data2
+        data: data2,
       };
 
       await axios.request(configUpdate);
-      setData1(data1.filter((item)=>item.id!==response?.data?.id));
+      setData1(data1.filter((item) => item.id !== response?.data?.id));
       enqueueSnackbar("Room allotted successfully", { variant: "success" });
       fetchAllotmentData();
     } catch (error) {
       console.error(error);
-      if(error?.response?.data?.errors?.hostel_room?.[0])
-        {
-          enqueueSnackbar(error?.response?.data?.errors?.hostel_room?.[0], { variant: "error" });
-        }
-      if(error?.response?.data?.errors?.[0])  
-      enqueueSnackbar(error?.response?.data?.errors?.[0], { variant: "error" });
+      if (error?.response?.data?.errors?.hostel_room?.[0]) {
+        enqueueSnackbar(error?.response?.data?.errors?.hostel_room?.[0], {
+          variant: "error",
+        });
+      }
+      if (error?.response?.data?.errors?.[0])
+        enqueueSnackbar(error?.response?.data?.errors?.[0], {
+          variant: "error",
+        });
     }
   };
 
   const fetchAllotmentData = async () => {
     const config = {
-      method: 'get',
+      method: "get",
       maxBodyLength: Infinity,
-      url: 'https://amarnath013.pythonanywhere.com/api/user/hostel-room-allotments/',
-      headers: { 
-        'Content-Type': 'application/json', 
-        Authorization: `Bearer ${localStorage.getItem('accesstoken')}`
+      url: "https://amarnath013.pythonanywhere.com/api/user/hostel-room-allotments/",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
       },
     };
 
@@ -149,174 +148,248 @@ const HostelRoomAllotment = () => {
 
   if (loading || loading1) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="80vh">
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="80vh"
+      >
         <CircularProgress />
       </Box>
     );
   }
 
   return (
-    <>
-      <NavbarNew />
-      <Container>
-        <Typography variant="h5" align="center" gutterBottom style={{ marginTop: "20px", marginBottom: "36px" }}>
-          Hostel Room Allotment
-        </Typography>
-        <Grid container spacing={2}>
-        <Grid item xs={12} md={12} lg={6} 
-          sx={{
-            display:{xs:"block",sm:"block",md:"block",lg:"none"},
-            overflowY:"scroll",
-            height:"300px",
-            width:"100vw",
-            padding:"12",
-            marginTop:"20px"
-          }}
-          >
-            <p style={{textAlign:"center",fontSize:"1.4rem",marginTop:"10px",marginBottom:"10px"}}>Hostel Room Requests</p>
-            {data1.length === 0 ? (
-              <Typography variant="body1" align="center" style={{ marginTop: "20%" }}>
-                No Requests are present currently.
-              </Typography>
-            ) : (
-              <Box display="flex" justifyContent="center" alignItems="center" flexDirection="column" minHeight="80vh"
+    <Box className="logout-container">
+      <div className="circle circle1"></div>
+      <div className="rectangle circle2"></div>
+      <div className="circle circle3"></div>
+      <div className="rectangle circle4"></div>
+      <div className="rectangle circle5"></div>
+      <div className="circle circle6"></div>
+      <Box
+        className="z-10"
+        style={{ height: "calc(100vh - 2px)", overflowY: "scroll" }}
+      >
+        <Box>
+          <NavbarNew />
+          <Grid container spacing={2}>
+            <Grid
+              item
+              xs={12}
+              md={12}
+              sm={12}
+              lg={12}
               sx={{
-                display:""
-              }}>
-                <Grid container spacing={2}>
-                  {data1.map((item, index) => (
-                    <Grid item xs={12} sm={6} md={6} key={index}>
-                      <Card>
-                        <CardMedia
-                          component="img"
-                          width="250"
-                          height="140"
-                          image={`data:image/jpeg;base64,${item.latest_marksheet}`}
-                          alt="Marksheet"
-                        />
-                        <CardContent>
-                          <Typography variant="h6" component="div">
-                            Registration Number: {item.registration_number}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            Status: {item.status}
-                          </Typography>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                  ))}
-                </Grid>
-              </Box>
-            )}
-          </Grid>
-          <Grid item xs={12} md={12} lg={6} style={{marginTop:"20px"}} >
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <Controller
-                    name="registration_number"
-                    control={control}
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        label="Registration Number"
-                        variant="outlined"
-                        fullWidth
-                        error={!!errors.registration_number}
-                        helperText={errors.registration_number?.message}
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <Controller
-                    name="hostel_room"
-                    control={control}
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        label="Hostel Room"
-                        variant="outlined"
-                        fullWidth
-                        error={!!errors.hostel_room}
-                        helperText={errors.hostel_room?.message}
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <Button type="submit" variant="contained" color="primary" fullWidth>
-                    Submit
-                  </Button>
-                </Grid>
-              </Grid>
-            </form>
+                // display: { xs: "block", sm: "block", md: "block", lg: "none" },
 
-            <Divider style={{ marginTop: "20px" }} />
-            <Typography variant="h6" gutterBottom style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
-              Approved Allotment Details
-            </Typography>
+                width: "100vw",
+                padding: "12",
+                marginTop: "20px",
+              }}
+            >
+              <p
+                style={{
+                  textAlign: "center",
+                  fontSize: "1.6rem",
+                  marginTop: "10px",
+                  marginBottom: "50px",
+                }}
+              >
+                Hostel Room Requests
+              </p>
+              <center>
+                <img
+                  src="./images/hostel_caretaker.png"
+                  alt=""
+                  style={{ width: "300px" }}
+                />
+              </center>
+              {data1.length === 0 ? (
+                <Typography
+                  variant="body1"
+                  align="center"
+                  style={{ marginTop: "20%" }}
+                >
+                  <center>
+                    <img
+                      src="./images/No_data.png"
+                      alt=""
+                      style={{
+                        width: "310px",
+                        borderRadius: "10px",
+                        marginTop: "30px",
+                      }}
+                    />
+                  </center>
+                </Typography>
+              ) : (
+                <Box
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  flexDirection="column"
+                  minHeight="80vh"
+                  sx={{
+                    display: "",
+                  }}
+                >
+                  <Grid container spacing={2}>
+                    {data1.map((item, index) => (
+                      <Grid
+                        item
+                        xs={12}
+                        sm={12}
+                        lg={12}
+                        md={12}
+                        key={index}
+                        justifyContent="center"
+                        display="flex"
+                      >
+                        <Card
+                          sx={{
+                            width: {
+                              lg: "30%",
+                              md: "70%",
+                              xs: "100%",
+                              sm: "90%",
+                            },
+                          }}
+                        >
+                          <CardMedia
+                            component="img"
+                            sx={{ height: 240,objectFit:"contain" }}
+                            image={`data:image/jpeg;base64,${item.latest_marksheet}`}
+                            alt="Marksheet"
 
-            {allotmentData && allotmentData.map((data, index) => (
-              <Card style={{ marginTop: "20px", marginBottom: "10px", backgroundColor: "rgb(163 217 217)" }} key={index}>
-                <CardContent>
-                  <Typography variant="subtitle1">
-                    ID: {data?.id}
-                  </Typography>
-                  <Typography variant="subtitle1">
-                    Registration Number: {data?.registration_details?.registration_number}
-                  </Typography>
-                  <Typography variant="subtitle1">
-                    Hostel Room: {data?.hostel_room}
-                  </Typography>
-                </CardContent>
-              </Card>
-            ))}
-          </Grid>
-          <Grid item xs={12} md={12} lg={6} 
-          sx={{
-            display:{xs:"none",sm:"none",md:"none",lg:"block"}
-          }}
-          >
-            {data1.length === 0 ? (
-              <Typography variant="body1" align="center" style={{ marginTop: "20%" }}>
-                No Requests are present currently.
+                          />
+
+                          <CardContent>
+                            <Box>
+                              <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                  <p>
+                                    Registration Number:{" "}
+                                    {item?.registration_number}
+                                  </p>
+                                </Grid>
+                                <Grid item xs={12}>
+                                  <TextField
+                                    onChange={(e) =>
+                                      setHostel_room(e.target.value)
+                                    }
+                                    placeholder="Hostel Room"
+                                    variant="outlined"
+                                    fullWidth
+                                  />
+                                </Grid>
+                                <Grid item xs={12}>
+                                  <center>
+                                    <Button
+                                      type="submit"
+                                      variant="contained"
+                                      color="primary"
+                                      fullWidth
+                                      onClick={(e) => {
+                                        onSubmit(item?.registration_number);
+                                      }}
+                                      sx={{
+                                        width: {
+                                          lg: "30%",
+                                          md: "40%",
+                                          xs: "100%",
+                                          sm: "90%",
+                                        },
+                                      }}
+                                    >
+                                      Submit
+                                    </Button>
+                                  </center>
+                                </Grid>
+                              </Grid>
+                            </Box>
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                    ))}
+                  </Grid>
+                </Box>
+              )}
+            </Grid>
+            <Grid
+              item
+              xs={12}
+              md={12}
+              lg={12}
+              sm={12}
+              style={{
+                marginTop: "20px",
+                display: "flex",
+                justifyContent: "center",
+                flexDirection: "column",
+                alignContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Divider style={{ marginTop: "20px" }} />
+              <Typography
+                variant="h6"
+                gutterBottom
+                style={{
+                  textAlign: "center",
+                  marginTop: "20px",
+                  marginBottom: "20px",
+                }}
+              >
+                Approved Allotment Details
               </Typography>
-            ) : (
-              <Box display="flex" justifyContent="center" alignItems="center" flexDirection="column" minHeight="80vh"
-              sx={{
-                display:""
-              }}>
-                <Grid container spacing={2}>
-                  {data1.map((item, index) => (
-                    <Grid item xs={12} sm={6} md={6} key={index}>
-                      <Card>
-                        <CardMedia
-                          component="img"
-                          width="250"
-                          height="140"
-                          image={`data:image/jpeg;base64,${item.latest_marksheet}`}
-                          alt="Marksheet"
-                        />
-                        <CardContent>
-                          <Typography variant="h6" component="div">
-                            Registration Number: {item.registration_number}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            Status: {item.status}
-                          </Typography>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                  ))}
-                </Grid>
+              <Box
+                sx={{ width: { lg: "50%", md: "50%", xs: "90%", sm: "90%" } }}
+              >
+                {allotmentData.length === 0 ? (
+                  <center>
+                    <img
+                      src="./images/No_data.png"
+                      alt=""
+                      style={{
+                        width: "310px",
+                        borderRadius: "10px",
+                        marginTop: "30px",
+                      }}
+                    />
+                  </center>
+                ) : (
+                  allotmentData.map((data, index) => (
+                    <Card
+                      style={{
+                        marginTop: "20px",
+                        marginBottom: "10px",
+                        backgroundColor: "whitesmoke",
+                      }}
+                      key={index}
+                    >
+                      <CardContent>
+                        <Typography variant="subtitle1">
+                          ID: {data?.id}
+                        </Typography>
+                        <Typography variant="subtitle1">
+                          Registration Number:{" "}
+                          {data?.registration_details?.registration_number}
+                        </Typography>
+                        <Typography variant="subtitle1">
+                          Hostel Room: {data?.hostel_room}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  ))
+                )}
               </Box>
-            )}
+            </Grid>
           </Grid>
-        </Grid>
-      </Container>
-      <Footer />
-    </>
+        </Box>
+        <Footer />
+      </Box>
+    </Box>
   );
 };
 
