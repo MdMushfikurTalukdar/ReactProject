@@ -236,39 +236,42 @@ const HostelRoomAllotment = () => {
                     display: "",
                   }}
                 >
-                  <Grid container spacing={2}>
+                  <Grid container spacing={0}>
                     {data1.map((item, index) => (
                       <Grid
                         item
                         xs={12}
                         sm={12}
-                        lg={12}
-                        md={12}
+                        lg={6}
+                        md={6}
                         key={index}
                         justifyContent="center"
                         display="flex"
                       >
                         <Card
+                         
                           sx={{
                             width: {
-                              lg: "30%",
+                              lg: "50%",
                               md: "70%",
                               xs: "100%",
                               sm: "90%",
                             },
+                           backgroundColor:"rgb(244, 243, 243)",
+                           border:"2px solid whitesmoke"
                           }}
                         >
                           <CardMedia
                             component="img"
-                            sx={{ height: 240,objectFit:"contain" }}
+                            sx={{ height: 260,objectFit:"fill",}}
                             image={`data:image/jpeg;base64,${item.latest_marksheet}`}
                             alt="Marksheet"
 
                           />
 
                           <CardContent>
-                            <Box>
-                              <Grid container spacing={2}>
+                           
+                              <Grid container spacing={3}>
                                 <Grid item xs={12}>
                                   <p>
                                     Registration Number:{" "}
@@ -317,7 +320,7 @@ const HostelRoomAllotment = () => {
                                   </center>
                                 </Grid>
                               </Grid>
-                            </Box>
+                          
                           </CardContent>
                         </Card>
                       </Grid>
