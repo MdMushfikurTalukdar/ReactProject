@@ -198,7 +198,7 @@ const HostelRoomAllotment = () => {
                   marginBottom: "50px",
                 }}
               >
-                Hostel Room Requests
+                Hostel Room Allotments
               </p>
               <center>
                 <img
@@ -207,11 +207,22 @@ const HostelRoomAllotment = () => {
                   style={{ width: "300px" }}
                 />
               </center>
+
+              <p
+                style={{
+                  textAlign: "center",
+                  fontSize: "1.6rem",
+                  marginTop: "10px",
+                  marginBottom: "50px",
+                }}
+              >
+                  Hostel Room Requests
+              </p>
               {data1.length === 0 ? (
                 <Typography
                   variant="body1"
                   align="center"
-                  style={{ marginTop: "20%" }}
+                  sx={{ marginTop: {xs:"20%",sm:"4%",lg:"4%",md:"4%"} }}
                 >
                   <center>
                     <img
@@ -254,8 +265,8 @@ const HostelRoomAllotment = () => {
                             width: {
                               lg: "50%",
                               md: "70%",
-                              xs: "100%",
-                              sm: "90%",
+                              xs: "88%",
+                              sm: "80%",
                             },
                            backgroundColor:"rgb(244, 243, 243)",
                            border:"2px solid whitesmoke"
@@ -263,7 +274,7 @@ const HostelRoomAllotment = () => {
                         >
                           <CardMedia
                             component="img"
-                            sx={{ height: 260,objectFit:"fill",}}
+                            sx={{ height: 260,objectFit:"cover",}}
                             image={`data:image/jpeg;base64,${item.latest_marksheet}`}
                             alt="Marksheet"
 
@@ -376,12 +387,12 @@ const HostelRoomAllotment = () => {
                     <Card
                       style={{
                         marginTop: "20px",
-                        marginBottom: "10px",
+                        marginBottom: "20px",
                         backgroundColor: "whitesmoke",
                       }}
                       key={index}
                     >
-                      <CardContent>
+                      <CardContent style={{padding:"20px"}}> 
                         <Typography variant="subtitle1">
                           ID: {data?.id}
                         </Typography>
