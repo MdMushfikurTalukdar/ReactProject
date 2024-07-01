@@ -3,6 +3,7 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import axios from "axios";
+import { TbHomeFilled } from "react-icons/tb";
 import {
   TextField,
   Button,
@@ -15,6 +16,7 @@ import {
   Divider,
   CardMedia,
   Box,
+  InputAdornment,
 } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { jwtDecode } from "jwt-decode";
@@ -278,9 +280,17 @@ const HostelRoomAllotment = () => {
                                     onChange={(e) =>
                                       setHostel_room(e.target.value)
                                     }
+                                    label="Hostel Room"
                                     placeholder="Hostel Room"
                                     variant="outlined"
                                     fullWidth
+                                    InputProps={{
+                                      startAdornment: (
+                                        <InputAdornment position="start">
+                                          <TbHomeFilled />
+                                        </InputAdornment>
+                                      ),
+                                    }}
                                   />
                                 </Grid>
                                 <Grid item xs={12}>

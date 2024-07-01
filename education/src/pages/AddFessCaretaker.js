@@ -18,13 +18,14 @@ import {
   TableRow,
   TableCell,
   TableBody,
+  InputAdornment,
 } from "@mui/material";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
+import { RiMoneyRupeeCircleFill } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 import NavbarNew from "../components/NavbarNew";
 import Footer from "../components/Home/Footer";
-
 
 // Validation schema using yup
 const schema = yup.object().shape({
@@ -160,20 +161,39 @@ const AddFeesCaretaker = () => {
   return (
     <>
       <NavbarNew />
-      <Container style={{ marginBottom: "11%",padding:"10px"}}>
-        <p style={{ marginTop: "20px", marginBottom: "36px",textAlign:"center",fontSize:"1.4rem"}}
+      <Container style={{ marginBottom: "11%", padding: "10px" }}>
+        <p
+          style={{
+            marginTop: "20px",
+            marginBottom: "36px",
+            textAlign: "center",
+            fontSize: "1.4rem",
+          }}
         >
           Fees Structure
         </p>
         <Grid container spacing={12}>
-          <Grid item xs={12} sm={12} md={6} lg={7} sx={{
-            marginTop:{lg:"70px",md:"70px",xs:"0px",sm:"0px" }
-            }}>
-            <Box sx={{
-                display:{sm:"block",xs:"block",md:"none",lg:"none"},
-                textAlign:"center"
-              }}>
-              <img src={`./images/addCarefee.png`} alt="" style={{width:"250px"}}/>
+          <Grid
+            item
+            xs={12}
+            sm={12}
+            md={6}
+            lg={7}
+            sx={{
+              marginTop: { lg: "70px", md: "70px", xs: "0px", sm: "0px" },
+            }}
+          >
+            <Box
+              sx={{
+                display: { sm: "block", xs: "block", md: "none", lg: "none" },
+                textAlign: "center",
+              }}
+            >
+              <img
+                src={`./images/addCarefee.png`}
+                alt=""
+                style={{ width: "250px" }}
+              />
             </Box>
             <form onSubmit={handleSubmit(onSubmit)}>
               <Controller
@@ -182,12 +202,20 @@ const AddFeesCaretaker = () => {
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    placeholder="Maintenance Fees"
+                    label="Maintenance Fees"
+                    placeholder="Maintenance Fees..."
                     variant="outlined"
                     fullWidth
                     error={!!errors.Maintainance_fees}
                     helperText={errors.Maintainance_fees?.message}
                     style={{ marginTop: "20px" }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <RiMoneyRupeeCircleFill />
+                        </InputAdornment>
+                      ),
+                    }}
                   />
                 )}
               />
@@ -198,28 +226,45 @@ const AddFeesCaretaker = () => {
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    placeholder="Mess Fees"
+                    label="Mess Fees"
+                    placeholder="Mess Fees..."
                     variant="outlined"
                     fullWidth
                     error={!!errors.Mess_fees}
                     helperText={errors.Mess_fees?.message}
                     style={{ marginTop: "20px" }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <RiMoneyRupeeCircleFill />
+                        </InputAdornment>
+                      ),
+                    }}
                   />
                 )}
               />
 
               <Controller
                 name="Security_Deposit"
+             
                 control={control}
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    placeholder="Security Deposit"
+                    label="Security Deposit"
+                       placeholder="Security_Deposit..."
                     variant="outlined"
                     fullWidth
                     error={!!errors.Security_Deposit}
                     helperText={errors.Security_Deposit?.message}
                     style={{ marginTop: "20px" }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <RiMoneyRupeeCircleFill />
+                        </InputAdornment>
+                      ),
+                    }}
                   />
                 )}
               />
@@ -236,24 +281,43 @@ const AddFeesCaretaker = () => {
             </form>
           </Grid>
 
-          <Grid item xs={12} sm={12} md={6} lg={5} sx={{
-           display:"flex",flexDirection:"column",justifyContent:'center', textAlign:"-webkit-center"
-          }}>
-
-             <Box sx={{
-                display:{sm:"none",xs:"none",md:"block",lg:"block"},
-                textAlign:"center"
-              }}>
-             <img src={`./images/addCarefee.png`} alt="" style={{width:"300px"}}/>
-              
-            </Box>  
+          <Grid
+            item
+            xs={12}
+            sm={12}
+            md={6}
+            lg={5}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              textAlign: "-webkit-center",
+            }}
+          >
+            <Box
+              sx={{
+                display: { sm: "none", xs: "none", md: "block", lg: "block" },
+                textAlign: "center",
+              }}
+            >
+              <img
+                src={`./images/addCarefee.png`}
+                alt=""
+                style={{ width: "300px" }}
+              />
+            </Box>
 
             <Box style={{ marginTop: "20px" }}>
-              <Divider />
-              <p style={{ marginTop: "20px", marginBottom: "36px",textAlign:"center",fontSize:"1.4rem"}}
-        >
-          Previous Fees Records
-        </p>
+              <p
+                style={{
+                  marginTop: "20px",
+                  marginBottom: "36px",
+                  textAlign: "center",
+                  fontSize: "1.4rem",
+                }}
+              >
+                Previous Fees Records
+              </p>
             </Box>
 
             {result.length === 0 ? (
