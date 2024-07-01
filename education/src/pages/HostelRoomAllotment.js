@@ -236,7 +236,7 @@ const HostelRoomAllotment = () => {
                     display: "",
                   }}
                 >
-                  <Grid container spacing={0}>
+                  <Grid container spacing={3}>
                     {data1.map((item, index) => (
                       <Grid
                         item

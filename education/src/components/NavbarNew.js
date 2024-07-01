@@ -527,7 +527,7 @@ export const NavbarNew = () => {
                 </Box>
               </div>
             )}
-            <div className="relative">
+            {roll==='student' && <div className="relative">
               <CgProfile
                 size={24}
                 className="cursor-pointer"
@@ -535,7 +535,9 @@ export const NavbarNew = () => {
                   navigate("/profile");
                 }}
               />
+              
             </div>
+            }
           </div>
         </div>
       </nav>
