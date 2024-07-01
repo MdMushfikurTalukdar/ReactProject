@@ -85,16 +85,15 @@ function HostelFeePayment() {
   };
 
   useEffect(() => {
-    if (localStorage.getItem("accesstoken")) {
-      const token = localStorage.getItem("accesstoken");
-      const decoded = jwtDecode(token);
-      if (decoded.exp < Date.now() / 1000) {
+    if (localStorage?.getItem("accesstoken")) {
+      const response = jwtDecode(localStorage?.getItem("accesstoken"));
+      if (response.exp < Math.floor(Date.now() / 1000)|| response.role!=="student" ) {
         navigate("/login");
       }
     } else {
       navigate("/login");
     }
-  }, [navigate]);
+  }, []);
 
   useEffect(() => {
     const fetchProfileData = async () => {

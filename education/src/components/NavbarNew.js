@@ -7,7 +7,7 @@ import { CgProfile } from "react-icons/cg";
 import { Box, Button, Divider } from "@mui/material";
 import axios from "axios";
 import dayjs from "dayjs";
-import relativeTime from 'dayjs/plugin/relativeTime';
+import relativeTime from "dayjs/plugin/relativeTime";
 
 dayjs.extend(relativeTime);
 
@@ -16,7 +16,6 @@ export const NavbarNew = () => {
   const [roll, setRoll] = useState("");
 
   useEffect(() => {
-
     if (localStorage.getItem("accesstoken") === null) {
       navigate("/login");
     } else {
@@ -58,12 +57,15 @@ export const NavbarNew = () => {
     { name: "Hostel No Dues Request", link: "/hostel-no-dues-request" },
     { name: "Security Money Return Request", link: "/underDevelopment" },
   ];
-  // const other_responsibilities = [
-  //   { name: "Add Subject", link: "/sem-sub-register" },
-  //    { name: "Add Branch", link: "/sem-branch-register" },
-  //    { name: "Add College", link: "/add-college" },
-  //   { name: "Semester Registration Request", link: "/verifySemesterRegistration" }
-  // ];
+  const teachers = [
+
+    { name: "Add Subject", link: "/sem-sub-register" },
+     { name: "Add Branch", link: "/sem-branch-register" },
+     { name: "Upload/Check Assignment", link: "/underDevelopment" },
+    { name: "Upload Internal Sem Marks", link: "/underDevelopment" },
+    
+    // { name: "Semester Registration Request", link: "/verifySemesterRegistration" }
+  ];
 
   const fees_add = [
     { name: "Add Fees", link: "/add-fees" },
@@ -76,9 +78,9 @@ export const NavbarNew = () => {
     { name: "Complaints", link: "/complaints" },
   ];
 
-  const facultyAcadamic = [
-    { name: "Upload/Check Assignment", link: "/underDevelopment" },
-    { name: "Upload Internal Sem Marks", link: "/underDevelopment" },
+  const admin = [{ name: "Add college", link: "/add-college" },
+    { name: "Add Subject", link: "/sem-sub-register" },
+    { name: "Add Branch", link: "/sem-branch-register" },
   ];
 
   const hod = [
@@ -190,62 +192,63 @@ export const NavbarNew = () => {
   const [hide, setHide] = useState(false);
   const [notifications, setNotifications] = useState([]);
 
-  useEffect(()=>{
+  useEffect(() => {
     let config = {
-      method: 'get',
+      method: "get",
       maxBodyLength: Infinity,
-      url: `https://amarnath013.pythonanywhere.com/api/user/notification/?search=${localStorage?.getItem('RollNumber')}`,
-      headers: { 
-        'Authorization': `Bearer ${localStorage?.getItem('accesstoken')}`
-      }
+      url: `https://amarnath013.pythonanywhere.com/api/user/notification/?search=${localStorage?.getItem(
+        "RollNumber"
+      )}`,
+      headers: {
+        Authorization: `Bearer ${localStorage?.getItem("accesstoken")}`,
+      },
     };
-    
-    axios.request(config)
-    .then((response) => {
-      console.log(JSON.stringify(response.data));
-      setNotifications(response?.data);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-  },[]);
+
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        setNotifications(response?.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   const [showNotifications, setShowNotifications] = useState(false);
 
   const deleteNotification = (id) => {
-
     let config = {
-      method: 'delete',
+      method: "delete",
       maxBodyLength: Infinity,
       url: `https://amarnath013.pythonanywhere.com/api/user/notification/${id}/`,
-      headers: { 
-        'Authorization': `Bearer ${localStorage?.getItem('accesstoken')}`
-      }
+      headers: {
+        Authorization: `Bearer ${localStorage?.getItem("accesstoken")}`,
+      },
     };
-    
-    axios.request(config)
-    .then((response) => {
-      console.log(JSON.stringify(response.data));
-      setNotifications(
-        notifications.filter((notification) => notification.id !== id)
-      );
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-   
+
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        setNotifications(
+          notifications.filter((notification) => notification.id !== id)
+        );
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const deleteAllNotifications = async () => {
-
-    const deleteRequests = notifications.map(notification => {
+    const deleteRequests = notifications.map((notification) => {
       let config = {
-        method: 'delete',
+        method: "delete",
         maxBodyLength: Infinity,
         url: `https://amarnath013.pythonanywhere.com/api/user/notification/${notification.id}/`,
-        headers: { 
-          'Authorization': `Bearer ${localStorage?.getItem('accesstoken')}`
-        }
+        headers: {
+          Authorization: `Bearer ${localStorage?.getItem("accesstoken")}`,
+        },
       };
       return axios.request(config);
     });
@@ -338,6 +341,50 @@ export const NavbarNew = () => {
                         </div>
                       </>
                     )}
+                    {roll === "admin" && (
+                      <div
+                        className="hover:bg-blue-50 px-4 py-2 cursor-pointer"
+                        onClick={toggleNestedDropdownResidential}
+                      >
+                        Action
+                        {isNestedDropdownResidentialOpen && (
+                          <div className="mt-2 bg-white rounded-lg shadow-md">
+                            {admin.map((item, index) => (
+                              <Link
+                                key={index}
+                                className="block px-4 py-2 text-gray-800 hover:bg-blue-100"
+                                to={item.link}
+                                style={{ textDecoration: "none" }}
+                              >
+                                {item.name}
+                              </Link>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    {(roll === "teacher" || roll==="faculty") && (
+                      <div
+                        className="hover:bg-blue-50 px-4 py-2 cursor-pointer"
+                        onClick={toggleNestedDropdownResidential}
+                      >
+                        Action
+                        {isNestedDropdownResidentialOpen && (
+                          <div className="mt-2 bg-white rounded-lg shadow-md">
+                            {teachers.map((item, index) => (
+                              <Link
+                                key={index}
+                                className="block px-4 py-2 text-gray-800 hover:bg-blue-100"
+                                to={item.link}
+                                style={{ textDecoration: "none" }}
+                              >
+                                {item.name}
+                              </Link>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
                     {/* {roll !== "student" && roll !== "caretaker" && (
                       <div
                         className="hover:bg-blue-50 px-4 py-2 cursor-pointer"
@@ -407,7 +454,7 @@ export const NavbarNew = () => {
                     )}
 
                     {/* Faculty common */}
-                    {roll === "faculty" && (
+                    {/* {roll === "faculty" && (
                       <div
                         className="hover:bg-blue-50 px-4 py-2 cursor-pointer"
                         onClick={toggleNestedDropdownFacultyAcademic}
@@ -428,9 +475,10 @@ export const NavbarNew = () => {
                           </div>
                         )}
                       </div>
-                    )}
+                    )} */}
                     {/* Faculty HOD */}
-                    {roll === "faculty" && (
+
+                    {roll === "hod" && (
                       <div
                         className="hover:bg-blue-50 px-4 py-2 cursor-pointer"
                         onClick={toggleNestedDropdownHOD}
@@ -527,17 +575,17 @@ export const NavbarNew = () => {
                 </Box>
               </div>
             )}
-            {roll==='student' && <div className="relative">
-              <CgProfile
-                size={24}
-                className="cursor-pointer"
-                onClick={(e) => {
-                  navigate("/profile");
-                }}
-              />
-              
-            </div>
-            }
+            {roll === "student" && (
+              <div className="relative">
+                <CgProfile
+                  size={24}
+                  className="cursor-pointer"
+                  onClick={(e) => {
+                    navigate("/profile");
+                  }}
+                />
+              </div>
+            )}
           </div>
         </div>
       </nav>

@@ -31,10 +31,7 @@ export const SemBranch = () => {
   useEffect(() => {
     if (localStorage?.getItem("accesstoken")) {
       const response = jwtDecode(localStorage?.getItem("accesstoken"));
-      if (
-        response.exp < Math.floor(Date.now() / 1000) ||
-        response.role !== "admin" 
-      ) {
+      if (response.exp < Math.floor(Date.now() / 1000) || (response.role !== "admin" && response.role !== "teacher" && response.role !== "faculty"))  {
         navigate("/login");
       }
     } else {
@@ -118,17 +115,16 @@ export const SemBranch = () => {
   return (
     <Box>
       <NavbarNew />
-      <Paper
-        elevation={3}
+      <Box
+        
         sx={{
           padding: 4,
           borderRadius: 2,
           maxWidth: 400,
           margin: "auto",
           marginTop: 5,
-          backgroundColor: "#f5f5f5",
-          marginBottom: 9,
-          maxHeight: 460,
+          marginBottom: 18,
+        
         }}
       >
         <Typography
@@ -137,8 +133,11 @@ export const SemBranch = () => {
           gutterBottom
           sx={{ textAlign: "center", marginBottom: 2 }}
         >
-          Add Subject
+          Branch Enrollment
         </Typography>
+        <center>
+            <img src="./images/enrollment.png" alt="" style={{width:"250px",borderRadius:"10px"}}/>
+          </center>
         <Box
           sx={{
             display: "flex",
@@ -149,7 +148,7 @@ export const SemBranch = () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <FormControl
               fullWidth
-              margin="normal"
+              style={{marginBottom:"5px"}}
               error={!!errors.subject_name}
             >
               <TextField
@@ -163,19 +162,20 @@ export const SemBranch = () => {
             </FormControl>
             <FormControl
               fullWidth
-              margin="normal"
+            
               error={!!errors.subject_codes}
             >
               <TextField
                 type="text"
                 label="Subject Codes*"
                 variant="outlined"
+                style={{marginBottom:"5px"}}
                 fullWidth
                 {...register("subject_codes")}
               />
               <FormHelperText>{errors?.subject_codes?.message}</FormHelperText>
             </FormControl>
-            <FormControl fullWidth margin="normal" error={!!errors.branch}>
+            <FormControl fullWidth  error={!!errors.branch}>
               <TextField
                 type="text"
                 label="Branch*"
@@ -185,6 +185,7 @@ export const SemBranch = () => {
               />
               <FormHelperText>{errors?.branch?.message}</FormHelperText>
             </FormControl>
+            <center>
             <Button
               variant="contained"
               color="primary"
@@ -193,14 +194,16 @@ export const SemBranch = () => {
                 paddingX: 4,
                 paddingY: 1,
                 marginTop: 1,
+                
               }}
               type="submit"
             >
-              Add Subject
+              Add Branch
             </Button>
+            </center>
           </form>
         </Box>
-      </Paper>
+      </Box>
       <Footer />
     </Box>
   );

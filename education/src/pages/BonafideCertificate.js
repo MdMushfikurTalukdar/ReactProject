@@ -48,10 +48,7 @@ export const BonafideCertificate = () => {
     if (localStorage?.getItem("accesstoken")) {
       const response = jwtDecode(localStorage?.getItem("accesstoken"));
       console.log(response.exp);
-      if (
-        response.token_type !== "access" &&
-        response.exp < Math.floor(Date.now() / 1000)
-      ) {
+      if (response.exp < Math.floor(Date.now() / 1000)|| response.role!=="student" ) {
         navigate("/login");
       }
     } else {

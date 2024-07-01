@@ -104,6 +104,7 @@ export const HostelRoomRequest = () => {
     };
   }, []);
 
+ 
   useEffect(() => {
     const accessToken = localStorage.getItem("accesstoken");
 
@@ -114,7 +115,7 @@ export const HostelRoomRequest = () => {
 
     const decodedToken = jwtDecode(accessToken);
 
-    if (decodedToken.exp < Math.floor(Date.now() / 1000)) {
+    if (decodedToken.exp < Math.floor(Date.now() / 1000 || decodedToken.role!=="student")) {
       navigate("/login");
     }
 
