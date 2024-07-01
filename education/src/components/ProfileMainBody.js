@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  CircularProgress,
   Divider,
   Grid,
   TextField,
@@ -14,11 +15,12 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../pages/logout.css";
 import { jwtDecode } from "jwt-decode";
-import { Opacity } from "@mui/icons-material";
+
 
 export const ProfileMainBody = () => {
   const [userProfile, setUserProfile] = useState([]);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (localStorage?.getItem("accesstoken")) {
@@ -45,6 +47,7 @@ export const ProfileMainBody = () => {
       .request(config)
       .then((response) => {
         setUserProfile(response.data);
+        setLoading(false);
       })
       .catch((error) => {
         console.log(error);
@@ -85,6 +88,18 @@ export const ProfileMainBody = () => {
   //   });
 
   // }
+  if (loading) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="80vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
   return (
     <Box className="logout-container">
       <div className="circle circle1"></div>

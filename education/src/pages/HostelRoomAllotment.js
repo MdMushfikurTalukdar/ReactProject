@@ -74,11 +74,15 @@ const HostelRoomAllotment = () => {
   }, [navigate]);
 
   const onSubmit = async (data) => {
+
+    if(hostel_room.length===0){
+      return  enqueueSnackbar("Hostel Room field is required", { variant: "error" });
+    }
     const jsonData = {
       registration_number: data,
       hostel_room: hostel_room,
     };
-    console.log(jsonData);
+    
     const config = {
       method: "post",
       maxBodyLength: Infinity,
@@ -104,7 +108,7 @@ const HostelRoomAllotment = () => {
         },
         data: data2,
       };
-
+      setHostel_room('');
       await axios.request(configUpdate);
       setData1(data1.filter((item) => item.id !== response?.data?.id));
       enqueueSnackbar("Room allotted successfully", { variant: "success" });

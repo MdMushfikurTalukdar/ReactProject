@@ -9,6 +9,7 @@ import {
   Paper,
   Box,
   InputAdornment,
+  CircularProgress,
 } from "@mui/material";
 import { MdDateRange } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
@@ -53,7 +54,8 @@ function HostelFeePayment() {
   const [fees, setFees] = useState({});
   const [result, setResult] = useState([]);
   const [total, setTotal] = useState(0);
-
+  const [loading, setLoading] = useState(true);
+  const [id,setId]=useState('');
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -78,6 +80,7 @@ function HostelFeePayment() {
         }
       );
       console.log(response.data);
+      setLoading(false);
       setFees(response.data);
     } catch (error) {
       console.error("Failed to fetch fees:", error);
@@ -95,6 +98,26 @@ function HostelFeePayment() {
     }
   }, []);
 
+  useEffect(()=>{
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `https://amarnath013.pythonanywhere.com/api/user/hostel-room-allotments/?search=${localStorage?.getItem('RollNumber')}`,
+      headers: { 
+        'Authorization': `Bearer ${localStorage?.getItem('accesstoken')}`
+      },
+     
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      setId(response?.data?.[0]?.id);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  },[]);
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
@@ -127,10 +150,10 @@ function HostelFeePayment() {
 
   const onSubmit = async (data) => {
     try {
-      await axios.post(
+      const response=await axios.post(
         "https://amarnath013.pythonanywhere.com/api/user/mess-fees-payment/",
         {
-          registration_details: fees.id,
+          registration_details: id,
           from_date: dayjs(data.startDate).format("YYYY-MM"),
           to_date: dayjs(data.endDate).format("YYYY-MM"),
           mess_fees: data.feeType === "Mess_fees" ? fees.Mess_fees : null,
@@ -149,6 +172,7 @@ function HostelFeePayment() {
           },
         }
       );
+      console.log(response);
       enqueueSnackbar("Payment request successful", {
         variant: "success",
         anchorOrigin: {
@@ -158,11 +182,11 @@ function HostelFeePayment() {
         autoHideDuration: 3000,
       });
       setTimeout(() => {
-        window.location.reload();
+        // window.location.reload();
       }, 2000);
     } catch (error) {
       console.error("Payment request error:", error);
-      enqueueSnackbar("Payment request failed", {
+      enqueueSnackbar("Caretaker have not alloted a room to you yet.", {
         variant: "error",
         anchorOrigin: {
           vertical: "bottom",
@@ -173,6 +197,7 @@ function HostelFeePayment() {
     }
   };
 
+  
   useEffect(() => {
     const fetchPayments = async () => {
       try {
@@ -222,6 +247,19 @@ function HostelFeePayment() {
       setTotal(differenceInMonths * monthlyCharge);
     }
   }, [watch("startDate"), watch("endDate"), watch("feeType"), setValue, fees]);
+
+  if (loading) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="80vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Container maxWidth="md">
@@ -294,6 +332,7 @@ function HostelFeePayment() {
                     selected={field.value}
                     onChange={handleStartDateChange}
                     dateFormat="MMMM yyyy"
+                    minDate={new Date()}
                     showMonthYearPicker
                     customInput={
                       <TextField

@@ -22,6 +22,7 @@ import {
   Paper,
   CardContent,
   Card,
+  CircularProgress,
 } from "@mui/material";
 import { Footer } from "../components/Footer";
 import "../App.css";
@@ -69,6 +70,7 @@ export const GuestRoom = () => {
   const [fromError, setFromError] = useState("");
   const [result, setResult] = useState([]);
   const [responsive, setResponsive] = useState(window.innerWidth < 669);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const resize = () => {
@@ -95,6 +97,7 @@ export const GuestRoom = () => {
       try {
         const response = await axios.request(config);
         setResult(response.data.reverse());
+        setLoading(false);
       } catch (error) {
         console.error(error);
       }
@@ -139,6 +142,19 @@ export const GuestRoom = () => {
       console.error(error);
     }
   };
+
+  if (loading) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="80vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <div className="container-fluid">

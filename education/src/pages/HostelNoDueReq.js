@@ -24,6 +24,7 @@ import {
   TableRow,
   Paper,
   Checkbox,
+  CircularProgress,
 } from "@mui/material";
 import Footer from "../components/Home/Footer";
 import "../App.css";
@@ -43,7 +44,9 @@ export const HostelNoDueReq = () => {
   const [result, setResult] = useState([]);
   const [responsive, setResponsive] = useState(window.innerWidth < 669);
   const navigate = useNavigate();
-
+  const [loading, setLoading] = useState(true);
+  const [loading1, setLoading1] = useState(true);
+ 
   const [maintainanceToDate, setMaintainanceToDate] = useState(null);
   const [messToDate, setMessToDate] = useState(null);
 
@@ -61,7 +64,7 @@ export const HostelNoDueReq = () => {
     axios.request(config)
     .then((response) => {
       const payments = response.data.reverse();
-     
+      setLoading(false);
       const maintainancePayment = payments.find(payment => payment.maintainance_fees !== null);
       const messPayment = payments.find(payment => payment.mess_fees !== null);
 
@@ -182,11 +185,25 @@ export const HostelNoDueReq = () => {
     .then((response) => {
       console.log(JSON.stringify(response.data));
       setResult(response?.data);
+      setLoading1(false);
     })
     .catch((error) => {
       console.log(error);
     });
   },[]);
+
+  if (loading || loading1) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="80vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
   return (
     <div className="container-fluid" style={{ backgroundColor: "whitesmoke" }}>
       <NavbarNew />
@@ -333,11 +350,13 @@ export const HostelNoDueReq = () => {
             <Typography
               style={{
                 marginBottom: "50px",
-                marginTop: "100px",
+                marginTop: "30px",
                 fontSize: "1.2rem",
               }}
             >
-              Nothing to show
+              <center>
+            <img src="./images/No_data.png" alt="" style={{width:"250px",borderRadius:"10px"}}/>
+          </center>
             </Typography>
           )}
 

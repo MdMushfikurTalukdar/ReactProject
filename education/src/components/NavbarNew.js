@@ -269,7 +269,7 @@ export const NavbarNew = () => {
             <div className="relative" onClick={toggleDropdown}>
               <div className="cursor-pointer flex items-center space-x-2">
                 <i className="fas fa-bars" style={{ marginTop: "5px" }}></i>
-                <span className="text-xl">Menu</span>
+                {/* <span className="text-xl">Menu</span> */}
               </div>
               {isDropdownOpen && (
                 <div className="absolute left-0 mt-2 w-64 bg-white text-black rounded-lg shadow-lg z-50">
@@ -505,7 +505,9 @@ export const NavbarNew = () => {
                 </div>
               )}
             </div>
-            <h1 className="text-2xl font-bold ml-4">Campus</h1>
+            <h1 className="text-xl font-bold ml-4" onClick={(e)=>{
+              navigate('/')
+            }}>Smart Campus</h1>
           </div>
           <div className="flex items-center space-x-4">
             <div

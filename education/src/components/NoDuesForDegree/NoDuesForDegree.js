@@ -112,7 +112,7 @@ export function NoDuesForDegree() {
   const [userProfile, setUserProfile] = useState({});
   const [result, setResult] = useState([]);
   const [responsive, setResponsive] = useState(window.innerWidth < 669);
-
+  const [loading, setLoading] = useState(true);
   const {
     handleSubmit,
     register,
@@ -180,6 +180,23 @@ export function NoDuesForDegree() {
   }, [navigate]);
 
   const onSubmit = async (data) => {
+
+  
+    if(userProfile?.personal_information?.first_name===null)
+      return enqueueSnackbar("name field is empty", { variant: "error" });
+
+    if(!userProfile?.academic_information?.branch)
+      return enqueueSnackbar("branch field is empty", { variant: "error" });
+
+    if(!userProfile?.personal_information?.father_name)
+      return enqueueSnackbar("Father field is empty", { variant: "error" });
+
+    if(!userProfile?.academic_information?.category)
+      return enqueueSnackbar("Category field is empty", { variant: "error" });
+
+    if(!userProfile?.academic_information?.session)
+      return enqueueSnackbar("Session field is empty", { variant: "error" });
+
     const requestData = {
       name: `${userProfile?.personal_information?.first_name} ${userProfile?.personal_information?.last_name}`,
       branch: userProfile?.academic_information?.branch,
@@ -378,6 +395,7 @@ export function NoDuesForDegree() {
                   variant="h6"
                   gutterBottom
                   sx={{ marginTop: "10px",fontSize:"1rem" }}
+                  
                 >
                   Category
                 </Typography>
@@ -392,6 +410,7 @@ export function NoDuesForDegree() {
                   <TextField  
                   value={userProfile?.academic_information?.category}
                   disabled
+                  placeholder="Category"
                   />
                  
                 </FormControl>
@@ -442,7 +461,7 @@ export function NoDuesForDegree() {
               <img
                 src="./images/NoDues.png"
                 alt=""
-                style={{ width: "55%", marginLeft: "15%",marginTop:"20%" }}
+                style={{ width: "40%", marginLeft: "15%",marginTop:"20%" }}
               />
             </Box>
           </Grid>
@@ -464,6 +483,13 @@ export function NoDuesForDegree() {
             </div>
           </Box>
         )}
+        {result.length===0 && 
+         <center>
+          <Box sx={{display:{lg:"none",md:"none",sm:"none"}}}>
+         <img src="./images/No_data.png" alt="" style={{width:"250px",borderRadius:"10px"}}/>
+         </Box>
+         </center>
+        }
         {responsive ? (
           result.length > 0 && (
                result.map((data, index) => (
@@ -520,6 +546,8 @@ export function NoDuesForDegree() {
                 <p style={{ marginTop: "20px", textAlign: "center",marginBottom:"20px" }}>
                   Previous Requests
                 </p>
+                
+                
                 {result.length > 0 ? (
                 <TableContainer>
                 <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
@@ -598,7 +626,13 @@ export function NoDuesForDegree() {
                       textAlign: "center",
                     }}
                   >
-                    Nothing to show
+                   {result.length===0 && 
+         <center>
+          <Box sx={{display:{lg:"block",md:"block",sm:"block",xs:"none"}}}>
+         <img src="./images/No_data.png" alt="" style={{width:"250px",borderRadius:"10px"}}/>
+         </Box>
+         </center>
+        }
                   </Typography>
                 )}
               </Box>

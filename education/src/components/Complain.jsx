@@ -32,6 +32,7 @@ import {
   CardContent,
   TableHead,
   useTheme,
+  CircularProgress,
 } from "@mui/material";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -153,6 +154,7 @@ const ComplaintForm = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [responsive, setResponsive] = useState(window.innerWidth < 684);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const handleResize = () => {
@@ -196,6 +198,9 @@ const ComplaintForm = () => {
         );
         if (!response.ok) throw new Error("Failed to fetch profile data");
         const data = await response.json();
+        if(data){
+          setLoading(false);
+        }
         setProfileData({
           registrationNo: data?.academic_information?.registration_number,
           name: data?.personal_information?.first_name,
@@ -329,6 +334,19 @@ const ComplaintForm = () => {
       ? Math.max(0, (1 + page) * rowsPerPage - previousRecord.length)
       : 0;
 
+
+      if (loading) {
+        return (
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            height="80vh"
+          >
+            <CircularProgress />
+          </Box>
+        );
+      }
   return (
     <div className="container-fluid" style={{borderRadius:"20px"}}>
       <Box

@@ -23,6 +23,7 @@ import {
   Paper,
   TableHead,
   Grid,
+  CircularProgress,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
@@ -79,6 +80,7 @@ export const HostelRoomRequest = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [responsive, setResponsive] = useState(window.innerWidth < 669);
+  const [loading, setLoading] = useState(true);
 
   const theme = useTheme();
 
@@ -141,7 +143,7 @@ export const HostelRoomRequest = () => {
             },
           }
         );
-       
+        setLoading(false);
         setResult(hostelAllotmentsResponse.data.reverse());
 
         const hostelRoomAllotmentsResponse = await axios.get(
@@ -162,6 +164,18 @@ export const HostelRoomRequest = () => {
     fetchData();
   }, [navigate]);
 
+  if (loading) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="80vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };

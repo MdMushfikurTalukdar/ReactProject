@@ -26,6 +26,7 @@ import {
   CardContent,
   TableHead,
   Grid,
+  CircularProgress,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
@@ -119,6 +120,7 @@ export const BonafideForm = () => {
   const [result, setResult] = useState([]);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [name, setName] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const navigate = useNavigate();
@@ -183,6 +185,7 @@ export const BonafideForm = () => {
         }
       )
       .then((response) => {
+        setLoading(false);
         setResult(response.data.reverse());
       })
       .catch((error) => {
@@ -245,6 +248,20 @@ export const BonafideForm = () => {
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - result.length) : 0;
+
+
+    if (loading) {
+      return (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          height="80vh"
+        >
+          <CircularProgress />
+        </Box>
+      );
+    }
 
   return (
     <div className="container-fluid" style={{ backgroundColor: "whitesmoke" }}>
