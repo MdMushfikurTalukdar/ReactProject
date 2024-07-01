@@ -253,7 +253,7 @@ const HostelRoomAllotment = () => {
                         item
                         xs={12}
                         sm={12}
-                        lg={6}
+                        lg={4}
                         md={6}
                         key={index}
                         justifyContent="center"
@@ -263,7 +263,7 @@ const HostelRoomAllotment = () => {
                          
                           sx={{
                             width: {
-                              lg: "50%",
+                              lg: "70%",
                               md: "70%",
                               xs: "88%",
                               sm: "80%",
