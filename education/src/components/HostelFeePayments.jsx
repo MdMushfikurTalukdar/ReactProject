@@ -182,7 +182,7 @@ function HostelFeePayment() {
         autoHideDuration: 3000,
       });
       setTimeout(() => {
-        // window.location.reload();
+        window.location.reload();
       }, 2000);
     } catch (error) {
       console.error("Payment request error:", error);
