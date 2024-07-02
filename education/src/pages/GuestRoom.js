@@ -385,7 +385,8 @@ export const GuestRoom = () => {
                     </TableBody>
                   </Table>
                 </TableContainer>
-              ) : null}
+              ) : <center>
+              <img src="./images/No_data.png" alt="" style={{width:"320px",borderRadius:"10px",marginTop:"30px"}}/></center>}
             </Box>
           )}
         </Box>

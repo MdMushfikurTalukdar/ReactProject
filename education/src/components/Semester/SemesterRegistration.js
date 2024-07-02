@@ -19,7 +19,8 @@ import {
   TableRow,
   TableCell,
   TableBody,
-  InputAdornment
+  InputAdornment,
+  CircularProgress,
 } from "@mui/material";
 import "../../App.css";
 import NavbarNew from "../NavbarNew";
@@ -56,7 +57,10 @@ export function SemesterRegistration() {
   const [uniqueCodes, setUniqueCodes] = useState([]);
   const [uniqueSubjects, setUniqueSubjects] = useState([]);
   const [result, setResult] = useState([]);
-  
+  const [loading,setLoading]=useState(true);
+  const [loading1,setLoading1]=useState(true);
+  const [loading2,setLoading2]=useState(true);
+ 
 
   const [responsive, setResponsive] = useState(
     window.innerWidth < 669 ? true : false
@@ -98,6 +102,7 @@ export function SemesterRegistration() {
     axios
       .request(config)
       .then((response) => {
+        setLoading(false);
         setUserProfile(response.data);
       })
       .catch((error) => {
@@ -121,6 +126,7 @@ export function SemesterRegistration() {
       .request(config)
       .then((response) => {
         console.log(response.data);
+        setLoading1(false);
         setResult(response.data.reverse());
       })
       .catch((error) => {
@@ -152,6 +158,7 @@ export function SemesterRegistration() {
     axios
       .request(config)
       .then((response) => {
+        setLoading2(false);
         setTotalData(response.data);
         const uniqueBranches = response.data.reduce((acc, current) => {
           const x = acc.find(
@@ -306,6 +313,18 @@ export function SemesterRegistration() {
       });
   };
 
+  if (loading || loading1 || loading2) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="80vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
   // console.log(uniqueSubjects);
   return (
     <>

@@ -362,6 +362,7 @@ const ComplaintForm = () => {
               Register Complaint
             </Typography>
 
+<center>
             <Box
               sx={{
                 display: { xs: "block", sm: "block", md: "none", lg: "none" },
@@ -376,10 +377,11 @@ const ComplaintForm = () => {
                 ))}
               </Slider>
             </Box>
+            </center>
 
             <form onSubmit={handleSubmit(onSubmit)}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
+              <Grid container spacing={2} sx={{padding:{lg:"30px",xs:"0px",md:"30px",sm:"0px"}}} >
+                <Grid item xs={12} >
                   <TextField
                     label="Registration/ Employee No"
                     fullWidth
