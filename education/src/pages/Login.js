@@ -69,7 +69,7 @@ export const LoginPage = () => {
       <Style />
       <Header />
 
-      <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 loginBody">
+      <div className=" flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 loginBody">
         <Box className="max-w-md w-full space-y-8" sx={{ boxShadow: { lg: 3, md: 3, sm: 3, xs: 0,borderRadius: '16px',
             padding: '32px',width: '100%',
             maxWidth: '400px' }}}>
