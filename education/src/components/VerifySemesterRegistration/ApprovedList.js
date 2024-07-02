@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import "./VerifySemesterRegistration.css";
 import axios from "axios";
+import { Box, CircularProgress } from "@mui/material";
 
 const ApprovedList = () => {
   const [print, setPrint] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [searchMessage, setSearchMessage] = useState("");
+  const [loading1,setLoading1]=useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,6 +25,7 @@ const ApprovedList = () => {
 
         const response = await axios.request(config);
         console.log(response.data);
+        setLoading1(false);
         setSearchResults(response.data);
       } catch (error) {
         console.log("Error fetching data:", error);
@@ -38,6 +41,7 @@ const ApprovedList = () => {
     setPrint(false);
   };
 
+ 
   const handleSearch = (e) => {
     const searchTerm = e.target.value.toLowerCase();
     setSearchTerm(searchTerm);
@@ -75,6 +79,7 @@ const ApprovedList = () => {
       <div className="print">
         <h2 className="text1">Approved List</h2>
 
+       
         {/* <div className="search-bar">
           <input
             type="search"
@@ -90,6 +95,14 @@ const ApprovedList = () => {
           Download
         </button>
 
+        {loading1 &&  <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="80vh"
+      >
+        <CircularProgress />
+      </Box>}
         <div>
           {searchMessage && <p>{searchMessage}</p>}
           {showCards && uniqueRegistrationNumbers.map((regNumber, index) => {

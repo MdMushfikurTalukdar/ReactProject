@@ -11,7 +11,8 @@ import {
   FormControl,
   useMediaQuery,
   Container,
-  RadioGroup
+  RadioGroup,
+  CircularProgress
 } from "@mui/material";
 import "../../App.css";
 import NavbarNew from "../NavbarNew";
@@ -29,6 +30,7 @@ const FacultySemesterRegistration = () => {
   const [isTextFieldDisabled, setIsTextFieldDisabled] = useState(true);
   const isMobile = useMediaQuery('(max-width: 600px)');
   const navigate = useNavigate();
+ 
 
   const handleRadioChange = (event) => {
     setRemark(event.target.value);
@@ -68,6 +70,21 @@ const FacultySemesterRegistration = () => {
     }
   }, [navigate]);
 
+  useEffect(() => {
+  
+    console.log(localStorage.getItem("accesstoken"))
+    
+    if (localStorage?.getItem("accesstoken")) {
+      const response = jwtDecode(localStorage?.getItem("accesstoken"));
+      if (response.exp < Math.floor(Date.now() / 1000) || (response.role!=='hod' && response.role!=='admin') ) {
+        navigate("/login");
+      }
+    } else {
+     
+      navigate("/login");
+    }
+  }, []);
+
   const onSubmit = (status) => {
     
     let a='No Remark';
@@ -78,7 +95,7 @@ const FacultySemesterRegistration = () => {
       a=text;
     }
     let data1 = JSON.stringify({
-      "registration_details": id,
+      "registration_details": parseInt(id),
       "remarks": a,
       "status": status
     });
@@ -106,7 +123,14 @@ const FacultySemesterRegistration = () => {
     });
   };
 
-  if (!profileDetails) return <div>Loading...</div>;
+  if (!profileDetails) return  <Box
+    display="flex"
+    justifyContent="center"
+    alignItems="center"
+    height="80vh"
+  >
+    <CircularProgress />
+  </Box>
 
   const { personal_information, academic_information } = profileDetails.student_details;
 

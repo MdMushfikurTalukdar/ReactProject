@@ -252,6 +252,13 @@ export function SemesterRegistration() {
   const onSubmit = (data) => {
     console.log(data);
 
+    if(userProfile?.personal_information?.first_name===null)
+      return enqueueSnackbar("name field is empty", { variant: "error" });
+
+    if(!userProfile?.academic_information?.session)
+      return enqueueSnackbar("Session field is empty", { variant: "error" });
+
+    
     let config = {
       method: "get",
       maxBodyLength: Infinity,
@@ -337,7 +344,7 @@ export function SemesterRegistration() {
        
           
         <center>
-        <img src="./images/semester.png" alt="" style={{width:"230px",borderRadius:"10px",marginTop:"10px"}}/></center>
+        <img src="./images/semester.png" alt="" style={{width:"290px",borderRadius:"10px",marginTop:"10px"}}/></center>
         
       <Grid container spacing={1} style={{ padding: "30px",display:"flex",justifyContent:"center",alignContent:"center",alignItems:"center" }}>
         <Grid item xs={12} sm={12} lg={7} md={7} style={{display:"flex",flexDirection:"column",justifyContent:'center',alignContent:"center",alignItems:"center"}}>

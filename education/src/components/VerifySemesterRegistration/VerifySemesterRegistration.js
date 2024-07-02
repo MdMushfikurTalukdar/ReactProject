@@ -5,9 +5,27 @@ import NavbarNew from "../NavbarNew";
 import Footer from "../Home/Footer";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+import { Box, CircularProgress } from "@mui/material";
 
 const VerifySemesterRegistration = () => {
   const [searchResults, setSearchResults] = useState([]);
+  const [loading,setLoading]=useState(true);
+
+  useEffect(() => {
+  
+    console.log(localStorage.getItem("accesstoken"))
+    
+    if (localStorage?.getItem("accesstoken")) {
+      const response = jwtDecode(localStorage?.getItem("accesstoken"));
+      if (response.exp < Math.floor(Date.now() / 1000) || (response.role!=='hod' && response.role!=='admin') ) {
+        navigate("/login");
+      }
+    } else {
+     
+      navigate("/login");
+    }
+  }, []);
 
   useEffect(() => {
     const fetchApprovedStudents = async () => {
@@ -22,6 +40,7 @@ const VerifySemesterRegistration = () => {
         );
         console.log(response.data);
         setSearchResults(response.data);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -35,6 +54,19 @@ const VerifySemesterRegistration = () => {
   const handleCardClick = (id,reg) => {
     navigate(`/facultySemesterRegistration/${id}/${reg}`);
   };
+
+  if (loading) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="80vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
   return (
     <>
       <NavbarNew />

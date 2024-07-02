@@ -104,10 +104,14 @@ const CollegeForm = () => {
    <> 
    <NavbarNew/>
     <Container component="main" maxWidth="md">
-      <Paper elevation={3} sx={{ p: 4, mt: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
+      <Paper elevation={0} sx={{ p: 1, mt: 4 }}>
+        <Typography variant="h5" align='center' gutterBottom>
           College Information Form
         </Typography>
+
+        <center>
+          <img src='./images/college.jpg' alt='' style={{width:"290px"}}/>
+        </center>
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12}>
