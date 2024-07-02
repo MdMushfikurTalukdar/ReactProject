@@ -495,7 +495,7 @@ export function SemesterRegistration() {
         xs:"flex"
       }, justifyContent:"center",alignContent:"center",alignItems:"center" }}>
         <Grid item xs={12}>
-          <Typography variant="h5" gutterBottom sx={{marginBottom:"50px"}}>
+          <Typography variant="h5" align="center" gutterBottom sx={{marginBottom:"50px"}}>
             Subject List
           </Typography>
           <center>
@@ -552,7 +552,7 @@ export function SemesterRegistration() {
               <Box key={index}>
                 <Card
                   sx={{
-                    minWidth: {lg:675,sm:400,xs:250,md:575},
+                    minWidth: {lg:675,sm:400,xs:280,md:575},
                     marginBottom: 2,
                     backgroundColor: "whitesmoke",
                     height: 150,
@@ -560,7 +560,7 @@ export function SemesterRegistration() {
                   }}
                 >
                   <CardContent>
-                    <Typography variant="p" component="div" sx={{fontSize:"1.2rem"}}>
+                    <Typography variant="p" component="div" sx={{fontSize:"1.0rem",marginBottom:"7px"}}>
                       Semester Name: {data?.semester?.semester_name}
                     </Typography>
 
