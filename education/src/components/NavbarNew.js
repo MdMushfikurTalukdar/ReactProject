@@ -500,7 +500,7 @@ export const NavbarNew = () => {
                         )}
                       </div>
                     )}
-                    {/* faculty hod end */}
+                    
                   </div>
                 </div>
               )}

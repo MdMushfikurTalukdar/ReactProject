@@ -156,13 +156,13 @@ function HostelFeePayment() {
           registration_details: id,
           from_date: dayjs(data.startDate).format("YYYY-MM"),
           to_date: dayjs(data.endDate).format("YYYY-MM"),
-          mess_fees: data.feeType === "Mess_fees" ? fees.Mess_fees : null,
-          maintainance_fees:
-            data.feeType === "Maintainance_fees"
-              ? fees.Maintainance_fees
-              : null,
-          security_fees:
-            data.feeType === "Security_Deposit" ? fees.Security_Deposit : null,
+          // mess_fees: data.feeType === "Mess_fees" ? fees.Mess_fees : null,
+          fee_type:data.feeType,
+          //   data.feeType === "Maintainance_fees"
+          //     ? fees.Maintainance_fees
+          //     : null,
+          // security_fees:
+          //   data.feeType === "Security_Deposit" ? fees.Security_Deposit : null,
           total_fees: total,
         },
         {
@@ -228,6 +228,7 @@ function HostelFeePayment() {
     setValue("endDate", date, { shouldValidate: true });
   };
 
+  console.log(fees);
   useEffect(() => {
     if (watch("startDate") && watch("endDate")) {
       const differenceInMonths = dayjs(watch("endDate")).diff(
@@ -237,10 +238,10 @@ function HostelFeePayment() {
       setValue("noOfMonths", differenceInMonths, { shouldValidate: true });
       const feeType = watch("feeType");
       let monthlyCharge = 0;
-      if (feeType === "Mess_fees") monthlyCharge = fees.Mess_fees;
-      else if (feeType === "Maintainance_fees")
+      if (feeType === "mess_fee") monthlyCharge = fees.Mess_fees;
+      else if (feeType === "maintainance_fee")
         monthlyCharge = fees.Maintainance_fees;
-      else if (feeType === "Security_Deposit")
+      else if (feeType === "security_fee")
         monthlyCharge = fees.Security_Deposit;
 
       setValue("monthlyCharges", monthlyCharge, { shouldValidate: true });
@@ -313,11 +314,11 @@ function HostelFeePayment() {
                     error={!!errors.feeType}
                     helperText={errors.feeType?.message}
                   >
-                    <MenuItem value="Maintainance_fees">
+                    <MenuItem value="maintainance_fee">
                       Maintenance Fee
                     </MenuItem>
-                    <MenuItem value="Mess_fees">Mess Fee</MenuItem>
-                    <MenuItem value="Security_Deposit">Security Money</MenuItem>
+                    <MenuItem value="mess_fee">Mess Fee</MenuItem>
+                    <MenuItem value="security_fee">Security Money</MenuItem>
                   </TextField>
                 )}
               />
@@ -503,9 +504,9 @@ function HostelFeePayment() {
               
                 <React.Fragment key={payment.id}>
                   <Grid item xs={4}>
-                    {payment.maintainance_fees && "Maintenance Fee"}
-                    {payment.mess_fees && "Mess Fee"}
-                    {payment.security_fees && "Security Money"}
+                    {payment.fee_type==="maintainance_fee" && "Maintenance Fee"}
+                    {payment.fee_type==="mess_fee" && "Mess Fee"}
+                    {payment.fee_type==="security_fee" && "Security Money"}
                   </Grid>
                   <Grid item xs={4}>
                     {payment.from_date}

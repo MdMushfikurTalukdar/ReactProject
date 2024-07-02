@@ -65,8 +65,8 @@ export const HostelNoDueReq = () => {
     .then((response) => {
       const payments = response.data.reverse();
       setLoading(false);
-      const maintainancePayment = payments.find(payment => payment.maintainance_fees !== null);
-      const messPayment = payments.find(payment => payment.mess_fees !== null);
+      const maintainancePayment = payments.find(payment => payment.fee_type === "maintainance_fee");
+      const messPayment = payments.find(payment => payment.fee_type === "mess_fee");
 
       if (maintainancePayment) {
         setMaintainanceToDate(maintainancePayment.to_date);
