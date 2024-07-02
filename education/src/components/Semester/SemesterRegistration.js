@@ -579,12 +579,16 @@ export function SemesterRegistration() {
                   }}
                 >
                   <CardContent>
-                    <Typography variant="p" component="div" sx={{fontSize:"1.0rem",marginBottom:"7px"}}>
+                    <Typography variant="p" component="div" sx={{fontSize:"1.0rem",marginBottom:"2px"}}>
                       Semester Name: {data?.semester?.semester_name}
                     </Typography>
 
                     <Typography variant="p"  sx={{fontSize:"1.0rem"}}>
                       Applied Date: {data?.applied_date}
+                    </Typography><br/>
+
+                    <Typography variant="p"  sx={{fontSize:"1.0rem",marginBottom:"2px"}}>
+                      Status: {data?.status}
                     </Typography>
                    
                   </CardContent>

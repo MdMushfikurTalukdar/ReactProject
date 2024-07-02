@@ -78,9 +78,11 @@ export const NavbarNew = () => {
     { name: "Complaints", link: "/complaints" },
   ];
 
-  const admin = [{ name: "Add college", link: "/add-college" },
+  const admin = [
+    { name: "Add college", link: "/add-college" },
     { name: "Add Subject", link: "/sem-sub-register" },
     { name: "Add Branch", link: "/sem-branch-register" },
+    { name: "Verify Semester Registration",link: "/verifySemesterRegistration"}
   ];
 
   const hod = [

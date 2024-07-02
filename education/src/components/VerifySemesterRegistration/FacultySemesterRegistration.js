@@ -69,12 +69,21 @@ const FacultySemesterRegistration = () => {
   }, [navigate]);
 
   const onSubmit = (status) => {
+    
+    let a='No Remark';
+    console.log(text);
+    if(text.length===0){
+      a='No Remark';
+    }else{
+      a=text;
+    }
     let data1 = JSON.stringify({
       "registration_details": id,
-      "remarks": text,
+      "remarks": a,
       "status": status
     });
 
+    console.log(data1);
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
@@ -166,7 +175,7 @@ const FacultySemesterRegistration = () => {
             </Grid>
           </Grid>
 
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={4} >
             <Box
               sx={{
                 display: 'flex',
@@ -174,10 +183,10 @@ const FacultySemesterRegistration = () => {
                 alignItems: 'center',
                 height: '250px',
                 width: '250px',
-                border: '1px solid #ddd',
+               
               }}
             >
-              <img src={personal_information?.profile_picture} style={{width:"250px",height:"250px"}} alt=""/>
+              <img src={personal_information?.profile_picture} style={{width:"200px",height:"200px",borderRadius:"50%",objectFit:"fill"}} alt=""/>
             </Box>
           </Grid>
         </Grid>
