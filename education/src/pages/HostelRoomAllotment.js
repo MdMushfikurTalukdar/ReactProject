@@ -101,7 +101,7 @@ const HostelRoomAllotment = () => {
       const configUpdate = {
         method: "put",
         maxBodyLength: Infinity,
-        url: `https://amarnath013.pythonanywhere.com/api/user/hostel-allotments/${response?.data?.id}/update-status/`,
+        url: `https://amarnath013.pythonanywhere.com/api/user/hostel-allotments/${response?.data?.registration_details?.id}/update-status/`,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
@@ -110,7 +110,7 @@ const HostelRoomAllotment = () => {
       };
       setHostel_room('');
       await axios.request(configUpdate);
-      setData1(data1.filter((item) => item.id !== response?.data?.id));
+      setData1(data1.filter((item) => item.id !== response?.data?.registration_details?.id));
       enqueueSnackbar("Room allotted successfully", { variant: "success" });
       fetchAllotmentData();
     } catch (error) {
@@ -292,6 +292,7 @@ const HostelRoomAllotment = () => {
                                     Registration Number:{" "}
                                     {item?.registration_number}
                                   </p>
+                                  
                                 </Grid>
                                 <Grid item xs={12}>
                                   <TextField

@@ -81,6 +81,7 @@ export const HostelRoomRequest = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [responsive, setResponsive] = useState(window.innerWidth < 669);
   const [loading, setLoading] = useState(true);
+  const [loading1, setLoading1] = useState(true);
 
   const theme = useTheme();
 
@@ -96,7 +97,7 @@ export const HostelRoomRequest = () => {
 
   useEffect(() => {
     const resize = () => {
-      setResponsive(window.innerWidth < 669);
+      setResponsive(window.innerWidth < 600);
     };
 
     window.addEventListener("resize", resize);
@@ -156,6 +157,7 @@ export const HostelRoomRequest = () => {
         );
         console.log(hostelRoomAllotmentsResponse.data)
         setAllotedRoom(hostelRoomAllotmentsResponse.data);
+        setLoading1(false);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -164,7 +166,7 @@ export const HostelRoomRequest = () => {
     fetchData();
   }, [navigate]);
 
-  if (loading) {
+  if (loading || loading1) {
     return (
       <Box
         display="flex"
@@ -193,6 +195,16 @@ export const HostelRoomRequest = () => {
   };
 
   const onSubmit = async (data) => {
+
+    const acceptedFormats = ["image/jpeg", "image/png", "image/jpg"];
+    
+    if(data?.file?.length===0){
+      return enqueueSnackbar("Marksheet field is empty", { variant: "error" });
+    }
+    if(!acceptedFormats.includes(data.file?.type)){
+     
+      return enqueueSnackbar("Only jpeg,png,jpg files are supported", { variant: "error" });
+    }
     const formData = new FormData();
     formData.append(
       "registration_number",
@@ -247,7 +259,7 @@ export const HostelRoomRequest = () => {
       <NavbarNew />
       <Box
         className="bonafide-form"
-        sx={{ bgcolor: "whitesmoke", borderRadius: 3 , padding: 0 }}
+        sx={{  borderRadius: 3 , padding: 0 }}
       >
       <Typography
         variant="h5"
@@ -445,9 +457,13 @@ export const HostelRoomRequest = () => {
               {result.length === 0 && (
                 <Typography
                   variant="body1"
-                  sx={{ marginTop: 3, textAlign: "center" }}
+                  sx={{ marginTop: 3, textAlign: "center",
+                    display:{lg:"none",md:"none",xs:"block",sm:"none"}
+
+                   }}
                 >
-                  No previous hostel requests found.
+                 <center>
+                 <img src="./images/No_data.png" alt="" style={{width:"310px",borderRadius:"10px",marginTop:"10px"}}/></center>
                 </Typography>
               )}
 
@@ -516,6 +532,10 @@ export const HostelRoomRequest = () => {
                   </Card>
                 ))
               ) : (
+                result.length===0?(<>
+                <center>
+                <img src="./images/No_data.png" alt="" style={{width:"310px",borderRadius:"10px",marginTop:"30px"}}/></center>
+                </>):(
                 <TableContainer component={Paper} sx={{ marginTop: 3 }}>
                   <Table
                     sx={{ minWidth: 650 }}
@@ -591,6 +611,7 @@ export const HostelRoomRequest = () => {
                     </TableFooter>
                   </Table>
                 </TableContainer>
+              )
               )}
             </Box>
 

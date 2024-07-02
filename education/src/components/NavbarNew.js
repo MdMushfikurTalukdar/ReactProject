@@ -505,7 +505,7 @@ export const NavbarNew = () => {
                 </div>
               )}
             </div>
-            <h1 className="text-xl font-bold ml-4" onClick={(e)=>{
+            <h1 className="text-xl font-bold ml-4 mt-1" onClick={(e)=>{
               navigate('/')
             }}>Smart Campus</h1>
           </div>
