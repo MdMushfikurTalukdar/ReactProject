@@ -27,11 +27,12 @@ function UnderDevelopment() {
   return (
     <>
    
+     
+      <div class="fullArea" >
+      <NavbarNew/>
       <div class="context">
         <h1>This Page is Under Development</h1>
       </div>
-      <div class="fullArea" >
-      <NavbarNew/>
         <ul class="circles">
             <li></li>
             <li></li>

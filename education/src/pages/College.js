@@ -32,7 +32,7 @@ const schema = yup.object().shape({
 });
 
 const CollegeForm = () => {
-  const { register, handleSubmit, control, formState: { errors } } = useForm({
+  const { register, handleSubmit, control, formState: { errors },reset } = useForm({
     resolver: yupResolver(schema)
   });
 
@@ -75,7 +75,7 @@ const CollegeForm = () => {
     try {
       const response = await axios.request(config);
       console.log(response.data);
-     
+      reset();
       enqueueSnackbar("successfully created", {
         variant: "success",
         anchorOrigin: {

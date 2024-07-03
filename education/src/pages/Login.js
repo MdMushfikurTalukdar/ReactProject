@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSnackbar } from "notistack";
 import { useNavigate } from 'react-router-dom';
@@ -10,6 +10,7 @@ import { CgProfile } from "react-icons/cg";
 import {
   Box,
   Button,
+  CircularProgress,
   InputAdornment,
   TextField
 } from "@mui/material";
@@ -20,7 +21,8 @@ export const LoginPage = () => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-
+  
+  
   const onSubmit = (data) => {
     let data1 = JSON.stringify({
       "registration_number": data.rollNumber,
@@ -66,6 +68,7 @@ export const LoginPage = () => {
 
   return (
     <>
+   
       <Style />
       <Header />
 
@@ -145,6 +148,7 @@ export const LoginPage = () => {
         </Box>
       </div>
       <Footer />
-    </>
+      </>
+             
   );
 };

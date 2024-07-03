@@ -302,10 +302,10 @@ export const HostelRoomRequest = () => {
             </Box>
             <form onSubmit={handleSubmit(onSubmit)}>
               <FormControl fullWidth variant="outlined" margin="normal">
-                <Typography variant="h6">
+                <Typography variant="p" style={{fontSize:"1.2rem"}}>
                   Registration / Employee Number
                 </Typography>
-                <Typography variant="body1" sx={{ marginBottom: "10px" }}>
+                <Typography variant="body1" sx={{ marginBottom: "10px",marginTop:"5px" }}>
                   {userProfile?.academic_information?.registration_number}
                 </Typography>
               </FormControl>
@@ -339,9 +339,9 @@ export const HostelRoomRequest = () => {
                     alignItems: "center",
                   }}
                 >
-                  <Typography variant="h6" gutterBottom>
+                  <Typography variant="p" gutterBottom style={{fontSize:"1.2rem"}}>
                     Latest Semester Marksheet
-                  </Typography>
+                  </Typography><br/>
                   <Button
                     component="label"
                     variant="contained"
@@ -351,7 +351,7 @@ export const HostelRoomRequest = () => {
                       "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
                       
                         width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
-                      
+                      marginTop:"10px"
                     }}
                   >
                     Upload File

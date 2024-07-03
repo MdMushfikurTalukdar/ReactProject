@@ -32,6 +32,7 @@ import AddFeesCaretaker from "./pages/AddFessCaretaker.js";
 import VerifySemesterRegistration from "./components/VerifySemesterRegistration/VerifySemesterRegistration.js";
 import FacultySemesterRegistration from "./components/VerifySemesterRegistration/FacultySemesterRegistration.js";
 import ShowHostelRoomRequest from "./pages/ShowHostelRoomRequest.js";
+import { NotFoundPage } from "./pages/NotFoundPage.js";
 
 function App() {
   return (
@@ -72,6 +73,7 @@ function App() {
             <Route path="/no-dues-for-degree" element={ <NoDuesForDegree/> } />
             <Route path="/verifySemesterRegistration" element={<VerifySemesterRegistration/>} />
             <Route path="/facultySemesterRegistration/:id/:reg" element={<FacultySemesterRegistration/>} />
+            <Route path="/*" element={<NotFoundPage />} />
           </Routes>
         </Router>
 

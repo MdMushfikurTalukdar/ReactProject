@@ -265,7 +265,7 @@ export const NavbarNew = () => {
 
   return (
     <>
-      <nav className="bg-gray-200 text-[#041E49] px-4 py-5 shadow-md">
+      <nav className="bg-gray-200 text-[#041E49] px-4 py-5 shadow-md" style={{zIndex:"20"}}>
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <div className="relative" onClick={toggleDropdown}>
@@ -583,7 +583,7 @@ export const NavbarNew = () => {
               <div className="relative">
                 <CgProfile
                   size={24}
-                  className="cursor-pointer"
+                  className="cursor-pointer z-20"
                   onClick={(e) => {
                     navigate("/profile");
                   }}
