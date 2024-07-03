@@ -118,6 +118,17 @@ const FacultySemesterRegistration = () => {
       navigate("/verifySemesterRegistration");
     })
     .catch((error) => {
+      if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+        enqueueSnackbar("Logging out", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 3000,
+        });  
+        navigate("/login");
+      }
       enqueueSnackbar("Action failed", { variant: 'error' });
       console.log(error);
     });

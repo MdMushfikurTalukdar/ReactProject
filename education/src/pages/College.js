@@ -53,6 +53,8 @@ const CollegeForm = () => {
   }, []);
   
   const onSubmit = async (data) => {
+
+   
     const formData = new FormData();
     formData.append('college_code', data.college_code);
     formData.append('college_name', data.college_name);
@@ -88,14 +90,38 @@ const CollegeForm = () => {
 
     } catch (error) {
 
+      if(error?.response?.data?.errors?.college_name){
         enqueueSnackbar("college with this college code already exists", {
-            variant: "error",
-            anchorOrigin: {
-              vertical: "bottom",
-              horizontal: "center",
-            },
-            autoHideDuration: 3000,
-          });  
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 3000,
+        });  
+      }
+      if(error?.response?.data?.errors?.college_logo){
+        enqueueSnackbar("give a valid college logo", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 3000,
+        });  
+      }
+      if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+        enqueueSnackbar("Logging out", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 3000,
+        });  
+        navigate("/login");
+      }
+       
       console.error(error);
     }
   };

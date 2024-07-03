@@ -55,7 +55,7 @@ export const GuestRoom = () => {
   });
 
   useEffect(() => {
-    if (localStorage?.getItem("accesstoken")) {
+    if (localStorage.getItem("accesstoken")!==null) {
       const response = jwtDecode(localStorage?.getItem("accesstoken"));
       if (response.exp < Math.floor(Date.now() / 1000)) {
         navigate("/login");
@@ -83,31 +83,34 @@ export const GuestRoom = () => {
   }, []);
 
   useEffect(() => {
+    if(localStorage.getItem("accesstoken")!==null){
     const fetchData = async () => {
       let config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: `https://amarnath013.pythonanywhere.com/api/user/guest-room-allotments/?search=${localStorage?.getItem(
-          "RollNumber"
-        )}`,
+        url: `https://amarnath013.pythonanywhere.com/api/user/guest-room-allotments/?search=${jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}`,
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
+          Authorization: `Bearer ${localStorage?.getItem("accesstoken")}`,
         },
       };
       try {
         const response = await axios.request(config);
-        setResult(response.data.reverse());
+        
+        setResult(response?.data?.reverse());
         setLoading(false);
       } catch (error) {
         console.error(error);
       }
     };
     fetchData();
+  }else{
+    navigate('/login');
+  }
   }, []);
 
   const onSubmit = async (data) => {
     let requestData = JSON.stringify({
-      user: jwtDecode(localStorage?.getItem("accesstoken")).user_id,
+      user: localStorage?.getItem('accesstoken')===null ?null: jwtDecode(localStorage?.getItem("accesstoken"))?.user_id,
       purpose_of_request: data.purpose,
       from_date: from,
       to_date: data.toDate,
@@ -140,6 +143,17 @@ export const GuestRoom = () => {
       }, 2500);
     } catch (error) {
       console.error(error);
+      if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+        enqueueSnackbar("Logging out", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 3000,
+        });  
+        navigate("/login");
+      }
     }
   };
 
@@ -171,11 +185,14 @@ export const GuestRoom = () => {
         >
           Guest Room Allotment Request
         </Typography>
+        <Box style={{
+          maxWidth:{lg:"30%",xs:"100%",sm:"30%",md:"30%"}
+        }}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <FormControl fullWidth variant="outlined" margin="normal">
             <Typography variant="h6">Registration number</Typography>
             <Typography variant="body1" style={{ marginBottom: "5px" }}>
-              {localStorage?.getItem("RollNumber")}
+              {localStorage?.getItem("accesstoken")===null?null:jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}
             </Typography>
           </FormControl>
 
@@ -301,6 +318,7 @@ export const GuestRoom = () => {
             Send Request
           </Button>
         </form>
+        </Box>
         <Divider sx={{ my: 3 }} />
         <Typography
           variant="h6"
@@ -349,6 +367,9 @@ export const GuestRoom = () => {
                       <Typography variant="body2">
                         No Of Persons: {data?.no_of_persons}
                       </Typography>
+                      <Typography variant="body2">
+                        Status: {data?.status}
+                      </Typography>
                     </CardContent>
                   </Card>
                 </Box>
@@ -371,6 +392,7 @@ export const GuestRoom = () => {
                         <TableCell>From Date</TableCell>
                         <TableCell>To Date</TableCell>
                         <TableCell>No of Persons</TableCell>
+                        <TableCell>Status</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -379,7 +401,8 @@ export const GuestRoom = () => {
                           <TableCell>{data?.purpose_of_request}</TableCell>
                           <TableCell>{data?.from_date}</TableCell>
                           <TableCell>{data?.to_date}</TableCell>
-                          <TableCell>{data?.no_of_persons}</TableCell>
+                          <TableCell style={{textAlign:"center"}}>{data?.no_of_persons}</TableCell>
+                          <TableCell>{data?.status}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>

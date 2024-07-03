@@ -135,9 +135,7 @@ export const HostelRoomRequest = () => {
         setUserProfile(userProfileResponse.data);
 
         const hostelAllotmentsResponse = await axios.get(
-          `https://amarnath013.pythonanywhere.com/api/user/hostel-allotments/?search=${localStorage.getItem(
-            "RollNumber"
-          )}`,
+          `https://amarnath013.pythonanywhere.com/api/user/hostel-allotments/?search=${jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -148,7 +146,7 @@ export const HostelRoomRequest = () => {
         setResult(hostelAllotmentsResponse.data.reverse());
 
         const hostelRoomAllotmentsResponse = await axios.get(
-          `https://amarnath013.pythonanywhere.com/api/user/hostel-room-allotments/?search=${localStorage?.getItem("RollNumber")}`,
+          `https://amarnath013.pythonanywhere.com/api/user/hostel-room-allotments/?search=${jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -239,6 +237,17 @@ export const HostelRoomRequest = () => {
       }, 2000);
     } catch (error) {
       console.error("Error sending request:", error);
+      if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+        enqueueSnackbar("Logging out", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 3000,
+        });  
+        navigate("/login");
+      }
       enqueueSnackbar(
         error?.response?.data?.errors?.non_field_errors[0] ||
           "Failed to send request",

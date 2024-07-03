@@ -134,6 +134,7 @@ export function NoDuesForDegree() {
   }, []);
 
   useEffect(() => {
+    if(localStorage.getItem("accesstoken")!==null){
     const fetchData = async () => {
       try {
         const response = await axios.get(
@@ -148,6 +149,7 @@ export function NoDuesForDegree() {
       } catch (error) {
         console.log(error);
       }
+      
     };
 
     const fetchRequests = async () => {
@@ -164,6 +166,7 @@ export function NoDuesForDegree() {
       } catch (error) {
         console.log(error);
       }
+
     };
 
     if (localStorage.getItem("accesstoken")) {
@@ -177,6 +180,9 @@ export function NoDuesForDegree() {
     } else {
       navigate("/login");
     }
+  }else{
+    navigate("/login");
+  }
   }, [navigate]);
 
   const onSubmit = async (data) => {
@@ -222,6 +228,7 @@ export function NoDuesForDegree() {
         window.location.reload();
       }, 2000);
 
+     
       enqueueSnackbar("Request was applied successfully", {
         variant: "success",
         anchorOrigin: {
@@ -230,8 +237,20 @@ export function NoDuesForDegree() {
         },
         autoHideDuration: 3000,
       });
+    
     } catch (error) {
       console.log(error);
+      if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+        enqueueSnackbar("Logging out", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 3000,
+        });  
+        navigate("/login");
+      }
       enqueueSnackbar("The request has already been made.", {
         variant: "success",
         anchorOrigin: {

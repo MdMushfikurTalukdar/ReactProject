@@ -43,6 +43,7 @@ import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import NavbarNew from "../components/NavbarNew";
 import Footer from "../components/Home/Footer";
+import { enqueueSnackbar } from "notistack";
 
 const settings = {
   infinite: true,
@@ -185,6 +186,7 @@ const ComplaintForm = () => {
     }
 
     const fetchProfileData = async () => {
+     
       try {
         const response = await fetch(
           "https://amarnath013.pythonanywhere.com/api/user/profile",
@@ -209,6 +211,7 @@ const ComplaintForm = () => {
       } catch (error) {
         console.error("Error fetching profile data:", error);
       }
+  
     };
 
     const fetchComplaints = async () => {
@@ -245,6 +248,7 @@ const ComplaintForm = () => {
   });
 
   useEffect(() => {
+    if(localStorage.getItem("accesstoken")!==null){
     let config = {
       method: "get",
       maxBodyLength: Infinity,
@@ -263,12 +267,24 @@ const ComplaintForm = () => {
         console.log(error);
       });
 
-    if (localStorage?.getItem("accesstoken")) {
+    } else {
+      navigate("/login");
+    }
+  }, []);
+
+  useEffect(() => {
+  
+    // console.log(localStorage.getItem("accesstoken"))
+    if(localStorage?.getItem("accesstoken")===null){
+      navigate("/login");
+    }
+    else if (localStorage?.getItem("accesstoken")) {
       const response = jwtDecode(localStorage?.getItem("accesstoken"));
       if (response.exp < Math.floor(Date.now() / 1000)) {
         navigate("/login");
       }
     } else {
+     
       navigate("/login");
     }
   }, []);
@@ -317,6 +333,17 @@ const ComplaintForm = () => {
           position: "top-center",
           autoClose: 5000,
         });
+        if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+          enqueueSnackbar("Logging out", {
+            variant: "error",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 3000,
+          });  
+          navigate("/login");
+        }
       });
   };
 

@@ -94,6 +94,7 @@ export const ChangePassword = () => {
 
     axios.request(config)
       .then((response) => {
+        
         setTimeout(() => {
           enqueueSnackbar(response.data.message, {
             variant: "success",
@@ -123,6 +124,17 @@ export const ChangePassword = () => {
         }, 3000);
       })
       .catch((error) => {
+        if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+          enqueueSnackbar("Logging out", {
+            variant: "error",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 3000,
+          });  
+          navigate("/login");
+        }
         console.log(error);
       });
   };

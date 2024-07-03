@@ -175,9 +175,7 @@ export const BonafideForm = () => {
   useEffect(() => {
     axios
       .get(
-        `https://amarnath013.pythonanywhere.com/api/user/bonafide/?search=${localStorage.getItem(
-          "RollNumber"
-        )}`,
+        `https://amarnath013.pythonanywhere.com/api/user/bonafide/?search=${jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
@@ -196,10 +194,7 @@ export const BonafideForm = () => {
   const onSubmit = (data) => {
     const formData = new FormData();
     formData.append("college", "1");
-    formData.append(
-      "student",
-      jwtDecode(localStorage?.getItem("accesstoken")).user_id
-    );
+    formData.append("student",jwtDecode(localStorage?.getItem("accesstoken")).user_id);
     formData.append(
       "roll_no",
       jwtDecode(localStorage?.getItem("accesstoken")).user_id
@@ -235,6 +230,17 @@ export const BonafideForm = () => {
       })
       .catch((error) => {
         console.error(error);
+        if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+          enqueueSnackbar("Logging out", {
+            variant: "error",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 3000,
+          });  
+          navigate("/login");
+        }
       });
   };
 

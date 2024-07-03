@@ -25,6 +25,7 @@ export const NavbarNew = () => {
     }
   }, []);
 
+
   const mainOptions = [
     "General",
     "Academic",
@@ -195,12 +196,11 @@ export const NavbarNew = () => {
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
+    if(localStorage.getItem("accesstoken")!==null){
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `https://amarnath013.pythonanywhere.com/api/user/notification/?search=${localStorage?.getItem(
-        "RollNumber"
-      )}`,
+      url: `https://amarnath013.pythonanywhere.com/api/user/notification/?search=${jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}`,
       headers: {
         Authorization: `Bearer ${localStorage?.getItem("accesstoken")}`,
       },
@@ -215,6 +215,9 @@ export const NavbarNew = () => {
       .catch((error) => {
         console.log(error);
       });
+    }else{
+      navigate('/login');
+    }
   }, []);
 
   const [showNotifications, setShowNotifications] = useState(false);
@@ -243,6 +246,7 @@ export const NavbarNew = () => {
   };
 
   const deleteAllNotifications = async () => {
+    if(localStorage.getItem("accesstoken")!==null){
     const deleteRequests = notifications.map((notification) => {
       let config = {
         method: "delete",
@@ -261,6 +265,9 @@ export const NavbarNew = () => {
     } catch (error) {
       console.log(error);
     }
+  }else{
+    navigate('/login');
+  }
   };
 
   return (

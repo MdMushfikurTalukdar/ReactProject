@@ -55,7 +55,7 @@ export const HostelNoDueReq = () => {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `https://amarnath013.pythonanywhere.com/api/user/mess-fees-payment/?search=${localStorage?.getItem('RollNumber')}`,
+      url: `https://amarnath013.pythonanywhere.com/api/user/mess-fees-payment/?search=${jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}`,
       headers: { 
         Authorization: `Bearer ${localStorage.getItem('accesstoken')}`
       }
@@ -165,6 +165,17 @@ export const HostelNoDueReq = () => {
 
     })
     .catch((error) => {
+      if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+        enqueueSnackbar("Logging out", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 3000,
+        });  
+        navigate("/login");
+      }
       console.log(error);
     });
     
@@ -175,7 +186,7 @@ export const HostelNoDueReq = () => {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `https://amarnath013.pythonanywhere.com/api/user/hostel-no-dues/?search=${localStorage?.getItem('RollNumber')}`,
+      url: `https://amarnath013.pythonanywhere.com/api/user/hostel-no-dues/?search=${jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}`,
       headers: { 
         'Authorization': `Bearer ${localStorage?.getItem('accesstoken')}`
       }
@@ -226,7 +237,7 @@ export const HostelNoDueReq = () => {
             Registration/Employee No:
           </Typography>
           <Typography variant="p" gutterBottom>
-            {localStorage?.getItem('RollNumber')}
+            {jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}
           </Typography>
           <FormControl
             fullWidth

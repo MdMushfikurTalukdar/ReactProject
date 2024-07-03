@@ -115,6 +115,17 @@ const HostelRoomAllotment = () => {
       fetchAllotmentData();
     } catch (error) {
       console.error(error);
+      if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+        enqueueSnackbar("Logging out", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 3000,
+        });  
+        navigate("/login");
+      }
       if (error?.response?.data?.errors?.hostel_room?.[0]) {
         enqueueSnackbar(error?.response?.data?.errors?.hostel_room?.[0], {
           variant: "error",

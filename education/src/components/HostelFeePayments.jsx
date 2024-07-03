@@ -70,6 +70,7 @@ function HostelFeePayment() {
   });
 
   const fetchData = async () => {
+    if(localStorage.getItem("accesstoken")!==null){
     try {
       const response = await axios.get(
         "https://amarnath013.pythonanywhere.com/api/user/fees/",
@@ -85,6 +86,9 @@ function HostelFeePayment() {
     } catch (error) {
       console.error("Failed to fetch fees:", error);
     }
+    }else{
+      navigate('/login');
+    }
   };
 
   useEffect(() => {
@@ -99,10 +103,11 @@ function HostelFeePayment() {
   }, []);
 
   useEffect(()=>{
+    if(localStorage.getItem("accesstoken")!==null){
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `https://amarnath013.pythonanywhere.com/api/user/hostel-room-allotments/?search=${localStorage?.getItem('RollNumber')}`,
+      url: `https://amarnath013.pythonanywhere.com/api/user/hostel-room-allotments/?search=${jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}`,
       headers: { 
         'Authorization': `Bearer ${localStorage?.getItem('accesstoken')}`
       },
@@ -117,9 +122,14 @@ function HostelFeePayment() {
     .catch((error) => {
       console.log(error);
     });
+  }else{
+    navigate('/login');
+  }
   },[]);
   useEffect(() => {
+    if(localStorage.getItem("accesstoken")!==null){
     const fetchProfileData = async () => {
+     
       try {
         const response = await axios.get(
           "https://amarnath013.pythonanywhere.com/api/user/profile",
@@ -142,6 +152,9 @@ function HostelFeePayment() {
     };
 
     fetchProfileData();
+  }else{
+    navigate('/login');
+  }
   }, []);
 
   useEffect(() => {
@@ -186,6 +199,17 @@ function HostelFeePayment() {
       }, 2000);
     } catch (error) {
       console.error("Payment request error:", error);
+      if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+        enqueueSnackbar("Logging out", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 3000,
+        });  
+        navigate("/login");
+      }
       enqueueSnackbar("Caretaker have not alloted a room to you yet.", {
         variant: "error",
         anchorOrigin: {
@@ -202,9 +226,7 @@ function HostelFeePayment() {
     const fetchPayments = async () => {
       try {
         const response = await axios.get(
-          `https://amarnath013.pythonanywhere.com/api/user/mess-fees-payment/?search=${localStorage.getItem(
-            "RollNumber"
-          )}`,
+          `https://amarnath013.pythonanywhere.com/api/user/mess-fees-payment/?search=${jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,

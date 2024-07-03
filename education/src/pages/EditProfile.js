@@ -432,6 +432,17 @@ export const EditProfile = () => {
         navigate("/profile");
       })
       .catch((error) => {
+        if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+          enqueueSnackbar("Logging out", {
+            variant: "error",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 3000,
+          });  
+          navigate("/login");
+        }
         console.log(error);
       });
   };

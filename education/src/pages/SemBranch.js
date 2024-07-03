@@ -101,6 +101,17 @@ export const SemBranch = () => {
       .catch((error) => {
         console.log(error);
 
+        if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+          enqueueSnackbar("Logging out", {
+            variant: "error",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 3000,
+          });  
+          navigate("/login");
+        }
         enqueueSnackbar(error?.response?.data?.errors?.subject_codes[0], {
           variant: "error",
           anchorOrigin: {
