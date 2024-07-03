@@ -249,7 +249,7 @@ export const HostelRoomRequest = () => {
         navigate("/login");
       }
       enqueueSnackbar(
-        error?.response?.data?.errors?.non_field_errors[0] ||
+        error?.response?.data?.errors?.non_field_errors?.[0] ||
           "Failed to send request",
         {
           variant: "error",

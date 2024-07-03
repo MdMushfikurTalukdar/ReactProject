@@ -194,10 +194,10 @@ export const BonafideForm = () => {
   const onSubmit = (data) => {
     const formData = new FormData();
     formData.append("college", "1");
-    formData.append("student",jwtDecode(localStorage?.getItem("accesstoken")).user_id);
+    formData.append("student",localStorage?.getItem('accesstoken')===null ?null:jwtDecode(localStorage?.getItem("accesstoken")).user_id);
     formData.append(
       "roll_no",
-      jwtDecode(localStorage?.getItem("accesstoken")).user_id
+      localStorage?.getItem('accesstoken')===null ?null:jwtDecode(localStorage?.getItem("accesstoken")).user_id
     );
     formData.append("status", "pending");
     formData.append("supporting_document", data.file[0]);

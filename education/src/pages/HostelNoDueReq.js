@@ -51,7 +51,18 @@ export const HostelNoDueReq = () => {
   const [messToDate, setMessToDate] = useState(null);
 
   useEffect(() => {
-    
+    if (localStorage?.getItem("accesstoken")) {
+      const response = jwtDecode(localStorage?.getItem("accesstoken"));
+      if (response.exp < Math.floor(Date.now() / 1000)|| response.role!=="student" ) {
+        navigate("/login");
+      }
+    } else {
+      navigate("/login");
+    }
+  }, []);
+
+  useEffect(() => {
+    if(localStorage.getItem('accesstoken')!==null){
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
@@ -78,6 +89,9 @@ export const HostelNoDueReq = () => {
     .catch((error) => {
       console.log(error);
     });
+  }else{
+    navigate('/login');
+  }
   }, []);
 
 
@@ -89,16 +103,6 @@ export const HostelNoDueReq = () => {
     resolver: yupResolver(schema),
   });
 
-  useEffect(() => {
-    if (localStorage?.getItem("accesstoken")) {
-      const response = jwtDecode(localStorage?.getItem("accesstoken"));
-      if (response.exp < Math.floor(Date.now() / 1000)|| response.role!=="student" ) {
-        navigate("/login");
-      }
-    } else {
-      navigate("/login");
-    }
-  }, []);
 
   useEffect(() => {
     const resize = () => {
@@ -115,7 +119,7 @@ export const HostelNoDueReq = () => {
 
 
   const onSubmit = (data) => {
-
+    if(localStorage.getItem('accesstoken')!==null){
     if(maintainanceToDate===null || messToDate===null)
     {
       return enqueueSnackbar("Have not paid Maintainance or Mess", {
@@ -178,7 +182,9 @@ export const HostelNoDueReq = () => {
       }
       console.log(error);
     });
-    
+  }else{
+    navigate('/login');
+  }
    
   };
 
@@ -237,7 +243,7 @@ export const HostelNoDueReq = () => {
             Registration/Employee No:
           </Typography>
           <Typography variant="p" gutterBottom>
-            {jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}
+            {localStorage?.getItem('accesstoken')===null ?null:jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}
           </Typography>
           <FormControl
             fullWidth
