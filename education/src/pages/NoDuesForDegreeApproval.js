@@ -5,6 +5,7 @@ import {
   Typography,
   Grid,
   Button,
+  CircularProgress,
 } from "@mui/material";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
@@ -21,6 +22,7 @@ export const NoDuesForDegreeApproval = () => {
   const [id, setId] = useState();
   const [approved, setApproved] = useState([]);
   const [rejected, setRejected] = useState([]);
+  const [loading,setLoading]=useState(true);
 
   useEffect(() => {
     if (localStorage?.getItem("accesstoken")) {
@@ -64,6 +66,7 @@ export const NoDuesForDegreeApproval = () => {
         .request(config)
         .then((response) => {
           console.log(response?.data);
+          setLoading(false);
           setAllData(response?.data);
           const filteredResults = response?.data.filter(
             (data) =>
@@ -331,7 +334,18 @@ export const NoDuesForDegreeApproval = () => {
         console.log(error);
       });
   };
-console.log(rejected);
+  if (loading) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="80vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
   return (
     <Box>
       <NavbarNew />
@@ -526,8 +540,7 @@ console.log(rejected);
                   <Typography variant="body2" color="text.secondary">
                     Status: {data?.status}
                   </Typography>
-                </CardContent>
-                <Box style={{ marginTop: "10px" }}>
+                  <Box style={{ marginTop: "10px" }}>
                   <Button
                     variant="outlined"
                     onClick={() => handleReapproval(data?.id)}
@@ -536,6 +549,8 @@ console.log(rejected);
                     Approve
                   </Button>
                 </Box>
+                </CardContent>
+              
               </Card>
             </Grid>
           ))}
