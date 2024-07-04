@@ -53,7 +53,7 @@ export const HostelNoDueReq = () => {
   useEffect(() => {
     if (localStorage?.getItem("accesstoken")) {
       const response = jwtDecode(localStorage?.getItem("accesstoken"));
-      if (response.exp < Math.floor(Date.now() / 1000)|| response.role!=="student" ) {
+      if (response.exp < Math.floor(Date.now() / 1000)|| (response.role!=="student" && response.role!=='admin')) {
         navigate("/login");
       }
     } else {
