@@ -79,6 +79,10 @@ export const NavbarNew = () => {
     { name: "Complaints", link: "/complaints" },
   ];
 
+  const department=[
+    { name: "No dues for degree", link: "/No-dues-for-degree-approval" }
+  ]
+
   const admin = [
     { name: "Add college", link: "/add-college" },
     { name: "Add Subject", link: "/sem-sub-register" },
@@ -359,6 +363,28 @@ export const NavbarNew = () => {
                         {isNestedDropdownResidentialOpen && (
                           <div className="mt-2 bg-white rounded-lg shadow-md">
                             {admin.map((item, index) => (
+                              <Link
+                                key={index}
+                                className="block px-4 py-2 text-gray-800 hover:bg-blue-100"
+                                to={item.link}
+                                style={{ textDecoration: "none" }}
+                              >
+                                {item.name}
+                              </Link>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                     {roll === "department" && (
+                      <div
+                        className="hover:bg-blue-50 px-4 py-2 cursor-pointer"
+                        onClick={toggleNestedDropdownResidential}
+                      >
+                        Action
+                        {isNestedDropdownResidentialOpen && (
+                          <div className="mt-2 bg-white rounded-lg shadow-md">
+                            {department.map((item, index) => (
                               <Link
                                 key={index}
                                 className="block px-4 py-2 text-gray-800 hover:bg-blue-100"

@@ -33,6 +33,7 @@ import VerifySemesterRegistration from "./components/VerifySemesterRegistration/
 import FacultySemesterRegistration from "./components/VerifySemesterRegistration/FacultySemesterRegistration.js";
 import ShowHostelRoomRequest from "./pages/ShowHostelRoomRequest.js";
 import { NotFoundPage } from "./pages/NotFoundPage.js";
+import { NoDuesForDegreeApproval } from "./pages/NoDuesForDegreeApproval.js";
 
 function App() {
   return (
@@ -63,6 +64,7 @@ function App() {
               path="/semesterRegistration"
               element={<SemesterRegistration />}
             />
+            <Route path='/No-dues-for-degree-approval' element={<NoDuesForDegreeApproval/>}/>
             <Route path="/add-fees" element={<AddFeesCaretaker/>}/>
             <Route path="/hostel-room-allotment" element={<HostelRoomAllotment/>}/>
             <Route path="/sem-sub-register" element={<SemSubject/>}/>
