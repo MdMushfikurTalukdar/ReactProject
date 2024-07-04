@@ -481,10 +481,11 @@ export const HostelRoomRequest = () => {
                 result.map((data, index) => (
                   <Card
                     key={index}
+                    variant="outlined"
                     sx={{
                       minWidth: 275,
                       marginBottom: 2,
-                      backgroundColor: "#D2E9E9",
+                      
                     }}
                   >
                     <CardContent>
@@ -530,7 +531,8 @@ export const HostelRoomRequest = () => {
                               height: "150px",
                               margin: "10px 0px",
                               borderRadius: "10px",
-                              textAlign: "center",
+                             
+                              objectFit:"fill"
                             }}
                           />
                         ) : (
@@ -543,7 +545,7 @@ export const HostelRoomRequest = () => {
               ) : (
                 result.length===0?(<>
                 <center>
-                <img src="./images/No_data.png" alt="" style={{width:"310px",borderRadius:"10px",marginTop:"30px"}}/></center>
+                <img src="./images/No_data.png" alt="" style={{width:"310px",borderRadius:"10px",marginTop:"30px",}}/></center>
                 </>):(
                 <TableContainer component={Paper} sx={{ marginTop: 3 }}>
                   <Table

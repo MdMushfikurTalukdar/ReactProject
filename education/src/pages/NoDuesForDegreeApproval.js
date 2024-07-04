@@ -302,7 +302,7 @@ export const NoDuesForDegreeApproval = () => {
             ...rejected,
             {
               id: user_id,
-              status: "approved",
+              status: "rejected",
               approved_date: new Date().toLocaleDateString("en-CA"),
               applied_date: itemToReject?.applied_date,
               registration_number:
@@ -535,7 +535,7 @@ export const NoDuesForDegreeApproval = () => {
                     Applied Date: {data?.applied_date}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    Approved Date: {data?.approved_date}
+                    Rejected Date: {data?.approved_date}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     Status: {data?.status}

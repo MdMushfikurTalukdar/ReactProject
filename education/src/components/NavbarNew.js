@@ -213,7 +213,7 @@ export const NavbarNew = () => {
     axios
       .request(config)
       .then((response) => {
-        console.log(JSON.stringify(response.data));
+     
         setNotifications(response?.data);
       })
       .catch((error) => {
