@@ -6,7 +6,8 @@ import NavbarNew from "../components/NavbarNew";
 import HistoryCard from "../components/Dashboard/HistoryCard";
 import SemesterCard from "../components/Dashboard/SemsterDashboard";
 import AttendanceDashboard from "../components/Dashboard/Attendance";
-import {Footer} from "../components/Footer";
+import Footer from "../components/Home/Footer";
+
 
 export const Dashboard = () => {
   const navigate = useNavigate();
