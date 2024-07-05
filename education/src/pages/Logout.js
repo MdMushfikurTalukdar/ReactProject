@@ -10,8 +10,10 @@ export const Logout = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem("accesstoken");
-    localStorage.removeItem("refreshtoken");
+    localStorage?.removeItem("accesstoken");
+    localStorage?.removeItem("refreshtoken");
+    localStorage?.removeItem("RollNumber");
+    localStorage?.removeItem("password");
     navigate('/');
   };
 

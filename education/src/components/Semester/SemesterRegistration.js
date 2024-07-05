@@ -19,10 +19,13 @@ import {
   TableRow,
   TableCell,
   TableBody,
+  InputAdornment,
+  CircularProgress,
 } from "@mui/material";
 import "../../App.css";
 import NavbarNew from "../NavbarNew";
-
+import { IoIosInformationCircle } from "react-icons/io";
+import { PiListNumbersFill } from "react-icons/pi";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -32,6 +35,10 @@ import * as yup from "yup";
 import Footer from "../Home/Footer";
 import { Table } from "heroicons-react";
 import { enqueueSnackbar } from "notistack";
+import { MdDateRange } from "react-icons/md";
+import { FaCodeBranch } from "react-icons/fa";
+import { GiSpellBook } from "react-icons/gi";
+import { BaseUrl } from "../BaseUrl";
 
 const schema = yup.object().shape({
   selectedSemester: yup.string().required("Semester is required"),
@@ -51,7 +58,10 @@ export function SemesterRegistration() {
   const [uniqueCodes, setUniqueCodes] = useState([]);
   const [uniqueSubjects, setUniqueSubjects] = useState([]);
   const [result, setResult] = useState([]);
-  
+  const [loading,setLoading]=useState(true);
+  const [loading1,setLoading1]=useState(true);
+  const [loading2,setLoading2]=useState(true);
+ 
 
   const [responsive, setResponsive] = useState(
     window.innerWidth < 669 ? true : false
@@ -84,7 +94,7 @@ export function SemesterRegistration() {
     let config = {
       method: "GET",
       maxBodyLength: Infinity,
-      url: "https://amarnath013.pythonanywhere.com/api/user/profile/",
+      url: `${BaseUrl}/profile/`,
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
       },
@@ -93,6 +103,7 @@ export function SemesterRegistration() {
     axios
       .request(config)
       .then((response) => {
+        setLoading(false);
         setUserProfile(response.data);
       })
       .catch((error) => {
@@ -105,7 +116,7 @@ export function SemesterRegistration() {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `https://amarnath013.pythonanywhere.com/api/user/semester-registrations/?search=${userProfile?.personal_information?.registration_number}`,
+      url: `${BaseUrl}/semester-registrations/?search=${userProfile?.personal_information?.registration_number}`,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
@@ -116,6 +127,7 @@ export function SemesterRegistration() {
       .request(config)
       .then((response) => {
         console.log(response.data);
+        setLoading1(false);
         setResult(response.data.reverse());
       })
       .catch((error) => {
@@ -126,7 +138,7 @@ export function SemesterRegistration() {
   useEffect(() => {
     if (localStorage?.getItem("accesstoken")) {
       const response = jwtDecode(localStorage?.getItem("accesstoken"));
-      if (response.exp < Math.floor(Date.now() / 1000)) {
+      if (response.exp < Math.floor(Date.now() / 1000) || response.role !== "student" ) {
         navigate("/login");
       }
     } else {
@@ -138,7 +150,7 @@ export function SemesterRegistration() {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `https://amarnath013.pythonanywhere.com/api/user/semester/?search`,
+      url: `${BaseUrl}/semester/?search`,
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
       },
@@ -147,6 +159,7 @@ export function SemesterRegistration() {
     axios
       .request(config)
       .then((response) => {
+        setLoading2(false);
         setTotalData(response.data);
         const uniqueBranches = response.data.reduce((acc, current) => {
           const x = acc.find(
@@ -169,7 +182,7 @@ export function SemesterRegistration() {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `https://amarnath013.pythonanywhere.com/api/user/semester/?search=${semester}`,
+      url: `${BaseUrl}/semester/?search=${semester}`,
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
       },
@@ -240,10 +253,17 @@ export function SemesterRegistration() {
   const onSubmit = (data) => {
     console.log(data);
 
+    if(userProfile?.personal_information?.first_name===null)
+      return enqueueSnackbar("name field is empty", { variant: "error" });
+
+    if(!userProfile?.academic_information?.session)
+      return enqueueSnackbar("Session field is empty", { variant: "error" });
+
+    
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: "https://amarnath013.pythonanywhere.com/api/user/semester/?search",
+      url: `${BaseUrl}/semester/?search`,
       headers: {
         Authorization: `Bearer ${localStorage?.getItem("accesstoken")}`,
       },
@@ -265,7 +285,7 @@ export function SemesterRegistration() {
         let config = {
           method: "post",
           maxBodyLength: Infinity,
-          url: "https://amarnath013.pythonanywhere.com/api/user/semester-registrations/",
+          url: `${BaseUrl}/semester-registrations/`,
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage?.getItem("accesstoken")}`,
@@ -294,43 +314,97 @@ export function SemesterRegistration() {
           })
           .catch((error) => {
             console.log(error);
+            
           });
       })
       .catch((error) => {
         console.log(error);
+        if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+          enqueueSnackbar("Logging out", {
+            variant: "error",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 3000,
+          });  
+          navigate("/login");
+        }
       });
   };
 
+  if (loading || loading1 || loading2) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="80vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
   // console.log(uniqueSubjects);
   return (
     <>
       <NavbarNew />
-      <Grid container spacing={3} style={{ padding: "20px" }}>
-        <Grid item xs={12}>
-          <Typography variant="h5" gutterBottom style={{ width: "100%" }}>
+       
+          <Typography variant="h5" align="center" gutterBottom style={{ width: "100%",fontFamily:"mono-space",fontSize:"1.6rem",marginTop:"30px" }}>
             Semester Registration
           </Typography>
-        </Grid>
-        <Grid item xs={12} sm={6}>
+       
+       
+          
+        <center>
+        <img src="./images/semester.png" alt="" style={{width:"290px",borderRadius:"10px",marginTop:"10px"}}/></center>
+        
+      <Grid container spacing={1} style={{ padding: "30px",display:"flex",justifyContent:"center",alignContent:"center",alignItems:"center" }}>
+        <Grid item xs={12} sm={12} lg={7} md={7} style={{display:"flex",flexDirection:"column",justifyContent:'center',alignContent:"center",alignItems:"center"}}>
           <TextField
             type="text"
-            label="Student Name"
+            placeholder="Student Name"
             value={`${userProfile?.personal_information?.first_name} ${userProfile?.personal_information?.middle_name} ${userProfile?.personal_information?.last_name}`}
             fullWidth
             disabled
+            sx={{
+              width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
+              marginTop:"15px",marginBottom:"10px"
+            }}
+           
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <IoIosInformationCircle />
+                </InputAdornment>
+              ),
+            }}
           />
-        </Grid>
-        {/* Other form fields */}
-        <Grid item xs={12} sm={6}>
+      
+       
           <TextField
             type="text"
             value={userProfile?.personal_information?.registration_number}
             fullWidth
             disabled
+            sx={{
+              width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
+              marginBottom:"10px"
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <PiListNumbersFill />
+                </InputAdornment>
+              ),
+            }}
           />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <FormControl fullWidth>
+       
+        
+          <FormControl fullWidth  sx={{
+                      width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
+                      marginBottom:"10px"
+                    }} >
             <InputLabel id="semester-label">Choose Semester</InputLabel>
             <Controller
               name="selectedSemester"
@@ -346,6 +420,7 @@ export function SemesterRegistration() {
                     field.onChange(e);
                     handleSemesterChange(e);
                   }}
+                 
                 >
                   <MenuItem value="" disabled>
                     Choose Semester
@@ -361,11 +436,15 @@ export function SemesterRegistration() {
 
             <FormHelperText>{errors.selectedSemester?.message}</FormHelperText>
           </FormControl>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <FormControl fullWidth>
+        
+        
+          <FormControl fullWidth  sx={{
+                      width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
+                      marginBottom:"10px"
+                    }}>
             <InputLabel id="branch-label">Branch</InputLabel>
             <Controller
+           
               name="branch"
               control={control}
               defaultValue=""
@@ -374,6 +453,7 @@ export function SemesterRegistration() {
                   {...field}
                   labelId="branch-label"
                   label="Branch"
+                  
                   onChange={(e) => {
                     field.onChange(e);
                     handleBranchChange(e);
@@ -393,71 +473,117 @@ export function SemesterRegistration() {
             />
             <FormHelperText>{errors.branch?.message}</FormHelperText>
           </FormControl>
-        </Grid>
-
-        <Grid item xs={12} sm={6}>
+        
           <TextField
             type="text"
-            label={userProfile?.academic_information?.batch}
-           
+            value={userProfile?.academic_information?.session}
+            placeholder='session'
+            sx={{
+              width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
+            }}
             fullWidth
             disabled
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <MdDateRange />
+                </InputAdornment>
+              ),
+            }}
           />
         </Grid>
-      </Grid>
-      {/* Subject List */}
-      <Grid container spacing={2} style={{ padding: "20px" }}>
-        <Grid item xs={12}>
-          <Typography variant="h5" gutterBottom>
+       
+        <Grid item lg={5} md={5} sx={{ padding: "20px" , display:{
+        lg:"block",
+        md:"block",
+        sm:"none",
+        xs:"none"
+      },marginTop:"20px" }}>
+          <Typography variant="h5" align="center" gutterBottom sx={{marginBottom:"20px"}}>
             Subject List
           </Typography>
-          <Box style={{ marginTop: "20px", marginBottom: "20px" }}>
-            {uniqueSubjects &&
+          <center>
+          <Box style={{ marginTop: "10px", marginBottom: "20px" }}>
+            {uniqueSubjects.length > 0 ? (
               uniqueSubjects.map((data, index) => (
                 <p key={index} style={{ margin: "10px" }}>
-                  {data.subject_code} {data.subject_name}
+                 <GiSpellBook style={{fontSize:"1.4rem"}}/> {data.subject_code} : {data.subject_name}
                 </p>
-              ))}
+              ))):(<center><img src="./images/semester_no_data.png" alt="" style={{
+                width:"280px"
+              }}/></center>)}
           </Box>
-        </Grid>
-      </Grid>
-      <Grid container justifyContent="center" style={{ padding: "20px" }}>
-        <Button
+          <Button
           variant="contained"
           color="primary"
           onClick={handleSubmit(onSubmit)}
-        >
+          >
           Send Request
         </Button>
+          </center>
+        </Grid>
+     
+      </Grid>
+      
+     
+       {/* for phone */}
+      <Grid container spacing={2} sx={{ padding: "20px" , display:{
+        lg:"none",
+        md:"none",
+        sm:"flex",
+        xs:"flex"
+      }, justifyContent:"center",alignContent:"center",alignItems:"center" }}>
+        <Grid item xs={12}>
+          <Typography variant="h5" align="center" gutterBottom sx={{marginBottom:"50px"}}>
+            Subject List
+          </Typography>
+          <center>
+          <Box style={{ marginTop: "20px", marginBottom: "20px" }}>
+            {uniqueSubjects.length > 0 ? (
+              uniqueSubjects.map((data, index) => (
+                <p key={index} style={{ margin: "10px" }}>
+                 <GiSpellBook style={{fontSize:"1.4rem"}}/> {data.subject_code} : {data.subject_name}
+                </p>
+              ))):(<center><img src="./images/semester_no_data.png" alt="" style={{
+                width:"280px"
+              }}/></center>)}
+          </Box>
+          <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSubmit(onSubmit)}
+          >
+          Send Request
+        </Button>
+          </center>
+        </Grid>
       </Grid>
 
+
+    
+
       <Grid container spacing={3} style={{ padding: "20px" }}>
-        <Grid item xs={12}>
-          <Typography variant="h5" gutterBottom style={{ width: "100%" }}>
-            Previous Semester Registration
-          </Typography>
+        <Grid item xs={12} style={{marginTop:"40px"}}>
+         <center> 
+          <p style={{ width: "100%",fontSize:"1.2rem" }}>
+            Previous Records
+          </p></center>
         </Grid>
         <Box
           style={{
             display: "flex",
             justifyContent: "center",
             flexDirection: "column",
-            padding: "20px",
+            padding: "30px",
             alignItems: "center",
             alignContent: "center",
             width: "100vw",
           }}
         >
-          {result?.semester?.subjets?.length === 0 && (
-            <p
-              style={{
-                marginBottom: "50px",
-                marginTop: "100px",
-                fontSize: "1.2rem",
-              }}
-            >
-              Nothing to show
-            </p>
+          {result?.length === 0 && (
+           
+        <center>
+        <img src="./images/No_data.png" alt="" style={{width:"300px",borderRadius:"10px",marginTop:"30px"}}/></center>
           )}
 
           { result.length > 0 &&
@@ -465,20 +591,26 @@ export function SemesterRegistration() {
               <Box key={index}>
                 <Card
                   sx={{
-                    minWidth: 275,
+                    minWidth: {lg:675,sm:400,xs:280,md:575},
                     marginBottom: 2,
-                    backgroundColor: "#D2E9E9",
+                  
                     height: 150,
+                    padding:2
                   }}
                 >
                   <CardContent>
-                    <Typography variant="h6" component="div">
+                    <Typography variant="p" component="div" sx={{fontSize:"1.0rem",marginBottom:"2px"}}>
                       Semester Name: {data?.semester?.semester_name}
                     </Typography>
 
-                    <Typography variant="body2">
+                    <Typography variant="p"  sx={{fontSize:"1.0rem"}}>
                       Applied Date: {data?.applied_date}
+                    </Typography><br/>
+
+                    <Typography variant="p"  sx={{fontSize:"1.0rem",marginBottom:"2px"}}>
+                      Status: {data?.status}
                     </Typography>
+                   
                   </CardContent>
                 </Card>
               </Box>

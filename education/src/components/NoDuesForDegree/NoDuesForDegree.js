@@ -36,10 +36,11 @@ import { enqueueSnackbar } from "notistack";
 import NavbarNew from "../NavbarNew";
 import Footer from "../Home/Footer";
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
+import { BaseUrl } from "../BaseUrl";
 
 // Validation schema
 const schema = yup.object().shape({
-  Category: yup.string().required("Category is required"),
+  
   checkbox: yup
     .boolean()
     .oneOf([true], "Please agree to the terms and conditions"),
@@ -112,7 +113,7 @@ export function NoDuesForDegree() {
   const [userProfile, setUserProfile] = useState({});
   const [result, setResult] = useState([]);
   const [responsive, setResponsive] = useState(window.innerWidth < 669);
-
+  const [loading, setLoading] = useState(true);
   const {
     handleSubmit,
     register,
@@ -134,10 +135,11 @@ export function NoDuesForDegree() {
   }, []);
 
   useEffect(() => {
+    if(localStorage.getItem("accesstoken")!==null){
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "https://amarnath013.pythonanywhere.com/api/user/profile/",
+          `${BaseUrl}/profile/`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
@@ -148,12 +150,13 @@ export function NoDuesForDegree() {
       } catch (error) {
         console.log(error);
       }
+      
     };
 
     const fetchRequests = async () => {
       try {
         const response = await axios.get(
-          "https://amarnath013.pythonanywhere.com/api/user/overall-no-dues/",
+          `${BaseUrl}/overall-no-dues/`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
@@ -164,6 +167,7 @@ export function NoDuesForDegree() {
       } catch (error) {
         console.log(error);
       }
+
     };
 
     if (localStorage.getItem("accesstoken")) {
@@ -177,22 +181,42 @@ export function NoDuesForDegree() {
     } else {
       navigate("/login");
     }
+  }else{
+    navigate("/login");
+  }
   }, [navigate]);
 
   const onSubmit = async (data) => {
+
+  
+    if(userProfile?.personal_information?.first_name===null)
+      return enqueueSnackbar("name field is empty", { variant: "error" });
+
+    if(!userProfile?.academic_information?.branch)
+      return enqueueSnackbar("branch field is empty", { variant: "error" });
+
+    if(!userProfile?.personal_information?.father_name)
+      return enqueueSnackbar("Father field is empty", { variant: "error" });
+
+    if(!userProfile?.academic_information?.category)
+      return enqueueSnackbar("Category field is empty", { variant: "error" });
+
+    if(!userProfile?.academic_information?.session)
+      return enqueueSnackbar("Session field is empty", { variant: "error" });
+
     const requestData = {
       name: `${userProfile?.personal_information?.first_name} ${userProfile?.personal_information?.last_name}`,
-      branch: userProfile?.academic_information?.department,
+      branch: userProfile?.academic_information?.branch,
       father_name: userProfile?.personal_information?.father_name,
-      category: data?.Category,
+      category: userProfile?.academic_information?.category,
       self_declaration: true,
       status: "applied",
-      session: userProfile?.academic_information?.batch,
+      session: userProfile?.academic_information?.session,
     };
 
     try {
       const response = await axios.post(
-        "https://amarnath013.pythonanywhere.com/api/user/overall-no-dues/",
+        `${BaseUrl}/overall-no-dues/`,
         requestData,
         {
           headers: {
@@ -205,6 +229,7 @@ export function NoDuesForDegree() {
         window.location.reload();
       }, 2000);
 
+     
       enqueueSnackbar("Request was applied successfully", {
         variant: "success",
         anchorOrigin: {
@@ -213,8 +238,20 @@ export function NoDuesForDegree() {
         },
         autoHideDuration: 3000,
       });
+    
     } catch (error) {
       console.log(error);
+      if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+        enqueueSnackbar("Logging out", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 3000,
+        });  
+        navigate("/login");
+      }
       enqueueSnackbar("The request has already been made.", {
         variant: "success",
         anchorOrigin: {
@@ -325,7 +362,7 @@ export function NoDuesForDegree() {
                 </Typography>
                 <FormControl fullWidth>
                   <TextField
-                    value={userProfile?.academic_information?.department || ""}
+                    value={userProfile?.academic_information?.branch || ""}
                     disabled
                     placeholder="Branch"
                     sx={{
@@ -363,7 +400,7 @@ export function NoDuesForDegree() {
 
                 <TextField
                   type="text"
-                  value={userProfile?.academic_information?.batch}
+                  value={userProfile?.academic_information?.session}
                   sx={{
                     width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
                   }}
@@ -378,6 +415,7 @@ export function NoDuesForDegree() {
                   variant="h6"
                   gutterBottom
                   sx={{ marginTop: "10px",fontSize:"1rem" }}
+                  
                 >
                   Category
                 </Typography>
@@ -389,24 +427,21 @@ export function NoDuesForDegree() {
                   margin="normal"
                   error={!!errors.Category?.message}
                 >
-                  <TextField label="Category" {...register("Category")} />
-                  {errors.Category && (
-                    <FormHelperText>{errors.Category.message}</FormHelperText>
-                  )}
+                  <TextField  
+                  value={userProfile?.academic_information?.category}
+                  disabled
+                  placeholder="Category"
+                  />
+                 
                 </FormControl>
                 <br />
 
-                <Typography
-                  variant="h6"
-                  gutterBottom
-                  sx={{ marginTop: "30px",fontSize:"1rem" }}
-                >
-                  Self Declaration
-                </Typography>
+              
                 <FormControlLabel
                   control={
                     <Checkbox name="checkbox" {...register("checkbox")} />
                   }
+                  sx={{marginTop:"15px"}}
                   label="I declare that all these information are correct and I have no dues in any department/section as per my knowledge."
                 />
                 {errors.checkbox && (
@@ -446,7 +481,7 @@ export function NoDuesForDegree() {
               <img
                 src="./images/NoDues.png"
                 alt=""
-                style={{ width: "55%", marginLeft: "15%",marginTop:"20%" }}
+                style={{ width: "40%", marginLeft: "15%",marginTop:"20%" }}
               />
             </Box>
           </Grid>
@@ -468,6 +503,13 @@ export function NoDuesForDegree() {
             </div>
           </Box>
         )}
+        {result.length===0 && 
+         <center>
+          <Box sx={{display:{lg:"none",md:"none",sm:"none"}}}>
+         <img src="./images/No_data.png" alt="" style={{width:"250px",borderRadius:"10px"}}/>
+         </Box>
+         </center>
+        }
         {responsive ? (
           result.length > 0 && (
                result.map((data, index) => (
@@ -477,7 +519,7 @@ export function NoDuesForDegree() {
                   minWidth: 275,
                   width:'60vw',
                   marginBottom: 2,
-                  backgroundColor: "#D2E9E9",
+                  backgroundColor: "whitesmoke",
                 }}
               >
                 <CardContent>
@@ -524,6 +566,8 @@ export function NoDuesForDegree() {
                 <p style={{ marginTop: "20px", textAlign: "center",marginBottom:"20px" }}>
                   Previous Requests
                 </p>
+                
+                
                 {result.length > 0 ? (
                 <TableContainer>
                 <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
@@ -602,7 +646,13 @@ export function NoDuesForDegree() {
                       textAlign: "center",
                     }}
                   >
-                    Nothing to show
+                   {result.length===0 && 
+         <center>
+          <Box sx={{display:{lg:"block",md:"block",sm:"block",xs:"none"}}}>
+         <img src="./images/No_data.png" alt="" style={{width:"250px",borderRadius:"10px"}}/>
+         </Box>
+         </center>
+        }
                   </Typography>
                 )}
               </Box>

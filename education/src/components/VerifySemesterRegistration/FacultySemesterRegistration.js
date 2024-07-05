@@ -11,7 +11,8 @@ import {
   FormControl,
   useMediaQuery,
   Container,
-  RadioGroup
+  RadioGroup,
+  CircularProgress
 } from "@mui/material";
 import "../../App.css";
 import NavbarNew from "../NavbarNew";
@@ -20,6 +21,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { enqueueSnackbar } from "notistack";
 import Footer from "../Home/Footer";
+import { BaseUrl } from "../BaseUrl";
 
 const FacultySemesterRegistration = () => {
   const { id } = useParams();
@@ -29,6 +31,7 @@ const FacultySemesterRegistration = () => {
   const [isTextFieldDisabled, setIsTextFieldDisabled] = useState(true);
   const isMobile = useMediaQuery('(max-width: 600px)');
   const navigate = useNavigate();
+ 
 
   const handleRadioChange = (event) => {
     setRemark(event.target.value);
@@ -41,7 +44,7 @@ const FacultySemesterRegistration = () => {
         let config = {
           method: 'get',
           maxBodyLength: Infinity,
-          url: `https://amarnath013.pythonanywhere.com/api/user/semester-registrations/${id}`,
+          url: `${BaseUrl}/semester-registrations/${id}`,
           headers: {
             'Authorization': `Bearer ${localStorage.getItem("accesstoken")}`
           }
@@ -68,17 +71,41 @@ const FacultySemesterRegistration = () => {
     }
   }, [navigate]);
 
+  useEffect(() => {
+  
+    console.log(localStorage.getItem("accesstoken"))
+    
+    if (localStorage?.getItem("accesstoken")) {
+      const response = jwtDecode(localStorage?.getItem("accesstoken"));
+      if (response.exp < Math.floor(Date.now() / 1000) || (response.role!=='hod' && response.role!=='admin') ) {
+        navigate("/login");
+      }
+    } else {
+     
+      navigate("/login");
+    }
+  }, []);
+
   const onSubmit = (status) => {
+    
+    let a='No Remark';
+    console.log(text);
+    if(text.length===0){
+      a='No Remark';
+    }else{
+      a=text;
+    }
     let data1 = JSON.stringify({
-      "registration_details": id,
-      "remarks": text,
+      "registration_details": parseInt(id),
+      "remarks": a,
       "status": status
     });
 
+    console.log(data1);
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'https://amarnath013.pythonanywhere.com/api/user/verify-semester-registration/',
+      url: `${BaseUrl}/verify-semester-registration/`,
       headers: { 
         'Content-Type': 'application/json', 
         'Authorization': `Bearer ${localStorage?.getItem('accesstoken')}`
@@ -92,12 +119,30 @@ const FacultySemesterRegistration = () => {
       navigate("/verifySemesterRegistration");
     })
     .catch((error) => {
+      if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+        enqueueSnackbar("Logging out", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 3000,
+        });  
+        navigate("/login");
+      }
       enqueueSnackbar("Action failed", { variant: 'error' });
       console.log(error);
     });
   };
 
-  if (!profileDetails) return <div>Loading...</div>;
+  if (!profileDetails) return  <Box
+    display="flex"
+    justifyContent="center"
+    alignItems="center"
+    height="80vh"
+  >
+    <CircularProgress />
+  </Box>
 
   const { personal_information, academic_information } = profileDetails.student_details;
 
@@ -148,7 +193,7 @@ const FacultySemesterRegistration = () => {
                 <TextField
                   type="text"
                   label="Branch"
-                  value={academic_information?.department}
+                  value={academic_information?.branch}
                   fullWidth
                   disabled
                 />
@@ -166,7 +211,7 @@ const FacultySemesterRegistration = () => {
             </Grid>
           </Grid>
 
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={4} >
             <Box
               sx={{
                 display: 'flex',
@@ -174,10 +219,10 @@ const FacultySemesterRegistration = () => {
                 alignItems: 'center',
                 height: '250px',
                 width: '250px',
-                border: '1px solid #ddd',
+               
               }}
             >
-              <img src={personal_information?.profile_picture} style={{width:"250px",height:"250px"}} alt=""/>
+              <img src={personal_information?.profile_picture} style={{width:"200px",height:"200px",borderRadius:"50%",objectFit:"fill"}} alt=""/>
             </Box>
           </Grid>
         </Grid>

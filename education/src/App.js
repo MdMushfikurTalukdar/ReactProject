@@ -64,6 +64,7 @@ function App() {
               path="/semesterRegistration"
               element={<SemesterRegistration />}
             />
+            <Route path='/No-dues-for-degree-approval' element={<NoDuesForDegreeApproval/>}/>
             <Route path="/add-fees" element={<AddFeesCaretaker/>}/>
             <Route path="/hostel-room-allotment" element={<HostelRoomAllotment/>}/>
             <Route path="/sem-sub-register" element={<SemSubject/>}/>
@@ -74,6 +75,7 @@ function App() {
             <Route path="/no-dues-for-degree" element={ <NoDuesForDegree/> } />
             <Route path="/verifySemesterRegistration" element={<VerifySemesterRegistration/>} />
             <Route path="/facultySemesterRegistration/:id/:reg" element={<FacultySemesterRegistration/>} />
+            <Route path="/*" element={<NotFoundPage />} />
           </Routes>
         </Router>
 

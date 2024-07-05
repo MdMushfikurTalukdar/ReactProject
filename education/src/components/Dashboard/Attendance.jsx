@@ -17,7 +17,7 @@ const AttendanceDashboard = ({ presentPercentage }) => {
               a 15.9155 15.9155 0 0 1 0 -31.831"
           />
           <path
-            className="text-green-500"
+            style={{color:"#8ccccc"}}
             strokeWidth="4"
             strokeDasharray={`${presentPercentage}, 100`}
             stroke="currentColor"
@@ -28,9 +28,9 @@ const AttendanceDashboard = ({ presentPercentage }) => {
           />
         </svg>
         <div className="flex flex-col items-center justify-center">
-          <span className="text-3xl font-bold text-green-500">{presentPercentage}%</span>
+          <span className="text-3xl font-bold " style={{color:"#8ccccc"}}>{presentPercentage}%</span>
           <span className="text-lg text-gray-600">Present</span>
-          <span className="mt-2 text-3xl font-bold text-red-500">{absentPercentage}%</span>
+          <span className="mt-2 text-3xl font-bold" style={{color:"red"}}>{absentPercentage}%</span>
           <span className="text-lg text-gray-600">Absent</span>
         </div>
       </div>

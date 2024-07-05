@@ -17,6 +17,7 @@ import NavbarNew from '../components/NavbarNew';
 import Footer from '../components/Home/Footer';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
+import { BaseUrl } from '../components/BaseUrl';
 
 // Define validation schema using Yup
 const schema = yup.object().shape({
@@ -32,7 +33,7 @@ const schema = yup.object().shape({
 });
 
 const CollegeForm = () => {
-  const { register, handleSubmit, control, formState: { errors } } = useForm({
+  const { register, handleSubmit, control, formState: { errors },reset } = useForm({
     resolver: yupResolver(schema)
   });
 
@@ -53,6 +54,8 @@ const CollegeForm = () => {
   }, []);
   
   const onSubmit = async (data) => {
+
+   
     const formData = new FormData();
     formData.append('college_code', data.college_code);
     formData.append('college_name', data.college_name);
@@ -64,7 +67,7 @@ const CollegeForm = () => {
 
     const config = {
       method: 'post',
-      url: 'https://amarnath013.pythonanywhere.com/api/user/college/',
+      url: `${BaseUrl}/college/`,
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('accesstoken')}`,
         'Content-Type': 'multipart/form-data'
@@ -75,7 +78,7 @@ const CollegeForm = () => {
     try {
       const response = await axios.request(config);
       console.log(response.data);
-     
+      reset();
       enqueueSnackbar("successfully created", {
         variant: "success",
         anchorOrigin: {
@@ -88,14 +91,38 @@ const CollegeForm = () => {
 
     } catch (error) {
 
+      if(error?.response?.data?.errors?.college_name){
         enqueueSnackbar("college with this college code already exists", {
-            variant: "error",
-            anchorOrigin: {
-              vertical: "bottom",
-              horizontal: "center",
-            },
-            autoHideDuration: 3000,
-          });  
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 3000,
+        });  
+      }
+      if(error?.response?.data?.errors?.college_logo){
+        enqueueSnackbar("give a valid college logo", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 3000,
+        });  
+      }
+      if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+        enqueueSnackbar("Logging out", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 3000,
+        });  
+        navigate("/login");
+      }
+       
       console.error(error);
     }
   };
@@ -104,10 +131,14 @@ const CollegeForm = () => {
    <> 
    <NavbarNew/>
     <Container component="main" maxWidth="md">
-      <Paper elevation={3} sx={{ p: 4, mt: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
+      <Paper elevation={0} sx={{ p: 1, mt: 4 }}>
+        <Typography variant="h5" align='center' gutterBottom>
           College Information Form
         </Typography>
+
+        <center>
+          <img src='./images/college.jpg' alt='' style={{width:"290px"}}/>
+        </center>
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12}>

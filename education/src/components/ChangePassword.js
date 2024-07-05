@@ -11,6 +11,7 @@ import { HiOutlineExclamationCircle } from "react-icons/hi2";
 import NavbarNew from './NavbarNew';
 import Footer from './Home/Footer';
 import { RiLockPasswordFill } from "react-icons/ri";
+import { BaseUrl } from './BaseUrl';
 
 const validationSchema = yup.object({
   newPassword: yup
@@ -84,7 +85,7 @@ export const ChangePassword = () => {
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'https://amarnath013.pythonanywhere.com/api/user/change-password/',
+      url: `${BaseUrl}/change-password/`,
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('accesstoken')}`
@@ -94,6 +95,7 @@ export const ChangePassword = () => {
 
     axios.request(config)
       .then((response) => {
+        
         setTimeout(() => {
           enqueueSnackbar(response.data.message, {
             variant: "success",
@@ -123,6 +125,17 @@ export const ChangePassword = () => {
         }, 3000);
       })
       .catch((error) => {
+        if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+          enqueueSnackbar("Logging out", {
+            variant: "error",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 3000,
+          });  
+          navigate("/login");
+        }
         console.log(error);
       });
   };

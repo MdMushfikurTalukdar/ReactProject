@@ -9,6 +9,7 @@ import axios from 'axios';
 import { enqueueSnackbar } from 'notistack';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
+import { BaseUrl } from '../components/BaseUrl';
 
 const schema = yup.object().shape({
   subject_name: yup.string().required("Subject name is required"),
@@ -23,7 +24,7 @@ export const SemSubject = () => {
     useEffect(() => {
         if (localStorage?.getItem("accesstoken")) {
           const response = jwtDecode(localStorage?.getItem("accesstoken"));
-          if (response.exp < Math.floor(Date.now() / 1000) || response.role !== "admin") {
+          if (response.exp < Math.floor(Date.now() / 1000) || (response.role !== "admin" && response.role !== "teacher" && response.role !== "faculty")) {
             navigate("/login");
           }
         } else {
@@ -51,7 +52,7 @@ export const SemSubject = () => {
       let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: 'https://amarnath013.pythonanywhere.com/api/user/subject/',
+        url: `${BaseUrl}/subject/`,
         headers: { 
           'Content-Type': 'application/json', 
           'Authorization': `Bearer ${localStorage.getItem('accesstoken')}`
@@ -76,6 +77,17 @@ export const SemSubject = () => {
       .catch((error) => {
         console.log(error);
       
+        if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+          enqueueSnackbar("Logging out", {
+            variant: "error",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 3000,
+          });  
+          navigate("/login");
+        }
         enqueueSnackbar(error?.response?.data?.errors?.subject_code[0], {
             variant: "error",
             anchorOrigin: {
@@ -90,17 +102,16 @@ export const SemSubject = () => {
   return (
     <Box>
       <NavbarNew />
-      <Paper
+      <Box
         elevation={3}
         sx={{
           padding: 4,
           borderRadius: 2,
           maxWidth: 400,
           margin: "auto",
-          marginTop: 5,
-          backgroundColor: "#f5f5f5",
+          marginTop: 4,
           marginBottom: 9,
-          maxHeight:460
+         
         }}
       >
         <Typography
@@ -109,8 +120,11 @@ export const SemSubject = () => {
           gutterBottom
           sx={{ textAlign: "center", marginBottom: 2 }}
         >
-          Add Subject
+        Subject Enrollment
         </Typography>
+        <center>
+            <img src="./images/enrollment.png" alt="" style={{width:"250px",borderRadius:"10px"}}/>
+          </center>
         <Box
           sx={{
             display: "flex",
@@ -119,36 +133,40 @@ export const SemSubject = () => {
           }}
         >
           <form onSubmit={handleSubmit(onSubmit)}>
-            <FormControl fullWidth margin="normal" error={!!errors.subject_name}>
+            <FormControl fullWidth  error={!!errors.subject_name}>
               <TextField
                 type="text"
                 label="Subject Name*"
                 variant="outlined"
                 fullWidth
+                style={{marginBottom:"5px"}}
                 {...register("subject_name")}
               />
               <FormHelperText>{errors?.subject_name?.message}</FormHelperText>
             </FormControl>
-            <FormControl fullWidth margin="normal" error={!!errors.subject_code}>
+            <FormControl fullWidth  error={!!errors.subject_code}>
               <TextField
                 type="text"
                 label="Subject Code*"
                 variant="outlined"
                 fullWidth
+                style={{marginBottom:"5px"}}
                 {...register("subject_code")}
               />
               <FormHelperText>{errors?.subject_code?.message}</FormHelperText>
             </FormControl>
-            <FormControl fullWidth margin="normal" error={!!errors.name}>
+            <FormControl fullWidth error={!!errors.name}>
               <TextField
                 type="text"
                 label="Name*"
                 variant="outlined"
                 fullWidth
                 {...register("name")}
+                style={{marginBottom:"5px"}}
               />
               <FormHelperText>{errors?.name?.message}</FormHelperText>
             </FormControl>
+            <center>
             <Button
               variant="contained"
               color="primary"
@@ -162,9 +180,10 @@ export const SemSubject = () => {
             >
               Add Subject
             </Button>
+            </center>
           </form>
         </Box>
-      </Paper>
+      </Box>
       <Footer />
     </Box>
   );

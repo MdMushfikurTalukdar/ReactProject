@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import { BaseUrl } from "../components/BaseUrl";
 
 export const BonafideCertificate = () => {
   const [result, setResult] = useState([]);
@@ -23,7 +24,7 @@ export const BonafideCertificate = () => {
     let config = {
       method: "post",
       maxBodyLength: Infinity,
-      url: "https://amarnath013.pythonanywhere.com/api/user/bonafide/",
+      url: `${BaseUrl}/bonafide/`,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
@@ -48,10 +49,7 @@ export const BonafideCertificate = () => {
     if (localStorage?.getItem("accesstoken")) {
       const response = jwtDecode(localStorage?.getItem("accesstoken"));
       console.log(response.exp);
-      if (
-        response.token_type !== "access" &&
-        response.exp < Math.floor(Date.now() / 1000)
-      ) {
+      if (response.exp < Math.floor(Date.now() / 1000)|| response.role!=="student" ) {
         navigate("/login");
       }
     } else {
@@ -61,7 +59,7 @@ export const BonafideCertificate = () => {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: "https://amarnath013.pythonanywhere.com/api/user/profile/",
+      url: `${BaseUrl}/profile/`,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
@@ -121,24 +119,24 @@ export const BonafideCertificate = () => {
           <p className="text-justify leading-loose print:text-lg">
             This is to certify that{" "}
             <b>
-              {result?.student_details?.first_name?.slice(0, 1)?.toUpperCase()}
-              {result?.student_details?.first_name?.slice(1)}{" "}
-              {result?.student_details?.last_name?.slice(0, 1)?.toUpperCase()}
-              {result?.student_details?.last_name?.slice(1)}
+              {profile?.personal_information?.first_name?.slice(0, 1)?.toUpperCase()}
+              {profile?.personal_information?.first_name?.slice(1)}{" "}
+              {profile?.personal_information?.last_name?.slice(0, 1)?.toUpperCase()}
+              {profile?.personal_information?.last_name?.slice(1)}
             </b>{" "}
             S/o or D/o{" "}
             <b>
               {" "}
-              {result?.student_details?.father_name?.slice(0, 1)?.toUpperCase()}
-              {result?.student_details?.father_name?.slice(1)}
+              {profile?.personal_information?.father_name?.slice(0, 1)?.toUpperCase()}
+              {profile?.personal_information?.father_name?.slice(1)}
             </b>{" "}
             bearing College Roll No.-{" "}
-            <b> {result?.student_details?.registration_number}</b> is a bonafide student
+            <b> {profile?.personal_information?.registration_number}</b> is a bonafide student
             of<b> {profile?.academic_information?.current_year} </b>Semester/Year. (Batch{" "}
-            <b>{profile?.academic_information?.batch}</b>)
-            <b> {profile?.academic_information?.department?.toUpperCase()} Department</b>, under B.Tech
+            <b>{profile?.academic_information?.session}</b>)
+            <b> {profile?.academic_information?.branch?.toUpperCase()} Department</b>, under B.Tech
             Programme of this Institute. Class starts from{" "}
-            <b>{profile?.academic_information?.enrollment_date}</b> After completing the usual
+            <b>{profile?.academic_information?.date_of_admission}</b> After completing the usual
             academic procedure, he/she has been enrolled under the 04 years
             B.Tech programme of the Institute.
           </p>

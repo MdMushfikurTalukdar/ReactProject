@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import NavbarNew from '../components/NavbarNew';
 import Footer from '../components/Home/Footer';
+import { BaseUrl } from '../components/BaseUrl';
 
 const ShowHostelRoomRequest = () => {
   const [data, setData] = useState([]);
@@ -30,7 +31,7 @@ const ShowHostelRoomRequest = () => {
     const config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: 'https://amarnath013.pythonanywhere.com/api/user/hostel-allotments/?search=applied',
+      url: `${BaseUrl}/hostel-allotments/?search=applied`,
       headers: { 
         'Authorization': `Bearer ${localStorage?.getItem('accesstoken')}`
       }

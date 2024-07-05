@@ -32,6 +32,7 @@ import {
   CardContent,
   TableHead,
   useTheme,
+  CircularProgress,
 } from "@mui/material";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -42,6 +43,8 @@ import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import NavbarNew from "../components/NavbarNew";
 import Footer from "../components/Home/Footer";
+import { enqueueSnackbar } from "notistack";
+import { BaseUrl } from "./BaseUrl";
 
 const settings = {
   infinite: true,
@@ -122,12 +125,19 @@ function TablePaginationActions(props) {
 
 const slides = [
   {
+    image: "complaints1.png",
+    title: "Revolutionizing Campus Life with Smart Tech",
+    subtitle:
+      "Revolutionizing the campus experience with smart technology and seamless connectivity.",
+  },
+  {
     image: "complaints.jpg",
     title: "Welcome to Smart Campus",
     subtitle: "Your journey to excellence starts here",
   },
+  
   {
-    image: "complaints1.png",
+    image: "complaints2.png",
     title: "Revolutionizing Campus Life with Smart Tech",
     subtitle:
       "Revolutionizing the campus experience with smart technology and seamless connectivity.",
@@ -146,6 +156,7 @@ const ComplaintForm = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [responsive, setResponsive] = useState(window.innerWidth < 684);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const handleResize = () => {
@@ -158,6 +169,17 @@ const ComplaintForm = () => {
   }, []);
 
   useEffect(() => {
+    if (localStorage?.getItem("accesstoken")) {
+      const response = jwtDecode(localStorage?.getItem("accesstoken"));
+      if (response.exp < Math.floor(Date.now() / 1000)|| (response.role!=="student" && response.role!=="admin")) {
+        navigate("/login");
+      }
+    } else {
+      navigate("/login");
+    }
+  }, []);
+  
+  useEffect(() => {
     const token = localStorage.getItem("accesstoken");
     if (!token) {
       window.location.href = "/login";
@@ -165,9 +187,10 @@ const ComplaintForm = () => {
     }
 
     const fetchProfileData = async () => {
+     
       try {
         const response = await fetch(
-          "https://amarnath013.pythonanywhere.com/api/user/profile",
+          `${BaseUrl}/profile`,
           {
             method: "GET",
             headers: {
@@ -178,20 +201,24 @@ const ComplaintForm = () => {
         );
         if (!response.ok) throw new Error("Failed to fetch profile data");
         const data = await response.json();
+        if(data){
+          setLoading(false);
+        }
         setProfileData({
           registrationNo: data?.academic_information?.registration_number,
           name: data?.personal_information?.first_name,
-          branch: data?.academic_information?.department,
+          branch: data?.academic_information?.branch,
         });
       } catch (error) {
         console.error("Error fetching profile data:", error);
       }
+  
     };
 
     const fetchComplaints = async () => {
       try {
         const response = await fetch(
-          "https://amarnath013.pythonanywhere.com/api/user/complaints",
+          `${BaseUrl}/complaints`,
           {
             method: "GET",
             headers: {
@@ -222,10 +249,11 @@ const ComplaintForm = () => {
   });
 
   useEffect(() => {
+    if(localStorage.getItem("accesstoken")!==null){
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: "https://amarnath013.pythonanywhere.com/api/user/complaints/",
+      url: `${BaseUrl}/complaints/`,
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
       },
@@ -240,12 +268,24 @@ const ComplaintForm = () => {
         console.log(error);
       });
 
-    if (localStorage?.getItem("accesstoken")) {
+    } else {
+      navigate("/login");
+    }
+  }, []);
+
+  useEffect(() => {
+  
+    // console.log(localStorage.getItem("accesstoken"))
+    if(localStorage?.getItem("accesstoken")===null){
+      navigate("/login");
+    }
+    else if (localStorage?.getItem("accesstoken")) {
       const response = jwtDecode(localStorage?.getItem("accesstoken"));
       if (response.exp < Math.floor(Date.now() / 1000)) {
         navigate("/login");
       }
     } else {
+     
       navigate("/login");
     }
   }, []);
@@ -268,7 +308,7 @@ const ComplaintForm = () => {
     let config = {
       method: "post",
       maxBodyLength: Infinity,
-      url: "https://amarnath013.pythonanywhere.com/api/user/complaints/",
+      url: `${BaseUrl}/complaints/`,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
@@ -294,6 +334,17 @@ const ComplaintForm = () => {
           position: "top-center",
           autoClose: 5000,
         });
+        if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+          enqueueSnackbar("Logging out", {
+            variant: "error",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 3000,
+          });  
+          navigate("/login");
+        }
       });
   };
 
@@ -311,8 +362,21 @@ const ComplaintForm = () => {
       ? Math.max(0, (1 + page) * rowsPerPage - previousRecord.length)
       : 0;
 
+
+      if (loading) {
+        return (
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            height="80vh"
+          >
+            <CircularProgress />
+          </Box>
+        );
+      }
   return (
-    <div className="container-fluid" style={{borderRadius:"20px",border:"1px solid whitesmoke"}}>
+    <div className="container-fluid" style={{borderRadius:"20px"}}>
       <Box
         className="complaint-form"
         sx={{ bgcolor: "", borderRadius: 3, padding: 3 }}
@@ -326,6 +390,7 @@ const ComplaintForm = () => {
               Register Complaint
             </Typography>
 
+<center>
             <Box
               sx={{
                 display: { xs: "block", sm: "block", md: "none", lg: "none" },
@@ -336,14 +401,15 @@ const ComplaintForm = () => {
             >
               <Slider {...settings}>
                 {slides.map((slide, index) => (
-                  <img src={`./images/${slide.image}`} alt="" />
+                  <img src={`./images/${slide.image}`} alt="" style={{borderRadius:"10px"}} />
                 ))}
               </Slider>
             </Box>
+            </center>
 
             <form onSubmit={handleSubmit(onSubmit)}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
+              <Grid container spacing={2} sx={{padding:{lg:"30px",xs:"0px",md:"30px",sm:"0px"}}} >
+                <Grid item xs={12} >
                   <TextField
                     label="Registration/ Employee No"
                     fullWidth
@@ -463,29 +529,31 @@ const ComplaintForm = () => {
                 display: { xs: "none", sm: "none", md: "block", lg: "block" },
                 width: "300px",
                 marginTop: "50px",
+                borderRadius:"15px"
               }}
             >
               <Slider {...settings}>
                 {slides.map((slide, index) => (
-                  <img src={`./images/${slide.image}`} alt="" key={index} />
+                  <img src={`./images/${slide.image}`} alt="" key={index}  />
                 ))}
               </Slider>
             </Box>
+            <Box sx={{marginTop:"50px"}}>
             <Typography
-              variant="h5"
-              sx={{ marginBottom: "2%", textAlign: "center", marginTop: "5%" }}
+              variant="p"
+              sx={{ marginBottom: "2%", textAlign: "center", marginTop: "10px",fontSize:"1.2rem" }}
             >
               Previous Complaints
             </Typography>
+            </Box>
             {previousRecord.length === 0 ? (
-              <Typography variant="body1" sx={{ textAlign: "center" }}>
-                No previous complaints found.
-              </Typography>
+               <center>
+              <img src="./images/No_data.png" alt="" style={{width:"310px",borderRadius:"10px",marginTop:"30px"}}/></center>
             ) : responsive ? (
               previousRecord
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => (
-                  <Card key={index} sx={{ marginBottom: 2, bgcolor: "#f5f5f5",textAlign:"justify" }}>
+                  <Card key={index} sx={{ marginBottom: 2, bgcolor: "#f5f5f5",textAlign:"justify",marginTop:"20px" }}>
                     <CardContent>
                      
                       <Typography color="textSecondary">
@@ -520,9 +588,8 @@ const ComplaintForm = () => {
                   <TableBody>
                     {previousRecord.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={5} align="center">
-                          No records found.
-                        </TableCell>
+                        <center>
+                        <img src="./images/No_data.png" alt="" style={{width:"340px",borderRadius:"10px",marginTop:"30px"}}/></center>
                       </TableRow>
                     ) : (
                       previousRecord

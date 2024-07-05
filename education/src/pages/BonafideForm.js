@@ -26,6 +26,7 @@ import {
   CardContent,
   TableHead,
   Grid,
+  CircularProgress,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
@@ -37,6 +38,7 @@ import { jwtDecode } from "jwt-decode";
 import NavbarNew from "../components/NavbarNew";
 import Footer from "../components/Home/Footer";
 import { enqueueSnackbar } from "notistack";
+import { BaseUrl } from "../components/BaseUrl";
 
 // Validation schema
 const schema = yup.object().shape({
@@ -119,6 +121,7 @@ export const BonafideForm = () => {
   const [result, setResult] = useState([]);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [name, setName] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const navigate = useNavigate();
@@ -162,7 +165,7 @@ export const BonafideForm = () => {
   useEffect(() => {
     if (localStorage?.getItem("accesstoken")) {
       const response = jwtDecode(localStorage?.getItem("accesstoken"));
-      if (response.exp < Math.floor(Date.now() / 1000)) {
+      if (response.exp < Math.floor(Date.now() / 1000)|| response.role!=="student" ) {
         navigate("/login");
       }
     } else {
@@ -173,9 +176,7 @@ export const BonafideForm = () => {
   useEffect(() => {
     axios
       .get(
-        `https://amarnath013.pythonanywhere.com/api/user/bonafide/?search=${localStorage.getItem(
-          "RollNumber"
-        )}`,
+        `${BaseUrl}/bonafide/?search=${jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
@@ -183,6 +184,7 @@ export const BonafideForm = () => {
         }
       )
       .then((response) => {
+        setLoading(false);
         setResult(response.data.reverse());
       })
       .catch((error) => {
@@ -193,13 +195,10 @@ export const BonafideForm = () => {
   const onSubmit = (data) => {
     const formData = new FormData();
     formData.append("college", "1");
-    formData.append(
-      "student",
-      jwtDecode(localStorage?.getItem("accesstoken")).user_id
-    );
+    formData.append("student",localStorage?.getItem('accesstoken')===null ?null:jwtDecode(localStorage?.getItem("accesstoken")).user_id);
     formData.append(
       "roll_no",
-      jwtDecode(localStorage?.getItem("accesstoken")).user_id
+      localStorage?.getItem('accesstoken')===null ?null:jwtDecode(localStorage?.getItem("accesstoken")).user_id
     );
     formData.append("status", "pending");
     formData.append("supporting_document", data.file[0]);
@@ -208,7 +207,7 @@ export const BonafideForm = () => {
 
     axios
       .post(
-        "https://amarnath013.pythonanywhere.com/api/user/bonafide/",
+        `${BaseUrl}/bonafide/`,
         formData,
         {
           headers: {
@@ -232,6 +231,17 @@ export const BonafideForm = () => {
       })
       .catch((error) => {
         console.error(error);
+        if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+          enqueueSnackbar("Logging out", {
+            variant: "error",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 3000,
+          });  
+          navigate("/login");
+        }
       });
   };
 
@@ -245,6 +255,20 @@ export const BonafideForm = () => {
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - result.length) : 0;
+
+
+    if (loading) {
+      return (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          height="80vh"
+        >
+          <CircularProgress />
+        </Box>
+      );
+    }
 
   return (
     <div className="container-fluid" style={{ backgroundColor: "whitesmoke" }}>
@@ -410,14 +434,15 @@ export const BonafideForm = () => {
           </Box>}
         {responsive ? (
          
-          result.length > 0 &&
+          result.length > 0 ?
           result.map((data, index) => (
             <Box key={index}>
               <Card
+              // variant="outline"
                 sx={{
-                  minWidth: 275,
+                  minWidth: 295,
                   marginBottom: 2,
-                  backgroundColor: "#D2E9E9",
+                  
                   marginTop: 2,
                 }}
               >
@@ -458,7 +483,8 @@ export const BonafideForm = () => {
                 </CardContent>
               </Card>
             </Box>
-          ))
+          )):( <center>
+              <img src="./images/No_data.png" alt="" style={{width:"320px",borderRadius:"10px",marginTop:"30px"}}/></center>)
         ) : (
           <Grid container>
             <Grid item lg={6} md={4} sx={{
@@ -554,12 +580,8 @@ export const BonafideForm = () => {
                 </Table>
               </TableContainer>
             ) : (
-              <Typography
-                variant="body1"
-                sx={{ marginTop: 3, textAlign: "center" }}
-              >
-                No Bonafide Requests Found
-              </Typography>
+              <center>
+              <img src="./images/No_data.png" alt="" style={{width:"320px",borderRadius:"10px",marginTop:"30px"}}/></center>
             )}
           </Box>
           </Grid>

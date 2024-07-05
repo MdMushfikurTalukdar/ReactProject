@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSnackbar } from "notistack";
 import { useNavigate } from 'react-router-dom';
@@ -10,17 +10,26 @@ import { CgProfile } from "react-icons/cg";
 import {
   Box,
   Button,
+  CircularProgress,
   InputAdornment,
   TextField
 } from "@mui/material";
 import Style from '../components/StyleLogin';
 import { RiLockPasswordFill } from 'react-icons/ri';
+import { FaEye } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa";
+import Checkbox from '@mui/material/Checkbox';
+import { BaseUrl } from '../components/BaseUrl';
+
+const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 export const LoginPage = () => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-
+  const [hide,setHide]=useState(false);
+  const [remember,setRemember]=useState(false);
+  
   const onSubmit = (data) => {
     let data1 = JSON.stringify({
       "registration_number": data.rollNumber,
@@ -28,7 +37,7 @@ export const LoginPage = () => {
     });
 
     axios({
-      url: "https://amarnath013.pythonanywhere.com/api/user/login/",
+      url: `${BaseUrl}/login/`,
       method: "POST",
       headers: {
         'Content-Type': 'application/json'
@@ -45,7 +54,16 @@ export const LoginPage = () => {
           autoHideDuration: 3000,
         });
         navigate('/dashboard');
-        localStorage.setItem('RollNumber', data.rollNumber);
+
+        if(localStorage?.getItem('remember')==='true'){
+          localStorage.setItem('RollNumber', data.rollNumber);
+          localStorage.setItem('password',data.password);
+        }else{
+          localStorage?.removeItem('RollNumber');
+          localStorage?.removeItem('password');
+          
+        }
+        
         localStorage.setItem('accesstoken', res.data.token.access);
         localStorage.setItem('refreshtoken', res.data.token.refresh);
       })
@@ -64,12 +82,23 @@ export const LoginPage = () => {
     reset();
   };
 
+  const checking=(e)=>{
+    setRemember(e.nativeEvent.srcElement.checked);
+    localStorage?.setItem('remember',e.nativeEvent.srcElement.checked)
+  }
+  var rememberMe=false;
+  if(localStorage?.getItem('remember')==='true'){
+    rememberMe=true;
+  }else{
+    rememberMe=false;
+  }
   return (
     <>
+   
       <Style />
       <Header />
 
-      <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 loginBody">
+      <div className=" flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 loginBody">
         <Box className="max-w-md w-full space-y-8" sx={{ boxShadow: { lg: 3, md: 3, sm: 3, xs: 0,borderRadius: '16px',
             padding: '32px',width: '100%',
             maxWidth: '400px' }}}>
@@ -90,6 +119,7 @@ export const LoginPage = () => {
                   type="text"
                   label="Registration no./Employee ID."
                   fullWidth
+                  defaultValue={localStorage?.getItem('RollNumber')}
                   {...register("rollNumber", { required: true })}
                   autoComplete="off"
                   className={`appearance-none rounded-none relative block w-full px-3 py-2 border ${errors.rollNumber ? 'border-red-500' : 'border-gray-300'} placeholder-blue-300 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
@@ -108,8 +138,9 @@ export const LoginPage = () => {
                 <label htmlFor="password" className="sr-only">Password</label>
                 <TextField
                   id="password"
-                  type="password"
+                  type={hide?"text":"password"}
                   label="password"
+                  defaultValue={localStorage?.getItem('password')}
                   {...register("password", { required: true })}
                   fullWidth
                   autoComplete="current-password"
@@ -121,10 +152,20 @@ export const LoginPage = () => {
                         <RiLockPasswordFill />
                       </InputAdornment>
                     ),
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        {hide ? <FaEyeSlash className='cursor-pointer' onClick={(e)=>
+                          setHide(!hide)
+                        }/>:<FaEye className='cursor-pointer' onClick={(e)=>
+                          setHide(!hide)
+                        }/>}
+                      </InputAdornment>
+                    ),
                   }}
                 />
                 {errors.password && <p className="text-black-500 text-xs mt-1 textSign">Password is required</p>}
               </div>
+              <Checkbox {...label} defaultChecked={rememberMe} onClick={checking}/>Remember me?
             </div>
 
             <div>
@@ -145,6 +186,7 @@ export const LoginPage = () => {
         </Box>
       </div>
       <Footer />
-    </>
+      </>
+             
   );
 };

@@ -24,6 +24,7 @@ import {
   TableRow,
   Paper,
   Checkbox,
+  CircularProgress,
 } from "@mui/material";
 import Footer from "../components/Home/Footer";
 import "../App.css";
@@ -32,6 +33,7 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { enqueueSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
+import { BaseUrl } from "../components/BaseUrl";
 
 // Validation schema
 const schema = yup.object().shape({
@@ -43,16 +45,30 @@ export const HostelNoDueReq = () => {
   const [result, setResult] = useState([]);
   const [responsive, setResponsive] = useState(window.innerWidth < 669);
   const navigate = useNavigate();
-
+  const [loading, setLoading] = useState(true);
+  const [loading1, setLoading1] = useState(true);
+ 
   const [maintainanceToDate, setMaintainanceToDate] = useState(null);
   const [messToDate, setMessToDate] = useState(null);
 
   useEffect(() => {
-    
+    if (localStorage?.getItem("accesstoken")) {
+      const response = jwtDecode(localStorage?.getItem("accesstoken"));
+      if (response.exp < Math.floor(Date.now() / 1000)|| (response.role!=="student" && response.role!=='admin')) {
+        navigate("/login");
+      }
+    } else {
+      navigate("/login");
+    }
+  }, []);
+
+  
+  useEffect(() => {
+    if(localStorage.getItem('accesstoken')!==null){
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `https://amarnath013.pythonanywhere.com/api/user/mess-fees-payment/?search=${localStorage?.getItem('RollNumber')}`,
+      url: `${BaseUrl}/mess-fees-payment/?search=${jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}`,
       headers: { 
         Authorization: `Bearer ${localStorage.getItem('accesstoken')}`
       }
@@ -61,9 +77,9 @@ export const HostelNoDueReq = () => {
     axios.request(config)
     .then((response) => {
       const payments = response.data.reverse();
-     
-      const maintainancePayment = payments.find(payment => payment.maintainance_fees !== null);
-      const messPayment = payments.find(payment => payment.mess_fees !== null);
+      setLoading(false);
+      const maintainancePayment = payments.find(payment => payment.fee_type === "maintainance_fee");
+      const messPayment = payments.find(payment => payment.fee_type === "mess_fee");
 
       if (maintainancePayment) {
         setMaintainanceToDate(maintainancePayment.to_date);
@@ -75,6 +91,9 @@ export const HostelNoDueReq = () => {
     .catch((error) => {
       console.log(error);
     });
+  }else{
+    navigate('/login');
+  }
   }, []);
 
 
@@ -86,16 +105,6 @@ export const HostelNoDueReq = () => {
     resolver: yupResolver(schema),
   });
 
-  useEffect(() => {
-    if (localStorage?.getItem("accesstoken")) {
-      const response = jwtDecode(localStorage?.getItem("accesstoken"));
-      if (response.exp < Math.floor(Date.now() / 1000)) {
-        navigate("/login");
-      }
-    } else {
-      navigate("/login");
-    }
-  }, [navigate]);
 
   useEffect(() => {
     const resize = () => {
@@ -112,7 +121,7 @@ export const HostelNoDueReq = () => {
 
 
   const onSubmit = (data) => {
-
+    if(localStorage.getItem('accesstoken')!==null){
     if(maintainanceToDate===null || messToDate===null)
     {
       return enqueueSnackbar("Have not paid Maintainance or Mess", {
@@ -135,7 +144,7 @@ export const HostelNoDueReq = () => {
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'https://amarnath013.pythonanywhere.com/api/user/hostel-no-dues/',
+      url: `${BaseUrl}/hostel-no-dues/`,
       headers: { 
         'Content-Type': 'application/json', 
         Authorization: `Bearer ${localStorage?.getItem('accesstoken')}`
@@ -162,9 +171,22 @@ export const HostelNoDueReq = () => {
 
     })
     .catch((error) => {
+      if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+        enqueueSnackbar("Logging out", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 3000,
+        });  
+        navigate("/login");
+      }
       console.log(error);
     });
-    
+  }else{
+    navigate('/login');
+  }
    
   };
 
@@ -172,7 +194,7 @@ export const HostelNoDueReq = () => {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `https://amarnath013.pythonanywhere.com/api/user/hostel-no-dues/?search=${localStorage?.getItem('RollNumber')}`,
+      url: `${BaseUrl}/hostel-no-dues/?search=${jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}`,
       headers: { 
         'Authorization': `Bearer ${localStorage?.getItem('accesstoken')}`
       }
@@ -182,11 +204,25 @@ export const HostelNoDueReq = () => {
     .then((response) => {
       console.log(JSON.stringify(response.data));
       setResult(response?.data);
+      setLoading1(false);
     })
     .catch((error) => {
       console.log(error);
     });
   },[]);
+
+  if (loading || loading1) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="80vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
   return (
     <div className="container-fluid" style={{ backgroundColor: "whitesmoke" }}>
       <NavbarNew />
@@ -209,7 +245,7 @@ export const HostelNoDueReq = () => {
             Registration/Employee No:
           </Typography>
           <Typography variant="p" gutterBottom>
-            {localStorage?.getItem('RollNumber')}
+            {localStorage?.getItem('accesstoken')===null ?null:jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}
           </Typography>
           <FormControl
             fullWidth
@@ -333,11 +369,13 @@ export const HostelNoDueReq = () => {
             <Typography
               style={{
                 marginBottom: "50px",
-                marginTop: "100px",
+                marginTop: "30px",
                 fontSize: "1.2rem",
               }}
             >
-              Nothing to show
+              <center>
+            <img src="./images/No_data.png" alt="" style={{width:"250px",borderRadius:"10px"}}/>
+          </center>
             </Typography>
           )}
 

@@ -8,7 +8,10 @@ import {
   Typography,
   Paper,
   Box,
+  InputAdornment,
+  CircularProgress,
 } from "@mui/material";
+import { MdDateRange } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -19,6 +22,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import dayjs from "dayjs";
 import { useSnackbar } from "notistack";
 import { jwtDecode } from "jwt-decode";
+import { BaseUrl } from "./BaseUrl";
 
 const schema = yup.object().shape({
   feeType: yup.string().required("Fee Type is required"),
@@ -51,14 +55,14 @@ function HostelFeePayment() {
   const [fees, setFees] = useState({});
   const [result, setResult] = useState([]);
   const [total, setTotal] = useState(0);
-
+  const [loading, setLoading] = useState(true);
+  const [id,setId]=useState('');
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
   const {
     control,
     handleSubmit,
-    register,
     watch,
     setValue,
     formState: { errors },
@@ -67,38 +71,80 @@ function HostelFeePayment() {
   });
 
   const fetchData = async () => {
+    if(localStorage.getItem("accesstoken")!==null){
     try {
       const response = await axios.get(
-        "https://amarnath013.pythonanywhere.com/api/user/fees/",
+        `${BaseUrl}/fees/`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
           },
         }
       );
+      console.log(response.data);
+      setLoading(false);
       setFees(response.data);
     } catch (error) {
       console.error("Failed to fetch fees:", error);
+      if(error?.response?.data?.message==="ID does not Exists"){
+        enqueueSnackbar("Fees Structure is not added by caretaker", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 3000,
+        });
+        navigate('/dashboard')
+      }
+    }
+    }else{
+      navigate('/login');
     }
   };
 
   useEffect(() => {
-    if (localStorage.getItem("accesstoken")) {
-      const token = localStorage.getItem("accesstoken");
-      const decoded = jwtDecode(token);
-      if (decoded.exp < Date.now() / 1000) {
+    if (localStorage?.getItem("accesstoken")) {
+      const response = jwtDecode(localStorage?.getItem("accesstoken"));
+      if (response.exp < Math.floor(Date.now() / 1000)|| response.role!=="student" ) {
         navigate("/login");
       }
     } else {
       navigate("/login");
     }
-  }, [navigate]);
+  }, []);
 
+  useEffect(()=>{
+    if(localStorage.getItem("accesstoken")!==null){
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `${BaseUrl}/hostel-room-allotments/?search=${jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}`,
+      headers: { 
+        'Authorization': `Bearer ${localStorage?.getItem('accesstoken')}`
+      },
+     
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      setId(response?.data?.[0]?.id);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }else{
+    navigate('/login');
+  }
+  },[]);
   useEffect(() => {
+    if(localStorage.getItem("accesstoken")!==null){
     const fetchProfileData = async () => {
+     
       try {
         const response = await axios.get(
-          "https://amarnath013.pythonanywhere.com/api/user/profile",
+          `${BaseUrl}/profile`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
@@ -118,6 +164,9 @@ function HostelFeePayment() {
     };
 
     fetchProfileData();
+  }else{
+    navigate('/login');
+  }
   }, []);
 
   useEffect(() => {
@@ -126,19 +175,19 @@ function HostelFeePayment() {
 
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post(
-        "https://amarnath013.pythonanywhere.com/api/user/mess-fees-payment/",
+      const response=await axios.post(
+        `${BaseUrl}/mess-fees-payment/`,
         {
-          registration_details: localStorage.getItem("id"),
+          registration_details: id,
           from_date: dayjs(data.startDate).format("YYYY-MM"),
           to_date: dayjs(data.endDate).format("YYYY-MM"),
-          mess_fees: data.feeType === "Mess_fees" ? fees.Mess_fees : null,
-          maintainance_fees:
-            data.feeType === "Maintainance_fees"
-              ? fees.Maintainance_fees
-              : null,
-          security_fees:
-            data.feeType === "Security_Deposit" ? fees.Security_fees : null,
+          // mess_fees: data.feeType === "Mess_fees" ? fees.Mess_fees : null,
+          fee_type:data.feeType,
+          //   data.feeType === "Maintainance_fees"
+          //     ? fees.Maintainance_fees
+          //     : null,
+          // security_fees:
+          //   data.feeType === "Security_Deposit" ? fees.Security_Deposit : null,
           total_fees: total,
         },
         {
@@ -148,6 +197,7 @@ function HostelFeePayment() {
           },
         }
       );
+      console.log(response);
       enqueueSnackbar("Payment request successful", {
         variant: "success",
         anchorOrigin: {
@@ -161,7 +211,18 @@ function HostelFeePayment() {
       }, 2000);
     } catch (error) {
       console.error("Payment request error:", error);
-      enqueueSnackbar("Payment request failed", {
+       if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+          enqueueSnackbar("Logging out", {
+            variant: "error",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 3000,
+          });  
+          navigate("/login");
+        }
+      enqueueSnackbar("Caretaker have not alloted a room to you yet.", {
         variant: "error",
         anchorOrigin: {
           vertical: "bottom",
@@ -172,13 +233,12 @@ function HostelFeePayment() {
     }
   };
 
+  
   useEffect(() => {
     const fetchPayments = async () => {
       try {
         const response = await axios.get(
-          `https://amarnath013.pythonanywhere.com/api/user/mess-fees-payment/?search=${localStorage.getItem(
-            "RollNumber"
-          )}`,
+          `${BaseUrl}/mess-fees-payment/?search=${jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
@@ -202,29 +262,57 @@ function HostelFeePayment() {
     setValue("endDate", date, { shouldValidate: true });
   };
 
+  console.log(fees);
   useEffect(() => {
     if (watch("startDate") && watch("endDate")) {
-      const differenceInMonths =
-        dayjs(watch("endDate")).diff(dayjs(watch("startDate")), "month") + 1;
+      const differenceInMonths = dayjs(watch("endDate")).diff(
+        dayjs(watch("startDate")),
+        "month"
+      );
       setValue("noOfMonths", differenceInMonths, { shouldValidate: true });
-      setTotal(differenceInMonths * watch("monthlyCharges"));
+      const feeType = watch("feeType");
+      let monthlyCharge = 0;
+      if (feeType === "mess_fee") monthlyCharge = fees.Mess_fees;
+      else if (feeType === "maintainance_fee")
+        monthlyCharge = fees.Maintainance_fees;
+      else if (feeType === "security_fee")
+        monthlyCharge = fees.Security_Deposit;
+
+      setValue("monthlyCharges", monthlyCharge, { shouldValidate: true });
+      setTotal(differenceInMonths * monthlyCharge);
     }
-  }, [watch, setValue]);
+  }, [watch("startDate"), watch("endDate"), watch("feeType"), setValue, fees]);
+
+  if (loading) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="80vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Container maxWidth="md">
-      <Paper elevation={3} sx={{ p: 4, mt: 4 }}>
-        <p
-          style={{
-            textAlign: "center",
-            fontSize: "1.7rem",
-            marginBottom: "20px",
-          }}
+      <Paper elevation={0} sx={{ p: { lg: 4, md: 4 }, mt: 4 }}>
+        <Typography
+          variant="h5"
+          align="center"
+          gutterBottom
+          style={{ marginBottom: "30px" }}
         >
           Hostel/Mess Fee Payment
-        </p>
+        </Typography>
         <center style={{ marginBottom: "16px" }}>
-          <img src="./images/payment.jpg" alt="" style={{ width: "250px" }} />
+          <img
+            src="./images/payment.png"
+            alt="Payment"
+            style={{ width: "250px", marginLeft: "15px" }}
+          />
         </center>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={2}>
@@ -246,82 +334,7 @@ function HostelFeePayment() {
                 disabled
               />
             </Grid>
-            <Grid item xs={12} sm={6} lg={12} md={12}>
-              <Controller
-                control={control}
-                name="startDate"
-                render={({ field }) => (
-                  <DatePicker
-                    {...field}
-                    selected={field.value}
-                    onChange={handleStartDateChange}
-                    selectsStart
-                    startDate={field.value}
-                    minDate={new Date()}
-                    dateFormat="yyyy-MM"
-                    showMonthYearPicker
-                    customInput={
-                      <TextField
-                        label="From"
-                        variant="outlined"
-                        sx={{
-                          width: {
-                            lg: "353%",
-                            md: "353%",
-                            xs: "100%",
-                            sm: "130%",
-                          },
-                        }}
-                      />
-                    }
-                  />
-                )}
-              />
-              {errors.startDate && (
-                <Typography color="error" variant="body2">
-                  {errors.startDate.message}
-                </Typography>
-              )}
-            </Grid>
-            <Grid item xs={12} sm={6} lg={12} md={12}>
-              <Controller
-                control={control}
-                name="endDate"
-                render={({ field }) => (
-                  <DatePicker
-                    {...field}
-                    selected={field.value}
-                    onChange={handleEndDateChange}
-                    selectsEnd
-                    startDate={watch("startDate")}
-                    endDate={field.value}
-                    minDate={dayjs(watch("startDate")).add(1, "month").toDate()}
-                    dateFormat="yyyy-MM"
-                    showMonthYearPicker
-                    customInput={
-                      <TextField
-                        label="To"
-                        variant="outlined"
-                        sx={{
-                          width: {
-                            lg: "353%",
-                            md: "353%",
-                            xs: "100%",
-                            sm: "90%",
-                          },
-                        }}
-                      />
-                    }
-                  />
-                )}
-              />
-              {errors.endDate && (
-                <Typography color="error" variant="body2">
-                  {errors.endDate.message}
-                </Typography>
-              )}
-            </Grid>
-            <Grid item xs={12} sm={12} lg={12} md={12}>
+            <Grid item xs={12}>
               <Controller
                 name="feeType"
                 control={control}
@@ -335,55 +348,149 @@ function HostelFeePayment() {
                     error={!!errors.feeType}
                     helperText={errors.feeType?.message}
                   >
-                    <MenuItem value="Maintainance_fees">
+                    <MenuItem value="maintainance_fee">
                       Maintenance Fee
                     </MenuItem>
-                    <MenuItem value="Mess_fees">Mess Fee</MenuItem>
-                    <MenuItem value="Security_Deposit">Security Money</MenuItem>
+                    <MenuItem value="mess_fee">Mess Fee</MenuItem>
+                    <MenuItem value="security_fee">Security Money</MenuItem>
                   </TextField>
                 )}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                type="number"
-                placeholder="Monthly Charges"
-                variant="outlined"
-                fullWidth
-                {...register("monthlyCharges")}
-                error={!!errors.monthlyCharges}
-                helperText={errors.monthlyCharges?.message}
-                disabled
+            <Grid item xs={6} sm={6} md={12} lg={12}>
+              <Controller
+                control={control}
+                name="startDate"
+                render={({ field }) => (
+                  <DatePicker
+                    {...field}
+                    selected={field.value}
+                    onChange={handleStartDateChange}
+                    dateFormat="MMMM yyyy"
+                    minDate={new Date()}
+                    showMonthYearPicker
+                    customInput={
+                      <TextField
+                        label="Start Date"
+                        variant="outlined"
+                        fullWidth
+                        error={!!errors.startDate}
+                        helperText={errors.startDate?.message}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <MdDateRange />
+                            </InputAdornment>
+                          ),
+                        }}
+                        sx={{
+                          width: {
+                            lg: "320%",
+                            md: "320%",
+                            xs: "100%",
+                            sm: "100%",
+                          },
+                        }}
+                      />
+                    }
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={6} sm={6} md={12} lg={12}>
+              <Controller
+                control={control}
+                name="endDate"
+                render={({ field }) => (
+                  <DatePicker
+                    {...field}
+                    selected={field.value}
+                    onChange={handleEndDateChange}
+                    dateFormat="MMMM yyyy"
+                    showMonthYearPicker
+                    customInput={
+                      <TextField
+                        label="End Date"
+                        variant="outlined"
+                        fullWidth
+                        error={!!errors.endDate}
+                        helperText={errors.endDate?.message}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <MdDateRange />
+                            </InputAdornment>
+                          ),
+                        }}
+                        sx={{
+                          width: {
+                            lg: "320%",
+                            md: "320%",
+                            xs: "100%",
+                            sm: "100%",
+                          },
+                        }}
+                      />
+                    }
+                  />
+                )}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                type="number"
-                placeholder="No. of Months"
-                variant="outlined"
-                fullWidth
-                {...register("noOfMonths")}
-                error={!!errors.noOfMonths}
-                helperText={errors.noOfMonths?.message}
-                disabled
+              <Controller
+                name="noOfMonths"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    placeholder="Number of Months"
+                    variant="outlined"
+                    fullWidth
+                    error={!!errors.noOfMonths}
+                    helperText={errors.noOfMonths?.message}
+                    disabled
+                  />
+                )}
               />
             </Grid>
-          </Grid>
-          <Box mt={2}>
-            <Typography variant="h6" align="right" gutterBottom>
-              Total: {total}
-            </Typography>
-            <Grid container justifyContent="center">
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="monthlyCharges"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    placeholder="Monthly Charges"
+                    variant="outlined"
+                    fullWidth
+                    error={!!errors.monthlyCharges}
+                    helperText={errors.monthlyCharges?.message}
+                    disabled
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Typography variant="subtitle1">Total Amount:</Typography>
+                <Typography variant="h6">Rs: {total}/-</Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12}>
               <Button
                 type="submit"
                 variant="contained"
-                color="primary"
-                style={{ marginBottom: "20px" }}
+                style={{ backgroundColor: "#8ecccc" }}
+                fullWidth
               >
-                Pay & Request to Verify
+                Request For Payment
               </Button>
             </Grid>
-          </Box>
+          </Grid>
         </form>
         <Box mt={4}>
           <p
@@ -395,35 +502,45 @@ function HostelFeePayment() {
           >
             Previous Fee Payments
           </p>
-          <Grid container spacing={2}>
-            <Grid item xs={4}>
-              <Typography variant="subtitle1" fontWeight="bold">
-                Fee Type:
-              </Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography variant="subtitle1" fontWeight="bold">
-                From:
-              </Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography variant="subtitle1" fontWeight="bold">
-                To:
-              </Typography>
-            </Grid>
+          <Grid
+            container
+            spacing={1}
+            className="shadow-xl mb-5 lg:p-5 md:p-5 p-2 rounded-lg "
+            style={{ textAlign: "center" }}
+          >
+            {result.length !== 0 && (
+              <>
+                <Grid item xs={4}>
+                  <Typography variant="subtitle1" fontWeight="bold">
+                    Fee Type:
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography variant="subtitle1" fontWeight="bold">
+                    From:
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography variant="subtitle1" fontWeight="bold">
+                    To:
+                  </Typography>
+                </Grid>
+              </>
+            )}
             {result.length === 0 ? (
               <Grid item xs={12}>
                 <center style={{ marginTop: "20px" }}>
-                  <p>No payment records found.</p>
+                  <img src="./images/No_data.png" alt="" style={{width:"320px",borderRadius:"15px",marginRight:"15px"}}/>
                 </center>
               </Grid>
             ) : (
               result.map((payment) => (
+              
                 <React.Fragment key={payment.id}>
                   <Grid item xs={4}>
-                    {payment.maintainance_fees && "Maintenance Fee"}
-                    {payment.mess_fees && "Mess Fee"}
-                    {payment.security_fees && "Security Money"}
+                    {payment.fee_type==="maintainance_fee" && "Maintenance Fee"}
+                    {payment.fee_type==="mess_fee" && "Mess Fee"}
+                    {payment.fee_type==="security_fee" && "Security Money"}
                   </Grid>
                   <Grid item xs={4}>
                     {payment.from_date}
@@ -432,6 +549,7 @@ function HostelFeePayment() {
                     {payment.to_date}
                   </Grid>
                 </React.Fragment>
+                
               ))
             )}
           </Grid>
