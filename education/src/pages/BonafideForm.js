@@ -165,7 +165,10 @@ export const BonafideForm = () => {
   useEffect(() => {
     if (localStorage?.getItem("accesstoken")) {
       const response = jwtDecode(localStorage?.getItem("accesstoken"));
-      if (response.exp < Math.floor(Date.now() / 1000)|| response.role!=="student" ) {
+      if (
+        response.exp < Math.floor(Date.now() / 1000) ||
+        response.role !== "student"
+      ) {
         navigate("/login");
       }
     } else {
@@ -176,7 +179,9 @@ export const BonafideForm = () => {
   useEffect(() => {
     axios
       .get(
-        `${BaseUrl}/bonafide/?search=${jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}`,
+        `${BaseUrl}/bonafide/?search=${
+          jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number
+        }`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
@@ -195,10 +200,17 @@ export const BonafideForm = () => {
   const onSubmit = (data) => {
     const formData = new FormData();
     formData.append("college", "1");
-    formData.append("student",localStorage?.getItem('accesstoken')===null ?null:jwtDecode(localStorage?.getItem("accesstoken")).user_id);
+    formData.append(
+      "student",
+      localStorage?.getItem("accesstoken") === null
+        ? null
+        : jwtDecode(localStorage?.getItem("accesstoken")).user_id
+    );
     formData.append(
       "roll_no",
-      localStorage?.getItem('accesstoken')===null ?null:jwtDecode(localStorage?.getItem("accesstoken")).user_id
+      localStorage?.getItem("accesstoken") === null
+        ? null
+        : jwtDecode(localStorage?.getItem("accesstoken")).user_id
     );
     formData.append("status", "pending");
     formData.append("supporting_document", data.file[0]);
@@ -206,16 +218,12 @@ export const BonafideForm = () => {
     formData.append("required_for", data.purpose);
 
     axios
-      .post(
-        `${BaseUrl}/bonafide/`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
-          },
-        }
-      )
+      .post(`${BaseUrl}/bonafide/`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
+        },
+      })
       .then((response) => {
         enqueueSnackbar("Request sent successfully", {
           variant: "success",
@@ -231,7 +239,10 @@ export const BonafideForm = () => {
       })
       .catch((error) => {
         console.error(error);
-        if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+        if (
+          error?.response?.data?.errors?.detail ===
+          "Given token not valid for any token type"
+        ) {
           enqueueSnackbar("Logging out", {
             variant: "error",
             anchorOrigin: {
@@ -239,7 +250,7 @@ export const BonafideForm = () => {
               horizontal: "center",
             },
             autoHideDuration: 3000,
-          });  
+          });
           navigate("/login");
         }
       });
@@ -256,62 +267,71 @@ export const BonafideForm = () => {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - result.length) : 0;
 
-
-    if (loading) {
-      return (
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          height="80vh"
-        >
-          <CircularProgress />
-        </Box>
-      );
-    }
+  if (loading) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="80vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
-    <div className="container-fluid" style={{ backgroundColor: "whitesmoke" }}>
+    <div className="container-fluid">
       <NavbarNew />
       <Box
         className="bonafide-form"
-        sx={{ bgcolor: "whitesmoke", borderRadius: 3 , padding: 3 }}
+        sx={{ borderRadius: 3, padding: 1 ,marginTop:3 }}
       >
-          <Grid container>
-           
-            <Grid item xs={12} md={6} lg={6}>
-            <Typography variant="h5" sx={{ marginBottom: "1px",textAlign:"center" }}>
-                  Bonafide Certificate Request
-            </Typography>
+        <Grid container>
+          <Grid item xs={12} md={6} lg={6}>
+            <center><p style={{fontSize:'1.2rem'}}>Bonafide Certificate Request</p></center>
 
-              <Grid
+            <Grid
               item
               xs={12}
               sm={12}
-              sx={{ display: { xs: "block",sm:"block",md:"none",lg:"none"},
+              sx={{
+                display: { xs: "block", sm: "block", md: "none", lg: "none" },
               }}
             >
-              <Box sx={{
-                marginTop:{lg:"5%",md:"15%"}
-                }}>
-              <img src="./images/Bonafide.png" alt="" style={{width:"55%",marginLeft:"20%"}}  />
+              <Box
+                sx={{
+                  marginTop: { lg: "5%", md: "15%" },
+                }}
+              >
+                <center>
+                <img
+                  src="./images/Bonafide.png"
+                  alt=""
+                  style={{ width: "55%",marginTop:"20px"}}
+                />
+                </center>
               </Box>
-            </Grid>    
-              <Box sx={{marginLeft:{lg:"20%",md:"20%"},
-              marginTop:{lg:"60px",md:"40px"}
-            }}>
+            </Grid>
+            <Box
+              sx={{
+                backgroundColor: "rgb(243 244 246)",
+                padding: {lg:"45px",md:"35px",xs:"20px",sm:"20px"},
+                marginTop: {lg:"42px",md:"42px",xs:"29px",sm:"29px"},
+                marginLeft: {lg:"42px",md:"42px",xs:"0px",sm:"0px"},
+                borderRadius: "15px"
+              }}
+            >
               <form onSubmit={handleSubmit(onSubmit)}>
-              
-                <Typography variant="h6" gutterBottom sx={{marginTop:"30px"}}>
+                <p style={{fontSize:"1.2rem",marginBottom:"10px"}}>
                   Purpose
-                </Typography>
+                </p>
                 <FormControl
-                  // fullWidth
+                 
                   sx={{
-                     width:{lg:"70%",md:"70%",xs:"100%",sm:"90%"}
+                    width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
                   }}
                   variant="outlined"
-                  margin="normal"
                   error={!!errors.purpose?.message}
                 >
                   <InputLabel id="purpose-label">Select Purpose</InputLabel>
@@ -334,15 +354,16 @@ export const BonafideForm = () => {
                   {errors.purpose && (
                     <FormHelperText>{errors.purpose.message}</FormHelperText>
                   )}
-                </FormControl><br/>
+                </FormControl>
+                <br />
 
                 <FormControl
                   error={!!errors.file?.message}
                   sx={{ marginTop: 2 }}
                 >
-                  <Typography variant="h6" gutterBottom>
+                  <p style={{fontSize:"1.2rem",marginBottom:"10px"}}>
                     Supporting Document
-                  </Typography>
+                  </p>
                   <Button
                     variant="contained"
                     component="label"
@@ -378,15 +399,32 @@ export const BonafideForm = () => {
                     <FormHelperText>{errors.file.message}</FormHelperText>
                   )}
                 </FormControl>
-                <Typography variant="h6" gutterBottom sx={{ marginTop: 2 }}>
+                <p style={{fontSize:"1.2rem",marginBottom:"10px",marginTop:"10px"}}>
                   Do you want fee structure also?
-                </Typography>
-                <Box style={{ display: "flex", gap: "10px" }}>
-                  <label>
-                    <input type="radio" name="option" value="yes" /> Yes
+                </p>
+                <Box
+                  style={{ display: "flex", gap: "10px", marginBottom: "10px" }}
+                >
+                  <label
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "5px",
+                    }}
+                  >
+                    <input type="radio" name="option" value="yes" />
+                    <span>Yes</span>
                   </label>
-                  <label>
-                    <input type="radio" name="option" value="no" /> No
+
+                  <label
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "5px",
+                    }}
+                  >
+                    <input type="radio" name="option" value="no" />
+                    <span>No</span>
                   </label>
                 </Box>
 
@@ -394,197 +432,254 @@ export const BonafideForm = () => {
                   variant="contained"
                   color="primary"
                   type="submit"
-                  
                   sx={{
                     marginTop: "5px",
                     backgroundColor: "rgb(107, 169, 169)",
                     color: "#fff",
                     "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
-                    width:{lg:"70%",md:"70%",xs:"100%",sm:"90%"}
+                    width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
                   }}
                 >
                   Send Request
                 </Button>
               </form>
-              </Box>
-            </Grid>
-            <Grid
-              item
-              xs={12}
-              md={6}
-              lg={6}
-              sm={12}
-              sx={{ display: { xs: "none", md: "block",lg:"block" ,sm:"none"},
-              
+            </Box>
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            md={6}
+            lg={6}
+            sm={12}
+            sx={{
+              display: { xs: "none", md: "block", lg: "block", sm: "none" },
+            }}
+          >
+            <Box
+              sx={{
+                marginTop: { lg: "2%", md: "15%" },
               }}
             >
-              <Box sx={{
-                marginTop:{lg:"5%",md:"15%"}
-                }}>
-              <img src="./images/Bonafide.png" alt="" style={{width:"50%",marginLeft:"15%"}} />
-              </Box>
-            </Grid>
+              <img
+                src="./images/Bonafide.png"
+                alt=""
+                style={{ width: "50%", marginLeft: "15%",marginTop:"5%" }}
+              />
+            </Box>
           </Grid>
-        
-        {responsive && <Box>
-          <div style={{marginTop:"25px"}}>
-          <Divider sx={{width:"90vw"}}/>
-          <p style={{textAlign:"center",marginTop:"10px",fontSize:"1.2rem"}}>Previous Records</p>
-          </div>
-          </Box>}
-        {responsive ? (
-         
-          result.length > 0 ?
-          result.map((data, index) => (
-            <Box key={index}>
-              <Card
-              // variant="outline"
-                sx={{
-                  minWidth: 295,
-                  marginBottom: 2,
-                  
-                  marginTop: 2,
+        </Grid>
+
+        {responsive && (
+          <Box>
+            <div style={{ marginTop: "25px" }}>
+              <Divider sx={{ width: "90vw" }} />
+              <p
+                style={{
+                  textAlign: "center",
+                  marginTop: "10px",
+                  fontSize: "1.2rem",
                 }}
               >
-                <CardContent>
-                  <Typography
-                    sx={{ fontSize: 14 }}
-                    color="text.secondary"
-                    gutterBottom
-                  >
-                    Bonafide Details
-                  </Typography>
-                  <Typography variant="p" component="div">
-                    Bonafide Number: {data?.bonafide_number}
-                  </Typography>
-                  <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                    Student Information
-                  </Typography>
-                  <Typography variant="body2">
-                    Applied For: {data?.required_for}
-                  </Typography>
-                  <Typography variant="body2">
-                    Status: {data?.status}
-                  </Typography>
-                  <Typography variant="body2">
-                    Applied Date: {data?.applied_date}
-                  </Typography>
-                  {data?.status === "approved" ? (
-                    <Button
-                      size="small"
-                      variant="contained"
-                      color="primary"
-                      onClick={(e) => navigate("/bonafideCertificate")}
-                      style={{ marginTop: "10px" }}
+                Previous Records
+              </p>
+            </div>
+          </Box>
+        )}
+        {responsive ? (
+          result.length > 0 ? (
+            result.map((data, index) => (
+              <Box key={index}>
+                <Card
+                  // variant="outline"
+                  sx={{
+                    minWidth: 295,
+                    marginBottom: 2,
+
+                    marginTop: 2,
+                  }}
+                >
+                  <CardContent>
+                    <Typography
+                      sx={{ fontSize: 14 }}
+                      color="text.secondary"
+                      gutterBottom
                     >
-                      View
-                    </Button>
-                  ) : null}
-                </CardContent>
-              </Card>
-            </Box>
-          )):( <center>
-              <img src="./images/No_data.png" alt="" style={{width:"320px",borderRadius:"10px",marginTop:"30px"}}/></center>)
+                      Bonafide Details
+                    </Typography>
+                    <Typography variant="p" component="div">
+                      Bonafide Number: {data?.bonafide_number}
+                    </Typography>
+                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                      Student Information
+                    </Typography>
+                    <Typography variant="body2">
+                      Applied For: {data?.required_for}
+                    </Typography>
+                    <Typography variant="body2">
+                      Status: {data?.status}
+                    </Typography>
+                    <Typography variant="body2">
+                      Applied Date: {data?.applied_date}
+                    </Typography>
+                    {data?.status === "approved" ? (
+                      <Button
+                        size="small"
+                        variant="contained"
+                        color="primary"
+                        onClick={(e) => navigate("/bonafideCertificate")}
+                        style={{ marginTop: "10px" }}
+                      >
+                        View
+                      </Button>
+                    ) : null}
+                  </CardContent>
+                </Card>
+              </Box>
+            ))
+          ) : (
+            <center>
+              <img
+                src="./images/No_data.png"
+                alt=""
+                style={{
+                  width: "320px",
+                  borderRadius: "10px",
+                  marginTop: "30px",
+                }}
+              />
+            </center>
+          )
         ) : (
           <Grid container>
-            <Grid item lg={6} md={4} sx={{
-              display:{xs:"none",sm:"none",md:"block",lg:"block"}
-            }}></Grid>
-            <Grid item lg={6} md={8} sm={12} sx={{
-              display:{xs:"none",sm:"block",md:"block",lg:"block"}
-            }}>
-          <Box sx={{ marginTop: 5 }}>
-            <Divider style={{ fontWeight: "bold" }} />
+            <Grid
+              item
+              lg={6}
+             
+              sx={{
+                display: { xs: "none", sm: "none", md: "none", lg: "block" },
+              }}
+            ></Grid>
+            <Grid
+              item
+              lg={6}
+              md={12}
+              sm={12}
+              sx={{
+                display: { xs: "none", sm: "block", md: "block", lg: "block" },
+              }}
+            >
+              <Box sx={{ marginTop: 5 }}>
+                <Divider style={{ fontWeight: "bold" }} />
 
-            <p style={{ marginTop: "20px", textAlign: "center" }}>
-              {" "}
-              Previous Records
-            </p>
-            {result.length > 0 ? (
-              <TableContainer
-                component={Paper}
-                sx={{ marginTop: 3, borderRadius: "10px" }}
-              >
-                <Table sx={{ minWidth: 650 }} aria-label="bonafide table">
-                  <TableHead style={{ backgroundColor: "#D2E9E9" }}>
-                    <TableRow>
-                      <TableCell>Bonafide Number</TableCell>
-                      <TableCell>Applied For</TableCell>
-                      <TableCell>Status</TableCell>
-                      <TableCell>Applied Date</TableCell>
-                      <TableCell>Actions</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {(rowsPerPage > 0
-                      ? result.slice(
-                          page * rowsPerPage,
-                          page * rowsPerPage + rowsPerPage
-                        )
-                      : result
-                    ).map((data, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{data.bonafide_number}</TableCell>
-                        <TableCell>{data.required_for}</TableCell>
-                        <TableCell>{data.status}</TableCell>
-                        <TableCell>{data.applied_date}</TableCell>
-                        <TableCell>
-                          {data.status === "approved" ? (
-                            <Button
-                              size="small"
-                              variant="contained"
-                              color="primary"
-                              onClick={() => navigate("/bonafideCertificate")}
-                            >
-                              View
-                            </Button>
-                          ) : (
-                            <Typography variant="body2" color="textSecondary">
-                              N/A
-                            </Typography>
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                    {emptyRows > 0 && (
-                      <TableRow style={{ height: 53 * emptyRows }}>
-                        <TableCell colSpan={6} />
-                      </TableRow>
-                    )}
-                  </TableBody>
-                  <TableFooter style={{ backgroundColor: "#D2E9E9" }}>
-                    <TableRow>
-                      <TablePagination
-                        rowsPerPageOptions={[
-                          5,
-                          10,
-                          25,
-                          { label: "All", value: -1 },
-                        ]}
-                        colSpan={5}
-                        count={result.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        SelectProps={{
-                          inputProps: {
-                            "aria-label": "rows per page",
-                          },
-                          native: true,
-                        }}
-                        onPageChange={handleChangePage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                        ActionsComponent={TablePaginationActions}
-                      />
-                    </TableRow>
-                  </TableFooter>
-                </Table>
-              </TableContainer>
-            ) : (
-              <center>
-              <img src="./images/No_data.png" alt="" style={{width:"320px",borderRadius:"10px",marginTop:"30px"}}/></center>
-            )}
-          </Box>
-          </Grid>
+                <p
+                  style={{
+                    marginTop: "20px",
+                    textAlign: "center",
+                    fontSize: "1.3rem",
+                  }}
+                >
+                  {" "}
+                  Previous Records
+                </p>
+                {result.length > 0 ? (
+                  <TableContainer
+                    component={Paper}
+                    sx={{ marginTop: 3, borderRadius: "10px" }}
+                  >
+                    <Table sx={{ minWidth: 650 }} aria-label="bonafide table">
+                      <TableHead style={{ backgroundColor: "#D2E9E9" }}>
+                        <TableRow>
+                          <TableCell>Bonafide Number</TableCell>
+                          <TableCell>Applied For</TableCell>
+                          <TableCell>Status</TableCell>
+                          <TableCell>Applied Date</TableCell>
+                          <TableCell>Actions</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {(rowsPerPage > 0
+                          ? result.slice(
+                              page * rowsPerPage,
+                              page * rowsPerPage + rowsPerPage
+                            )
+                          : result
+                        ).map((data, index) => (
+                          <TableRow key={index}>
+                            <TableCell>{data.bonafide_number}</TableCell>
+                            <TableCell>{data.required_for}</TableCell>
+                            <TableCell>{data.status}</TableCell>
+                            <TableCell>{data.applied_date}</TableCell>
+                            <TableCell>
+                              {data.status === "approved" ? (
+                                <Button
+                                  size="small"
+                                  variant="contained"
+                                  color="primary"
+                                  onClick={() =>
+                                    navigate("/bonafideCertificate")
+                                  }
+                                >
+                                  View
+                                </Button>
+                              ) : (
+                                <Typography
+                                  variant="body2"
+                                  color="textSecondary"
+                                >
+                                  N/A
+                                </Typography>
+                              )}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                        {emptyRows > 0 && (
+                          <TableRow style={{ height: 53 * emptyRows }}>
+                            <TableCell colSpan={6} />
+                          </TableRow>
+                        )}
+                      </TableBody>
+                      <TableFooter style={{ backgroundColor: "#D2E9E9" }}>
+                        <TableRow>
+                          <TablePagination
+                            rowsPerPageOptions={[
+                              5,
+                              10,
+                              25,
+                              { label: "All", value: -1 },
+                            ]}
+                            colSpan={5}
+                            count={result.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            SelectProps={{
+                              inputProps: {
+                                "aria-label": "rows per page",
+                              },
+                              native: true,
+                            }}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                            ActionsComponent={TablePaginationActions}
+                          />
+                        </TableRow>
+                      </TableFooter>
+                    </Table>
+                  </TableContainer>
+                ) : (
+                  <center>
+                    <img
+                      src="./images/No_data.png"
+                      alt=""
+                      style={{
+                        width: "320px",
+                        borderRadius: "10px",
+                        marginTop: "30px",
+                      }}
+                    />
+                  </center>
+                )}
+              </Box>
+            </Grid>
           </Grid>
         )}
       </Box>

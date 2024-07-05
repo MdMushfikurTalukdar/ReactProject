@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import "../App.css";
-import { CiEdit } from "react-icons/ci";
+import { FaUserEdit } from "react-icons/fa";
 
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -157,8 +157,9 @@ export const ProfileMainBody = () => {
               Basic details
             </p>
 
-            <CiEdit
-              style={{ fontSize: "1.5rem" }}
+            <FaUserEdit
+              style={{ fontSize: "1.6rem" }}
+              className="text-gray-500"
               onClick={(e) => navigate("/profileEdit")}
             />
           </div>
