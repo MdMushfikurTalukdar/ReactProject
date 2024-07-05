@@ -36,7 +36,7 @@ import LastPageIcon from "@mui/icons-material/LastPage";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import NavbarNew from "../components/NavbarNew";
-import Footer from "../components/Home/Footer";
+import {Footer} from "../components/Footer";
 import { enqueueSnackbar } from "notistack";
 import { BaseUrl } from "../components/BaseUrl";
 
@@ -329,7 +329,7 @@ export const BonafideForm = () => {
                 <FormControl
                  
                   sx={{
-                    width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
+                    width: { lg: "86%", md: "70%", xs: "100%", sm: "90%" },
                   }}
                   variant="outlined"
                   error={!!errors.purpose?.message}
@@ -437,7 +437,7 @@ export const BonafideForm = () => {
                     backgroundColor: "rgb(107, 169, 169)",
                     color: "#fff",
                     "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
-                    width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
+                    width: { lg: "80%", md: "70%", xs: "100%", sm: "90%" },
                   }}
                 >
                   Send Request
@@ -494,7 +494,7 @@ export const BonafideForm = () => {
                   sx={{
                     minWidth: 295,
                     marginBottom: 2,
-
+                    backgroundColor:"rgb(243 244 246)",
                     marginTop: 2,
                   }}
                 >

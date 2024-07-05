@@ -278,20 +278,23 @@ export function NoDuesForDegree() {
 
 
   return (
-    <div className="container-fluid" style={{ backgroundColor: "whitesmoke" }}>
+    <div className="container-fluid" >
       <NavbarNew />
       <Box
         className="no-dues-form"
-        sx={{ bgcolor: "whitesmoke", borderRadius: 3, padding: 3 }}
+        sx={{  borderRadius: 3, padding: {lg:3,xs:2} }}
       >
         <Grid container>
-          <Grid item xs={12} md={6} lg={6}>
+          <Grid item xs={12} md={6} lg={6} style={{ marginTop: "20px",}}>
+            <center>
             <Typography
-              variant="h5"
-              sx={{ marginBottom: "1px", textAlign: "center" }}
+              variant="p"
+             
+              sx={{fontSize:"1.2rem" }}
             >
               Overall No Dues Request (For TC)
             </Typography>
+            </center>
 
             <Grid
             item
@@ -302,21 +305,24 @@ export function NoDuesForDegree() {
               display: { xs: "block", md: "none", lg: "none", sm: "block" },
             }}
           >
-            <Box sx={{ marginTop: { lg: "5%", md: "15%",textAlign:"center"  } }}>
+            <Box sx={{ marginTop: { lg: "5%", md: "5%",sm:"5%",xs:"5%"  },textAlign:"center" }}>
               <img
-                src="./images/NoDues.png"
+                src="https://static.vecteezy.com/system/resources/previews/015/120/647/original/man-with-computer-icon-cartoon-online-work-vector.jpg"
                 alt=""
-                style={{ width: "230px", marginLeft: "0%",marginTop:"20%",}}
+                style={{ width: "230px", marginLeft: "0%",marginTop:"5%",}}
               />
             </Box>
           </Grid>
 
 
 
-            <Box
+          <Box
               sx={{
-                marginLeft: { lg: "20%", md: "20%" },
-                marginTop: { lg: "60px", md: "40px" },
+                backgroundColor: {xs:"rgb(243 244 246)",lg:"transparent",md:"transparent"},
+                padding: {lg:"45px",md:"0px",xs:"20px",sm:"20px"},
+                marginTop: {lg:"0px",md:"42px",xs:"29px",sm:"19px"},
+                marginLeft: {lg:"100px",md:"42px",xs:"0px",sm:"0px"},
+                borderRadius: "15px"
               }}
             >
               <form onSubmit={handleSubmit(onSubmit)}>
@@ -479,7 +485,7 @@ export function NoDuesForDegree() {
           >
             <Box sx={{ marginTop: { lg: "5%", md: "15%" } }}>
               <img
-                src="./images/NoDues.png"
+                src="https://static.vecteezy.com/system/resources/previews/015/120/647/original/man-with-computer-icon-cartoon-online-work-vector.jpg"
                 alt=""
                 style={{ width: "40%", marginLeft: "15%",marginTop:"20%" }}
               />
@@ -515,62 +521,57 @@ export function NoDuesForDegree() {
                result.map((data, index) => (
             <Box key={index} style={{display:"flex",justifyContent:"center",flexDirection:"column",alignItems:"center",maxWidth:"100%",marginTop:"20px"}}>
               <Card
+              variant="outlined"
                 sx={{
                   minWidth: 275,
-                  width:'60vw',
+                  width:'80vw',
                   marginBottom: 2,
-                  backgroundColor: "whitesmoke",
+                  backgroundColor: "rgb(243 244 246)",
                 }}
               >
                 <CardContent>
                   <Typography
-                    sx={{ fontSize: 14 }}
+                    sx={{ fontSize: 15 }}
                     color="text.secondary"
                     gutterBottom
                   >
                     Request Details
                   </Typography>
-                  <Typography variant="body2">
+                  <Typography variant="body2" color="text.secondary" style={{fontSize:15}}>
                     Registration Number: {data?.registration_number}
                   </Typography>
-                  <Typography variant="h6" component="div">
+                  <Typography variant="body2" color="text.secondary" style={{fontSize:15}}>
                     Name: {data?.name}
                   </Typography>
-                  <Typography variant="body2">Status: {data?.status}</Typography>
+                  <Typography variant="body2" color="text.secondary" style={{fontSize:15}}>Status: {data?.status}</Typography>
                 </CardContent>
               </Card>
             </Box>
           
         )))) : (
           <Grid container>
+           
             <Grid
               item
-              lg={6}
-              md={4}
-              sx={{
-                display: { xs: "none", sm: "none", md: "block", lg: "block" },
-              }}
-            ></Grid>
-            <Grid
-              item
-              lg={6}
-              md={8}
+              lg={12}
+              md={12}
               sm={12}
               sx={{
                 display: { xs: "none", sm: "block", md: "block", lg: "block" },
               }}
             >
               <Box sx={{ marginTop: 5 }}>
-                <Divider style={{ fontWeight: "bold" }} />
+                {/* <Divider style={{ fontWeight: "bold" }} /> */}
 
-                <p style={{ marginTop: "20px", textAlign: "center",marginBottom:"20px" }}>
+                <p style={{ marginTop: "20px", textAlign: "center",marginBottom:"20px",fontSize:"1.3rem" }}>
                   Previous Requests
                 </p>
                 
                 
                 {result.length > 0 ? (
+                  <center>
                 <TableContainer>
-                <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
+                <Table sx={{ minWidth: 500,maxWidth:900}} aria-label="custom pagination table">
                   <TableHead style={{ backgroundColor: "#D2E9E9" }}>
                     <TableRow>
                       <TableCell align="center">Name</TableCell>
@@ -637,6 +638,7 @@ export function NoDuesForDegree() {
                   </TableFooter>
                 </Table>
               </TableContainer>
+              </center>
                 ) : (
                   <Typography
                     style={{

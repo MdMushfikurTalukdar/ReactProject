@@ -178,25 +178,31 @@ export const GuestRoom = () => {
       <NavbarNew />
       <Box
         className="bonafide-form"
-        sx={{ padding: 3, bgcolor: "#f5f5f5", borderRadius: 2 }}
+        sx={{ padding: {lg:1,xs:1}, borderRadius: 2 }}
       >
         <Typography
-          variant="h5"
+          variant="p"
           align="center"
           gutterBottom
-          style={{ color: "rgb(107 169 169)" }}
+          style={{marginTop:"20px",fontSize:"1.4rem" }}
         >
           Guest Room Allotment Request
         </Typography>
        
-        <img src="./images/guestRoom.jpg" alt="" style={{width:"320px",marginTop:"20px"}}/>
-        <Box style={{
-          maxWidth:{lg:"30%",xs:"100%",sm:"30%",md:"30%"}
-        }}>
+        <img src="./images/hostel_caretaker.png" alt="" style={{width:"320px",marginTop:"20px"}}/>
+        <Box
+              sx={{
+                backgroundColor: "rgb(243 244 246)",
+                padding: {lg:"20px",md:"35px",xs:"10px",sm:"20px"},
+                marginTop: {lg:"22px",md:"42px",xs:"20px",sm:"29px"},
+                marginLeft: {lg:"42px",md:"42px",xs:"0px",sm:"0px"},
+                borderRadius: "10px"
+              }}
+        >
         <form onSubmit={handleSubmit(onSubmit)}>
           <FormControl fullWidth variant="outlined" margin="normal">
-            <Typography variant="h6">Registration number</Typography>
-            <Typography variant="body1" style={{ marginBottom: "5px",fontSize:"1.1rem" }}>
+            <Typography variant="p" style={{fontSize:"1.0rem"}}>Registration number</Typography>
+            <Typography variant="body2" color="text.secondary" style={{ marginBottom: "5px",fontSize:"1.0rem" }}>
               {localStorage?.getItem("accesstoken")===null?null:jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}
             </Typography>
           </FormControl>
@@ -329,7 +335,7 @@ export const GuestRoom = () => {
             color="primary"
             type="submit"
             fullWidth
-            style={{ marginTop: "16px", backgroundColor: "rgb(107,169,169)" }}
+            style={{ marginTop: "16px", backgroundColor: "rgb(107,169,169)",marginBottom:"15px" }}
           >
             Send Request
           </Button>
@@ -337,9 +343,9 @@ export const GuestRoom = () => {
         </Box>
         <Divider sx={{ my: 3 }} />
         <Typography
-          variant="h6"
+          variant="p"
           gutterBottom
-          style={{ color: "rgb(107 169 169)" }}
+          style={{fontSize:"1.2rem"}}
         >
           Approved Requests
         </Typography>
@@ -352,38 +358,39 @@ export const GuestRoom = () => {
             flexDirection: "column",
           }}
         >
-          {responsive ? (
-            result.length > 0 ? (
+          
+            {result.length > 0 ? (
               result.map((data, index) => (
                 <Box key={index}>
                   <Card
+                  variant="outlined"
                     sx={{
-                      minWidth: 295,
+                      width: { lg: "800px", md: "700px", sm: "500px", xs: "300px" },
                       marginBottom: 2,
-                    
+                      backgroundColor:"rgb(243 244 246)"
                     }}
                   >
                     <CardContent>
                       <Typography
-                        sx={{ fontSize: 14 }}
+                        sx={{ fontSize: 16 }}
                         color="text.secondary"
                         gutterBottom
                       >
                         Hostel Request Details
                       </Typography>
-                      <Typography variant="h6" component="p">
+                      <Typography variant="p" component="div">
                         Purpose Of Request: {data?.purpose_of_request}
                       </Typography>
-                      <Typography sx={{  }} color="text.secondary">
+                      <Typography variant="body2" color="text.secondary">
                         From Date: {data?.from_date}
                       </Typography>
-                      <Typography variant="body2">
+                      <Typography variant="body2" color="text.secondary">
                         To Date: {data?.to_date}
                       </Typography>
-                      <Typography variant="body2">
+                      <Typography variant="body2" color="text.secondary">
                         No Of Persons: {data?.no_of_persons}
                       </Typography>
-                      <Typography variant="body2">
+                      <Typography variant="body2" color="text.secondary">
                         Status: {data?.status}
                       </Typography>
                     </CardContent>
@@ -394,40 +401,41 @@ export const GuestRoom = () => {
               <center>
               <img src="./images/No_data.png" alt="" style={{width:"320px",borderRadius:"10px",marginTop:"30px"}}/></center>
             )
-          ) : (
-            <Box>
-              {result.length > 0 ? (
-                <TableContainer component={Paper} sx={{ marginTop: 3 }}>
-                  <Table
-                    sx={{ minWidth: 650 }}
-                    aria-label="hostel requests table"
-                  >
-                    <TableHead style={{ backgroundColor: "#D2E9E9" }}>
-                      <TableRow>
-                        <TableCell>Purpose Of Request</TableCell>
-                        <TableCell>From Date</TableCell>
-                        <TableCell>To Date</TableCell>
-                        <TableCell>No of Persons</TableCell>
-                        <TableCell>Status</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {result.map((data, index) => (
-                        <TableRow key={index}>
-                          <TableCell>{data?.purpose_of_request}</TableCell>
-                          <TableCell>{data?.from_date}</TableCell>
-                          <TableCell>{data?.to_date}</TableCell>
-                          <TableCell style={{textAlign:"center"}}>{data?.no_of_persons}</TableCell>
-                          <TableCell>{data?.status}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              ) : <center>
-              <img src="./images/No_data.png" alt="" style={{width:"320px",borderRadius:"10px",marginTop:"30px"}}/></center>}
-            </Box>
-          )}
+          
+          // ) : (
+          //   <Box>
+          //     {result.length > 0 ? (
+          //       <TableContainer component={Paper} sx={{ marginTop: 3 ,marginBottom:3 }}>
+          //         <Table
+          //           sx={{ minWidth: 650 }}
+          //           aria-label="hostel requests table"
+          //         >
+          //           <TableHead style={{ backgroundColor: "#D2E9E9" }}>
+          //             <TableRow>
+          //               <TableCell>Purpose Of Request</TableCell>
+          //               <TableCell>From Date</TableCell>
+          //               <TableCell>To Date</TableCell>
+          //               <TableCell>No of Persons</TableCell>
+          //               <TableCell>Status</TableCell>
+          //             </TableRow>
+          //           </TableHead>
+          //           <TableBody>
+          //             {result.map((data, index) => (
+          //               <TableRow key={index}>
+          //                 <TableCell style={{backgroundColor:"rgb(243 244 246)"}}>{data?.purpose_of_request}</TableCell>
+          //                 <TableCell style={{backgroundColor:"rgb(243 244 246)"}}>{data?.from_date}</TableCell>
+          //                 <TableCell style={{backgroundColor:"rgb(243 244 246)"}}>{data?.to_date}</TableCell>
+          //                 <TableCell style={{textAlign:"center",backgroundColor:"rgb(243 244 246)"}}>{data?.no_of_persons}</TableCell>
+          //                 <TableCell style={{backgroundColor:"rgb(243 244 246)"}}>{data?.status}</TableCell>
+          //               </TableRow>
+          //             ))}
+          //           </TableBody>
+          //         </Table>
+          //       </TableContainer>
+          //     ) : <center>
+          //     <img src="./images/No_data.png" alt="" style={{width:"320px",borderRadius:"10px",marginTop:"30px"}}/></center>}
+            // </Box>
+          }
         </Box>
       </Box>
       <Footer />

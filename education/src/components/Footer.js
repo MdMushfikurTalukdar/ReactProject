@@ -5,7 +5,7 @@ export const Footer = () => {
     <div style={{
       backgroundColor: '#35393b',
       color: 'white',
-      padding: '20px',
+      padding: '40px',
       textAlign: 'center',
       position: 'relative',
       bottom: 0,

@@ -379,13 +379,13 @@ const ComplaintForm = () => {
     <div className="container-fluid" style={{borderRadius:"20px"}}>
       <Box
         className="complaint-form"
-        sx={{ bgcolor: "", borderRadius: 3, padding: 3 }}
+        sx={{ bgcolor: "", borderRadius: 3, padding: 1 }}
       >
         <Grid container spacing={2}>
-          <Grid item xs={12} md={6} lg={6}>
+          <Grid item xs={12} md={6} lg={6} style={{marginTop:"15px"}}>
             <Typography
               variant="h5"
-              sx={{ marginBottom: "6%", textAlign: "center" }}
+              sx={{ marginBottom: "3%", textAlign: "center" }}
             >
               Register Complaint
             </Typography>
@@ -406,9 +406,17 @@ const ComplaintForm = () => {
               </Slider>
             </Box>
             </center>
-
+            <Box
+              sx={{
+                backgroundColor: "rgb(243 244 246)",
+                padding: {lg:"5px",md:"0px",xs:"20px",sm:"20px"},
+                marginTop: {lg:"0px",md:"42px",xs:"29px",sm:"19px"},
+                marginLeft: {lg:"10px",md:"42px",xs:"0px",sm:"0px"},
+                borderRadius: "15px"
+              }}
+            >
             <form onSubmit={handleSubmit(onSubmit)}>
-              <Grid container spacing={2} sx={{padding:{lg:"30px",xs:"0px",md:"30px",sm:"0px"}}} >
+              <Grid container spacing={2} sx={{padding:{lg:"15px",xs:"0px",md:"15px",sm:"10px"}}} >
                 <Grid item xs={12} >
                   <TextField
                     label="Registration/ Employee No"
@@ -521,6 +529,7 @@ const ComplaintForm = () => {
                 </Grid>
               </Grid>
             </form>
+            </Box>
           </Grid>
 
           <Grid item xs={12} md={6} lg={6} sx={{ textAlign: "-webkit-center" }}>
@@ -541,7 +550,7 @@ const ComplaintForm = () => {
             <Box sx={{marginTop:"50px"}}>
             <Typography
               variant="p"
-              sx={{ marginBottom: "2%", textAlign: "center", marginTop: "10px",fontSize:"1.2rem" }}
+              sx={{ marginBottom: "5%", textAlign: "center", marginTop: "10px",fontSize:"1.2rem" }}
             >
               Previous Complaints
             </Typography>
@@ -567,16 +576,16 @@ const ComplaintForm = () => {
                       </Typography>
                       <Typography color="textSecondary"> <span style={{fontSize:"1.0rem"}}>Status:</span> {row.status}</Typography>
                       <Typography color="textSecondary">
-                      <span style={{fontSize:"1.0rem"}}>Date:</span>: {row.registered_date}
+                      <span style={{fontSize:"1.0rem"}}>Date:</span> {row.registered_date}
                       </Typography>
                      
                     </CardContent>
                   </Card>
                 ))
             ) : (
-              <TableContainer component={Paper}>
+              <TableContainer component={Paper} style={{marginTop:"20px"}}>
                 <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
-                  <TableHead>
+                  <TableHead style={{backgroundColor:"#D2E9E9"}}>
                     <TableRow>
                       <TableCell>Complaint Type</TableCell>
                       <TableCell>Subject</TableCell>
@@ -614,7 +623,7 @@ const ComplaintForm = () => {
                       </TableRow>
                     )}
                   </TableBody>
-                  <TableFooter>
+                  <TableFooter style={{backgroundColor:"#D2E9E9"}}>
                     <TableRow>
                       <TablePagination
                         rowsPerPageOptions={[

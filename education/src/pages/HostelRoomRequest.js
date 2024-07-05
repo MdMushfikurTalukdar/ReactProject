@@ -30,7 +30,7 @@ import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
-import Footer from "../components/Home/Footer";
+import {Footer} from "../components/Footer";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
@@ -272,20 +272,22 @@ export const HostelRoomRequest = () => {
         sx={{  borderRadius: 3 , padding: 0 }}
       >
       <Typography
-        variant="h5"
+        variant="p"
         align="center"
         gutterBottom
-        sx={{ color: "rgb(107, 169, 169)", fontWeight: "bold",marginTop:"20px" }}
+        sx={{ fontSize:20, marginTop:"20px" }}
       >
         Hostel Room Allotment Request
       </Typography>
       <Grid
         container
-        sx={{ padding: { lg: 5, md: 5, xs: 3, sm: 3 } }}
+        sx={{ padding: { lg: 5, md: 5, xs: 1, sm: 1 },
+       
+      }}
       >
-        <Grid item xs={12} sm={12} md={12} lg={7} sx={{padding:{lg:2},
-        position:"relative",left:{lg:"90px"},
-        top:{lg:"50px"}
+        <Grid item xs={12} sm={12} md={12} lg={6} sx={{padding:{lg:3},
+        position:"relative",
+        top:{lg:"-20px"}
         }}>
           <Box>
             <Box
@@ -310,9 +312,18 @@ export const HostelRoomRequest = () => {
                 />
               </center>
             </Box>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <FormControl fullWidth variant="outlined" margin="normal">
-                <Typography variant="p" style={{fontSize:"1.2rem"}}>
+            <Box
+              sx={{
+                backgroundColor: "rgb(243 244 246)",
+                padding: {lg:"45px",md:"35px",xs:"20px",sm:"20px"},
+                marginTop: {lg:"5px",md:"42px",xs:"29px",sm:"29px"},
+                marginLeft: {lg:"42px",md:"42px",xs:"0px",sm:"0px"},
+                borderRadius: "15px"
+              }}
+            >
+            <form onSubmit={handleSubmit(onSubmit)} >
+              <FormControl fullWidth variant="outlined" margin="normal" >
+                <Typography variant="p" style={{fontSize:"1.1rem"}}>
                   Registration / Employee Number
                 </Typography>
                 <Typography variant="body1" sx={{ marginBottom: "10px",marginTop:"5px" }}>
@@ -324,7 +335,7 @@ export const HostelRoomRequest = () => {
                 fullWidth
                 variant="outlined"
                 error={!!errors?.cgpa?.message}
-                margin="normal"
+               
               >
                 <TextField
                   label="Current CGPA"
@@ -349,7 +360,7 @@ export const HostelRoomRequest = () => {
                     alignItems: "center",
                   }}
                 >
-                  <Typography variant="p" gutterBottom style={{fontSize:"1.2rem"}}>
+                  <Typography variant="p" gutterBottom style={{fontSize:"1.1rem"}}>
                     Latest Semester Marksheet
                   </Typography><br/>
                   <Button
@@ -398,6 +409,7 @@ export const HostelRoomRequest = () => {
                 fullWidth
                 sx={{
                   marginTop: 2,
+                  marginBottom:2,
                   backgroundColor: "rgb(107, 169, 169)",
                   color: "#fff",
                   "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
@@ -409,22 +421,13 @@ export const HostelRoomRequest = () => {
                 Send Request
               </Button>
             </form>
+            </Box>
           </Box>
         </Grid>
 
-        <Grid item xs={12} sm={12} md={12} lg={5} sx={{textAlign:"-webkit-center"}}>
+        <Grid item xs={12} sm={12} md={12} lg={6} sx={{textAlign:"-webkit-center"}}>
           <Box>
-            <Divider
-              sx={{
-                display: {
-                  lg: "none",
-                  md: "block",
-                  sm: "block",
-                  xs: "block",
-                },
-                my: 3,
-              }}
-            />
+            
 
             <Box
               sx={{
@@ -449,13 +452,9 @@ export const HostelRoomRequest = () => {
               </center>
             </Box>
 
-            <Typography
-              variant="h6"
-              gutterBottom
-              sx={{ color: "rgb(107, 169, 169)",textAlign:"center",marginBottom:"10px",marginTop:"20px" }}
-            >
+            <p style={{textAlign:"center",marginBottom:"10px",marginTop:"20px",fontSize:"1.2rem" }}>
               Previous Hostel Requests
-            </Typography>
+            </p>
 
             <Box
               style={{
@@ -486,22 +485,23 @@ export const HostelRoomRequest = () => {
                     sx={{
                       minWidth: 275,
                       marginBottom: 2,
+                      backgroundColor:"rgb(243 244 246)"
                       
                     }}
                   >
                     <CardContent>
                       <Typography
-                        sx={{ fontSize: 14,textAlign:"center" }}
+                        sx={{ fontSize: 16,textAlign:"center" }}
                         color="text.secondary"
                         gutterBottom
                         
                       >
                         Previous Request Details
                       </Typography>
-                      <Typography color="text.secondary" sx={{ fontSize: 13 }}>
+                      <Typography color="text.secondary" sx={{ fontSize: 15 }}>
                         Status: {data?.status}
                       </Typography>
-                      <Typography color="text.secondary" sx={{ fontSize: 13,textAlign:"center" }}>
+                      <Typography color="text.secondary" sx={{ fontSize: 15,textAlign:"center" }}>
                       Alloted Room No: 
                         {allotedRoom.length>0 ? (
                               <Typography
@@ -517,7 +517,7 @@ export const HostelRoomRequest = () => {
                       <Typography
                         variant="body2"
                         color="text.secondary"
-                        sx={{ fontSize: 13 }}
+                        sx={{ fontSize: 15 }}
                       >
                         Marksheet Image:
                         <br />
@@ -569,8 +569,8 @@ export const HostelRoomRequest = () => {
                         )
                         .map((data, index) => (
                           <TableRow key={index}>
-                            <TableCell style={{textAlign:"center"}}>{data?.status}</TableCell>
-                            <TableCell style={{textAlign:"center"}}>
+                            <TableCell style={{textAlign:"center" ,backgroundColor:"rgb(243 244 246)"}}>{data?.status}</TableCell>
+                            <TableCell style={{textAlign:"center",backgroundColor:"rgb(243 244 246)"}}>
                               {data?.latest_marksheet !== null ? (
                                 <img
                                   src={`data:image/*;base64,${decodeURIComponent(
@@ -583,7 +583,7 @@ export const HostelRoomRequest = () => {
                                 <p>Null</p>
                               )}
                             </TableCell>
-                            <TableCell style={{textAlign:"center"}}>
+                            <TableCell style={{textAlign:"center",backgroundColor:"rgb(243 244 246)"}}>
                             {allotedRoom.length>0 ? (
                               <Typography
                                
