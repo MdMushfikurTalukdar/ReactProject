@@ -14,6 +14,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import { CgMenuRightAlt } from "react-icons/cg";
 
 const drawerWidth = 240;
 const navItems = ["Home", "About", "Contact"];
@@ -68,7 +69,7 @@ function DrawerAppBar(props) {
             onClick={handleDrawerToggle}
             sx={{ mr: 2, display: { sm: "none" } }}
           >
-            <MenuIcon />
+            <CgMenuRightAlt />
           </IconButton>
           <Typography
             variant="h6"

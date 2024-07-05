@@ -111,7 +111,7 @@ export const ProfileMainBody = () => {
       <div className="circle circle6"></div>
 
       <Box
-        className=" mt-3 w-full lg:p-10 sm:p-5 p-5"
+        className="mt-3 w-full lg:p-10 sm:p-5 p-5"
         style={{
           height: "calc(100vh - 5px)",
           overflowY: "scroll",

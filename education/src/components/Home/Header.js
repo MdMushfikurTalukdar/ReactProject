@@ -10,6 +10,7 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import { useNavigate } from 'react-router-dom';
+import { CgMenuLeftAlt } from 'react-icons/cg';
 
 const pages = ['Dashboard', 'About', 'Contact', 'Login'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
@@ -43,11 +44,13 @@ export const Header = () => {
   return (
     <AppBar position="static" sx={{
       backgroundColor:"#e8e8e8",
-      color:"black"
+      color:"black",
+      
+     
     }}>
-      <Container maxWidth="xl" >
+      <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1}}>
             {/* Menu Icon for Mobile View */}
             <IconButton
               size="medium"
@@ -58,7 +61,7 @@ export const Header = () => {
               color="inherit"
               sx={{ display: { xs: 'flex', md: 'none' } }}
             >
-              <MenuIcon />
+              <CgMenuLeftAlt />
             </IconButton>
 
             {/* Title */}
@@ -96,11 +99,12 @@ export const Header = () => {
               onClose={handleCloseNavMenu}
               sx={{
                 display: { xs: 'block', md: 'none' },
-                color:"black"
+                color:"black",
+               
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={() => handleNavigate(page)}>
+                <MenuItem key={page} style={{ width:"140px"}} onClick={() => handleNavigate(page)}>
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}

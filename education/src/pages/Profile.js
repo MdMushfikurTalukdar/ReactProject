@@ -25,7 +25,7 @@ export const Profile = () => {
   }, []);
 
   return (
-    <Box style={{ fontFamily: "Math", minHeight: "100vh" }}>
+    <Box style={{ minHeight: "100vh" }}>
       <NavbarNew />
       <Grid container>
        

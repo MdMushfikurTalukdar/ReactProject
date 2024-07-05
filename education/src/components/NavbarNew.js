@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "./NavbarNew.css"; // If you have custom CSS, keep this import
 import { jwtDecode } from "jwt-decode";
 import { IoIosNotificationsOutline } from "react-icons/io";
-import { CgProfile } from "react-icons/cg";
+import { CgMenuLeftAlt, CgProfile ,CgMenuRightAlt} from "react-icons/cg";
 import { Box, Button, Divider } from "@mui/material";
 import axios from "axios";
 import dayjs from "dayjs";
@@ -282,8 +282,8 @@ export const NavbarNew = () => {
           <div className="flex items-center">
             <div className="relative" onClick={toggleDropdown}>
               <div className="cursor-pointer flex items-center space-x-2">
-                <i className="fas fa-bars" style={{ marginTop: "5px" }}></i>
-                {/* <span className="text-xl">Menu</span> */}
+               {isDropdownOpen ? <CgMenuRightAlt style={{fontSize:"1.3rem"}}/>:<CgMenuLeftAlt style={{fontSize:"1.3rem"}}/>}
+               
               </div>
               {isDropdownOpen && (
                 <div className="absolute left-0 mt-2 w-64 bg-white text-black rounded-lg shadow-lg z-50">
@@ -541,7 +541,7 @@ export const NavbarNew = () => {
                 </div>
               )}
             </div>
-            <h1 className="text-xl font-bold ml-4 mt-1" onClick={(e)=>{
+            <h1 className="text-xl font-bold ml-4 " onClick={(e)=>{
               navigate('/')
             }}>Smart Campus</h1>
           </div>
