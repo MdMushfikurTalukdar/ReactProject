@@ -32,6 +32,7 @@ import AddFeesCaretaker from "./pages/AddFessCaretaker.js";
 import VerifySemesterRegistration from "./components/VerifySemesterRegistration/VerifySemesterRegistration.js";
 import FacultySemesterRegistration from "./components/VerifySemesterRegistration/FacultySemesterRegistration.js";
 import ShowHostelRoomRequest from "./pages/ShowHostelRoomRequest.js";
+import Contact from "./pages/Contact.js";
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/profileEdit" element={<EditProfile />} />
             <Route path="/about" element={<About/>}/>
+            <Route path="/contact" element={<Contact/>}/>
             <Route path='/bonafide-form' element={<BonafideForm/>}/>
             <Route path='/guest-room' element={<GuestRoom/>}/>
             <Route path="/logout" element={<Logout/>}/>
