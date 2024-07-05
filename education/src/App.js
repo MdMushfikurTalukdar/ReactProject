@@ -33,6 +33,7 @@ import VerifySemesterRegistration from "./components/VerifySemesterRegistration/
 import FacultySemesterRegistration from "./components/VerifySemesterRegistration/FacultySemesterRegistration.js";
 import ShowHostelRoomRequest from "./pages/ShowHostelRoomRequest.js";
 import Contact from "./pages/Contact.js";
+import NoDuesForDegreeApproval from "./pages/NoDuesForDegreeApproval";
 
 function App() {
   return (
