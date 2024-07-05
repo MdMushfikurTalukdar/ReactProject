@@ -314,7 +314,7 @@ export const HostelRoomRequest = () => {
             </Box>
             <Box
               sx={{
-                backgroundColor: "rgb(243 244 246)",
+                backgroundColor: {xs:"rgb(243 244 246)",lg:"transparent"},
                 padding: {lg:"45px",md:"35px",xs:"20px",sm:"20px"},
                 marginTop: {lg:"5px",md:"42px",xs:"29px",sm:"29px"},
                 marginLeft: {lg:"42px",md:"42px",xs:"0px",sm:"0px"},

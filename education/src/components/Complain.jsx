@@ -408,7 +408,7 @@ const ComplaintForm = () => {
             </center>
             <Box
               sx={{
-                backgroundColor: "rgb(243 244 246)",
+                backgroundColor: {xs:"rgb(243 244 246)",lg:"transparent",md:"transparent"},
                 padding: {lg:"5px",md:"0px",xs:"20px",sm:"20px"},
                 marginTop: {lg:"0px",md:"42px",xs:"29px",sm:"19px"},
                 marginLeft: {lg:"10px",md:"42px",xs:"0px",sm:"0px"},
