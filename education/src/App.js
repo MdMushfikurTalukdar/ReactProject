@@ -34,6 +34,7 @@ import FacultySemesterRegistration from "./components/VerifySemesterRegistration
 import ShowHostelRoomRequest from "./pages/ShowHostelRoomRequest.js";
 import Contact from "./pages/Contact.js";
 import NoDuesForDegreeApproval from "./pages/NoDuesForDegreeApproval";
+import NotFoundPage from "./pages/NotFoundPage.js";
 
 function App() {
   return (
