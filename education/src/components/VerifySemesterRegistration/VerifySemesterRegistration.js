@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { Box, CircularProgress } from "@mui/material";
+import { BaseUrl } from "../BaseUrl";
 
 const VerifySemesterRegistration = () => {
   const [searchResults, setSearchResults] = useState([]);
@@ -31,7 +32,7 @@ const VerifySemesterRegistration = () => {
     const fetchApprovedStudents = async () => {
       try {
         const response = await axios.get(
-          "https://amarnath013.pythonanywhere.com/api/user/semester-registrations/",
+          `${BaseUrl}/semester-registrations/`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
@@ -71,7 +72,7 @@ const VerifySemesterRegistration = () => {
     <>
       <NavbarNew />
       <div className="printHide">
-        <h2 className="text1">Semester Registration List</h2>
+        <h2 className="text1 mb-4">Semester Registration List</h2>
         <div>
           {searchResults.map((data, index) => (
             <div key={index} className="id-card" onClick={() => handleCardClick(data.id,data.student_details.personal_information.registration_number)}>

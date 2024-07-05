@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 import { FaUpload } from "react-icons/fa";
+import { BaseUrl } from '../components/BaseUrl';
 
 export const RegisterUser = () => {
   const [responsive, setResponsive] = useState(
@@ -54,8 +55,8 @@ export const RegisterUser = () => {
     role: yup
       .string()
       .oneOf(
-        ["student", "faculty", "admin","office","principal","caretaker"],
-        "Invalid role, must be one of: student, faculty, admin,office,principal,caretaker"
+        ["student", "faculty", "admin","office","principal","caretaker","department"],
+        "Invalid role, must be one of: student, faculty, admin,office,principal,caretaker","department"
       )
       .required("role is required"),
   });
@@ -86,7 +87,7 @@ export const RegisterUser = () => {
 
     try {
       const response = await axios.post(
-        "https://amarnath013.pythonanywhere.com/api/user/register/",
+        `${BaseUrl}/register/`,
         formData,
         {
           headers: {
@@ -120,7 +121,7 @@ export const RegisterUser = () => {
     });
 
     axios({
-      url: "https://amarnath013.pythonanywhere.com/api/user/register/",
+      url: `${BaseUrl}/register/`,
       method: "POST",
       headers: {
         "Content-Type": "application/json",

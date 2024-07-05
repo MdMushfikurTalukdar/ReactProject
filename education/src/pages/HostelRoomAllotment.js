@@ -23,6 +23,7 @@ import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import NavbarNew from "../components/NavbarNew";
 import Footer from "../components/Home/Footer";
+import { BaseUrl } from "../components/BaseUrl";
 
 const HostelRoomAllotment = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -38,7 +39,7 @@ const HostelRoomAllotment = () => {
     const config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: "https://amarnath013.pythonanywhere.com/api/user/hostel-allotments/?search=applied",
+      url: `${BaseUrl}/hostel-allotments/?search=applied`,
       headers: {
         Authorization: `Bearer ${localStorage?.getItem("accesstoken")}`,
       },
@@ -64,7 +65,7 @@ const HostelRoomAllotment = () => {
       const response = jwtDecode(token);
       if (
         response.exp < Math.floor(Date.now() / 1000) ||
-        response.role !== "caretaker"
+        (response.role !== "caretaker" && response.role !== "admin")
       ) {
         navigate("/login");
       }
@@ -86,7 +87,7 @@ const HostelRoomAllotment = () => {
     const config = {
       method: "post",
       maxBodyLength: Infinity,
-      url: "https://amarnath013.pythonanywhere.com/api/user/hostel-room-allotments/",
+      url: `${BaseUrl}/hostel-room-allotments/`,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
@@ -101,7 +102,7 @@ const HostelRoomAllotment = () => {
       const configUpdate = {
         method: "put",
         maxBodyLength: Infinity,
-        url: `https://amarnath013.pythonanywhere.com/api/user/hostel-allotments/${response?.data?.registration_details?.id}/update-status/`,
+        url: `${BaseUrl}/hostel-allotments/${response?.data?.registration_details?.id}/update-status/`,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
@@ -142,7 +143,7 @@ const HostelRoomAllotment = () => {
     const config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: "https://amarnath013.pythonanywhere.com/api/user/hostel-room-allotments/",
+      url: `${BaseUrl}/hostel-room-allotments/`,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,

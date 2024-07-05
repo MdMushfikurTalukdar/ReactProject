@@ -11,6 +11,7 @@ import { HiOutlineExclamationCircle } from "react-icons/hi2";
 import NavbarNew from './NavbarNew';
 import Footer from './Home/Footer';
 import { RiLockPasswordFill } from "react-icons/ri";
+import { BaseUrl } from './BaseUrl';
 
 const validationSchema = yup.object({
   newPassword: yup
@@ -84,7 +85,7 @@ export const ChangePassword = () => {
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'https://amarnath013.pythonanywhere.com/api/user/change-password/',
+      url: `${BaseUrl}/change-password/`,
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('accesstoken')}`

@@ -17,6 +17,7 @@ import NavbarNew from '../components/NavbarNew';
 import Footer from '../components/Home/Footer';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
+import { BaseUrl } from '../components/BaseUrl';
 
 // Define validation schema using Yup
 const schema = yup.object().shape({
@@ -66,7 +67,7 @@ const CollegeForm = () => {
 
     const config = {
       method: 'post',
-      url: 'https://amarnath013.pythonanywhere.com/api/user/college/',
+      url: `${BaseUrl}/college/`,
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('accesstoken')}`,
         'Content-Type': 'multipart/form-data'

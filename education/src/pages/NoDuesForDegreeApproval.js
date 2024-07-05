@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import NavbarNew from "../components/NavbarNew";
 import Footer from "../components/Home/Footer";
 import { enqueueSnackbar } from "notistack";
+import { BaseUrl } from "../components/BaseUrl";
 
 export const NoDuesForDegreeApproval = () => {
   const navigate = useNavigate();
@@ -56,7 +57,7 @@ export const NoDuesForDegreeApproval = () => {
       let config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: "https://amarnath013.pythonanywhere.com/api/user/No-dues-list/",
+        url: `${BaseUrl}/No-dues-list/`,
         headers: {
           Authorization: `Bearer ${localStorage?.getItem("accesstoken")}`,
         },
@@ -158,7 +159,7 @@ export const NoDuesForDegreeApproval = () => {
     let config = {
       method: "patch",
       maxBodyLength: Infinity,
-      url: `https://amarnath013.pythonanywhere.com/api/user/No-dues-list/${user_id}/departments/${id}/`,
+      url: `${BaseUrl}/No-dues-list/${user_id}/departments/${id}/`,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage?.getItem("accesstoken")}`,
@@ -218,7 +219,7 @@ export const NoDuesForDegreeApproval = () => {
         let config = {
           method: "patch",
           maxBodyLength: Infinity,
-          url: `https://amarnath013.pythonanywhere.com/api/user/No-dues-list/${user_id}/departments/${id}/`,
+          url: `${BaseUrl}/No-dues-list/${user_id}/departments/${id}/`,
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage?.getItem("accesstoken")}`,
@@ -283,7 +284,7 @@ export const NoDuesForDegreeApproval = () => {
     let config = {
       method: "patch",
       maxBodyLength: Infinity,
-      url: `https://amarnath013.pythonanywhere.com/api/user/No-dues-list/${user_id}/departments/${id}/`,
+      url: `${BaseUrl}/No-dues-list/${user_id}/departments/${id}/`,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage?.getItem("accesstoken")}`,

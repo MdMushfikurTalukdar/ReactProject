@@ -44,6 +44,7 @@ import LastPageIcon from "@mui/icons-material/LastPage";
 import NavbarNew from "../components/NavbarNew";
 import Footer from "../components/Home/Footer";
 import { enqueueSnackbar } from "notistack";
+import { BaseUrl } from "./BaseUrl";
 
 const settings = {
   infinite: true,
@@ -170,7 +171,7 @@ const ComplaintForm = () => {
   useEffect(() => {
     if (localStorage?.getItem("accesstoken")) {
       const response = jwtDecode(localStorage?.getItem("accesstoken"));
-      if (response.exp < Math.floor(Date.now() / 1000)|| response.role!=="student" ) {
+      if (response.exp < Math.floor(Date.now() / 1000)|| (response.role!=="student" && response.role!=="admin")) {
         navigate("/login");
       }
     } else {
@@ -189,7 +190,7 @@ const ComplaintForm = () => {
      
       try {
         const response = await fetch(
-          "https://amarnath013.pythonanywhere.com/api/user/profile",
+          `${BaseUrl}/profile`,
           {
             method: "GET",
             headers: {
@@ -217,7 +218,7 @@ const ComplaintForm = () => {
     const fetchComplaints = async () => {
       try {
         const response = await fetch(
-          "https://amarnath013.pythonanywhere.com/api/user/complaints",
+          `${BaseUrl}/complaints`,
           {
             method: "GET",
             headers: {
@@ -252,7 +253,7 @@ const ComplaintForm = () => {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: "https://amarnath013.pythonanywhere.com/api/user/complaints/",
+      url: `${BaseUrl}/complaints/`,
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
       },
@@ -307,7 +308,7 @@ const ComplaintForm = () => {
     let config = {
       method: "post",
       maxBodyLength: Infinity,
-      url: "https://amarnath013.pythonanywhere.com/api/user/complaints/",
+      url: `${BaseUrl}/complaints/`,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
@@ -552,7 +553,7 @@ const ComplaintForm = () => {
               previousRecord
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => (
-                  <Card key={index} sx={{ marginBottom: 2, bgcolor: "#f5f5f5",textAlign:"justify" }}>
+                  <Card key={index} sx={{ marginBottom: 2, bgcolor: "#f5f5f5",textAlign:"justify",marginTop:"20px" }}>
                     <CardContent>
                      
                       <Typography color="textSecondary">

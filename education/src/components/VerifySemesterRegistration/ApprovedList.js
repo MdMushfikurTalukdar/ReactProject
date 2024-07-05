@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./VerifySemesterRegistration.css";
 import axios from "axios";
 import { Box, CircularProgress } from "@mui/material";
+import { BaseUrl } from "../BaseUrl";
 
 const ApprovedList = () => {
   const [print, setPrint] = useState(false);
@@ -16,7 +17,7 @@ const ApprovedList = () => {
         const config = {
           method: "get",
           maxBodyLength: Infinity,
-          url: "https://amarnath013.pythonanywhere.com/api/user/verify-semester-registration/?status=approved",
+          url: `${BaseUrl}/verify-semester-registration/?status=approved`,
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
@@ -105,12 +106,13 @@ const ApprovedList = () => {
       </Box>}
         <div>
           {searchMessage && <p>{searchMessage}</p>}
-          {showCards && uniqueRegistrationNumbers.map((regNumber, index) => {
+          {uniqueRegistrationNumbers?.length===0 ? (<center>
+            <img src="./images/No_data.png" alt="" style={{width:"310px",borderRadius:"10px",marginTop:"30px"}}/></center>):( uniqueRegistrationNumbers.map((regNumber, index) => {
             // Find the first occurrence of this registration number in searchResults
             const student = searchResults.find(data =>
               data?.registration_details_info?.student_details?.personal_information?.registration_number === regNumber);
 
-            if (!student) return null;
+           
 
             return (
               <div key={index} className="id-card">
@@ -131,7 +133,8 @@ const ApprovedList = () => {
                 
               </div>
             );
-          })}
+          
+          }))}
         </div>
       </div>
     </>

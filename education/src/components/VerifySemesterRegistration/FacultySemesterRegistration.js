@@ -21,6 +21,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { enqueueSnackbar } from "notistack";
 import Footer from "../Home/Footer";
+import { BaseUrl } from "../BaseUrl";
 
 const FacultySemesterRegistration = () => {
   const { id } = useParams();
@@ -43,7 +44,7 @@ const FacultySemesterRegistration = () => {
         let config = {
           method: 'get',
           maxBodyLength: Infinity,
-          url: `https://amarnath013.pythonanywhere.com/api/user/semester-registrations/${id}`,
+          url: `${BaseUrl}/semester-registrations/${id}`,
           headers: {
             'Authorization': `Bearer ${localStorage.getItem("accesstoken")}`
           }
@@ -104,7 +105,7 @@ const FacultySemesterRegistration = () => {
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'https://amarnath013.pythonanywhere.com/api/user/verify-semester-registration/',
+      url: `${BaseUrl}/verify-semester-registration/`,
       headers: { 
         'Content-Type': 'application/json', 
         'Authorization': `Bearer ${localStorage?.getItem('accesstoken')}`

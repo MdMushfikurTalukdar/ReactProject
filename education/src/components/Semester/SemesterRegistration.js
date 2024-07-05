@@ -38,6 +38,7 @@ import { enqueueSnackbar } from "notistack";
 import { MdDateRange } from "react-icons/md";
 import { FaCodeBranch } from "react-icons/fa";
 import { GiSpellBook } from "react-icons/gi";
+import { BaseUrl } from "../BaseUrl";
 
 const schema = yup.object().shape({
   selectedSemester: yup.string().required("Semester is required"),
@@ -93,7 +94,7 @@ export function SemesterRegistration() {
     let config = {
       method: "GET",
       maxBodyLength: Infinity,
-      url: "https://amarnath013.pythonanywhere.com/api/user/profile/",
+      url: `${BaseUrl}/profile/`,
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
       },
@@ -115,7 +116,7 @@ export function SemesterRegistration() {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `https://amarnath013.pythonanywhere.com/api/user/semester-registrations/?search=${userProfile?.personal_information?.registration_number}`,
+      url: `${BaseUrl}/semester-registrations/?search=${userProfile?.personal_information?.registration_number}`,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
@@ -149,7 +150,7 @@ export function SemesterRegistration() {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `https://amarnath013.pythonanywhere.com/api/user/semester/?search`,
+      url: `${BaseUrl}/semester/?search`,
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
       },
@@ -181,7 +182,7 @@ export function SemesterRegistration() {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `https://amarnath013.pythonanywhere.com/api/user/semester/?search=${semester}`,
+      url: `${BaseUrl}/semester/?search=${semester}`,
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
       },
@@ -262,7 +263,7 @@ export function SemesterRegistration() {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: "https://amarnath013.pythonanywhere.com/api/user/semester/?search",
+      url: `${BaseUrl}/semester/?search`,
       headers: {
         Authorization: `Bearer ${localStorage?.getItem("accesstoken")}`,
       },
@@ -284,7 +285,7 @@ export function SemesterRegistration() {
         let config = {
           method: "post",
           maxBodyLength: Infinity,
-          url: "https://amarnath013.pythonanywhere.com/api/user/semester-registrations/",
+          url: `${BaseUrl}/semester-registrations/`,
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage?.getItem("accesstoken")}`,
@@ -592,7 +593,7 @@ export function SemesterRegistration() {
                   sx={{
                     minWidth: {lg:675,sm:400,xs:280,md:575},
                     marginBottom: 2,
-                    backgroundColor: "whitesmoke",
+                  
                     height: 150,
                     padding:2
                   }}

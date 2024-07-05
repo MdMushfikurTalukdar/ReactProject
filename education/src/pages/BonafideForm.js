@@ -38,6 +38,7 @@ import { jwtDecode } from "jwt-decode";
 import NavbarNew from "../components/NavbarNew";
 import Footer from "../components/Home/Footer";
 import { enqueueSnackbar } from "notistack";
+import { BaseUrl } from "../components/BaseUrl";
 
 // Validation schema
 const schema = yup.object().shape({
@@ -175,7 +176,7 @@ export const BonafideForm = () => {
   useEffect(() => {
     axios
       .get(
-        `https://amarnath013.pythonanywhere.com/api/user/bonafide/?search=${jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}`,
+        `${BaseUrl}/bonafide/?search=${jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
@@ -206,7 +207,7 @@ export const BonafideForm = () => {
 
     axios
       .post(
-        "https://amarnath013.pythonanywhere.com/api/user/bonafide/",
+        `${BaseUrl}/bonafide/`,
         formData,
         {
           headers: {
@@ -437,10 +438,11 @@ export const BonafideForm = () => {
           result.map((data, index) => (
             <Box key={index}>
               <Card
+              // variant="outline"
                 sx={{
-                  minWidth: 275,
+                  minWidth: 295,
                   marginBottom: 2,
-                  backgroundColor: "#D2E9E9",
+                  
                   marginTop: 2,
                 }}
               >

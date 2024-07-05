@@ -22,6 +22,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import dayjs from "dayjs";
 import { useSnackbar } from "notistack";
 import { jwtDecode } from "jwt-decode";
+import { BaseUrl } from "./BaseUrl";
 
 const schema = yup.object().shape({
   feeType: yup.string().required("Fee Type is required"),
@@ -73,7 +74,7 @@ function HostelFeePayment() {
     if(localStorage.getItem("accesstoken")!==null){
     try {
       const response = await axios.get(
-        "https://amarnath013.pythonanywhere.com/api/user/fees/",
+        `${BaseUrl}/fees/`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
@@ -85,6 +86,17 @@ function HostelFeePayment() {
       setFees(response.data);
     } catch (error) {
       console.error("Failed to fetch fees:", error);
+      if(error?.response?.data?.message==="ID does not Exists"){
+        enqueueSnackbar("Fees Structure is not added by caretaker", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 3000,
+        });
+        navigate('/dashboard')
+      }
     }
     }else{
       navigate('/login');
@@ -107,7 +119,7 @@ function HostelFeePayment() {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `https://amarnath013.pythonanywhere.com/api/user/hostel-room-allotments/?search=${jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}`,
+      url: `${BaseUrl}/hostel-room-allotments/?search=${jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}`,
       headers: { 
         'Authorization': `Bearer ${localStorage?.getItem('accesstoken')}`
       },
@@ -132,7 +144,7 @@ function HostelFeePayment() {
      
       try {
         const response = await axios.get(
-          "https://amarnath013.pythonanywhere.com/api/user/profile",
+          `${BaseUrl}/profile`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
@@ -164,7 +176,7 @@ function HostelFeePayment() {
   const onSubmit = async (data) => {
     try {
       const response=await axios.post(
-        "https://amarnath013.pythonanywhere.com/api/user/mess-fees-payment/",
+        `${BaseUrl}/mess-fees-payment/`,
         {
           registration_details: id,
           from_date: dayjs(data.startDate).format("YYYY-MM"),
@@ -199,17 +211,17 @@ function HostelFeePayment() {
       }, 2000);
     } catch (error) {
       console.error("Payment request error:", error);
-      if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
-        enqueueSnackbar("Logging out", {
-          variant: "error",
-          anchorOrigin: {
-            vertical: "bottom",
-            horizontal: "center",
-          },
-          autoHideDuration: 3000,
-        });  
-        navigate("/login");
-      }
+       if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+          enqueueSnackbar("Logging out", {
+            variant: "error",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 3000,
+          });  
+          navigate("/login");
+        }
       enqueueSnackbar("Caretaker have not alloted a room to you yet.", {
         variant: "error",
         anchorOrigin: {
@@ -226,7 +238,7 @@ function HostelFeePayment() {
     const fetchPayments = async () => {
       try {
         const response = await axios.get(
-          `https://amarnath013.pythonanywhere.com/api/user/mess-fees-payment/?search=${jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}`,
+          `${BaseUrl}/mess-fees-payment/?search=${jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,

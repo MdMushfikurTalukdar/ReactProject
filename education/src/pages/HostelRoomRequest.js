@@ -36,6 +36,7 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
+import { BaseUrl } from "../components/BaseUrl";
 
 // Validation schema
 const exactTwoDecimalRegex = /^\d+\.\d{2}$/;
@@ -118,14 +119,14 @@ export const HostelRoomRequest = () => {
 
     const decodedToken = jwtDecode(accessToken);
 
-    if (decodedToken.exp < Math.floor(Date.now() / 1000 || decodedToken.role!=="student")) {
+    if (decodedToken.exp < Math.floor(Date.now() / 1000) || ( decodedToken.role!=="student" && decodedToken.role!=="admin" ) ) {
       navigate("/login");
     }
 
     const fetchData = async () => {
       try {
         const userProfileResponse = await axios.get(
-          "https://amarnath013.pythonanywhere.com/api/user/profile/",
+          `${BaseUrl}/profile/`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -135,7 +136,7 @@ export const HostelRoomRequest = () => {
         setUserProfile(userProfileResponse.data);
 
         const hostelAllotmentsResponse = await axios.get(
-          `https://amarnath013.pythonanywhere.com/api/user/hostel-allotments/?search=${jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}`,
+          `${BaseUrl}/hostel-allotments/?search=${jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -146,7 +147,7 @@ export const HostelRoomRequest = () => {
         setResult(hostelAllotmentsResponse.data.reverse());
 
         const hostelRoomAllotmentsResponse = await axios.get(
-          `https://amarnath013.pythonanywhere.com/api/user/hostel-room-allotments/?search=${jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}`,
+          `${BaseUrl}/hostel-room-allotments/?search=${jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -214,7 +215,7 @@ export const HostelRoomRequest = () => {
 
     try {
       const response = await axios.post(
-        "https://amarnath013.pythonanywhere.com/api/user/hostel-allotments/",
+        `${BaseUrl}/hostel-allotments/`,
         formData,
         {
           headers: {

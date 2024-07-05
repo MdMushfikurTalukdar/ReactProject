@@ -8,6 +8,7 @@ import { Box, Button, Divider } from "@mui/material";
 import axios from "axios";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { BaseUrl } from "./BaseUrl";
 
 dayjs.extend(relativeTime);
 
@@ -204,7 +205,7 @@ export const NavbarNew = () => {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `https://amarnath013.pythonanywhere.com/api/user/notification/?search=${jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}`,
+      url: `${BaseUrl}/notification/?search=${jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}`,
       headers: {
         Authorization: `Bearer ${localStorage?.getItem("accesstoken")}`,
       },
@@ -230,7 +231,7 @@ export const NavbarNew = () => {
     let config = {
       method: "delete",
       maxBodyLength: Infinity,
-      url: `https://amarnath013.pythonanywhere.com/api/user/notification/${id}/`,
+      url: `${BaseUrl}/notification/${id}/`,
       headers: {
         Authorization: `Bearer ${localStorage?.getItem("accesstoken")}`,
       },
@@ -255,7 +256,7 @@ export const NavbarNew = () => {
       let config = {
         method: "delete",
         maxBodyLength: Infinity,
-        url: `https://amarnath013.pythonanywhere.com/api/user/notification/${notification.id}/`,
+        url: `${BaseUrl}/notification/${notification.id}/`,
         headers: {
           Authorization: `Bearer ${localStorage?.getItem("accesstoken")}`,
         },

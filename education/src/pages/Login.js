@@ -19,6 +19,7 @@ import { RiLockPasswordFill } from 'react-icons/ri';
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import Checkbox from '@mui/material/Checkbox';
+import { BaseUrl } from '../components/BaseUrl';
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
@@ -36,7 +37,7 @@ export const LoginPage = () => {
     });
 
     axios({
-      url: "https://amarnath013.pythonanywhere.com/api/user/login/",
+      url: `${BaseUrl}/login/`,
       method: "POST",
       headers: {
         'Content-Type': 'application/json'

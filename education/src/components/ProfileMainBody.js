@@ -15,6 +15,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../pages/logout.css";
 import { jwtDecode } from "jwt-decode";
+import { BaseUrl } from "./BaseUrl";
 
 
 export const ProfileMainBody = () => {
@@ -37,7 +38,7 @@ export const ProfileMainBody = () => {
     let config = {
       method: "GET",
       maxBodyLength: Infinity,
-      url: "https://amarnath013.pythonanywhere.com/api/user/profile/",
+      url: `${BaseUrl}/profile/`,
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
       },
@@ -138,7 +139,7 @@ export const ProfileMainBody = () => {
             />
           ) : (
             <img
-              src="https://mui.com/static/images/avatar/2.jpg"
+              src="https://img.freepik.com/free-vector/illustration-businessman_53876-5856.jpg?size=626&ext=jpg&ga=GA1.1.2113030492.1720137600&semt=ais_user"
               alt="Loading..."
               className="lg:w-[10%] w-[40%] sm:w-[25%] md:w-[15%] h-auto text-center"
               style={{ borderRadius: "50%" }}

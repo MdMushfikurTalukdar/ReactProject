@@ -22,6 +22,7 @@ import { enqueueSnackbar } from "notistack";
 import emailValidator from "email-validator";
 import NavbarNew from "../components/NavbarNew";
 import { FaCameraRetro } from "react-icons/fa";
+import { BaseUrl } from "../components/BaseUrl";
 
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 const phoneNumberRegex = /^\d{10}$/;
@@ -193,7 +194,7 @@ export const EditProfile = () => {
     let config = {
       method: "GET",
       maxBodyLength: Infinity,
-      url: "https://amarnath013.pythonanywhere.com/api/user/profile/",
+      url: `${BaseUrl}/profile/`,
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
       },
@@ -409,7 +410,7 @@ export const EditProfile = () => {
     let config = {
       method: "put",
       maxBodyLength: Infinity,
-      url: "https://amarnath013.pythonanywhere.com/api/user/profile/",
+      url: `${BaseUrl}/profile/`,
       headers: {
         "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
@@ -505,7 +506,7 @@ export const EditProfile = () => {
                     />
                   ) : (
                     <img
-                      src="https://mui.com/static/images/avatar/2.jpg"
+                      src="https://img.freepik.com/free-vector/illustration-businessman_53876-5856.jpg?size=626&ext=jpg&ga=GA1.1.2113030492.1720137600&semt=ais_user"
                       alt=""
                       className="lg:w-[10%] w-[40%] sm:w-[25%] md:w-[15%] h-auto text-center"
                       style={{ borderRadius: "50%" }}

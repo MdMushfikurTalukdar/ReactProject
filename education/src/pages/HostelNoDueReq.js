@@ -33,6 +33,7 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { enqueueSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
+import { BaseUrl } from "../components/BaseUrl";
 
 // Validation schema
 const schema = yup.object().shape({
@@ -67,7 +68,7 @@ export const HostelNoDueReq = () => {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `https://amarnath013.pythonanywhere.com/api/user/mess-fees-payment/?search=${jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}`,
+      url: `${BaseUrl}/mess-fees-payment/?search=${jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}`,
       headers: { 
         Authorization: `Bearer ${localStorage.getItem('accesstoken')}`
       }
@@ -143,7 +144,7 @@ export const HostelNoDueReq = () => {
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'https://amarnath013.pythonanywhere.com/api/user/hostel-no-dues/',
+      url: `${BaseUrl}/hostel-no-dues/`,
       headers: { 
         'Content-Type': 'application/json', 
         Authorization: `Bearer ${localStorage?.getItem('accesstoken')}`
@@ -193,7 +194,7 @@ export const HostelNoDueReq = () => {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `https://amarnath013.pythonanywhere.com/api/user/hostel-no-dues/?search=${jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}`,
+      url: `${BaseUrl}/hostel-no-dues/?search=${jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}`,
       headers: { 
         'Authorization': `Bearer ${localStorage?.getItem('accesstoken')}`
       }

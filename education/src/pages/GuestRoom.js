@@ -23,6 +23,7 @@ import {
   CardContent,
   Card,
   CircularProgress,
+  InputAdornment,
 } from "@mui/material";
 import { Footer } from "../components/Footer";
 import "../App.css";
@@ -31,6 +32,8 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
+import { BaseUrl } from "../components/BaseUrl";
+import { MdDateRange } from "react-icons/md";
 
 // Validation schema
 const schema = yup.object().shape({
@@ -88,7 +91,7 @@ export const GuestRoom = () => {
       let config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: `https://amarnath013.pythonanywhere.com/api/user/guest-room-allotments/?search=${jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}`,
+        url: `${BaseUrl}/guest-room-allotments/?search=${jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}`,
         headers: {
           Authorization: `Bearer ${localStorage?.getItem("accesstoken")}`,
         },
@@ -120,7 +123,7 @@ export const GuestRoom = () => {
     let config = {
       method: "post",
       maxBodyLength: Infinity,
-      url: "https://amarnath013.pythonanywhere.com/api/user/guest-room-allotments/",
+      url: `${BaseUrl}/guest-room-allotments/`,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
@@ -185,13 +188,15 @@ export const GuestRoom = () => {
         >
           Guest Room Allotment Request
         </Typography>
+       
+        <img src="./images/guestRoom.jpg" alt="" style={{width:"320px",marginTop:"20px"}}/>
         <Box style={{
           maxWidth:{lg:"30%",xs:"100%",sm:"30%",md:"30%"}
         }}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <FormControl fullWidth variant="outlined" margin="normal">
             <Typography variant="h6">Registration number</Typography>
-            <Typography variant="body1" style={{ marginBottom: "5px" }}>
+            <Typography variant="body1" style={{ marginBottom: "5px",fontSize:"1.1rem" }}>
               {localStorage?.getItem("accesstoken")===null?null:jwtDecode(localStorage?.getItem("accesstoken"))?.registration_number}
             </Typography>
           </FormControl>
@@ -240,6 +245,7 @@ export const GuestRoom = () => {
               type="date"
               InputLabelProps={{
                 shrink: true,
+               
               }}
               inputProps={{
                 min: today,
@@ -250,6 +256,7 @@ export const GuestRoom = () => {
               }}
               variant="outlined"
               fullWidth
+             
             />
             <p style={{ color: "red", fontSize: "0.75rem", fontWeight: "400" }}>
               {fromError}
@@ -272,6 +279,8 @@ export const GuestRoom = () => {
               helperText={errors.toDate?.message}
               variant="outlined"
               fullWidth
+              
+            
             />
           </FormControl>
 
@@ -280,14 +289,19 @@ export const GuestRoom = () => {
             variant="outlined"
             margin="normal"
             error={!!errors.numberOfPersons?.message}
+            
           >
             <InputLabel id="numberOfPersons-label">
+
               Number of Persons
+             
             </InputLabel>
             <Controller
+          
               name="numberOfPersons"
               control={control}
               render={({ field }) => (
+                
                 <Select
                   labelId="numberOfPersons-label"
                   id="numberOfPersons"
@@ -300,7 +314,9 @@ export const GuestRoom = () => {
                   <MenuItem value={3}>3</MenuItem>
                   <MenuItem value={4}>4</MenuItem>
                   <MenuItem value={5}>5</MenuItem>
+                  
                 </Select>
+                
               )}
             />
             {errors.numberOfPersons && (
@@ -342,9 +358,9 @@ export const GuestRoom = () => {
                 <Box key={index}>
                   <Card
                     sx={{
-                      minWidth: 275,
+                      minWidth: 295,
                       marginBottom: 2,
-                      backgroundColor: "#D2E9E9",
+                    
                     }}
                   >
                     <CardContent>
@@ -355,10 +371,10 @@ export const GuestRoom = () => {
                       >
                         Hostel Request Details
                       </Typography>
-                      <Typography variant="h6" component="div">
+                      <Typography variant="h6" component="p">
                         Purpose Of Request: {data?.purpose_of_request}
                       </Typography>
-                      <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                      <Typography sx={{  }} color="text.secondary">
                         From Date: {data?.from_date}
                       </Typography>
                       <Typography variant="body2">

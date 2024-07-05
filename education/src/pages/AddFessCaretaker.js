@@ -26,6 +26,7 @@ import { useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 import NavbarNew from "../components/NavbarNew";
 import Footer from "../components/Home/Footer";
+import { BaseUrl } from "../components/BaseUrl";
 
 // Validation schema using yup
 const schema = yup.object().shape({
@@ -79,7 +80,7 @@ const AddFeesCaretaker = () => {
       try {
         const config = {
           method: "get",
-          url: "https://amarnath013.pythonanywhere.com/api/user/fees/",
+          url: `${BaseUrl}/fees/`,
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
           },
@@ -103,7 +104,7 @@ const AddFeesCaretaker = () => {
       if (editId) {
         config = {
           method: "put",
-          url: `https://amarnath013.pythonanywhere.com/api/user/fees/update/${editId}/`,
+          url: `${BaseUrl}/fees/update/${editId}/`,
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
@@ -113,7 +114,7 @@ const AddFeesCaretaker = () => {
       } else {
         config = {
           method: "post",
-          url: "https://amarnath013.pythonanywhere.com/api/user/fees/create/",
+          url: `${BaseUrl}/fees/create/`,
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,

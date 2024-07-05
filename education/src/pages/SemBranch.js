@@ -17,6 +17,7 @@ import axios from "axios";
 import { enqueueSnackbar } from "notistack";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import { BaseUrl } from "../components/BaseUrl";
 
 const schema = yup.object().shape({
   semester_name: yup.string().required("Semester name is required"),
@@ -62,7 +63,7 @@ export const SemBranch = () => {
     let config = {
       method: "post",
       maxBodyLength: Infinity,
-      url: "https://amarnath013.pythonanywhere.com/api/user/semester/",
+      url: `${BaseUrl}/semester/`,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,

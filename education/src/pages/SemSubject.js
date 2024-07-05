@@ -9,6 +9,7 @@ import axios from 'axios';
 import { enqueueSnackbar } from 'notistack';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
+import { BaseUrl } from '../components/BaseUrl';
 
 const schema = yup.object().shape({
   subject_name: yup.string().required("Subject name is required"),
@@ -51,7 +52,7 @@ export const SemSubject = () => {
       let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: 'https://amarnath013.pythonanywhere.com/api/user/subject/',
+        url: `${BaseUrl}/subject/`,
         headers: { 
           'Content-Type': 'application/json', 
           'Authorization': `Bearer ${localStorage.getItem('accesstoken')}`

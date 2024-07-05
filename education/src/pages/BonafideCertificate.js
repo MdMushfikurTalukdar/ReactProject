@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import { BaseUrl } from "../components/BaseUrl";
 
 export const BonafideCertificate = () => {
   const [result, setResult] = useState([]);
@@ -23,7 +24,7 @@ export const BonafideCertificate = () => {
     let config = {
       method: "post",
       maxBodyLength: Infinity,
-      url: "https://amarnath013.pythonanywhere.com/api/user/bonafide/",
+      url: `${BaseUrl}/bonafide/`,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
@@ -58,7 +59,7 @@ export const BonafideCertificate = () => {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: "https://amarnath013.pythonanywhere.com/api/user/profile/",
+      url: `${BaseUrl}/profile/`,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,

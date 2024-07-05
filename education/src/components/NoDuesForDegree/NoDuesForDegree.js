@@ -36,6 +36,7 @@ import { enqueueSnackbar } from "notistack";
 import NavbarNew from "../NavbarNew";
 import Footer from "../Home/Footer";
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
+import { BaseUrl } from "../BaseUrl";
 
 // Validation schema
 const schema = yup.object().shape({
@@ -138,7 +139,7 @@ export function NoDuesForDegree() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "https://amarnath013.pythonanywhere.com/api/user/profile/",
+          `${BaseUrl}/profile/`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
@@ -155,7 +156,7 @@ export function NoDuesForDegree() {
     const fetchRequests = async () => {
       try {
         const response = await axios.get(
-          "https://amarnath013.pythonanywhere.com/api/user/overall-no-dues/",
+          `${BaseUrl}/overall-no-dues/`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
@@ -215,7 +216,7 @@ export function NoDuesForDegree() {
 
     try {
       const response = await axios.post(
-        "https://amarnath013.pythonanywhere.com/api/user/overall-no-dues/",
+        `${BaseUrl}/overall-no-dues/`,
         requestData,
         {
           headers: {
