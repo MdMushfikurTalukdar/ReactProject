@@ -72,11 +72,11 @@ export const Header = () => {
               href="#app-bar-with-responsive-menu"
               sx={{
                 mr: 'auto',
-                fontWeight: 700,
-                letterSpacing: '.1rem',
+                fontWeight: "bold",
+               
                 color: 'inherit',
                 textDecoration: 'none',
-                display: { xs: 'none', md: 'block' },
+                display: { xs: 'block', md: 'block' },
                 
               }}
             >
