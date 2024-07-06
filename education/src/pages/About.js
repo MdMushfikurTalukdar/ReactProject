@@ -16,7 +16,7 @@ export const About = () => {
         className="justify-center p-2 bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage:
-            "url(https://img.freepik.com/premium-photo/panoramic-cityscape-view-san-francisco-nob-hill-area-sunset-midtown-skyline-california-united-states-technologies-education-concept-academic-research-top-ranking-university-hologram_269648-14816.jpg)",
+            "url(https://static.vecteezy.com/ti/vetor-gratis/p1/20413291-moderno-isometrico-alunos-dentro-universidade-campus-conceito-com-texto-lugar-pode-usar-para-rede-bandeira-infograficos-heroi-imagens-plano-isometrico-ilustracao-isolado-em-branco-fundo-vetor.jpg)",
           filter: "brightness(0.5) opacity(0.9)",
           height: "29rem",
         }}

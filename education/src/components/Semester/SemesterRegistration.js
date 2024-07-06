@@ -350,9 +350,9 @@ export function SemesterRegistration() {
     <>
       <NavbarNew />
        
-          <Typography variant="h5" align="center" gutterBottom style={{ width: "100%",fontFamily:"mono-space",fontSize:"1.6rem",marginTop:"30px" }}>
+          <p  style={{ width: "100%",fontSize:"1.3rem",marginTop:"30px",textAlign:"center" }}>
             Semester Registration
-          </Typography>
+          </p>
        
        
           
@@ -362,6 +362,7 @@ export function SemesterRegistration() {
       <Grid container spacing={1} style={{ padding: "30px",display:"flex",justifyContent:"center",alignContent:"center",alignItems:"center" }}>
         <Grid item xs={12} sm={12} lg={7} md={7} style={{display:"flex",flexDirection:"column",justifyContent:'center',alignContent:"center",alignItems:"center"}}>
           <TextField
+          
             type="text"
             placeholder="Student Name"
             value={`${userProfile?.personal_information?.first_name} ${userProfile?.personal_information?.middle_name} ${userProfile?.personal_information?.last_name}`}
@@ -369,7 +370,8 @@ export function SemesterRegistration() {
             disabled
             sx={{
               width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
-              marginTop:"15px",marginBottom:"10px"
+              marginTop:"15px",marginBottom:"10px",
+              backgroundColor:"whitesmoke"
             }}
            
             InputProps={{
@@ -389,7 +391,8 @@ export function SemesterRegistration() {
             disabled
             sx={{
               width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
-              marginBottom:"10px"
+              marginBottom:"10px",
+              backgroundColor:"whitesmoke"
             }}
             InputProps={{
               startAdornment: (
@@ -410,8 +413,10 @@ export function SemesterRegistration() {
               name="selectedSemester"
               control={control}
               defaultValue=""
+            
               render={({ field }) => (
                 <Select
+                style={{backgroundColor:"whitesmoke"}}
                   {...field}
                   labelId="semester-label"
                   label="Choose Semester"
@@ -450,6 +455,7 @@ export function SemesterRegistration() {
               defaultValue=""
               render={({ field }) => (
                 <Select
+                style={{backgroundColor:"whitesmoke"}}
                   {...field}
                   labelId="branch-label"
                   label="Branch"
@@ -480,6 +486,7 @@ export function SemesterRegistration() {
             placeholder='session'
             sx={{
               width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
+              backgroundColor:"whitesmoke"
             }}
             fullWidth
             disabled
@@ -499,9 +506,9 @@ export function SemesterRegistration() {
         sm:"none",
         xs:"none"
       },marginTop:"20px" }}>
-          <Typography variant="h5" align="center" gutterBottom sx={{marginBottom:"20px"}}>
+          <p style={{marginBottom:"20px",fontSize:"1.2rem",textAlign:"center"}}>
             Subject List
-          </Typography>
+          </p>
           <center>
           <Box style={{ marginTop: "10px", marginBottom: "20px" }}>
             {uniqueSubjects.length > 0 ? (
@@ -590,24 +597,25 @@ export function SemesterRegistration() {
             result.map((data, index) => (
               <Box key={index}>
                 <Card
+                variant="outlined"
                   sx={{
-                    minWidth: {lg:675,sm:400,xs:280,md:575},
+                    minWidth: {lg:775,sm:400,xs:280,md:575},
                     marginBottom: 2,
-                  
+                    color:"whitesmoke",
                     height: 150,
                     padding:2
                   }}
                 >
                   <CardContent>
-                    <Typography variant="p" component="div" sx={{fontSize:"1.0rem",marginBottom:"2px"}}>
+                    <Typography variant="p" color="text.secondary" component="div" sx={{fontSize:"1.0rem",marginBottom:"2px"}}>
                       Semester Name: {data?.semester?.semester_name}
                     </Typography>
 
-                    <Typography variant="p"  sx={{fontSize:"1.0rem"}}>
+                    <Typography variant="body1" color="text.secondary"  sx={{fontSize:"1.0rem"}}>
                       Applied Date: {data?.applied_date}
-                    </Typography><br/>
+                    </Typography>
 
-                    <Typography variant="p"  sx={{fontSize:"1.0rem",marginBottom:"2px"}}>
+                    <Typography variant="body1" color="text.secondary"  sx={{fontSize:"1.0rem",marginBottom:"2px"}}>
                       Status: {data?.status}
                     </Typography>
                    
