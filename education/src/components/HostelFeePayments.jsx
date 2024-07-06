@@ -23,6 +23,10 @@ import dayjs from "dayjs";
 import { useSnackbar } from "notistack";
 import { jwtDecode } from "jwt-decode";
 import { BaseUrl } from "./BaseUrl";
+import { CiUser } from "react-icons/ci";
+import { PiIdentificationBadgeThin, PiMoneyWavy } from "react-icons/pi";
+import { IoMdTime } from "react-icons/io";
+import { RiMoneyRupeeCircleLine } from "react-icons/ri";
 
 const schema = yup.object().shape({
   feeType: yup.string().required("Fee Type is required"),
@@ -355,6 +359,13 @@ function HostelFeePayment() {
                     }}
                     value={profileData.name}
                     disabled
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <CiUser />
+                        </InputAdornment>
+                      ),
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -364,6 +375,13 @@ function HostelFeePayment() {
                     fullWidth
                     value={profileData.registrationNo}
                     disabled
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <PiIdentificationBadgeThin />
+                        </InputAdornment>
+                      ),
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -373,6 +391,13 @@ function HostelFeePayment() {
                     render={({ field }) => (
                       <TextField
                         {...field}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <PiMoneyWavy />
+                            </InputAdornment>
+                          ),
+                        }}
                         select
                         label="Fee Type"
                         variant="outlined"
@@ -404,6 +429,7 @@ function HostelFeePayment() {
                         customInput={
                           <TextField
                             label="Start Date"
+                            
                             variant="outlined"
                             fullWidth
                             error={!!errors.startDate}
@@ -481,6 +507,13 @@ function HostelFeePayment() {
                         error={!!errors.noOfMonths}
                         helperText={errors.noOfMonths?.message}
                         disabled
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <IoMdTime />
+                            </InputAdornment>
+                          ),
+                        }}
                       />
                     )}
                   />
@@ -498,6 +531,13 @@ function HostelFeePayment() {
                         error={!!errors.monthlyCharges}
                         helperText={errors.monthlyCharges?.message}
                         disabled
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <RiMoneyRupeeCircleLine />
+                            </InputAdornment>
+                          ),
+                        }}
                       />
                     )}
                   />
