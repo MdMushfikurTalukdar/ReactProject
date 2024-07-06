@@ -28,9 +28,12 @@ export const LoginPage = () => {
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [hide,setHide]=useState(false);
+  const [loading,setLoading]=useState(false);
   const [remember,setRemember]=useState(false);
   
   const onSubmit = (data) => {
+    setLoading(true);
+
     let data1 = JSON.stringify({
       "registration_number": data.rollNumber,
       "password": data.password,
@@ -55,6 +58,7 @@ export const LoginPage = () => {
         });
         navigate('/dashboard');
 
+        setLoading(false);
         if(localStorage?.getItem('remember')==='true'){
           localStorage.setItem('RollNumber', data.rollNumber);
           localStorage.setItem('password',data.password);
@@ -77,6 +81,7 @@ export const LoginPage = () => {
           },
           autoHideDuration: 3000,
         });
+        setLoading(false);
       });
 
     reset();
@@ -179,7 +184,8 @@ export const LoginPage = () => {
                 }}
                 type="submit"
               >
-                Login
+                {!loading && <p>Login</p>}
+                {loading && <CircularProgress style={{color:"white"}}/>}
               </Button>
             </div>
           </form>

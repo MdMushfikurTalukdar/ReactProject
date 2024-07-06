@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  CircularProgress,
   Divider,
   FormControl,
   FormControlLabel,
@@ -189,6 +190,7 @@ export const EditProfile = () => {
   const [userProfile, setUserProfile] = useState([]);
   const [file, setFile] = useState("");
   const [imgPreview, setImgPreview] = useState("");
+  const [loading,setLoading]=useState(false);
 
   useEffect(() => {
     let config = {
@@ -324,7 +326,7 @@ export const EditProfile = () => {
 
   const UpdateSubmit = (data) => {
     console.log(file);
-
+    setLoading(true)
     const formData = new FormData();
     formData.append("personal_information.first_name", data.first_name);
     formData.append("personal_information.last_name", data.last_name);
@@ -430,9 +432,11 @@ export const EditProfile = () => {
           },
           autoHideDuration: 3000,
         });
+        setLoading(false);
         navigate("/profile");
       })
       .catch((error) => {
+        setLoading(false);
         if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
           enqueueSnackbar("Logging out", {
             variant: "error",
@@ -1260,7 +1264,8 @@ export const EditProfile = () => {
                       width: { lg: "30%", md: "70%", xs: "100%", sm: "90%" },
                     }}
                   >
-                    Update
+                     {!loading && <p>Update</p>}
+                     {loading && <CircularProgress style={{color:"white"}}/>}
                   </Button>
                 </center>
               </form>

@@ -13,8 +13,8 @@ const Footer = () => {
         </div>
         <div>
           <h3 className="font-bold text-lg mb-3">Quick Links</h3>
-          <ul className="space-y-2">
-            <li><a href="#admissions" className="text-gray-400 hover:text-white transition">Admissions</a></li>
+          <ul className="space-y-2" style={{textDecoration:"none",listStyle:"none"}}>
+            <li style={{textDecoration:"none"}}><a href="#admissions" className="text-gray-400 hover:text-white transition">Admissions</a></li>
             <li><a href="#careers" className="text-gray-400 hover:text-white transition">Careers</a></li>
             <li><a href="#privacy" className="text-gray-400 hover:text-white transition">Privacy Policy</a></li>
           </ul>
