@@ -21,7 +21,8 @@ import {
   IconButton,
   TableFooter,
   TablePagination,
-  useTheme
+  useTheme,
+  CircularProgress
 } from "@mui/material";
 
 import {jwtDecode} from "jwt-decode";
@@ -147,6 +148,7 @@ export function NoDuesForDegree() {
           }
         );
         setUserProfile(response.data);
+        setLoading(false);
       } catch (error) {
         console.log(error);
       }
@@ -276,6 +278,18 @@ export function NoDuesForDegree() {
   };
 
 
+  if (loading) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="80vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <div className="container-fluid" >

@@ -162,7 +162,10 @@ export const BonafideForm = () => {
     setPage(0);
   };
 
+  
   useEffect(() => {
+
+    console.log(axios.defaults.headers.common['Authorization']);
     if (localStorage?.getItem("accesstoken")) {
       const response = jwtDecode(localStorage?.getItem("accesstoken"));
       if (

@@ -298,15 +298,12 @@ function HostelFeePayment() {
 
   return (
     <Container maxWidth="md">
-      <Paper elevation={0} sx={{ p: { lg: 4, md: 4 }, mt: 4 }}>
-        <Typography
-          variant="h5"
-          align="center"
-          gutterBottom
-          style={{ marginBottom: "30px" }}
+      <Paper elevation={0} sx={{ p: { lg: 4, md: 4 }, mt: 2 }}>
+        <p
+          style={{ marginBottom: "30px",textAlign:"center",fontSize:"1.4rem" }}
         >
           Hostel/Mess Fee Payment
-        </Typography>
+        </p>
         <center style={{ marginBottom: "16px" }}>
           <img
             src="./images/payment.png"

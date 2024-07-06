@@ -63,7 +63,7 @@ export const LoginPage = () => {
           localStorage?.removeItem('password');
           
         }
-        
+        // axios.defaults.headers.common['Authorization']=res.data.token.access;
         localStorage.setItem('accesstoken', res.data.token.access);
         localStorage.setItem('refreshtoken', res.data.token.refresh);
       })

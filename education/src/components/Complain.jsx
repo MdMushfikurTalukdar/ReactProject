@@ -383,12 +383,12 @@ const ComplaintForm = () => {
       >
         <Grid container spacing={2}>
           <Grid item xs={12} md={6} lg={6} style={{marginTop:"15px"}}>
-            <Typography
-              variant="h5"
-              sx={{ marginBottom: "3%", textAlign: "center" }}
+            <p
+          
+              style={{ marginBottom: "3%", textAlign: "center",fontSize:"1.3rem" }}
             >
               Register Complaint
-            </Typography>
+            </p>
 
 <center>
             <Box
@@ -409,10 +409,10 @@ const ComplaintForm = () => {
             <Box
               sx={{
                 backgroundColor: {xs:"rgb(243 244 246)",lg:"transparent",md:"transparent"},
-                padding: {lg:"5px",md:"0px",xs:"20px",sm:"20px"},
+                padding: {lg:"5px",md:"0px",xs:"15px",sm:"20px"},
                 marginTop: {lg:"0px",md:"42px",xs:"29px",sm:"19px"},
                 marginLeft: {lg:"10px",md:"42px",xs:"0px",sm:"0px"},
-                borderRadius: "15px"
+                borderRadius: "5px"
               }}
             >
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -522,6 +522,7 @@ const ComplaintForm = () => {
                     color="primary"
                     sx={{
                       width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
+                      backgroundColor:"rgb(107, 169, 169)"
                     }}
                   >
                     Submit

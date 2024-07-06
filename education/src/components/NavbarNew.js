@@ -9,6 +9,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { BaseUrl } from "./BaseUrl";
+import { TiDelete } from "react-icons/ti";
 
 dayjs.extend(relativeTime);
 
@@ -215,7 +216,7 @@ export const NavbarNew = () => {
       .request(config)
       .then((response) => {
      
-        setNotifications(response?.data);
+        setNotifications(response?.data?.reverse());
       })
       .catch((error) => {
         console.log(error);
@@ -572,10 +573,10 @@ export const NavbarNew = () => {
                   <div className="flex justify-between items-center">
                     <h4>Notifications</h4>
                     <Button
-                      variant="outlined"
+                      variant="contained"
                       size="small"
                       onClick={deleteAllNotifications}
-                      style={{ color: "rgb(107, 169, 169)" }}
+                      style={{ backgroundColor: "rgb(107, 169, 169)" }}
                     >
                       Clear All
                     </Button>
@@ -598,7 +599,7 @@ export const NavbarNew = () => {
                           onClick={() => deleteNotification(notification.id)}
                           style={{ color: "rgb(107, 169, 169)" }}
                         >
-                          Delete
+                          <TiDelete style={{fontSize:"1.5rem"}}/>
                         </Button>
                       </div>
                     ))
