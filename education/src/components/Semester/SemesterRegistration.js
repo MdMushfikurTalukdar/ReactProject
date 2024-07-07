@@ -357,7 +357,7 @@ export function SemesterRegistration() {
        
           
         <center>
-        <img src="./images/semester.png" alt="" style={{width:"290px",borderRadius:"10px",marginTop:"10px"}}/></center>
+        <img src="./images/semester.png" alt="" style={{width:"310px",borderRadius:"10px",marginTop:"25px"}}/></center>
         
       <Grid container spacing={1} style={{ padding: "30px",display:"flex",justifyContent:"center",alignContent:"center",alignItems:"center" }}>
         <Grid item xs={12} sm={12} lg={7} md={7} style={{display:"flex",flexDirection:"column",justifyContent:'center',alignContent:"center",alignItems:"center"}}>

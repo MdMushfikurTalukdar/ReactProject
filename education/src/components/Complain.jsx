@@ -130,18 +130,18 @@ const slides = [
     subtitle:
       "Revolutionizing the campus experience with smart technology and seamless connectivity.",
   },
-  {
-    image: "complaints.jpg",
-    title: "Welcome to Smart Campus",
-    subtitle: "Your journey to excellence starts here",
-  },
-  
-  {
-    image: "complaints2.png",
-    title: "Revolutionizing Campus Life with Smart Tech",
-    subtitle:
-      "Revolutionizing the campus experience with smart technology and seamless connectivity.",
-  },
+  // {
+  //   image: "complaints.jpg",
+  //   title: "Welcome to Smart Campus",
+  //   subtitle: "Your journey to excellence starts here",
+  // },
+
+  // {
+  //   image: "complaints2.png",
+  //   title: "Revolutionizing Campus Life with Smart Tech",
+  //   subtitle:
+  //     "Revolutionizing the campus experience with smart technology and seamless connectivity.",
+  // },
 ];
 
 const ComplaintForm = () => {
@@ -171,14 +171,17 @@ const ComplaintForm = () => {
   useEffect(() => {
     if (localStorage?.getItem("accesstoken")) {
       const response = jwtDecode(localStorage?.getItem("accesstoken"));
-      if (response.exp < Math.floor(Date.now() / 1000)|| (response.role!=="student" && response.role!=="admin")) {
+      if (
+        response.exp < Math.floor(Date.now() / 1000) ||
+        (response.role !== "student" && response.role !== "admin")
+      ) {
         navigate("/login");
       }
     } else {
       navigate("/login");
     }
   }, []);
-  
+
   useEffect(() => {
     const token = localStorage.getItem("accesstoken");
     if (!token) {
@@ -187,21 +190,17 @@ const ComplaintForm = () => {
     }
 
     const fetchProfileData = async () => {
-     
       try {
-        const response = await fetch(
-          `${BaseUrl}/profile`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await fetch(`${BaseUrl}/profile`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
         if (!response.ok) throw new Error("Failed to fetch profile data");
         const data = await response.json();
-        if(data){
+        if (data) {
           setLoading(false);
         }
         setProfileData({
@@ -212,21 +211,17 @@ const ComplaintForm = () => {
       } catch (error) {
         console.error("Error fetching profile data:", error);
       }
-  
     };
 
     const fetchComplaints = async () => {
       try {
-        const response = await fetch(
-          `${BaseUrl}/complaints`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await fetch(`${BaseUrl}/complaints`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
         if (!response.ok) throw new Error("Failed to fetch complaints");
         const data = await response.json();
         setComplaints(data.reverse());
@@ -249,43 +244,39 @@ const ComplaintForm = () => {
   });
 
   useEffect(() => {
-    if(localStorage.getItem("accesstoken")!==null){
-    let config = {
-      method: "get",
-      maxBodyLength: Infinity,
-      url: `${BaseUrl}/complaints/`,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
-      },
-    };
+    if (localStorage.getItem("accesstoken") !== null) {
+      let config = {
+        method: "get",
+        maxBodyLength: Infinity,
+        url: `${BaseUrl}/complaints/`,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
+        },
+      };
 
-    axios
-      .request(config)
-      .then((response) => {
-        setPreviousRecord(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
+      axios
+        .request(config)
+        .then((response) => {
+          setPreviousRecord(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     } else {
       navigate("/login");
     }
   }, []);
 
   useEffect(() => {
-  
     // console.log(localStorage.getItem("accesstoken"))
-    if(localStorage?.getItem("accesstoken")===null){
+    if (localStorage?.getItem("accesstoken") === null) {
       navigate("/login");
-    }
-    else if (localStorage?.getItem("accesstoken")) {
+    } else if (localStorage?.getItem("accesstoken")) {
       const response = jwtDecode(localStorage?.getItem("accesstoken"));
       if (response.exp < Math.floor(Date.now() / 1000)) {
         navigate("/login");
       }
     } else {
-     
       navigate("/login");
     }
   }, []);
@@ -334,7 +325,10 @@ const ComplaintForm = () => {
           position: "top-center",
           autoClose: 5000,
         });
-        if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+        if (
+          error?.response?.data?.errors?.detail ===
+          "Given token not valid for any token type"
+        ) {
           enqueueSnackbar("Logging out", {
             variant: "error",
             anchorOrigin: {
@@ -342,7 +336,7 @@ const ComplaintForm = () => {
               horizontal: "center",
             },
             autoHideDuration: 3000,
-          });  
+          });
           navigate("/login");
         }
       });
@@ -362,174 +356,185 @@ const ComplaintForm = () => {
       ? Math.max(0, (1 + page) * rowsPerPage - previousRecord.length)
       : 0;
 
-
-      if (loading) {
-        return (
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            height="80vh"
-          >
-            <CircularProgress />
-          </Box>
-        );
-      }
+  if (loading) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="80vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
   return (
-    <div className="container-fluid" style={{borderRadius:"20px"}}>
+    <div className="container-fluid" style={{ borderRadius: "20px" }}>
       <Box
         className="complaint-form"
         sx={{ bgcolor: "", borderRadius: 3, padding: 1 }}
       >
         <Grid container spacing={2}>
-          <Grid item xs={12} md={6} lg={6} style={{marginTop:"15px"}}>
+          <Grid item xs={12} md={6} lg={6} style={{ marginTop: "15px" }}>
             <p
-          
-              style={{ marginBottom: "3%", textAlign: "center",fontSize:"1.3rem" }}
+              style={{
+                marginBottom: "3%",
+                textAlign: "center",
+                fontSize: "1.3rem",
+              }}
             >
               Register Complaint
             </p>
 
-<center>
-            <Box
-              sx={{
-                display: { xs: "block", sm: "block", md: "none", lg: "none" },
-                textAlign: "center",
-                marginBottom: "30px",
-                width: "300px",
-              }}
-            >
-              <Slider {...settings}>
-                {slides.map((slide, index) => (
-                  <img src={`./images/${slide.image}`} alt="" style={{borderRadius:"10px"}} />
-                ))}
-              </Slider>
-            </Box>
+            <center>
+              <Box
+                sx={{
+                  display: { xs: "block", sm: "block", md: "none", lg: "none" },
+                  textAlign: "center",
+                  marginBottom: "30px",
+                }}
+              >
+                <img
+                  src={`./images/complaints2.png`}
+                  alt=""
+                  style={{ borderRadius: "10px", width: "310px" }}
+                />
+              </Box>
             </center>
             <Box
               sx={{
-                backgroundColor: {xs:"rgb(243 244 246)",lg:"transparent",md:"transparent"},
-                padding: {lg:"5px",md:"0px",xs:"15px",sm:"20px"},
-                marginTop: {lg:"0px",md:"42px",xs:"29px",sm:"19px"},
-                marginLeft: {lg:"10px",md:"42px",xs:"0px",sm:"0px"},
-                borderRadius: "5px"
+                backgroundColor: {
+                  xs: "rgb(243 244 246)",
+                  lg: "transparent",
+                  md: "transparent",
+                },
+                padding: { lg: "5px", md: "0px", xs: "15px", sm: "20px" },
+                marginTop: { lg: "0px", md: "42px", xs: "29px", sm: "19px" },
+                marginLeft: { lg: "10px", md: "42px", xs: "0px", sm: "0px" },
+                borderRadius: "5px",
               }}
             >
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <Grid container spacing={2} sx={{padding:{lg:"15px",xs:"0px",md:"15px",sm:"10px"}}} >
-                <Grid item xs={12} >
-                  <TextField
-                    label="Registration/ Employee No"
-                    fullWidth
-                    value={profileData?.registrationNo}
-                    disabled
-                    variant="outlined"
-                  />
-                </Grid>
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <Grid
+                  container
+                  spacing={2}
+                  sx={{
+                    padding: { lg: "15px", xs: "0px", md: "15px", sm: "10px" },
+                  }}
+                >
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Registration/ Employee No"
+                      fullWidth
+                      value={profileData?.registrationNo}
+                      disabled
+                      variant="outlined"
+                    />
+                  </Grid>
 
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    label="Name"
-                    fullWidth
-                    value={profileData?.name}
-                    disabled
-                    variant="outlined"
-                  />
-                </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      label="Name"
+                      fullWidth
+                      value={profileData?.name}
+                      disabled
+                      variant="outlined"
+                    />
+                  </Grid>
 
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    label="Branch"
-                    fullWidth
-                    value={profileData?.branch}
-                    disabled
-                    variant="outlined"
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Controller
-                    name="type"
-                    control={control}
-                    render={({ field }) => (
-                      <FormControl fullWidth variant="outlined">
-                        <InputLabel>Complaint Type</InputLabel>
-                        <Select {...field} label="Complaint Type">
-                          <MenuItem value="Ragging related">
-                            Ragging related
-                          </MenuItem>
-                          <MenuItem value="Academic fees">
-                            Academic fees
-                          </MenuItem>
-                          <MenuItem value="Classes related">
-                            Classes related
-                          </MenuItem>
-                          <MenuItem value="Others">Others</MenuItem>
-                        </Select>
-                        {errors.type && (
-                          <Typography color="error">
-                            {errors.type.message}
-                          </Typography>
-                        )}
-                      </FormControl>
-                    )}
-                  />
-                </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      label="Branch"
+                      fullWidth
+                      value={profileData?.branch}
+                      disabled
+                      variant="outlined"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Controller
+                      name="type"
+                      control={control}
+                      render={({ field }) => (
+                        <FormControl fullWidth variant="outlined">
+                          <InputLabel>Complaint Type</InputLabel>
+                          <Select {...field} label="Complaint Type">
+                            <MenuItem value="Ragging related">
+                              Ragging related
+                            </MenuItem>
+                            <MenuItem value="Academic fees">
+                              Academic fees
+                            </MenuItem>
+                            <MenuItem value="Classes related">
+                              Classes related
+                            </MenuItem>
+                            <MenuItem value="Others">Others</MenuItem>
+                          </Select>
+                          {errors.type && (
+                            <Typography color="error">
+                              {errors.type.message}
+                            </Typography>
+                          )}
+                        </FormControl>
+                      )}
+                    />
+                  </Grid>
 
-                <Grid item xs={12} sm={6}>
-                  <Controller
-                    name="subject"
-                    control={control}
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        label="Subject"
-                        variant="outlined"
-                        fullWidth
-                        error={!!errors.subject}
-                        helperText={
-                          errors.subject ? errors.subject.message : ""
-                        }
-                      />
-                    )}
-                  />
-                </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Controller
+                      name="subject"
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          label="Subject"
+                          variant="outlined"
+                          fullWidth
+                          error={!!errors.subject}
+                          helperText={
+                            errors.subject ? errors.subject.message : ""
+                          }
+                        />
+                      )}
+                    />
+                  </Grid>
 
-                <Grid item xs={12}>
-                  <Controller
-                    name="description"
-                    control={control}
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        label="Description"
-                        variant="outlined"
-                        fullWidth
-                        multiline
-                        rows={4}
-                        error={!!errors.description}
-                        helperText={
-                          errors.description ? errors.description.message : ""
-                        }
-                      />
-                    )}
-                  />
-                </Grid>
+                  <Grid item xs={12}>
+                    <Controller
+                      name="description"
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          label="Description"
+                          variant="outlined"
+                          fullWidth
+                          multiline
+                          rows={4}
+                          error={!!errors.description}
+                          helperText={
+                            errors.description ? errors.description.message : ""
+                          }
+                        />
+                      )}
+                    />
+                  </Grid>
 
-                <Grid item xs={12} style={{ textAlign: "center" }}>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    sx={{
-                      width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
-                      backgroundColor:"rgb(107, 169, 169)"
-                    }}
-                  >
-                    Submit
-                  </Button>
+                  <Grid item xs={12} style={{ textAlign: "center" }}>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                      sx={{
+                        width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
+                        backgroundColor: "rgb(107, 169, 169)",
+                      }}
+                    >
+                      Submit
+                    </Button>
+                  </Grid>
                 </Grid>
-              </Grid>
-            </form>
+              </form>
             </Box>
           </Grid>
 
@@ -537,56 +542,89 @@ const ComplaintForm = () => {
             <Box
               sx={{
                 display: { xs: "none", sm: "none", md: "block", lg: "block" },
-                width: "300px",
+               
                 marginTop: "50px",
-                borderRadius:"15px"
+                borderRadius: "15px",
               }}
             >
-              <Slider {...settings}>
-                {slides.map((slide, index) => (
-                  <img src={`./images/${slide.image}`} alt="" key={index}  />
-                ))}
-              </Slider>
+             <img
+                  src={`./images/complaints1.png`}
+                  alt=""
+                  style={{ borderRadius: "10px", width: "450px" }}
+                />
+             
             </Box>
-            <Box sx={{marginTop:"50px"}}>
-            <Typography
-              variant="p"
-              sx={{ marginBottom: "5%", textAlign: "center", marginTop: "10px",fontSize:"1.2rem" }}
-            >
-              Previous Complaints
-            </Typography>
+            <Box sx={{ marginTop: "50px" }}>
+              <Typography
+                variant="p"
+                sx={{
+                  marginBottom: "5%",
+                  textAlign: "center",
+                  marginTop: "10px",
+                  fontSize: "1.2rem",
+                }}
+              >
+                Previous Complaints
+              </Typography>
             </Box>
             {previousRecord.length === 0 ? (
-               <center>
-              <img src="./images/No_data.png" alt="" style={{width:"310px",borderRadius:"10px",marginTop:"30px"}}/></center>
+              <center>
+                <img
+                  src="./images/No_data.png"
+                  alt=""
+                  style={{
+                    width: "310px",
+                    borderRadius: "10px",
+                    marginTop: "30px",
+                  }}
+                />
+              </center>
             ) : responsive ? (
               previousRecord
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => (
-                  <Card key={index} sx={{ marginBottom: 2, bgcolor: "#f5f5f5",textAlign:"justify",marginTop:"20px" }}>
+                  <Card
+                   variant="outlined"
+                    key={index}
+                    sx={{
+                      marginBottom: 2,
+                      bgcolor: "#f5f5f5",
+                      textAlign: "justify",
+                      marginTop: "20px",
+                    }}
+                  >
                     <CardContent>
-                     
                       <Typography color="textSecondary">
-                       <span style={{fontSize:"1.2rem"}}>Subject:</span> {row.complaint_type}
+                        <span style={{ fontSize: "1.0rem" }}>Subject:</span>{" "}
+                        {row.complaint_type}
                       </Typography>
                       <Typography color="textSecondary">
-                      <span style={{fontSize:"1.0rem"}}>Description:</span> {row.complaint_description}
+                        <span style={{ fontSize: "1.0rem" }}>Description:</span>{" "}
+                        {row.complaint_description}
                       </Typography>
                       <Typography color="textSecondary">
-                      <span style={{fontSize:"1.0rem"}}>Type:</span> {row.complaint_type}
+                        <span style={{ fontSize: "1.0rem" }}>Type:</span>{" "}
+                        {row.complaint_type}
                       </Typography>
-                      <Typography color="textSecondary"> <span style={{fontSize:"1.0rem"}}>Status:</span> {row.status}</Typography>
                       <Typography color="textSecondary">
-                      <span style={{fontSize:"1.0rem"}}>Date:</span> {row.registered_date}
+                        {" "}
+                        <span style={{ fontSize: "1.0rem" }}>Status:</span>{" "}
+                        {row.status}
                       </Typography>
-                     
+                      <Typography color="textSecondary">
+                        <span style={{ fontSize: "1.0rem" }}>Date:</span>{" "}
+                        {row.registered_date}
+                      </Typography>
                     </CardContent>
                   </Card>
                 ))
             ) : (
-              <TableContainer component={Paper} style={{marginTop:"20px"}}>
-                <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
-                  <TableHead style={{backgroundColor:"#D2E9E9"}}>
+              <TableContainer component={Paper} style={{ marginTop: "20px" }}>
+                <Table
+                  sx={{ minWidth: 500 }}
+                  aria-label="custom pagination table"
+                >
+                  <TableHead style={{ backgroundColor: "#D2E9E9" }}>
                     <TableRow>
                       <TableCell>Complaint Type</TableCell>
                       <TableCell>Subject</TableCell>
@@ -599,7 +637,16 @@ const ComplaintForm = () => {
                     {previousRecord.length === 0 ? (
                       <TableRow>
                         <center>
-                        <img src="./images/No_data.png" alt="" style={{width:"340px",borderRadius:"10px",marginTop:"30px"}}/></center>
+                          <img
+                            src="./images/No_data.png"
+                            alt=""
+                            style={{
+                              width: "340px",
+                              borderRadius: "10px",
+                              marginTop: "30px",
+                            }}
+                          />
+                        </center>
                       </TableRow>
                     ) : (
                       previousRecord
@@ -624,7 +671,7 @@ const ComplaintForm = () => {
                       </TableRow>
                     )}
                   </TableBody>
-                  <TableFooter style={{backgroundColor:"#D2E9E9"}}>
+                  <TableFooter style={{ backgroundColor: "#D2E9E9" }}>
                     <TableRow>
                       <TablePagination
                         rowsPerPageOptions={[
