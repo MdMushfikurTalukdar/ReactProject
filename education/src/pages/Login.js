@@ -73,7 +73,8 @@ export const LoginPage = () => {
       })
       .catch((err) => {
         console.log(err);
-        enqueueSnackbar(err.response.data.error.non_fields_errors[0], {
+        if(err?.response?.data?.error?.non_fields_errors?.[0]){
+        enqueueSnackbar(err?.response?.data?.error?.non_fields_errors?.[0], {
           variant: 'error',
           anchorOrigin: {
             vertical: 'bottom',
@@ -81,6 +82,19 @@ export const LoginPage = () => {
           },
           autoHideDuration: 3000,
         });
+      }
+      if(err?.response?.data?.errors?.registration_number?.
+        [0]){
+        enqueueSnackbar(err?.response?.data?.errors?.registration_number?.
+          [0], {
+          variant: 'error',
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'center',
+          },
+          autoHideDuration: 3000,
+        });
+      }
         setLoading(false);
       });
 
@@ -185,7 +199,7 @@ export const LoginPage = () => {
                 type="submit"
               >
                 {!loading && <p>Login</p>}
-                {loading && <CircularProgress style={{color:"white"}}/>}
+                {loading && <CircularProgress style={{color:"white",width:"20px",height:"22px"}}/>}
               </Button>
             </div>
           </form>
