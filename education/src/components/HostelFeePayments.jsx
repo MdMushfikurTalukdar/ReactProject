@@ -548,7 +548,7 @@ function HostelFeePayment() {
                     justifyContent="space-between"
                     alignItems="center"
                   >
-                    <Typography variant="subtitle1">Total Amount:</Typography>
+                    <Typography variant="subtitle1">Total Amount</Typography>
                     <Typography variant="h6">Rs: {total}/-</Typography>
                   </Box>
                 </Grid>
@@ -585,17 +585,17 @@ function HostelFeePayment() {
                   <>
                     <Grid item xs={4}>
                       <Typography variant="subtitle1" fontWeight="bold">
-                        Fee Type:
+                        Fee Type
                       </Typography>
                     </Grid>
                     <Grid item xs={4}>
                       <Typography variant="subtitle1" fontWeight="bold">
-                        From:
+                        From
                       </Typography>
                     </Grid>
                     <Grid item xs={4}>
                       <Typography variant="subtitle1" fontWeight="bold">
-                        To:
+                        To
                       </Typography>
                     </Grid>
                   </>
