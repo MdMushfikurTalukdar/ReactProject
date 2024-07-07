@@ -397,7 +397,7 @@ const ComplaintForm = () => {
                 <img
                   src={`./images/complaints2.png`}
                   alt=""
-                  style={{ borderRadius: "10px", width: "310px" }}
+                  style={{ borderRadius: "10px", width: "300px" }}
                 />
               </Box>
             </center>
@@ -591,6 +591,7 @@ const ComplaintForm = () => {
                       bgcolor: "#f5f5f5",
                       textAlign: "justify",
                       marginTop: "20px",
+                      maxWidth:310
                     }}
                   >
                     <CardContent>

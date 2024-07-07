@@ -425,7 +425,7 @@ export const HostelRoomRequest = () => {
           </Box>
         </Grid>
 
-        <Grid item xs={12} sm={12} md={12} lg={6} sx={{textAlign:"-webkit-center"}}>
+        <Grid item xs={12} sm={12} md={12} lg={6}>
           <Box>
             
 
@@ -483,25 +483,29 @@ export const HostelRoomRequest = () => {
                     key={index}
                     variant="outlined"
                     sx={{
-                      minWidth: 275,
+                      maxWidth: 305,
                       marginBottom: 2,
-                      backgroundColor:"rgb(243 244 246)"
-                      
+                      backgroundColor:"rgb(243 244 246)",
+                      marginLeft:"20px",
+                      padding:1
                     }}
                   >
                     <CardContent>
                       <Typography
-                        sx={{ fontSize: 16,textAlign:"center" }}
+                        sx={{ fontSize: 16}}
                         color="text.secondary"
                         gutterBottom
+                        variant="p"
                         
                       >
                         Previous Request Details
                       </Typography>
-                      <Typography color="text.secondary" sx={{ fontSize: 15 }}>
+                      <br/>
+                      <Typography variant="p" color="text.secondary" sx={{ fontSize: 15 }}>
                         Status: {data?.status}
                       </Typography>
-                      <Typography color="text.secondary" sx={{ fontSize: 15,textAlign:"center" }}>
+                      <br/>
+                      <Typography variant="p" color="text.secondary" sx={{ fontSize: 15}}>
                       Alloted Room No: 
                         {allotedRoom.length>0 ? (
                               <Typography
@@ -514,32 +518,7 @@ export const HostelRoomRequest = () => {
                             ) : <p>Not alloted by now.</p>
                           }
                       </Typography>
-                      <Typography
-                        variant="body2"
-                        color="text.secondary"
-                        sx={{ fontSize: 15 }}
-                      >
-                        Marksheet Image:
-                        <br />
-                        {data?.latest_marksheet !== null ? (
-                          <img
-                            src={`data:image/*;base64,${decodeURIComponent(
-                              data?.latest_marksheet
-                            )}`}
-                            alt="Marksheet"
-                            style={{
-                              width: "150px",
-                              height: "150px",
-                              margin: "10px 0px",
-                              borderRadius: "10px",
-                             
-                              objectFit:"fill"
-                            }}
-                          />
-                        ) : (
-                          <p>Null</p>
-                        )}
-                      </Typography>
+                     
                     </CardContent>
                   </Card>
                 ))

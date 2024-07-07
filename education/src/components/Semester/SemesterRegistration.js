@@ -599,7 +599,7 @@ export function SemesterRegistration() {
                 <Card
                 variant="outlined"
                   sx={{
-                    minWidth: {lg:775,sm:400,xs:280,md:575},
+                    minWidth: {lg:775,sm:400,xs:305,md:575},
                     marginBottom: 2,
                     color:"whitesmoke",
                     height: 150,
