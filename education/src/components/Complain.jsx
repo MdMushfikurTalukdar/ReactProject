@@ -158,6 +158,63 @@ const ComplaintForm = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
 
+  
+  const regenerateToken = () => {
+    if (localStorage?.getItem("accesstoken")) {
+      const response = jwtDecode(localStorage?.getItem("accesstoken"));
+      const response1 = jwtDecode(localStorage?.getItem("refreshtoken"));
+      if (response.exp < Math.floor(Date.now() / 1000) || response1.exp < Math.floor(Date.now() / 1000)) {
+        navigate("/login");
+      }else{
+        if (localStorage.getItem("refreshtoken") && localStorage.getItem("accesstoken")) {
+          let data = {
+            refresh: localStorage?.getItem("refreshtoken"),
+          };
+    
+          let config = {
+            method: "post",
+            maxBodyLength: Infinity,
+            url: "https://amarnath013.pythonanywhere.com/api/user/token/refresh/",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage?.getItem("accesstoken")}`,
+            },
+            data: data,
+          };
+    
+          axios
+            .request(config)
+            .then((response) => {
+              console.log(JSON.stringify(response.data));
+              localStorage.setItem("accesstoken", response.data.access);
+            })
+            .catch((error) => {
+              if(error?.message==='Request failed with status code 500'){
+                navigate('/login');
+              }
+              if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+                enqueueSnackbar("Logging out", {
+                  variant: "error",
+                  anchorOrigin: {
+                    vertical: "bottom",
+                    horizontal: "center",
+                  },
+                  autoHideDuration: 3000,
+                });  
+                navigate("/login");
+              }
+              console.log(error);
+            });
+        } else {
+          navigate("/login");
+        }
+      }
+    } else {
+      navigate("/login");
+    }
+   
+  };
+
   useEffect(() => {
     const handleResize = () => {
       setResponsive(window.innerWidth < 684);
@@ -184,9 +241,10 @@ const ComplaintForm = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("accesstoken");
-    if (!token) {
-      window.location.href = "/login";
-      return;
+    const token1 = localStorage.getItem("refreshtoken");
+    if (!token && !token1) {
+      navigate("/login");
+  
     }
 
     const fetchProfileData = async () => {
@@ -210,6 +268,17 @@ const ComplaintForm = () => {
         });
       } catch (error) {
         console.error("Error fetching profile data:", error);
+        if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+          enqueueSnackbar("Logging out", {
+            variant: "error",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 3000,
+          });  
+          navigate("/login");
+        }
       }
     };
 
@@ -227,6 +296,7 @@ const ComplaintForm = () => {
         setComplaints(data.reverse());
       } catch (error) {
         console.error("Error fetching complaints:", error);
+
       }
     };
 
@@ -244,7 +314,7 @@ const ComplaintForm = () => {
   });
 
   useEffect(() => {
-    if (localStorage.getItem("accesstoken") !== null) {
+    if (localStorage.getItem("accesstoken") !== null && localStorage.getItem("refreshtoken")!==null) {
       let config = {
         method: "get",
         maxBodyLength: Infinity,
@@ -258,6 +328,29 @@ const ComplaintForm = () => {
         .request(config)
         .then((response) => {
           setPreviousRecord(response.data);
+          const token = localStorage.getItem("accesstoken");
+          const token1 = localStorage.getItem("refreshtoken");
+         
+          if (token && token1) {
+            let currentDate = new Date();
+            const decodedToken = jwtDecode(token);
+  
+            if (
+              decodedToken.exp * 1000 - currentDate.getTime() <
+              59 * 60 * 1000
+            ) {
+              try {
+                regenerateToken(); // Wait for the token regeneration to complete
+              } catch (error) {
+                console.error(
+                  "Error in request interceptor while regenerating token:",
+                  error
+                );
+              }
+            }
+          }else{
+            navigate('/login');
+          }
         })
         .catch((error) => {
           console.log(error);
@@ -310,6 +403,29 @@ const ComplaintForm = () => {
     axios
       .request(config)
       .then((response) => {
+        const token = localStorage.getItem("accesstoken");
+        const token1 = localStorage.getItem("refreshtoken");
+       
+        if (token && token1) {
+          let currentDate = new Date();
+          const decodedToken = jwtDecode(token);
+
+          if (
+            decodedToken.exp * 1000 - currentDate.getTime() <
+            59 * 60 * 1000
+          ) {
+            try {
+              regenerateToken(); // Wait for the token regeneration to complete
+            } catch (error) {
+              console.error(
+                "Error in request interceptor while regenerating token:",
+                error
+              );
+            }
+          }
+        }else{
+          navigate('/login');
+        }
         toast.success("Complaint registered successfully!", {
           position: "top-center",
           autoClose: 5000,

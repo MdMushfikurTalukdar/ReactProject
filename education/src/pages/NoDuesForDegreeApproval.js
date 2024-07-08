@@ -25,6 +25,61 @@ export const NoDuesForDegreeApproval = () => {
   const [rejected, setRejected] = useState([]);
   const [loading,setLoading]=useState(true);
 
+  const regenerateToken = () => {
+    if (localStorage?.getItem("accesstoken")) {
+      const response = jwtDecode(localStorage?.getItem("accesstoken"));
+      const response1 = jwtDecode(localStorage?.getItem("refreshtoken"));
+      if (response.exp < Math.floor(Date.now() / 1000) || response1.exp < Math.floor(Date.now() / 1000)) {
+        navigate("/login");
+      }else{
+        if (localStorage.getItem("refreshtoken") && localStorage.getItem("accesstoken")) {
+          let data = {
+            refresh: localStorage?.getItem("refreshtoken"),
+          };
+    
+          let config = {
+            method: "post",
+            maxBodyLength: Infinity,
+            url: "https://amarnath013.pythonanywhere.com/api/user/token/refresh/",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage?.getItem("accesstoken")}`,
+            },
+            data: data,
+          };
+    
+          axios
+            .request(config)
+            .then((response) => {
+              console.log(JSON.stringify(response.data));
+              localStorage.setItem("accesstoken", response.data.access);
+            })
+            .catch((error) => {
+              if(error?.message==='Request failed with status code 500'){
+                navigate('/login');
+              }
+              if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+                enqueueSnackbar("Logging out", {
+                  variant: "error",
+                  anchorOrigin: {
+                    vertical: "bottom",
+                    horizontal: "center",
+                  },
+                  autoHideDuration: 3000,
+                });  
+                navigate("/login");
+              }
+              console.log(error);
+            });
+        } else {
+          navigate("/login");
+        }
+      }
+    } else {
+      navigate("/login");
+    }
+   
+  };
   useEffect(() => {
     if (localStorage?.getItem("accesstoken")) {
       const response = jwtDecode(localStorage?.getItem("accesstoken"));
@@ -67,6 +122,29 @@ export const NoDuesForDegreeApproval = () => {
         .request(config)
         .then((response) => {
           console.log(response?.data);
+          const token = localStorage.getItem("accesstoken");
+          const token1 = localStorage.getItem("refreshtoken");
+         
+          if (token && token1) {
+            let currentDate = new Date();
+            const decodedToken = jwtDecode(token);
+  
+            if (
+              decodedToken.exp * 1000 - currentDate.getTime() <
+              59 * 60 * 1000
+            ) {
+              try {
+                regenerateToken(); // Wait for the token regeneration to complete
+              } catch (error) {
+                console.error(
+                  "Error in request interceptor while regenerating token:",
+                  error
+                );
+              }
+            }
+          }else{
+            navigate('/login');
+          }      
           setLoading(false);
           setAllData(response?.data);
           const filteredResults = response?.data.filter(
@@ -166,10 +244,36 @@ export const NoDuesForDegreeApproval = () => {
       },
       data: data,
     };
-
+    const token = localStorage.getItem("accesstoken");
+    const token1 = localStorage.getItem("refreshtoken");
+   
+    if (token && token1) {
     axios
       .request(config)
       .then((response) => {
+        const token = localStorage.getItem("accesstoken");
+        const token1 = localStorage.getItem("refreshtoken");
+       
+        if (token && token1) {
+          let currentDate = new Date();
+          const decodedToken = jwtDecode(token);
+
+          if (
+            decodedToken.exp * 1000 - currentDate.getTime() <
+            59 * 60 * 1000
+          ) {
+            try {
+              regenerateToken(); // Wait for the token regeneration to complete
+            } catch (error) {
+              console.error(
+                "Error in request interceptor while regenerating token:",
+                error
+              );
+            }
+          }
+        }else{
+          navigate('/login');
+        }      
         const itemToApprove = result.find(
           (item) => item?.requested_data?.id === user_id
         );
@@ -206,6 +310,9 @@ export const NoDuesForDegreeApproval = () => {
             navigate("/login");
           }
       });
+    }else{
+      navigate('/login')
+    }
   };
 
   const handleReapproval=(user_id)=>{
@@ -227,9 +334,38 @@ export const NoDuesForDegreeApproval = () => {
           data: data,
         };
     
+        const token = localStorage.getItem("accesstoken");
+    const token1 = localStorage.getItem("refreshtoken");
+   
+    if (token && token1) {
         axios
           .request(config)
           .then((response) => {
+
+            const token = localStorage.getItem("accesstoken");
+            const token1 = localStorage.getItem("refreshtoken");
+           
+            if (token && token1) {
+              let currentDate = new Date();
+              const decodedToken = jwtDecode(token);
+    
+              if (
+                decodedToken.exp * 1000 - currentDate.getTime() <
+                59 * 60 * 1000
+              ) {
+                try {
+                  regenerateToken(); // Wait for the token regeneration to complete
+                } catch (error) {
+                  console.error(
+                    "Error in request interceptor while regenerating token:",
+                    error
+                  );
+                }
+              }
+            }else{
+              navigate('/login');
+            }      
+
             const itemToApprove = allData?.find(
               (item) => item?.requested_data?.id === user_id
             );
@@ -271,6 +407,9 @@ export const NoDuesForDegreeApproval = () => {
                 navigate("/login");
               }
           });
+        }else{
+          navigate('/login')
+        }
 };
   
 
@@ -292,9 +431,38 @@ export const NoDuesForDegreeApproval = () => {
       data: data,
     };
 
+    const token = localStorage.getItem("accesstoken");
+    const token1 = localStorage.getItem("refreshtoken");
+   
+    if (token && token1) {
     axios
       .request(config)
       .then((response) => {
+
+        const token = localStorage.getItem("accesstoken");
+        const token1 = localStorage.getItem("refreshtoken");
+       
+        if (token && token1) {
+          let currentDate = new Date();
+          const decodedToken = jwtDecode(token);
+
+          if (
+            decodedToken.exp * 1000 - currentDate.getTime() <
+            59 * 60 * 1000
+          ) {
+            try {
+              regenerateToken(); // Wait for the token regeneration to complete
+            } catch (error) {
+              console.error(
+                "Error in request interceptor while regenerating token:",
+                error
+              );
+            }
+          }
+        }else{
+          navigate('/login');
+        }      
+
         const itemToReject = result.find(
           (item) => item?.requested_data?.id === user_id
         );
@@ -334,6 +502,9 @@ export const NoDuesForDegreeApproval = () => {
         }
         console.log(error);
       });
+    }else{
+      navigate("/login");
+    }
   };
   if (loading) {
     return (

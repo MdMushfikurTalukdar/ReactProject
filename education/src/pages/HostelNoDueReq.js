@@ -62,9 +62,64 @@ export const HostelNoDueReq = () => {
     }
   }, []);
 
+  const regenerateToken = () => {
+    if (localStorage?.getItem("accesstoken")) {
+      const response = jwtDecode(localStorage?.getItem("accesstoken"));
+      const response1 = jwtDecode(localStorage?.getItem("refreshtoken"));
+      if (response.exp < Math.floor(Date.now() / 1000) || response1.exp < Math.floor(Date.now() / 1000)) {
+        navigate("/login");
+      }else{
+        if (localStorage.getItem("refreshtoken") && localStorage.getItem("accesstoken")) {
+          let data = {
+            refresh: localStorage?.getItem("refreshtoken"),
+          };
+    
+          let config = {
+            method: "post",
+            maxBodyLength: Infinity,
+            url: "https://amarnath013.pythonanywhere.com/api/user/token/refresh/",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage?.getItem("accesstoken")}`,
+            },
+            data: data,
+          };
+    
+          axios
+            .request(config)
+            .then((response) => {
+              console.log(JSON.stringify(response.data));
+              localStorage.setItem("accesstoken", response.data.access);
+            })
+            .catch((error) => {
+              if(error?.message==='Request failed with status code 500'){
+                navigate('/login');
+              }
+              if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+                enqueueSnackbar("Logging out", {
+                  variant: "error",
+                  anchorOrigin: {
+                    vertical: "bottom",
+                    horizontal: "center",
+                  },
+                  autoHideDuration: 3000,
+                });  
+                navigate("/login");
+              }
+              console.log(error);
+            });
+        } else {
+          navigate("/login");
+        }
+      }
+    } else {
+      navigate("/login");
+    }
+   
+  };
   
   useEffect(() => {
-    if(localStorage.getItem('accesstoken')!==null){
+    if(localStorage.getItem('accesstoken')!==null || localStorage.getItem('refreshtoken')!==null){
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
@@ -73,9 +128,38 @@ export const HostelNoDueReq = () => {
         Authorization: `Bearer ${localStorage.getItem('accesstoken')}`
       }
     };
+    const token = localStorage.getItem("accesstoken");
+    const token1 = localStorage.getItem("refreshtoken");
     
+    if(token && token1){
     axios.request(config)
     .then((response) => {
+
+      const token = localStorage.getItem("accesstoken");
+      const token1 = localStorage.getItem("refreshtoken");
+     
+      if (token && token1) {
+        let currentDate = new Date();
+        const decodedToken = jwtDecode(token);
+
+        if (
+          decodedToken.exp * 1000 - currentDate.getTime() <
+          59 * 60 * 1000
+        ) {
+          try {
+            regenerateToken(); // Wait for the token regeneration to complete
+          } catch (error) {
+            console.error(
+              "Error in request interceptor while regenerating token:",
+              error
+            );
+          }
+        }
+      }else{
+        navigate('/login');
+      }      
+
+
       const payments = response.data.reverse();
       setLoading(false);
       const maintainancePayment = payments.find(payment => payment.fee_type === "maintainance_fee");
@@ -90,7 +174,21 @@ export const HostelNoDueReq = () => {
     })
     .catch((error) => {
       console.log(error);
+      if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+        enqueueSnackbar("Logging out", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 3000,
+        });  
+        navigate("/login");
+      }
     });
+  }else{
+    navigate('/login');
+  }
   }else{
     navigate('/login');
   }
@@ -121,7 +219,7 @@ export const HostelNoDueReq = () => {
 
 
   const onSubmit = (data) => {
-    if(localStorage.getItem('accesstoken')!==null){
+    if(localStorage.getItem('accesstoken')!==null && localStorage.getItem("refreshtoken")!==null){
     if(maintainanceToDate===null || messToDate===null)
     {
       return enqueueSnackbar("Have not paid Maintainance or Mess", {
@@ -152,10 +250,37 @@ export const HostelNoDueReq = () => {
       data : data1
     };
     
+    const token = localStorage.getItem("accesstoken");
+    const token1 = localStorage.getItem("refreshtoken");
+    
+    if(token && token1){
     axios.request(config)
     .then((response) => {
       console.log(JSON.stringify(response.data));
 
+      const token = localStorage.getItem("accesstoken");
+      const token1 = localStorage.getItem("refreshtoken");
+     
+      if (token && token1) {
+        let currentDate = new Date();
+        const decodedToken = jwtDecode(token);
+
+        if (
+          decodedToken.exp * 1000 - currentDate.getTime() <
+          59 * 60 * 1000
+        ) {
+          try {
+            regenerateToken(); // Wait for the token regeneration to complete
+          } catch (error) {
+            console.error(
+              "Error in request interceptor while regenerating token:",
+              error
+            );
+          }
+        }
+      }else{
+        navigate('/login');
+      }      
       enqueueSnackbar("Request Sent Successfully", {
         variant: "success",
         anchorOrigin: {
@@ -184,6 +309,9 @@ export const HostelNoDueReq = () => {
       }
       console.log(error);
     });
+  }else{
+    navigate('/login');
+  }
   }else{
     navigate('/login');
   }

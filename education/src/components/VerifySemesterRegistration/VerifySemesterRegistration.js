@@ -13,6 +13,9 @@ const VerifySemesterRegistration = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [loading,setLoading]=useState(true);
 
+
+
+
   useEffect(() => {
   
     console.log(localStorage.getItem("accesstoken"))
@@ -44,6 +47,7 @@ const VerifySemesterRegistration = () => {
         setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
+
       }
     };
 

@@ -74,17 +74,126 @@ function HostelFeePayment() {
     resolver: yupResolver(schema),
   });
 
+  const regenerateToken = () => {
+    if (localStorage?.getItem("accesstoken")) {
+      const response = jwtDecode(localStorage?.getItem("accesstoken"));
+      const response1 = jwtDecode(localStorage?.getItem("refreshtoken"));
+      if (
+        response.exp < Math.floor(Date.now() / 1000) ||
+        response1.exp < Math.floor(Date.now() / 1000)
+      ) {
+        navigate("/login");
+      } else {
+        if (
+          localStorage.getItem("refreshtoken") &&
+          localStorage.getItem("accesstoken")
+        ) {
+          let data = {
+            refresh: localStorage?.getItem("refreshtoken"),
+          };
+
+          let config = {
+            method: "post",
+            maxBodyLength: Infinity,
+            url: "https://amarnath013.pythonanywhere.com/api/user/token/refresh/",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage?.getItem("accesstoken")}`,
+            },
+            data: data,
+          };
+
+          axios
+            .request(config)
+            .then((response) => {
+              console.log(JSON.stringify(response.data));
+              localStorage.setItem("accesstoken", response.data.access);
+            })
+            .catch((error) => {
+              if (error?.message === "Request failed with status code 500") {
+                navigate("/login");
+              }
+              if (
+                error?.response?.data?.errors?.detail ===
+                "Given token not valid for any token type"
+              ) {
+                enqueueSnackbar("Logging out", {
+                  variant: "error",
+                  anchorOrigin: {
+                    vertical: "bottom",
+                    horizontal: "center",
+                  },
+                  autoHideDuration: 3000,
+                });
+                navigate("/login");
+              }
+              console.log(error);
+            });
+        } else {
+          navigate("/login");
+        }
+      }
+    } else {
+      navigate("/login");
+    }
+  };
+
   const fetchData = async () => {
-    if (localStorage.getItem("accesstoken") !== null) {
+    if (
+      localStorage.getItem("accesstoken") !== null &&
+      localStorage.getItem("refreshtoken")
+    ) {
       try {
-        const response = await axios.get(`${BaseUrl}/fees/`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
-          },
-        });
-        console.log(response.data);
-        setLoading(false);
-        setFees(response.data);
+        axios
+          .get(`${BaseUrl}/fees/`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
+            },
+          })
+          .then((response) => {
+            console.log(response.data);
+            setLoading(false);
+            setFees(response.data);
+            const token = localStorage.getItem("accesstoken");
+            const token1 = localStorage.getItem("refreshtoken");
+
+            if (token && token1) {
+              let currentDate = new Date();
+              const decodedToken = jwtDecode(token);
+
+              if (
+                decodedToken.exp * 1000 - currentDate.getTime() <
+                59 * 60 * 1000
+              ) {
+                try {
+                  regenerateToken(); // Wait for the token regeneration to complete
+                } catch (error) {
+                  console.error(
+                    "Error in request interceptor while regenerating token:",
+                    error
+                  );
+                }
+              }
+            } else {
+              navigate("/login");
+            }
+          })
+          .catch((error) => {
+            if (
+              error?.response?.data?.errors?.detail ===
+              "Given token not valid for any token type"
+            ) {
+              enqueueSnackbar("Logging out", {
+                variant: "error",
+                anchorOrigin: {
+                  vertical: "bottom",
+                  horizontal: "center",
+                },
+                autoHideDuration: 3000,
+              });
+              navigate("/login");
+            }
+          });
       } catch (error) {
         console.error("Failed to fetch fees:", error);
         if (error?.response?.data?.message === "ID does not Exists") {
@@ -119,7 +228,10 @@ function HostelFeePayment() {
   }, []);
 
   useEffect(() => {
-    if (localStorage.getItem("accesstoken") !== null) {
+    if (
+      localStorage.getItem("accesstoken") !== null &&
+      localStorage.getItem("refreshtoken") !== null
+    ) {
       let config = {
         method: "get",
         maxBodyLength: Infinity,
@@ -139,13 +251,30 @@ function HostelFeePayment() {
         })
         .catch((error) => {
           console.log(error);
+          // if (
+          //   error?.response?.data?.errors?.detail ===
+          //   "Given token not valid for any token type"
+          // ) {
+          //   enqueueSnackbar("Logging out", {
+          //     variant: "error",
+          //     anchorOrigin: {
+          //       vertical: "bottom",
+          //       horizontal: "center",
+          //     },
+          //     autoHideDuration: 3000,
+          //   });
+          //   navigate("/login");
+          // }
         });
     } else {
       navigate("/login");
     }
   }, []);
   useEffect(() => {
-    if (localStorage.getItem("accesstoken") !== null) {
+    if (
+      localStorage.getItem("accesstoken") !== null &&
+      localStorage.getItem("refreshtoken") !== null
+    ) {
       const fetchProfileData = async () => {
         try {
           const response = await axios.get(`${BaseUrl}/profile`, {
@@ -162,6 +291,20 @@ function HostelFeePayment() {
           });
         } catch (error) {
           console.error("Error fetching profile data:", error);
+          // if (
+          //   error?.response?.data?.errors?.detail ===
+          //   "Given token not valid for any token type"
+          // ) {
+          //   enqueueSnackbar("Logging out", {
+          //     variant: "error",
+          //     anchorOrigin: {
+          //       vertical: "bottom",
+          //       horizontal: "center",
+          //     },
+          //     autoHideDuration: 3000,
+          //   });
+          //   navigate("/login");
+          // }
         }
       };
 
@@ -172,69 +315,157 @@ function HostelFeePayment() {
   }, []);
 
   useEffect(() => {
-    fetchData();
+    const token = localStorage.getItem("accesstoken");
+    const token1 = localStorage.getItem("refreshtoken");
+
+    if (token && token1) {
+      fetchData();
+    } else {
+      navigate("/login");
+    }
   }, []);
 
   const onSubmit = async (data) => {
-    try {
-      const response = await axios.post(
-        `${BaseUrl}/mess-fees-payment/`,
-        {
-          registration_details: id,
-          from_date: dayjs(data.startDate).format("YYYY-MM"),
-          to_date: dayjs(data.endDate).format("YYYY-MM"),
-          // mess_fees: data.feeType === "Mess_fees" ? fees.Mess_fees : null,
-          fee_type: data.feeType,
-          //   data.feeType === "Maintainance_fees"
-          //     ? fees.Maintainance_fees
-          //     : null,
-          // security_fees:
-          //   data.feeType === "Security_Deposit" ? fees.Security_Deposit : null,
-          total_fees: total,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
-          },
+    const token = localStorage.getItem("accesstoken");
+    const token1 = localStorage.getItem("refreshtoken");
+
+    if (token && token1) {
+      const token = localStorage.getItem("accesstoken");
+      const token1 = localStorage.getItem("refreshtoken");
+
+      if (token && token1) {
+        let currentDate = new Date();
+        const decodedToken = jwtDecode(token);
+
+        if (decodedToken.exp * 1000 - currentDate.getTime() < 59 * 60 * 1000) {
+          try {
+            regenerateToken(); // Wait for the token regeneration to complete
+          } catch (error) {
+            console.error(
+              "Error in request interceptor while regenerating token:",
+              error
+            );
+          }
         }
-      );
-      console.log(response);
-      enqueueSnackbar("Payment request successful", {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "bottom",
-          horizontal: "center",
-        },
-        autoHideDuration: 3000,
-      });
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-    } catch (error) {
-      console.error("Payment request error:", error);
-      if (
-        error?.response?.data?.errors?.detail ===
-        "Given token not valid for any token type"
-      ) {
-        enqueueSnackbar("Logging out", {
-          variant: "error",
-          anchorOrigin: {
-            vertical: "bottom",
-            horizontal: "center",
-          },
-          autoHideDuration: 3000,
-        });
+      } else {
         navigate("/login");
       }
-      enqueueSnackbar("Caretaker have not alloted a room to you yet.", {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "bottom",
-          horizontal: "center",
-        },
-        autoHideDuration: 3000,
-      });
+
+      if (token && token1) {
+        try {
+          axios
+            .post(
+              `${BaseUrl}/mess-fees-payment/`,
+              {
+                registration_details: id,
+                from_date: dayjs(data.startDate).format("YYYY-MM"),
+                to_date: dayjs(data.endDate).format("YYYY-MM"),
+
+                fee_type: data.feeType,
+
+                total_fees: total,
+              },
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${localStorage.getItem(
+                    "accesstoken"
+                  )}`,
+                },
+              }
+            )
+            .then((response) => {
+              const token = localStorage.getItem("accesstoken");
+              const token1 = localStorage.getItem("refreshtoken");
+
+              if (token && token1) {
+                let currentDate = new Date();
+                const decodedToken = jwtDecode(token);
+
+                if (
+                  decodedToken.exp * 1000 - currentDate.getTime() <
+                  59 * 60 * 1000
+                ) {
+                  try {
+                    regenerateToken(); // Wait for the token regeneration to complete
+                  } catch (error) {
+                    console.error(
+                      "Error in request interceptor while regenerating token:",
+                      error
+                    );
+                  }
+                }
+              } else {
+                navigate("/login");
+              }
+              console.log(response);
+              enqueueSnackbar("Payment request successful", {
+                variant: "success",
+                anchorOrigin: {
+                  vertical: "bottom",
+                  horizontal: "center",
+                },
+                autoHideDuration: 3000,
+              });
+              setTimeout(() => {
+                window.location.reload();
+              }, 2000);
+            })
+            .catch((error) => {
+              console.error("Payment request error:", error);
+              if (
+                error?.response?.data?.errors?.detail ===
+                "Given token not valid for any token type"
+              ) {
+                enqueueSnackbar("Logging out", {
+                  variant: "error",
+                  anchorOrigin: {
+                    vertical: "bottom",
+                    horizontal: "center",
+                  },
+                  autoHideDuration: 3000,
+                });
+                navigate("/login");
+              }
+              enqueueSnackbar("Caretaker have not alloted a room to you yet.", {
+                variant: "error",
+                anchorOrigin: {
+                  vertical: "bottom",
+                  horizontal: "center",
+                },
+                autoHideDuration: 3000,
+              });
+            });
+        } catch (error) {
+          console.error("Payment request error:", error);
+          if (
+            error?.response?.data?.errors?.detail ===
+            "Given token not valid for any token type"
+          ) {
+            enqueueSnackbar("Logging out", {
+              variant: "error",
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "center",
+              },
+              autoHideDuration: 3000,
+            });
+            navigate("/login");
+          }
+          enqueueSnackbar("Caretaker have not alloted a room to you yet.", {
+            variant: "error",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 3000,
+          });
+        }
+      } else {
+        navigate("/login");
+      }
+    } else {
+      navigate("/login");
     }
   };
 
@@ -257,7 +488,14 @@ function HostelFeePayment() {
       }
     };
 
-    fetchPayments();
+    const token = localStorage.getItem("accesstoken");
+    const token1 = localStorage.getItem("refreshtoken");
+
+    if (token && token1) {
+      fetchPayments();
+    } else {
+      navigate("/login");
+    }
   }, []);
 
   const handleStartDateChange = (date) => {
@@ -304,7 +542,7 @@ function HostelFeePayment() {
 
   return (
     <Container maxWidth="lg">
-      <Box elevation={0} sx={{ p: { lg: 1, md: 1 ,xs:0}, mt: 3 }}>
+      <Box elevation={0} sx={{ p: { lg: 1, md: 1, xs: 0 }, mt: 3 }}>
         <p
           style={{
             marginBottom: "50px",
@@ -322,8 +560,7 @@ function HostelFeePayment() {
               md: "none",
               lg: "none",
             },
-            marginBottom:"10px"
-          
+            marginBottom: "10px",
           }}
         >
           <center style={{ marginBottom: "35px" }}>
@@ -336,234 +573,243 @@ function HostelFeePayment() {
         </Box>
         <Grid container spacing={4}>
           <Grid item xs={12} sm={12} md={6} lg={6}>
-          <Box
+            <Box
               sx={{
-                backgroundColor: {xs:"rgb(243 244 246)",lg:"transparent",md:"transparent",sm:"transparent"},
-                padding: {lg:"0px",md:"0px",xs:"15px",sm:"0px"},
-                marginTop: {lg:"42px",md:"42px",xs:"29px",sm:"29px"},
-               
-                borderRadius: "8px"
+                backgroundColor: {
+                  xs: "rgb(243 244 246)",
+                  lg: "transparent",
+                  md: "transparent",
+                  sm: "transparent",
+                },
+                padding: { lg: "0px", md: "0px", xs: "15px", sm: "0px" },
+                marginTop: { lg: "42px", md: "42px", xs: "29px", sm: "29px" },
+
+                borderRadius: "8px",
               }}
             >
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    label="Name"
-                    variant="outlined"
-                    fullWidth
-                    sx={{
-                      marginTop:{
-                        xs:"3px",lg:"0px",sm:"0px",md:"0px"
-                      }
-                    }}
-                    value={profileData.name}
-                    disabled
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <CiUser />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      label="Name"
+                      variant="outlined"
+                      fullWidth
+                      sx={{
+                        marginTop: {
+                          xs: "3px",
+                          lg: "0px",
+                          sm: "0px",
+                          md: "0px",
+                        },
+                      }}
+                      value={profileData.name}
+                      disabled
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <CiUser />
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      label="Registration No"
+                      variant="outlined"
+                      fullWidth
+                      value={profileData.registrationNo}
+                      disabled
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <PiIdentificationBadgeThin />
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Controller
+                      name="feeType"
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <PiMoneyWavy />
+                              </InputAdornment>
+                            ),
+                          }}
+                          select
+                          label="Fee Type"
+                          variant="outlined"
+                          fullWidth
+                          error={!!errors.feeType}
+                          helperText={errors.feeType?.message}
+                        >
+                          <MenuItem value="maintainance_fee">
+                            Maintenance Fee
+                          </MenuItem>
+                          <MenuItem value="mess_fee">Mess Fee</MenuItem>
+                          <MenuItem value="security_fee">
+                            Security Money
+                          </MenuItem>
+                        </TextField>
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={6} sm={6} md={12} lg={12}>
+                    <Controller
+                      control={control}
+                      name="startDate"
+                      render={({ field }) => (
+                        <DatePicker
+                          {...field}
+                          selected={field.value}
+                          onChange={handleStartDateChange}
+                          dateFormat="MMMM yyyy"
+                          minDate={new Date()}
+                          showMonthYearPicker
+                          customInput={
+                            <TextField
+                              label="Start Date"
+                              variant="outlined"
+                              fullWidth
+                              error={!!errors.startDate}
+                              helperText={errors.startDate?.message}
+                              InputProps={{
+                                endAdornment: (
+                                  <InputAdornment position="end">
+                                    <MdDateRange />
+                                  </InputAdornment>
+                                ),
+                              }}
+                              sx={{
+                                width: {
+                                  lg: "225%",
+                                  md: "calc(100vw - 55vw)",
+                                  xs: "100%",
+                                  sm: "46vw",
+                                },
+                              }}
+                            />
+                          }
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={6} sm={6} md={12} lg={12}>
+                    <Controller
+                      control={control}
+                      name="endDate"
+                      render={({ field }) => (
+                        <DatePicker
+                          {...field}
+                          selected={field.value}
+                          onChange={handleEndDateChange}
+                          dateFormat="MMMM yyyy"
+                          showMonthYearPicker
+                          customInput={
+                            <TextField
+                              label="End Date"
+                              variant="outlined"
+                              fullWidth
+                              error={!!errors.endDate}
+                              helperText={errors.endDate?.message}
+                              InputProps={{
+                                endAdornment: (
+                                  <InputAdornment position="end">
+                                    <MdDateRange />
+                                  </InputAdornment>
+                                ),
+                              }}
+                              sx={{
+                                width: {
+                                  lg: "225%",
+                                  md: "calc(100vw - 55vw)",
+                                  xs: "100%",
+                                  sm: "46vw",
+                                },
+                              }}
+                            />
+                          }
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Controller
+                      name="noOfMonths"
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          placeholder="Number of Months"
+                          variant="outlined"
+                          fullWidth
+                          error={!!errors.noOfMonths}
+                          helperText={errors.noOfMonths?.message}
+                          disabled
+                          InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <IoMdTime />
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Controller
+                      name="monthlyCharges"
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          placeholder="Monthly Charges"
+                          variant="outlined"
+                          fullWidth
+                          error={!!errors.monthlyCharges}
+                          helperText={errors.monthlyCharges?.message}
+                          disabled
+                          InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <RiMoneyRupeeCircleLine />
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Box
+                      display="flex"
+                      justifyContent="space-between"
+                      alignItems="center"
+                    >
+                      <Typography variant="subtitle1">Total Amount</Typography>
+                      <Typography variant="h6">Rs: {total}/-</Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      style={{ backgroundColor: "#8ecccc" }}
+                      fullWidth
+                    >
+                      Request For Payment
+                    </Button>
+                  </Grid>
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    label="Registration No"
-                    variant="outlined"
-                    fullWidth
-                    value={profileData.registrationNo}
-                    disabled
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <PiIdentificationBadgeThin />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <Controller
-                    name="feeType"
-                    control={control}
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position="start">
-                              <PiMoneyWavy />
-                            </InputAdornment>
-                          ),
-                        }}
-                        select
-                        label="Fee Type"
-                        variant="outlined"
-                        fullWidth
-                        error={!!errors.feeType}
-                        helperText={errors.feeType?.message}
-                      >
-                        <MenuItem value="maintainance_fee">
-                          Maintenance Fee
-                        </MenuItem>
-                        <MenuItem value="mess_fee">Mess Fee</MenuItem>
-                        <MenuItem value="security_fee">Security Money</MenuItem>
-                      </TextField>
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={6} sm={6} md={12} lg={12}>
-                  <Controller
-                    control={control}
-                    name="startDate"
-                    render={({ field }) => (
-                      <DatePicker
-                        {...field}
-                        selected={field.value}
-                        onChange={handleStartDateChange}
-                        dateFormat="MMMM yyyy"
-                        minDate={new Date()}
-                        showMonthYearPicker
-                        customInput={
-                          <TextField
-                            label="Start Date"
-                            
-                            variant="outlined"
-                            fullWidth
-                            error={!!errors.startDate}
-                            helperText={errors.startDate?.message}
-                            InputProps={{
-                              endAdornment: (
-                                <InputAdornment position="end">
-                                  <MdDateRange />
-                                </InputAdornment>
-                              ),
-                            }}
-                            sx={{
-                              width: {
-                                lg: "225%",
-                                md: "calc(100vw - 55vw)",
-                                xs: "100%",
-                                sm: "46vw",
-                              },
-                            }}
-                          />
-                        }
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={6} sm={6} md={12} lg={12}>
-                  <Controller
-                    control={control}
-                    name="endDate"
-                    render={({ field }) => (
-                      <DatePicker
-                        {...field}
-                        selected={field.value}
-                        onChange={handleEndDateChange}
-                        dateFormat="MMMM yyyy"
-                        showMonthYearPicker
-                        customInput={
-                          <TextField
-                            label="End Date"
-                            variant="outlined"
-                            fullWidth
-                            error={!!errors.endDate}
-                            helperText={errors.endDate?.message}
-                            InputProps={{
-                              endAdornment: (
-                                <InputAdornment position="end">
-                                  <MdDateRange />
-                                </InputAdornment>
-                              ),
-                            }}
-                            sx={{
-                              width: {
-                                lg: "225%",
-                                md: "calc(100vw - 55vw)",
-                                xs: "100%",
-                                sm: "46vw",
-                              },
-                            }}
-                          />
-                        }
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Controller
-                    name="noOfMonths"
-                    control={control}
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        placeholder="Number of Months"
-                        variant="outlined"
-                        fullWidth
-                        error={!!errors.noOfMonths}
-                        helperText={errors.noOfMonths?.message}
-                        disabled
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position="start">
-                              <IoMdTime />
-                            </InputAdornment>
-                          ),
-                        }}
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Controller
-                    name="monthlyCharges"
-                    control={control}
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        placeholder="Monthly Charges"
-                        variant="outlined"
-                        fullWidth
-                        error={!!errors.monthlyCharges}
-                        helperText={errors.monthlyCharges?.message}
-                        disabled
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position="start">
-                              <RiMoneyRupeeCircleLine />
-                            </InputAdornment>
-                          ),
-                        }}
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <Box
-                    display="flex"
-                    justifyContent="space-between"
-                    alignItems="center"
-                  >
-                    <Typography variant="subtitle1">Total Amount</Typography>
-                    <Typography variant="h6">Rs: {total}/-</Typography>
-                  </Box>
-                </Grid>
-                <Grid item xs={12}>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    style={{ backgroundColor: "#8ecccc" }}
-                    fullWidth
-                  >
-                    Request For Payment
-                  </Button>
-                </Grid>
-              </Grid>
-            </form>
+              </form>
             </Box>
             <Box mt={4}>
               <p
@@ -609,7 +855,6 @@ function HostelFeePayment() {
                         style={{
                           width: "280px",
                           borderRadius: "15px",
-                          
                         }}
                       />
                     </center>
@@ -637,7 +882,11 @@ function HostelFeePayment() {
             </Box>
           </Grid>
           <Grid
-          item lg={6} md={6} xs={12} sm={12}
+            item
+            lg={6}
+            md={6}
+            xs={12}
+            sm={12}
             sx={{
               display: {
                 xs: "none",
@@ -645,7 +894,6 @@ function HostelFeePayment() {
                 md: "block",
                 lg: "block",
               },
-              
             }}
           >
             <center style={{ marginBottom: "16px" }}>
@@ -654,9 +902,8 @@ function HostelFeePayment() {
                 alt="Payment"
                 style={{
                   width: "430px",
-                  marginTop:"25px",
+                  marginTop: "25px",
                   borderRadius: "5px",
-                 
                 }}
               />
             </center>

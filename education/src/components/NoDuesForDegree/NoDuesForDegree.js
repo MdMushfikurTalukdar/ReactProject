@@ -123,6 +123,63 @@ export function NoDuesForDegree() {
     resolver: yupResolver(schema),
   });
 
+  const regenerateToken = () => {
+    if (localStorage?.getItem("accesstoken")) {
+      const response = jwtDecode(localStorage?.getItem("accesstoken"));
+      const response1 = jwtDecode(localStorage?.getItem("refreshtoken"));
+      if (response.exp < Math.floor(Date.now() / 1000) || response1.exp < Math.floor(Date.now() / 1000)) {
+        navigate("/login");
+      }else{
+        if (localStorage.getItem("refreshtoken") && localStorage.getItem("accesstoken")) {
+          let data = {
+            refresh: localStorage?.getItem("refreshtoken"),
+          };
+    
+          let config = {
+            method: "post",
+            maxBodyLength: Infinity,
+            url: "https://amarnath013.pythonanywhere.com/api/user/token/refresh/",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage?.getItem("accesstoken")}`,
+            },
+            data: data,
+          };
+    
+          axios
+            .request(config)
+            .then((response) => {
+              console.log(JSON.stringify(response.data));
+              localStorage.setItem("accesstoken", response.data.access);
+            })
+            .catch((error) => {
+              if(error?.message==='Request failed with status code 500'){
+                navigate('/login');
+              }
+              if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+                enqueueSnackbar("Logging out", {
+                  variant: "error",
+                  anchorOrigin: {
+                    vertical: "bottom",
+                    horizontal: "center",
+                  },
+                  autoHideDuration: 3000,
+                });  
+                navigate("/login");
+              }
+              console.log(error);
+            });
+        } else {
+          navigate("/login");
+        }
+      }
+    } else {
+      navigate("/login");
+    }
+   
+  };
+
+
   useEffect(() => {
     window.addEventListener("resize", () => {
       setResponsive(window.innerWidth < 669);
@@ -136,7 +193,7 @@ export function NoDuesForDegree() {
   }, []);
 
   useEffect(() => {
-    if(localStorage.getItem("accesstoken")!==null){
+    if(localStorage.getItem("accesstoken")!==null && localStorage.getItem("refreshtoken")!==null){
     const fetchData = async () => {
       try {
         const response = await axios.get(
@@ -147,6 +204,29 @@ export function NoDuesForDegree() {
             },
           }
         );
+        const token = localStorage.getItem("accesstoken");
+        const token1 = localStorage.getItem("refreshtoken");
+       
+        if (token && token1) {
+          let currentDate = new Date();
+          const decodedToken = jwtDecode(token);
+  
+          if (
+            decodedToken.exp * 1000 - currentDate.getTime() <
+            59 * 60 * 1000
+          ) {
+            try {
+              regenerateToken(); // Wait for the token regeneration to complete
+            } catch (error) {
+              console.error(
+                "Error in request interceptor while regenerating token:",
+                error
+              );
+            }
+          }
+        }else{
+          navigate('/login');
+        }      
         setUserProfile(response.data);
         setLoading(false);
       } catch (error) {
@@ -186,7 +266,7 @@ export function NoDuesForDegree() {
   }else{
     navigate("/login");
   }
-  }, [navigate]);
+  }, []);
 
   const onSubmit = async (data) => {
 
@@ -216,8 +296,12 @@ export function NoDuesForDegree() {
       session: userProfile?.academic_information?.session,
     };
 
+    const token = localStorage.getItem("accesstoken");
+    const token1 = localStorage.getItem("refreshtoken");
+    
+    if(token && token1){
     try {
-      const response = await axios.post(
+      axios.post(
         `${BaseUrl}/overall-no-dues/`,
         requestData,
         {
@@ -225,24 +309,85 @@ export function NoDuesForDegree() {
             Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
           },
         }
-      );
+      ).then(response=>{
 
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
+        const token = localStorage.getItem("accesstoken");
+        const token1 = localStorage.getItem("refreshtoken");
+       
+        if (token && token1) {
+          let currentDate = new Date();
+          const decodedToken = jwtDecode(token);
+  
+          if (
+            decodedToken.exp * 1000 - currentDate.getTime() <
+            59 * 60 * 1000
+          ) {
+            try {
+              regenerateToken(); // Wait for the token regeneration to complete
+            } catch (error) {
+              console.error(
+                "Error in request interceptor while regenerating token:",
+                error
+              );
+            }
+          }
+        }else{
+          navigate('/login');
+        }      
 
-     
-      enqueueSnackbar("Request was applied successfully", {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "bottom",
-          horizontal: "center",
-        },
-        autoHideDuration: 3000,
-      });
-    
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+  
+       
+        enqueueSnackbar("Request was applied successfully", {
+          variant: "success",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 3000,
+        });
+      }).catch(error=>{
+        console.log(error);
+        if(error?.response?.data?.errors?.non_field_errors?.[0]){
+          enqueueSnackbar(error?.response?.data?.errors?.non_field_errors?.[0], {
+            variant: "error",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 3000,
+          });  
+          navigate("/login");
+        }
+        
+        if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+          enqueueSnackbar("Logging out", {
+            variant: "error",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 3000,
+          });  
+          navigate("/login");
+        }
+      })
+
     } catch (error) {
       console.log(error);
+      if(error?.response?.data?.errors?.non_field_errors?.[0]){
+        enqueueSnackbar(error?.response?.data?.errors?.non_field_errors?.[0], {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 3000,
+        });  
+        navigate("/login");
+      }
       if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
         enqueueSnackbar("Logging out", {
           variant: "error",
@@ -263,6 +408,9 @@ export function NoDuesForDegree() {
         autoHideDuration: 3000,
       });
     }
+  }else{
+    navigate('/login')
+  }
   };
 
   const [page, setPage] = useState(0);
