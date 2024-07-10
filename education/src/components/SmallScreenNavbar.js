@@ -19,7 +19,7 @@ export const SmallScreenNavbar = () => {
   };
 
   const Logout = () => {
-    const token = localStorage.getItem("accesstoken");
+    const token = sessionStorage.getItem("accesstoken");
     if (!token) {
       console.log("No access token found");
       return;
@@ -38,7 +38,7 @@ export const SmallScreenNavbar = () => {
       .request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
-        localStorage.removeItem("accesstoken");
+        sessionStorage.removeItem("accesstoken");
         navigate("/");
       })
       .catch((error) => {
