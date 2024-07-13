@@ -319,6 +319,10 @@ export const HostelNoDueReq = () => {
   };
 
   useEffect(()=>{
+    const token = sessionStorage.getItem("accesstoken");
+    const token1 = sessionStorage.getItem("refreshtoken");
+   
+    if (token && token1) {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
@@ -337,6 +341,9 @@ export const HostelNoDueReq = () => {
     .catch((error) => {
       console.log(error);
     });
+  }else{
+    navigate('/login');
+  }
   },[]);
 
   if (loading || loading1) {
