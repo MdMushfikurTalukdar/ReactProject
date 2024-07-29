@@ -176,7 +176,7 @@ export const HostelRoomRequest = () => {
 
     const decodedToken = jwtDecode(accessToken);
 
-    if (decodedToken.exp < Math.floor(Date.now() / 1000) || ( decodedToken.role!=="student" && decodedToken.role!=="admin" ) ) {
+    if (decodedToken.exp < Math.floor(Date.now() / 1000) || ( decodedToken.role!=="student" && decodedToken.role!=="super-admin" ) ) {
       navigate("/login");
     }
 

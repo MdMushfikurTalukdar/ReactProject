@@ -85,7 +85,7 @@ export const NoDuesForDegreeApproval = () => {
       const response = jwtDecode(sessionStorage?.getItem("accesstoken"));
       if (
         response.exp < Math.floor(Date.now() / 1000) ||
-        (response.role !== "department" && response.role!=='admin')
+        (response.role !== "department" && response.role!=='super-admin')
       ) {
         navigate("/login");
       }

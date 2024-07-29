@@ -87,7 +87,7 @@ export const SemBranch = () => {
   useEffect(() => {
     if (sessionStorage?.getItem("accesstoken")) {
       const response = jwtDecode(sessionStorage?.getItem("accesstoken"));
-      if (response.exp < Math.floor(Date.now() / 1000) || (response.role !== "admin" && response.role !== "teacher" && response.role !== "faculty"))  {
+      if (response.exp < Math.floor(Date.now() / 1000) || (response.role !== "super-admin" && response.role !== "teacher" && response.role !== "faculty"))  {
         navigate("/login");
       }
     } else {

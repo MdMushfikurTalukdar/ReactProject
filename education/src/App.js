@@ -35,6 +35,7 @@ import ShowHostelRoomRequest from "./pages/ShowHostelRoomRequest.js";
 import Contact from "./pages/Contact.js";
 import NoDuesForDegreeApproval from "./pages/NoDuesForDegreeApproval";
 import NotFoundPage from "./pages/NotFoundPage.js";
+import { AdminDashboard } from "./pages/AdminDashboard.js";
 
 function App() {
   return (
@@ -74,6 +75,7 @@ function App() {
             <Route path="/hostel-mess-fee-payment" element={<HostelfeePayment/>} />
             <Route path="/complaints" element={ <ComplaintForm/> } />
             <Route path="/underDevelopment" element={ <UnderDevelopment/> } />
+            <Route path="/admin-dashboard" element={ <AdminDashboard/> } />
             <Route path="/no-dues-for-degree" element={ <NoDuesForDegree/> } />
             <Route path="/verifySemesterRegistration" element={<VerifySemesterRegistration/>} />
             <Route path="/facultySemesterRegistration/:id/:reg" element={<FacultySemesterRegistration/>} />

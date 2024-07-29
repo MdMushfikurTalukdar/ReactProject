@@ -12,21 +12,22 @@ import { Header } from "../components/Home/Header";
 import Footer from "../components/Home/Footer";
 import { Phone, Email, LocationOn } from "@mui/icons-material";
 import { enqueueSnackbar } from "notistack";
+import axios from "axios";
+import { Url } from "../components/BaseUrl";
 
 export const Contact = () => {
   const [imageIndex, setImageIndex] = React.useState(0);
   const images = React.useMemo(() => ["contactUs.jpg", "contactUs1.jpg"], []);
-  const [url,setUrl]=React.useState('');
+  const [url, setUrl] = React.useState("");
   const [formData, setFormData] = React.useState({
-    name: '',
-    email: '',
-    collegeCode: '',
-    collegeName: '',
-    collegeAddress: '',
-    collegeId: '',
-    idCount: '',
-    establishedDate: '',
-    collegeLogo:'',
+    name: "",
+    email: "",
+    college_name: "",
+    college_address: "",
+    phone_number: "",
+    principal_name: "",
+    established_date: "",
+    college_logo: "",
   });
 
   React.useEffect(() => {
@@ -38,31 +39,79 @@ export const Contact = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
+    let formattedValue = value;
+
+    if (name === "established_date") {
+      formattedValue = new Date(value).toISOString().split("T")[0];
+    }
+
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: formattedValue,
     });
   };
 
   const handleFileChange = (e) => {
     setFormData({
       ...formData,
-      collegeLogo: e?.target?.files[0],
+      college_logo: e?.target?.files[0],
     });
-    if(e.target.files[0]){
-    const imageUrl=URL?.createObjectURL(e?.target?.files[0]);
-    setUrl(imageUrl);
-    }else{
-      setUrl('');
+    if (e.target.files[0]) {
+      const imageUrl = URL?.createObjectURL(e?.target?.files[0]);
+      setUrl(imageUrl);
+    } else {
+      setUrl("");
     }
   };
 
   const handleSubmit = () => {
-    
-    if(formData.name!=='' && formData.email!=='' && formData.collegeCode!=='' && formData.collegeName!=='' && formData.collegeAddress!=='' && formData.collegeId!=='' && formData.idCount!=='' && formData.establishedDate!=='' && formData.collegeLogo!=='')
-    {
-      console.log(formData);
-    }else{
+    console.log(formData);
+    if (
+      formData.name !== "" &&
+      formData.email !== "" &&
+      formData.college_name !== "" &&
+      formData.college_address !== "" &&
+      formData.phone_number !== "" &&
+      formData.established_date !== "" &&
+      formData.college_logo !== "" &&
+      formData.principal_name !== ""
+    ) {
+      let data = new FormData();
+      data.append("name", formData.name);
+      data.append("email", formData.email);
+      data.append("college_name", formData.college_name);
+      data.append("college_address", formData.college_address);
+      data.append("established_date", formData.established_date);
+      data.append("phone_number", formData.phone_number);
+      data.append("principal_name", formData.principal_name);
+      data.append("college_logo", formData.college_logo);
+
+      let config = {
+        method: "post",
+        maxBodyLength: Infinity,
+        url: `${Url}/college-requests/`,
+        headers: {},
+        data: data,
+      };
+
+      axios
+        .request(config)
+        .then((response) => {
+          console.log(response);
+          enqueueSnackbar(response?.data?.message, {
+            variant: "success",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 3000,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
       enqueueSnackbar("Please fill all the fields", {
         variant: "warning",
         anchorOrigin: {
@@ -70,9 +119,8 @@ export const Contact = () => {
           horizontal: "center",
         },
         autoHideDuration: 3000,
-      });  
+      });
     }
-    
   };
 
   return (
@@ -80,19 +128,18 @@ export const Contact = () => {
       <Header />
 
       <div>
-        <Container maxWidth="lg" sx={{ py: 3,marginBottom:"100px" }}>
+        <Container maxWidth="lg" sx={{ py: 3, marginBottom: "100px" }}>
           <Grid container spacing={7}>
             <Grid item xs={12} md={5}>
               <CardMedia
                 component="img"
-                
                 image={`./images/${images[imageIndex]}`}
                 sx={{
                   borderRadius: "15px",
-                  marginTop: {lg:"40%",xs:"2%",sm:"2%",md:"40%"},
+                  marginTop: { lg: "40%", xs: "2%", sm: "2%", md: "40%" },
                   marginBottom: "20px",
-                 
-                  height:{lg:"50%",xs:"100%",md:"50%",sm:"100%"}
+
+                  height: { lg: "50%", xs: "100%", md: "50%", sm: "100%" },
                 }}
                 alt="Contact Us Image"
               />
@@ -143,28 +190,14 @@ export const Contact = () => {
               <Box sx={{ py: 1 }}>
                 <TextField
                   fullWidth
-                  label="College Code"
-                  variant="outlined"
-                  placeholder="College Code..."
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  name="collegeCode"
-                  value={formData.collegeCode}
-                  onChange={handleInputChange}
-                />
-              </Box>
-              <Box sx={{ py: 1 }}>
-                <TextField
-                  fullWidth
                   label="College Name"
                   variant="outlined"
                   placeholder="College Name..."
                   InputLabelProps={{
                     shrink: true,
                   }}
-                  name="collegeName"
-                  value={formData.collegeName}
+                  name="college_name"
+                  value={formData.college_name}
                   onChange={handleInputChange}
                 />
               </Box>
@@ -177,23 +210,8 @@ export const Contact = () => {
                   InputLabelProps={{
                     shrink: true,
                   }}
-                  name="collegeAddress"
-                  value={formData.collegeAddress}
-                  onChange={handleInputChange}
-                />
-              </Box>
-              <Box sx={{ py: 1 }}>
-                <TextField
-                  type="text"
-                  fullWidth
-                  label="College Id"
-                  placeholder="College Id"
-                  variant="outlined"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  name="collegeId"
-                  value={formData.collegeId}
+                  name="college_address"
+                  value={formData.college_address}
                   onChange={handleInputChange}
                 />
               </Box>
@@ -201,14 +219,28 @@ export const Contact = () => {
                 <TextField
                   type="number"
                   fullWidth
-                  label="Id count"
-                  placeholder="how many id do you want ?"
+                  label="Phone Number"
+                  placeholder="Phone Number"
                   variant="outlined"
                   InputLabelProps={{
                     shrink: true,
                   }}
-                  name="idCount"
-                  value={formData.idCount}
+                  name="phone_number"
+                  value={formData.phone_number}
+                  onChange={handleInputChange}
+                />
+              </Box>
+              <Box sx={{ py: 1 }}>
+                <TextField
+                  fullWidth
+                  label="Principal Name"
+                  variant="outlined"
+                  placeholder="Principal Name..."
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  name="principal_name"
+                  value={formData.principal_name}
                   onChange={handleInputChange}
                 />
               </Box>
@@ -221,8 +253,8 @@ export const Contact = () => {
                   InputLabelProps={{
                     shrink: true,
                   }}
-                  name="establishedDate"
-                  value={formData.establishedDate}
+                  name="established_date"
+                  value={formData.established_date}
                   onChange={handleInputChange}
                 />
               </Box>
@@ -245,13 +277,9 @@ export const Contact = () => {
                     />
                     Upload
                   </label>
-                </Button><br/>
-                {url && 
-                <img 
-                src={url} 
-                alt="" 
-                style={{width:"150px"}}
-                />}
+                </Button>
+                <br />
+                {url && <img src={url} alt="" style={{ width: "150px" }} />}
               </Box>
               <Button
                 variant="contained"

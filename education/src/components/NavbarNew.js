@@ -198,7 +198,7 @@ export const NavbarNew = () => {
     setIsNestedDropdownFacultyAcadamicOpen(false);
     setIsNestedDropdownHODOpen(!isNestedDropdownHODOpen);
   };
-  const [hide, setHide] = useState(false);
+ 
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
@@ -356,7 +356,7 @@ export const NavbarNew = () => {
                         </div>
                       </>
                     )}
-                    {roll === "admin" && (
+                    {roll === "super-admin" && (
                       <div
                         className="hover:bg-blue-50 px-4 py-2 cursor-pointer"
                         onClick={toggleNestedDropdownResidential}

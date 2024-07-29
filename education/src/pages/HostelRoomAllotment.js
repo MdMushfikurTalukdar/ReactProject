@@ -150,7 +150,7 @@ const HostelRoomAllotment = () => {
       const response = jwtDecode(token);
       if (
         response.exp < Math.floor(Date.now() / 1000) ||
-        (response.role !== "caretaker" && response.role !== "admin")
+        (response.role !== "caretaker" && response.role !== "super-admin")
       ) {
         navigate("/login");
       }

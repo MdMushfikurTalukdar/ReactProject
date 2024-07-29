@@ -158,7 +158,7 @@ export const About = () => {
         Mission
       </Typography>
       <Typography variant="body1" paragraph>
-        At the core of our mission is an unwavering commitment to excellence. We take great pride in offering a comprehensive and easy-to-use platform. It caters to all aspects of student information management, classroom administration, assessment, and reporting. With “Smartcampus,” educational institutions gain a powerful tool that streamlines their daily operations, enhances efficiency, and fosters better student outcomes.
+        At the core of our mission is an unwavering commitment to excellence. We take great pride in offering a comprehensive and easy-to-use platform. It caters to all aspects of student information management, classroom super-administration, assessment, and reporting. With “Smartcampus,” educational institutions gain a powerful tool that streamlines their daily operations, enhances efficiency, and fosters better student outcomes.
       </Typography>
       
       <Typography variant="h6" gutterBottom>
