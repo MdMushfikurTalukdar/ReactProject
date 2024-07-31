@@ -74,6 +74,7 @@ export const NavbarNew = () => {
     { name: "Add Fees", link: "/add-fees" },
     { name: "Hostel Room Allotment", link: "/hostel-room-allotment" },
     { name: "Hostel No Due Request", link: "/hostel-no-due-request" },
+    { name: "Hostel/Mess Fee Payment", link: "/caretaker-dashboard" },
 
     // { name: "Show Hostel Room Requests", link: "/hostel-room-allotment-requests" },
   ];
