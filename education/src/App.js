@@ -36,6 +36,8 @@ import Contact from "./pages/Contact.js";
 import NoDuesForDegreeApproval from "./pages/NoDuesForDegreeApproval";
 import NotFoundPage from "./pages/NotFoundPage.js";
 import { AdminDashboard } from "./pages/AdminDashboard.js";
+import { CaretakerDashboard } from "./pages/CaretakerDashboard.js";
+import { CaretakerNoDues } from "./pages/CaretakerNoDues.js";
 
 function App() {
   return (
@@ -70,6 +72,8 @@ function App() {
             <Route path='/No-dues-for-degree-approval' element={<NoDuesForDegreeApproval/>}/>
             <Route path="/add-fees" element={<AddFeesCaretaker/>}/>
             <Route path="/hostel-room-allotment" element={<HostelRoomAllotment/>}/>
+            <Route path="/caretaker-dashboard" element={<CaretakerDashboard/>}/>
+            <Route path="/hostel-no-due-request" element={<CaretakerNoDues/>}/>
             <Route path="/sem-sub-register" element={<SemSubject/>}/>
             <Route path="/sem-branch-register" element={<SemBranch/>}/>
             <Route path="/hostel-mess-fee-payment" element={<HostelfeePayment/>} />

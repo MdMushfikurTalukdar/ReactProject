@@ -87,6 +87,8 @@ export const LoginPage = () => {
        
         if (response.role === "super-admin") {
           navigate("/admin-dashboard");
+        }else if(response.role === "caretaker") {
+          navigate("/caretaker-dashboard");
         }else{
           navigate("/dashboard");
         }
