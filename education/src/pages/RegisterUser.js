@@ -134,6 +134,18 @@ export const RegisterUser = () => {
       }
     } catch (error) {
       console.error(error);
+
+      if (error?.response?.data?.errors?.detail === "Given token not valid for any token type") {
+        enqueueSnackbar("Logging out", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 3000,
+        });
+        navigate("/login");
+      }
     }
   };
 
@@ -174,7 +186,7 @@ export const RegisterUser = () => {
         })
         .catch((err) => {
           console.log(err);
-          enqueueSnackbar(err?.response?.data?.errors?.registration_number?.[0], {
+          enqueueSnackbar(err?.response?.data?.message, {
             variant: "error",
             anchorOrigin: {
               vertical: "bottom",
