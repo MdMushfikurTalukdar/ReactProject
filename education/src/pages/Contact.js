@@ -14,11 +14,13 @@ import { Phone, Email, LocationOn } from "@mui/icons-material";
 import { enqueueSnackbar } from "notistack";
 import axios from "axios";
 import { Url } from "../components/BaseUrl";
+import { useNavigate } from "react-router-dom";
 
 export const Contact = () => {
   const [imageIndex, setImageIndex] = React.useState(0);
   const images = React.useMemo(() => ["contactUs.jpg", "contactUs1.jpg"], []);
   const [url, setUrl] = React.useState("");
+  const navigate=useNavigate();
   const [formData, setFormData] = React.useState({
     name: "",
     email: "",
@@ -110,6 +112,8 @@ export const Contact = () => {
             },
             autoHideDuration: 3000,
           });
+          navigate('/login');
+          
         })
         .catch((error) => {
           console.log(error);
