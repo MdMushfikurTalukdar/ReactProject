@@ -28,6 +28,7 @@ export const Contact = () => {
     principal_name: "",
     established_date: "",
     college_logo: "",
+    college_code: ""
   });
 
   React.useEffect(() => {
@@ -75,7 +76,8 @@ export const Contact = () => {
       formData.phone_number !== "" &&
       formData.established_date !== "" &&
       formData.college_logo !== "" &&
-      formData.principal_name !== ""
+      formData.principal_name !== "" &&
+      formData.college_code!==""
     ) {
       let data = new FormData();
       data.append("name", formData.name);
@@ -85,6 +87,7 @@ export const Contact = () => {
       data.append("established_date", formData.established_date);
       data.append("phone_number", formData.phone_number);
       data.append("principal_name", formData.principal_name);
+      data.append("college_code", formData.college_code);
       data.append("college_logo", formData.college_logo);
 
       let config = {
@@ -212,6 +215,20 @@ export const Contact = () => {
                   }}
                   name="college_address"
                   value={formData.college_address}
+                  onChange={handleInputChange}
+                />
+              </Box>
+              <Box sx={{ py: 1 }}>
+                <TextField
+                  fullWidth
+                  label="College Code"
+                  variant="outlined"
+                  placeholder="College Code..."
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  name="college_code"
+                  value={formData.college_code}
                   onChange={handleInputChange}
                 />
               </Box>

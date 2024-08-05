@@ -11,11 +11,12 @@ import "../App.css";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 import { FaUpload } from "react-icons/fa";
-import { BaseUrl } from '../components/BaseUrl';
+import { BaseUrl } from "../components/BaseUrl";
+import { jwtDecode } from "jwt-decode";
 
 export const RegisterUser = () => {
   const [responsive, setResponsive] = useState(
@@ -23,6 +24,21 @@ export const RegisterUser = () => {
   ); // Check if the screen is smaller than 1024
   const navigate = useNavigate();
   const [file, setFile] = useState("");
+  const { name } = useParams();
+
+  useEffect(() => {
+    if (sessionStorage?.getItem("accesstoken")) {
+      const response = jwtDecode(sessionStorage?.getItem("accesstoken"));
+      if (
+        response.exp < Math.floor(Date.now() / 1000) ||
+        response.role !== "office"
+      ) {
+        navigate("/login");
+      }
+    } else {
+      navigate("/login");
+    }
+  }, []);
 
   useEffect(() => {
     window.addEventListener("resize", resize);
@@ -55,8 +71,17 @@ export const RegisterUser = () => {
     role: yup
       .string()
       .oneOf(
-        ["student", "faculty", "super-admin","office","principal","caretaker","department"],
-        "Invalid role, must be one of: student, faculty, super-admin,office,principal,caretaker","department"
+        [
+          "student",
+          "faculty",
+          "super-admin",
+          "office",
+          "principal",
+          "caretaker",
+          "department",
+        ],
+        "Invalid role, must be one of: student, faculty, super-admin,office,principal,caretaker",
+        "department"
       )
       .required("role is required"),
   });
@@ -87,7 +112,7 @@ export const RegisterUser = () => {
 
     try {
       const response = await axios.post(
-        `${BaseUrl}/register/`,
+        `${BaseUrl}/${name}/register/`,
         formData,
         {
           headers: {
@@ -113,46 +138,68 @@ export const RegisterUser = () => {
   };
 
   const onSubmit = (data) => {
-    let data1 = JSON.stringify({
-      registration_number: data.registration_number,
-      role: data.role,
-      password: data.password,
-      password2: data.password2,
-    });
+    const token = sessionStorage.getItem("accesstoken");
+    const token1 = sessionStorage.getItem("refreshtoken");
 
-    axios({
-      url: `${BaseUrl}/register/`,
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: data1,
-    })
-      .then((res) => {
-        enqueueSnackbar(res.data.message, {
-          variant: "success",
-          anchorOrigin: {
-            vertical: "bottom",
-            horizontal: "center",
-          },
-          autoHideDuration: 3000,
-        });
-        sessionStorage.setItem("accesstoken", res.data.token.access);
-        sessionStorage.setItem("bonafied", false);
-      })
-      .catch((err) => {
-        console.log(err);
-        enqueueSnackbar(err.response.data.errors.registration_number[0], {
-          variant: "error",
-          anchorOrigin: {
-            vertical: "bottom",
-            horizontal: "center",
-          },
-          autoHideDuration: 3000,
-        });
+    if (token && token1) {
+      let data1 = JSON.stringify({
+        registration_number: data.registration_number,
+        role: data.role,
+        password: data.password,
+        password2: data.password2,
       });
 
-    reset();
+      axios({
+        url: `${BaseUrl}/${name}/register/`,
+        method: "post",
+        maxBodyLength: Infinity,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+        },
+        data: data1,
+      })
+        .then((res) => {
+          console.log(res);
+          enqueueSnackbar(res.data.message, {
+            variant: "success",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 3000,
+          });
+
+          sessionStorage.setItem("bonafied", false);
+        })
+        .catch((err) => {
+          console.log(err);
+          enqueueSnackbar(err?.response?.data?.errors?.registration_number?.[0], {
+            variant: "error",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 3000,
+          });
+
+          if (err?.response?.data?.errors?.detail === "Given token not valid for any token type") {
+            enqueueSnackbar("Logging out", {
+              variant: "error",
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "center",
+              },
+              autoHideDuration: 3000,
+            });
+            navigate("/login");
+          }
+        });
+
+      reset();
+    } else {
+      navigate("/login");
+    }
   };
   return (
     <div className="App">
@@ -173,7 +220,9 @@ export const RegisterUser = () => {
                 lg={9}
                 className="parentGrid_small_screen"
               >
-                <h2 style={{ marginRight: "35%",color:"rgb(107 169 169)" }}>Create Account</h2>
+                <h2 style={{ marginRight: "35%", color: "rgb(107 169 169)" }}>
+                  Create Account
+                </h2>
 
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <Box>
@@ -279,14 +328,22 @@ export const RegisterUser = () => {
                       borderRadius: "10px",
                     }}
                   >
-                    <p className="text-bold text-xl" style={{color:"rgb(107 169 169)"}}>Upload a csv file</p>
+                    <p
+                      className="text-bold text-xl"
+                      style={{ color: "rgb(107 169 169)" }}
+                    >
+                      Upload a csv file
+                    </p>
                     <Box className="mt-3 text-xl">
-                      <FaUpload style={{color:"rgb(107 169 169)"}}/>
+                      <FaUpload style={{ color: "rgb(107 169 169)" }} />
                     </Box>
                     <Button
                       component="label"
                       variant="contained"
-                      style={{ backgroundColor: "rgb(107 169 169)", marginTop: "10px" }}
+                      style={{
+                        backgroundColor: "rgb(107 169 169)",
+                        marginTop: "10px",
+                      }}
                     >
                       <input
                         type="file"
@@ -300,20 +357,20 @@ export const RegisterUser = () => {
                   </div>
                 </Box>
                 <Box>
-                <Button
-                  variant="contained"
-                  sx={{
-                    width: { xs: "85%", sm: "50%" },
-                    backgroundColor: "rgb(107 169 169)",
-                    textAlign: "start",
-                    marginTop: "20px",
-                  }}
-                  type="submit"
-                  onClick={handleSubmitFile}
-                >
-                  Create Account
-                </Button>
-              </Box>
+                  <Button
+                    variant="contained"
+                    sx={{
+                      width: { xs: "85%", sm: "50%" },
+                      backgroundColor: "rgb(107 169 169)",
+                      textAlign: "start",
+                      marginTop: "20px",
+                    }}
+                    type="submit"
+                    onClick={handleSubmitFile}
+                  >
+                    Create Account
+                  </Button>
+                </Box>
               </Grid>
             </Grid>
           </div>
@@ -349,7 +406,13 @@ export const RegisterUser = () => {
             lg={9}
             className="parentGrid_largeScreen"
           >
-            <h2 style={{ marginRight: "35%", marginTop: "20px",color:"rgb(107 169 169)" }}>
+            <h2
+              style={{
+                marginRight: "35%",
+                marginTop: "20px",
+                color: "rgb(107 169 169)",
+              }}
+            >
               Create Account
             </h2>
 
@@ -359,7 +422,6 @@ export const RegisterUser = () => {
                   type="text"
                   label="Registration Number"
                   placeholder="0123442"
-                  
                   sx={{
                     width: "50%",
                     marginTop: "12px",
@@ -373,7 +435,6 @@ export const RegisterUser = () => {
                   type="password"
                   label="Password"
                   placeholder="password..."
-                  
                   sx={{
                     width: "50%",
                     marginTop: "12px",
@@ -387,7 +448,6 @@ export const RegisterUser = () => {
                   type="password"
                   label="Confirm Password"
                   placeholder="confirmPassword..."
-                  
                   sx={{
                     width: "50%",
                     marginBottom: "10px",
@@ -455,14 +515,22 @@ export const RegisterUser = () => {
                     borderRadius: "10px",
                   }}
                 >
-                  <p className="text-bold text-xl" style={{color:"rgb(107 169 169)"}}>Upload a csv file</p>
+                  <p
+                    className="text-bold text-xl"
+                    style={{ color: "rgb(107 169 169)" }}
+                  >
+                    Upload a csv file
+                  </p>
                   <Box className="mt-3 text-xl">
-                    <FaUpload style={{color:"rgb(107 169 169)"}}/>
+                    <FaUpload style={{ color: "rgb(107 169 169)" }} />
                   </Box>
                   <Button
                     component="label"
                     variant="contained"
-                    style={{ backgroundColor: "rgb(107 169 169)", marginTop: "10px" }}
+                    style={{
+                      backgroundColor: "rgb(107 169 169)",
+                      marginTop: "10px",
+                    }}
                   >
                     <input
                       type="file"
@@ -475,7 +543,7 @@ export const RegisterUser = () => {
                   </Button>
                 </div>
               </Box>
-              
+
               <Box>
                 <Button
                   variant="contained"

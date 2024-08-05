@@ -45,7 +45,7 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<Home/>} />
-            <Route path="/register" element={<RegisterUser />} />
+            <Route path="/register/:name" element={<RegisterUser />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/leave" element={<Leave />} />

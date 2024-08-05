@@ -84,12 +84,32 @@ export const LoginPage = () => {
           autoHideDuration: 3000,
         });
         const response = jwtDecode(res.data.token.access);
-       
+        console.log(response);
+
         if (response.role === "super-admin") {
           navigate("/admin-dashboard");
-        }else if(response.role === "caretaker") {
+        } else if (response.role === "caretaker") {
           navigate("/caretaker-dashboard");
-        }else{
+        } else if (response.role === "office") {
+          let config = {
+            method: "get",
+            maxBodyLength: Infinity,
+            url: `${Url}/colleges-slugs/?search=${response.college}`,
+            headers: {
+              Authorization: `Bearer ${res.data.token.access}`,
+            },
+          };
+
+          axios
+            .request(config)
+            .then((response1) => {
+              console.log(JSON.stringify(response1.data));
+              navigate(`/register/${response1.data[0].slug}`);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        } else {
           navigate("/dashboard");
         }
 

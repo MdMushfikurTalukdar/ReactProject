@@ -49,14 +49,16 @@ export const AdminDashboard = () => {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `${Url}/college-requests/`,
-      headers: {},
+      url: `https://smart-backend-uebh.onrender.com/api/user/college-requests/`,
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+      },
     };
 
     axios
       .request(config)
       .then((response) => {
-        // console.log(JSON.stringify(response.data));
+        console.log(JSON.stringify(response.data));
         setResult(response.data);
       })
       .catch((error) => {
@@ -69,7 +71,7 @@ export const AdminDashboard = () => {
       is_verified: true,
     };
     axios
-      .put(`${Url}/college-requests/${e}/verify/`, data, {
+      .put(`https://smart-backend-uebh.onrender.com/api/user/college-requests/${e}/verify/`, data, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
         },
@@ -97,6 +99,17 @@ export const AdminDashboard = () => {
             autoHideDuration: 3000,
           });
         }
+        if (err?.response?.data?.errors?.detail === "Given token not valid for any token type") {
+          enqueueSnackbar("Logging out", {
+            variant: "error",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 3000,
+          });
+          navigate("/login");
+        }
       });
   };
   const handleReject = (e) => {
@@ -104,7 +117,7 @@ export const AdminDashboard = () => {
       is_verified: false,
     };
     axios
-      .put(`${Url}/college-requests/${e}/verify/`, data, {
+      .put(`https://smart-backend-uebh.onrender.com/api/user/college-requests/${e}/verify/`, data, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
         },
@@ -131,6 +144,17 @@ export const AdminDashboard = () => {
             },
             autoHideDuration: 3000,
           });
+        }
+        if (err?.response?.data?.errors?.detail === "Given token not valid for any token type") {
+          enqueueSnackbar("Logging out", {
+            variant: "error",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 3000,
+          });
+          navigate("/login");
         }
       });
   };
@@ -214,6 +238,9 @@ export const AdminDashboard = () => {
         />
       </center>
       <Box sx={{padding:"7px"}}>
+        {result?.length===0 && <center>
+              <img src="./images/No_data.png" alt="" style={{width:"250px",marginTop:"50px"}}/>
+            </center>}
         <Grid container spacing={2} sx={{ width: "100vw", marginTop: "50px" }}>
           {result?.length > 0 &&
             result?.map((data, index) => (
