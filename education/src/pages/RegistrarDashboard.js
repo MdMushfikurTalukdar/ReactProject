@@ -338,12 +338,17 @@ export const RegistrarDashboard = () => {
                         <CardActionArea>
                           <center>
                             <img
-                            src={`data:image/*;base64,${decodeURIComponent(
-                              data?.supporting_document
-                            )}`}
-                            alt="Marksheet"
-                            style={{  height: "280px",objectFit:"cover",marginTop:"10px" }}
-                          /></center>
+                              src={`data:image/*;base64,${decodeURIComponent(
+                                data?.supporting_document
+                              )}`}
+                              alt="Marksheet"
+                              style={{
+                                height: "280px",
+                                objectFit: "cover",
+                                marginTop: "10px",
+                              }}
+                            />
+                          </center>
                           <CardContent style={{ padding: "15px" }}>
                             <Typography
                               textAlign="center"
@@ -372,13 +377,6 @@ export const RegistrarDashboard = () => {
                                   >
                                     Applied Date:{data.applied_date}
                                   </Typography>
-                                  <Typography
-                                    textAlign="center"
-                                    variant="body2"
-                                    color="text.secondary"
-                                  >
-                                    {data.feetype}
-                                  </Typography>
                                 </Box>
                                 <Box sx={{ display: "flex", gap: "5px" }}>
                                   <Typography
@@ -388,6 +386,15 @@ export const RegistrarDashboard = () => {
                                   >
                                     Bonafide Number:{" "}
                                     <span>{data.bonafide_number}</span>
+                                  </Typography>
+                                </Box>
+                                <Box sx={{ display: "flex", gap: "5px" }}>
+                                  <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                    marginTop="5px"
+                                  >
+                                    Status: <span>{data.status}</span>
                                   </Typography>
                                 </Box>
                               </Grid>
@@ -441,7 +448,166 @@ export const RegistrarDashboard = () => {
             </center>
           ))}
 
-        {approved && (
+        {approved && 
+        (result.length > 0 ? (
+            <Box>
+              <p
+                style={{
+                  fontSize: "2.0rem",
+                  fontWeight: "500",
+                  textAlign: "center",
+                  marginTop: "20px",
+                }}
+              >
+                Bonafide Requests
+              </p>
+              <center>
+                <Divider
+                  sx={{
+                    backgroundColor: "blue",
+                    width: { lg: "17%", xs: "10%", md: "5%" },
+                    fontWeight: "800",
+                    textAlign: "center",
+                    marginTop: "5px",
+                  }}
+                />
+              </center>
+              <Box sx={{ padding: "7px" }}>
+                <Grid
+                  container
+                  spacing={2}
+                  sx={{ width: "100vw", marginTop: "50px" }}
+                >
+                  {result.map((data, index) => (
+                    <Grid
+                      item
+                      lg={6}
+                      sm={12}
+                      xs={12}
+                      md={12}
+                      sx={{ display: "flex", justifyContent: "center" }}
+                      key={index}
+                    >
+                      <Card
+                        sx={{
+                          minWidth: { lg: 545, md: 545, xs: 300, sm: 445 },
+                        }}
+                      >
+                        <CardActionArea>
+                          <center>
+                            <img
+                              src={`data:image/*;base64,${decodeURIComponent(
+                                data?.supporting_document
+                              )}`}
+                              alt="Marksheet"
+                              style={{
+                                height: "280px",
+                                objectFit: "cover",
+                                marginTop: "10px",
+                              }}
+                            />
+                          </center>
+                          <CardContent style={{ padding: "15px" }}>
+                            <Typography
+                              textAlign="center"
+                              variant="body2"
+                              fontSize="1.2rem"
+                              color="text.secondary"
+                            >
+                              {data.name}
+                            </Typography>
+                            <Typography
+                              variant="body2"
+                              textAlign="center"
+                              color="text.secondary"
+                              marginBottom="0%"
+                            >
+                              Registration No.:{" "}
+                              {data?.student_details?.registration_number}
+                            </Typography>
+                            <Grid container sx={{ padding: "20px" }}>
+                              <Grid item xs={12} lg={6} md={6} sm={6}>
+                                <Box sx={{ display: "flex", gap: "5px" }}>
+                                  <Typography
+                                    textAlign="center"
+                                    variant="body2"
+                                    color="text.secondary"
+                                  >
+                                    Applied Date:{data.applied_date}
+                                  </Typography>
+                                </Box>
+                                <Box sx={{ display: "flex", gap: "5px" }}>
+                                  <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                    marginTop="5px"
+                                  >
+                                    Bonafide Number:{" "}
+                                    <span>{data.bonafide_number}</span>
+                                  </Typography>
+                                </Box>
+                                <Box sx={{ display: "flex", gap: "5px" }}>
+                                  <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                    marginTop="5px"
+                                  >
+                                    Status: <span>{data.status}</span>
+                                  </Typography>
+                                </Box>
+                              </Grid>
+                              <Grid item xs={12} lg={6} md={6} sm={6}>
+                                <Typography
+                                  textAlign="center"
+                                  variant="body2"
+                                  color="text.secondary"
+                                  marginTop="10px"
+                                >
+                                  Required For: {data.required_for}
+                                </Typography>
+                              </Grid>
+                            </Grid>
+                          </CardContent>
+                        </CardActionArea>
+                        <CardActions
+                          style={{
+                            padding: "0px 15px 15px 15px",
+                            float: "right",
+                          }}
+                        >
+                          <Button
+                            variant="contained"
+                            // onClick={(e) => handleVerification(data.id)}
+                            style={{ backgroundColor: "rgb(107, 169, 169)" }}
+                          >
+                            Accept
+                          </Button>
+                          <Button
+                            variant="contained"
+                            // onClick={(e) => handleReject(data.id)}
+                            style={{ backgroundColor: "rgb(107, 169, 169)" }}
+                          >
+                            Reject
+                          </Button>
+                        </CardActions>
+                      </Card>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Box>
+            </Box>
+          ) : (
+            <center>
+              <img
+                src="./images/No_data.png"
+                alt=""
+                style={{ width: "250px" }}
+              />
+            </center>
+          ))}
+        
+        {reject && 
+        (result.length > 0 ? (
           <Box>
             <p
               style={{
@@ -451,7 +617,7 @@ export const RegistrarDashboard = () => {
                 marginTop: "20px",
               }}
             >
-              Approved Requests
+              Bonafide Requests
             </p>
             <center>
               <Divider
@@ -470,403 +636,134 @@ export const RegistrarDashboard = () => {
                 spacing={2}
                 sx={{ width: "100vw", marginTop: "50px" }}
               >
-                <Grid
-                  item
-                  lg={6}
-                  sm={12}
-                  xs={12}
-                  md={12}
-                  sx={{ display: "flex", justifyContent: "center" }}
-                >
-                  <Card
-                    sx={{ minWidth: { lg: 545, md: 545, xs: 300, sm: 445 } }}
+                {result.map((data, index) => (
+                  <Grid
+                    item
+                    lg={6}
+                    sm={12}
+                    xs={12}
+                    md={12}
+                    sx={{ display: "flex", justifyContent: "center" }}
+                    key={index}
                   >
-                    <CardActionArea>
-                      <CardContent style={{ padding: "15px" }}>
-                        <Typography
-                          textAlign="center"
-                          variant="body2"
-                          color="text.secondary"
-                          fontSize="1.2rem"
-                        >
-                          Amarnath apuri
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          textAlign="center"
-                          color="text.secondary"
-                          marginBottom="0%"
-                        >
-                          Registration No.: 16900120127
-                        </Typography>
-                        <Grid container sx={{ padding: "20px" }}>
-                          <Grid item xs={12} lg={6} md={6} sm={6}>
-                            <Box sx={{ display: "flex", gap: "5px" }}>
-                              <Typography
-                                textAlign="center"
-                                variant="body2"
-                                color="text.secondary"
-                              >
-                                Feetype:
-                              </Typography>
-                              <Typography
-                                textAlign="center"
-                                variant="body2"
-                                color="text.secondary"
-                              >
-                                Security Fees
-                              </Typography>
-                            </Box>
-                            <Box sx={{ display: "flex", gap: "5px" }}>
-                              <Typography
-                                variant="body2"
-                                color="text.secondary"
-                                marginTop="5px"
-                              >
-                                Monthly Charges: <span>6000</span>
-                              </Typography>
-                            </Box>
-                          </Grid>
-                          <Grid item xs={12} lg={6} md={6} sm={6}>
-                            <Typography
-                              textAlign="center"
-                              variant="body2"
-                              color="text.secondary"
-                              marginTop="10px"
-                            >
-                              Date: 10th july,2024 - 10th Aug,2024
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </CardContent>
-                    </CardActionArea>
-                    <CardActions
-                      style={{ padding: "0px 15px 15px 15px", float: "right" }}
+                    <Card
+                      sx={{
+                        minWidth: { lg: 545, md: 545, xs: 300, sm: 445 },
+                      }}
                     >
-                      <Button
-                        variant="contained"
-                        //   onClick={(e) => handleVerification(data.id)}
-                        style={{ backgroundColor: "rgb(107, 169, 169)" }}
-                      >
-                        Accept
-                      </Button>
-                      <Button
-                        variant="contained"
-                        //   onClick={(e) => handleReject(data.id)}
-                        style={{ backgroundColor: "rgb(107, 169, 169)" }}
-                      >
-                        Reject
-                      </Button>
-                    </CardActions>
-                  </Card>
-                </Grid>
-                <Grid
-                  item
-                  lg={6}
-                  sm={12}
-                  xs={12}
-                  md={12}
-                  sx={{ display: "flex", justifyContent: "center" }}
-                >
-                  <Card
-                    sx={{ minWidth: { lg: 545, md: 545, xs: 300, sm: 445 } }}
-                  >
-                    <CardActionArea>
-                      <CardContent style={{ padding: "15px" }}>
-                        <Typography
-                          textAlign="center"
-                          variant="body2"
-                          fontSize="1.2rem"
-                          color="text.secondary"
-                        >
-                          Soumyadeep Kumar
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          textAlign="center"
-                          color="text.secondary"
-                          marginBottom="0%"
-                        >
-                          Registration No.: 16900120122
-                        </Typography>
-                        <Grid container sx={{ padding: "20px" }}>
-                          <Grid item xs={12} lg={6} md={6} sm={6}>
-                            <Box sx={{ display: "flex", gap: "5px" }}>
+                      <CardActionArea>
+                        <center>
+                          <img
+                            src={`data:image/*;base64,${decodeURIComponent(
+                              data?.supporting_document
+                            )}`}
+                            alt="Marksheet"
+                            style={{
+                              height: "280px",
+                              objectFit: "cover",
+                              marginTop: "10px",
+                            }}
+                          />
+                        </center>
+                        <CardContent style={{ padding: "15px" }}>
+                          <Typography
+                            textAlign="center"
+                            variant="body2"
+                            fontSize="1.2rem"
+                            color="text.secondary"
+                          >
+                            {data.name}
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            textAlign="center"
+                            color="text.secondary"
+                            marginBottom="0%"
+                          >
+                            Registration No.:{" "}
+                            {data?.student_details?.registration_number}
+                          </Typography>
+                          <Grid container sx={{ padding: "20px" }}>
+                            <Grid item xs={12} lg={6} md={6} sm={6}>
+                              <Box sx={{ display: "flex", gap: "5px" }}>
+                                <Typography
+                                  textAlign="center"
+                                  variant="body2"
+                                  color="text.secondary"
+                                >
+                                  Applied Date:{data.applied_date}
+                                </Typography>
+                              </Box>
+                              <Box sx={{ display: "flex", gap: "5px" }}>
+                                <Typography
+                                  variant="body2"
+                                  color="text.secondary"
+                                  marginTop="5px"
+                                >
+                                  Bonafide Number:{" "}
+                                  <span>{data.bonafide_number}</span>
+                                </Typography>
+                              </Box>
+                              <Box sx={{ display: "flex", gap: "5px" }}>
+                                <Typography
+                                  variant="body2"
+                                  color="text.secondary"
+                                  marginTop="5px"
+                                >
+                                  Status: <span>{data.status}</span>
+                                </Typography>
+                              </Box>
+                            </Grid>
+                            <Grid item xs={12} lg={6} md={6} sm={6}>
                               <Typography
                                 textAlign="center"
                                 variant="body2"
                                 color="text.secondary"
+                                marginTop="10px"
                               >
-                                Feetype
+                                Required For: {data.required_for}
                               </Typography>
-                              <Typography
-                                textAlign="center"
-                                variant="body2"
-                                color="text.secondary"
-                              >
-                                Security Fees
-                              </Typography>
-                            </Box>
-                            <Box sx={{ display: "flex", gap: "5px" }}>
-                              <Typography
-                                variant="body2"
-                                color="text.secondary"
-                                marginTop="5px"
-                              >
-                                Monthly Charges: <span>7000</span>
-                              </Typography>
-                            </Box>
+                            </Grid>
                           </Grid>
-                          <Grid item xs={12} lg={6} md={6} sm={6}>
-                            <Typography
-                              textAlign="center"
-                              variant="body2"
-                              color="text.secondary"
-                              marginTop="10px"
-                            >
-                              Date: 12th july,2024 - 12th Aug,2024
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </CardContent>
-                    </CardActionArea>
-                    <CardActions
-                      style={{ padding: "0px 15px 15px 15px", float: "right" }}
-                    >
-                      <Button
-                        variant="contained"
-                        //   onClick={(e) => handleVerification(data.id)}
-                        style={{ backgroundColor: "rgb(107, 169, 169)" }}
+                        </CardContent>
+                      </CardActionArea>
+                      <CardActions
+                        style={{
+                          padding: "0px 15px 15px 15px",
+                          float: "right",
+                        }}
                       >
-                        Accept
-                      </Button>
-                      <Button
-                        variant="contained"
-                        //   onClick={(e) => handleReject(data.id)}
-                        style={{ backgroundColor: "rgb(107, 169, 169)" }}
-                      >
-                        Reject
-                      </Button>
-                    </CardActions>
-                  </Card>
-                </Grid>
+                        <Button
+                          variant="contained"
+                          // onClick={(e) => handleVerification(data.id)}
+                          style={{ backgroundColor: "rgb(107, 169, 169)" }}
+                        >
+                          Accept
+                        </Button>
+                        <Button
+                          variant="contained"
+                          // onClick={(e) => handleReject(data.id)}
+                          style={{ backgroundColor: "rgb(107, 169, 169)" }}
+                        >
+                          Reject
+                        </Button>
+                      </CardActions>
+                    </Card>
+                  </Grid>
+                ))}
               </Grid>
             </Box>
           </Box>
-        )}
-        {reject && (
-          <Box>
-            <p
-              style={{
-                fontSize: "2.0rem",
-                fontWeight: "500",
-                textAlign: "center",
-                marginTop: "20px",
-              }}
-            >
-              Rejected Requests
-            </p>
-            <center>
-              <Divider
-                sx={{
-                  backgroundColor: "blue",
-                  width: { lg: "17%", xs: "10%", md: "5%" },
-                  fontWeight: "800",
-                  textAlign: "center",
-                  marginTop: "5px",
-                }}
-              />
-            </center>
-            <Box sx={{ padding: "7px" }}>
-              <Grid
-                container
-                spacing={2}
-                sx={{ width: "100vw", marginTop: "50px" }}
-              >
-                <Grid
-                  item
-                  lg={6}
-                  sm={12}
-                  xs={12}
-                  md={12}
-                  sx={{ display: "flex", justifyContent: "center" }}
-                >
-                  <Card
-                    sx={{ minWidth: { lg: 545, md: 545, xs: 300, sm: 445 } }}
-                  >
-                    <CardActionArea>
-                      <CardContent style={{ padding: "15px" }}>
-                        <Typography
-                          textAlign="center"
-                          variant="body2"
-                          color="text.secondary"
-                          fontSize="1.2rem"
-                        >
-                          Himanshu Singh
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          textAlign="center"
-                          color="text.secondary"
-                          marginBottom="0%"
-                        >
-                          Registration No.: 16900120066
-                        </Typography>
-                        <Grid container sx={{ padding: "20px" }}>
-                          <Grid item xs={12} lg={6} md={6} sm={6}>
-                            <Box sx={{ display: "flex", gap: "5px" }}>
-                              <Typography
-                                textAlign="center"
-                                variant="body2"
-                                color="text.secondary"
-                              >
-                                Feetype:
-                              </Typography>
-                              <Typography
-                                textAlign="center"
-                                variant="body2"
-                                color="text.secondary"
-                              >
-                                Maintaince Fees
-                              </Typography>
-                            </Box>
-                            <Box sx={{ display: "flex", gap: "5px" }}>
-                              <Typography
-                                variant="body2"
-                                color="text.secondary"
-                                marginTop="5px"
-                              >
-                                Monthly Charges: <span>5000</span>
-                              </Typography>
-                            </Box>
-                          </Grid>
-                          <Grid item xs={12} lg={6} md={6} sm={6}>
-                            <Typography
-                              textAlign="center"
-                              variant="body2"
-                              color="text.secondary"
-                              marginTop="10px"
-                            >
-                              Date: 12th july,2024 - 12th Aug,2024
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </CardContent>
-                    </CardActionArea>
-                    <CardActions
-                      style={{ padding: "0px 15px 15px 15px", float: "right" }}
-                    >
-                      <Button
-                        variant="contained"
-                        //   onClick={(e) => handleVerification(data.id)}
-                        style={{ backgroundColor: "rgb(107, 169, 169)" }}
-                      >
-                        Accept
-                      </Button>
-                      <Button
-                        variant="contained"
-                        //   onClick={(e) => handleReject(data.id)}
-                        style={{ backgroundColor: "rgb(107, 169, 169)" }}
-                      >
-                        Reject
-                      </Button>
-                    </CardActions>
-                  </Card>
-                </Grid>
-                <Grid
-                  item
-                  lg={6}
-                  sm={12}
-                  xs={12}
-                  md={12}
-                  sx={{ display: "flex", justifyContent: "center" }}
-                >
-                  <Card
-                    sx={{ minWidth: { lg: 545, md: 545, xs: 300, sm: 445 } }}
-                  >
-                    <CardActionArea>
-                      <CardContent style={{ padding: "15px" }}>
-                        <Typography
-                          textAlign="center"
-                          variant="body2"
-                          fontSize="1.2rem"
-                          color="text.secondary"
-                        >
-                          Debjeet Gorai
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          textAlign="center"
-                          color="text.secondary"
-                          marginBottom="0%"
-                        >
-                          Registration No.: 16900120126
-                        </Typography>
-                        <Grid container sx={{ padding: "20px" }}>
-                          <Grid item xs={12} lg={6} md={6} sm={6}>
-                            <Box sx={{ display: "flex", gap: "5px" }}>
-                              <Typography
-                                textAlign="center"
-                                variant="body2"
-                                color="text.secondary"
-                              >
-                                Feetype
-                              </Typography>
-                              <Typography
-                                textAlign="center"
-                                variant="body2"
-                                color="text.secondary"
-                              >
-                                Maintaince Fees
-                              </Typography>
-                            </Box>
-                            <Box sx={{ display: "flex", gap: "5px" }}>
-                              <Typography
-                                variant="body2"
-                                color="text.secondary"
-                                marginTop="5px"
-                              >
-                                Monthly Charges: <span>5000</span>
-                              </Typography>
-                            </Box>
-                          </Grid>
-                          <Grid item xs={12} lg={6} md={6} sm={6}>
-                            <Typography
-                              textAlign="center"
-                              variant="body2"
-                              color="text.secondary"
-                              marginTop="10px"
-                            >
-                              Date: 12th july,2024 - 12th Aug,2024
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </CardContent>
-                    </CardActionArea>
-                    <CardActions
-                      style={{ padding: "0px 15px 15px 15px", float: "right" }}
-                    >
-                      <Button
-                        variant="contained"
-                        //   onClick={(e) => handleVerification(data.id)}
-                        style={{ backgroundColor: "rgb(107, 169, 169)" }}
-                      >
-                        Accept
-                      </Button>
-                      <Button
-                        variant="contained"
-                        //   onClick={(e) => handleReject(data.id)}
-                        style={{ backgroundColor: "rgb(107, 169, 169)" }}
-                      >
-                        Reject
-                      </Button>
-                    </CardActions>
-                  </Card>
-                </Grid>
-              </Grid>
-            </Box>
-          </Box>
-        )}
+        ) : (
+          <center>
+            <img
+              src="./images/No_data.png"
+              alt=""
+              style={{ width: "250px" }}
+            />
+          </center>
+        ))
+        }
       </Box>
       <Footer />
     </div>
