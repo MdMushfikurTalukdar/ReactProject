@@ -38,6 +38,7 @@ import NotFoundPage from "./pages/NotFoundPage.js";
 import { AdminDashboard } from "./pages/AdminDashboard.js";
 import { CaretakerDashboard } from "./pages/CaretakerDashboard.js";
 import { CaretakerNoDues } from "./pages/CaretakerNoDues.js";
+import { RegistrarDashboard } from "./pages/RegistrarDashboard.js";
 
 function App() {
   return (
@@ -77,6 +78,7 @@ function App() {
             <Route path="/sem-sub-register" element={<SemSubject/>}/>
             <Route path="/sem-branch-register" element={<SemBranch/>}/>
             <Route path="/hostel-mess-fee-payment" element={<HostelfeePayment/>} />
+            <Route path="/registrar-dashboard" element={<RegistrarDashboard/>} />
             <Route path="/complaints" element={ <ComplaintForm/> } />
             <Route path="/underDevelopment" element={ <UnderDevelopment/> } />
             <Route path="/admin-dashboard" element={ <AdminDashboard/> } />

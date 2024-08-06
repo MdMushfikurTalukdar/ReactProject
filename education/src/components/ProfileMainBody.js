@@ -15,19 +15,22 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../pages/logout.css";
 import { jwtDecode } from "jwt-decode";
-import { BaseUrl } from "./BaseUrl";
+import { BaseUrl, Url } from "./BaseUrl";
 import { enqueueSnackbar } from "notistack";
-
 
 export const ProfileMainBody = () => {
   const [userProfile, setUserProfile] = useState([]);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [college,setCollege]=useState('');
 
   useEffect(() => {
     if (sessionStorage?.getItem("accesstoken")) {
       const response = jwtDecode(sessionStorage?.getItem("accesstoken"));
-      if (response.exp < Math.floor(Date.now() / 1000)|| response.role!=="student" ) {
+      if (
+        response.exp < Math.floor(Date.now() / 1000) ||
+        response.role !== "student"
+      ) {
         navigate("/login");
       }
     } else {
@@ -36,71 +39,69 @@ export const ProfileMainBody = () => {
   }, []);
 
   useEffect(() => {
-    let config = {
-      method: "GET",
-      maxBodyLength: Infinity,
-      url: `${BaseUrl}/profile/`,
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-      },
-    };
+    const token = sessionStorage?.getItem("accesstoken");
+    const token1 = sessionStorage?.getItem("refreshtoken");
 
-    axios
-      .request(config)
-      .then((response) => {
-        setUserProfile(response.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-        if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
-          enqueueSnackbar("Logging out", {
-            variant: "error",
-            anchorOrigin: {
-              vertical: "bottom",
-              horizontal: "center",
+    if (token && token1) {
+      const response = jwtDecode(token);
+
+      let config = {
+        method: "get",
+        maxBodyLength: Infinity,
+        url: `${Url}/colleges-slugs/?search=${response.college}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      axios
+        .request(config)
+        .then((response1) => {
+          console.log(JSON.stringify(response1.data));
+
+          setCollege(response1?.data?.[0]?.slug);
+
+          let config = {
+            method: "GET",
+            maxBodyLength: Infinity,
+            url: `${BaseUrl}/${response1?.data?.[0]?.slug}/profile/`,
+            headers: {
+              Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
             },
-            autoHideDuration: 3000,
-          });  
-          navigate("/login");
-        }
-      });
+          };
+
+          axios
+            .request(config)
+            .then((response) => {
+              setUserProfile(response.data);
+              setLoading(false);
+            })
+            .catch((error) => {
+              console.log(error);
+              if (
+                error?.response?.data?.errors?.detail ===
+                "Given token not valid for any token type"
+              ) {
+                enqueueSnackbar("Logging out", {
+                  variant: "error",
+                  anchorOrigin: {
+                    vertical: "bottom",
+                    horizontal: "center",
+                  },
+                  autoHideDuration: 3000,
+                });
+                navigate("/login");
+              }
+            });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      navigate("/login");
+    }
   }, []);
 
-  // const handleChange=(e)=>{
-
-  //   const formData=new FormData();
-  //   console.log(e.target.files[0]);
-  //   formData.append("profile_picture",e.target.files[0]);
-
-  //   let data = JSON.stringify({
-  //     "personal_information": {
-  //       "profile_picture":formData
-  //     },
-  //     "contact_information": {},
-  //     "academic_information": {}
-  //   });
-
-  //   let config = {
-  //     method: 'put',
-  //     maxBodyLength: Infinity,
-  //     url: 'https://amarnath013.pythonanywhere.com/api/user/profile/',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       'Authorization': `Bearer ${sessionStorage.getItem('accesstoken')}`
-  //     },
-  //     data : data
-  //   };
-
-  //   axios.request(config)
-  //   .then((response) => {
-  //     console.log(JSON.stringify(response.data));
-  //   })
-  //   .catch((error) => {
-  //     console.log(error);
-  //   });
-
-  // }
   if (loading) {
     return (
       <Box
@@ -128,12 +129,10 @@ export const ProfileMainBody = () => {
           height: "calc(100vh - 5px)",
           overflowY: "scroll",
           zIndex: "6",
-          overflowX:"hidden"
+          overflowX: "hidden",
         }}
       >
-        <center>
-        
-        </center>
+        <center></center>
         <Box className="text-center">
           {userProfile?.personal_information?.profile_picture !== null ? (
             <img
@@ -146,7 +145,7 @@ export const ProfileMainBody = () => {
                 borderRadius: "50%",
                 filter: "opacity(1)",
                 border: "2px solid whitesmoke",
-                objectFit:"cover"
+                objectFit: "cover",
               }}
             />
           ) : (
@@ -870,7 +869,7 @@ export const ProfileMainBody = () => {
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
                 <Typography variant="p">
-                  {userProfile?.academic_information?.college_name || <p>NA</p>}
+                  {college}
                 </Typography>
               </Grid>
 

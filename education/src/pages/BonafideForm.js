@@ -36,9 +36,9 @@ import LastPageIcon from "@mui/icons-material/LastPage";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import NavbarNew from "../components/NavbarNew";
-import {Footer} from "../components/Footer";
+import { Footer } from "../components/Footer";
 import { enqueueSnackbar } from "notistack";
-import { BaseUrl } from "../components/BaseUrl";
+import { BaseUrl, Url } from "../components/BaseUrl";
 
 // Validation schema
 const schema = yup.object().shape({
@@ -125,11 +125,11 @@ export const BonafideForm = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const navigate = useNavigate();
+  const [college,setCollege]=useState();
   const [responsive, setResponsive] = useState(
     window.innerWidth < 669 ? true : false
   );
 
-  
   const regenerateToken = () => {
     if (sessionStorage?.getItem("accesstoken")) {
       const response = jwtDecode(sessionStorage?.getItem("accesstoken"));
@@ -151,7 +151,7 @@ export const BonafideForm = () => {
           let config = {
             method: "post",
             maxBodyLength: Infinity,
-            url: "https://amarnath013.pythonanywhere.com/api/user/token/refresh/",
+            url: `${Url}/token/refresh/`,
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
@@ -227,9 +227,7 @@ export const BonafideForm = () => {
     setPage(0);
   };
 
-  
   useEffect(() => {
-
     if (sessionStorage?.getItem("accesstoken")) {
       const response = jwtDecode(sessionStorage?.getItem("accesstoken"));
       if (
@@ -244,18 +242,14 @@ export const BonafideForm = () => {
   }, []);
 
   useEffect(() => {
-
     const token = sessionStorage.getItem("accesstoken");
     const token1 = sessionStorage.getItem("refreshtoken");
-   
+
     if (token && token1) {
       let currentDate = new Date();
       const decodedToken = jwtDecode(token);
 
-      if (
-        decodedToken.exp * 1000 - currentDate.getTime() <
-        59 * 60 * 1000
-      ) {
+      if (decodedToken.exp * 1000 - currentDate.getTime() < 59 * 60 * 1000) {
         try {
           regenerateToken(); // Wait for the token regeneration to complete
         } catch (error) {
@@ -265,47 +259,64 @@ export const BonafideForm = () => {
           );
         }
       }
-    }else{
-      navigate('/login');
+    } else {
+      navigate("/login");
     }
-
+   
     if (token && token1) {
-    axios
-      .get(
-        `${BaseUrl}/bonafide/?search=${
-          jwtDecode(sessionStorage?.getItem("accesstoken"))?.registration_number
-        }`,
-        {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-          },
-        }
-      )
-      .then((response) => {
-        setLoading(false);
-        setResult(response.data.reverse());
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-    }else{
-      navigate('/login');
-    }
+      const response = jwtDecode(token);
+
+      let config = {
+        method: "get",
+        maxBodyLength: Infinity,
+        url: `${Url}/colleges-slugs/?search=${response.college}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      axios
+        .request(config)
+        .then((response1) => {
+          console.log(JSON.stringify(response1.data));
+          axios
+          .get(
+            `${BaseUrl}/${response1?.data?.[0]?.slug}/bonafide/?search=${
+              jwtDecode(sessionStorage?.getItem("accesstoken"))
+                ?.registration_number
+            }`,
+            {
+              headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+              },
+            }
+          )
+          .then((response) => {
+            setLoading(false);
+            setResult(response.data.reverse());
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+          setCollege(response1?.data?.[0]?.slug);
+        }).catch(error=>{
+
+        })
+      }else{
+        navigate('/login');
+      } 
+    
   }, []);
 
   const onSubmit = (data) => {
-
     const token = sessionStorage.getItem("accesstoken");
     const token1 = sessionStorage.getItem("refreshtoken");
-   
+
     if (token && token1) {
       let currentDate = new Date();
       const decodedToken = jwtDecode(token);
 
-      if (
-        decodedToken.exp * 1000 - currentDate.getTime() <
-        59 * 60 * 1000
-      ) {
+      if (decodedToken.exp * 1000 - currentDate.getTime() < 59 * 60 * 1000) {
         try {
           regenerateToken(); // Wait for the token regeneration to complete
         } catch (error) {
@@ -315,9 +326,9 @@ export const BonafideForm = () => {
           );
         }
       }
-    }else{
-      navigate('/login');
-    } 
+    } else {
+      navigate("/login");
+    }
     const formData = new FormData();
     formData.append("college", "1");
     formData.append(
@@ -338,7 +349,7 @@ export const BonafideForm = () => {
     formData.append("required_for", data.purpose);
 
     axios
-      .post(`${BaseUrl}/bonafide/`, formData, {
+      .post(`${BaseUrl}/${college}/bonafide/`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
@@ -405,11 +416,13 @@ export const BonafideForm = () => {
       <NavbarNew />
       <Box
         className="bonafide-form"
-        sx={{ borderRadius: 3, padding: 1 ,marginTop:3 }}
+        sx={{ borderRadius: 3, padding: 1, marginTop: 3 }}
       >
         <Grid container>
           <Grid item xs={12} md={6} lg={6}>
-            <center><p style={{fontSize:'1.2rem'}}>Bonafide Certificate Request</p></center>
+            <center>
+              <p style={{ fontSize: "1.2rem" }}>Bonafide Certificate Request</p>
+            </center>
 
             <Grid
               item
@@ -425,29 +438,28 @@ export const BonafideForm = () => {
                 }}
               >
                 <center>
-                <img
-                  src="./images/Bonafide.png"
-                  alt=""
-                  style={{ width: "55%",marginTop:"20px"}}
-                />
+                  <img
+                    src="./images/Bonafide.png"
+                    alt=""
+                    style={{ width: "55%", marginTop: "20px" }}
+                  />
                 </center>
               </Box>
             </Grid>
             <Box
               sx={{
-                backgroundColor: {xs:"rgb(243 244 246)",lg:"transparent"},
-                padding: {lg:"45px",md:"35px",xs:"20px",sm:"20px"},
-                marginTop: {lg:"42px",md:"42px",xs:"29px",sm:"29px"},
-                marginLeft: {lg:"42px",md:"42px",xs:"0px",sm:"0px"},
-                borderRadius: "15px"
+                backgroundColor: { xs: "rgb(243 244 246)", lg: "transparent" },
+                padding: { lg: "45px", md: "35px", xs: "20px", sm: "20px" },
+                marginTop: { lg: "42px", md: "42px", xs: "29px", sm: "29px" },
+                marginLeft: { lg: "42px", md: "42px", xs: "0px", sm: "0px" },
+                borderRadius: "15px",
               }}
             >
               <form onSubmit={handleSubmit(onSubmit)}>
-                <p style={{fontSize:"1.2rem",marginBottom:"10px"}}>
+                <p style={{ fontSize: "1.2rem", marginBottom: "10px" }}>
                   Purpose
                 </p>
                 <FormControl
-                 
                   sx={{
                     width: { lg: "86%", md: "70%", xs: "100%", sm: "90%" },
                   }}
@@ -481,7 +493,7 @@ export const BonafideForm = () => {
                   error={!!errors.file?.message}
                   sx={{ marginTop: 2 }}
                 >
-                  <p style={{fontSize:"1.2rem",marginBottom:"10px"}}>
+                  <p style={{ fontSize: "1.2rem", marginBottom: "10px" }}>
                     Supporting Document
                   </p>
                   <Button
@@ -519,7 +531,13 @@ export const BonafideForm = () => {
                     <FormHelperText>{errors.file.message}</FormHelperText>
                   )}
                 </FormControl>
-                <p style={{fontSize:"1.2rem",marginBottom:"10px",marginTop:"10px"}}>
+                <p
+                  style={{
+                    fontSize: "1.2rem",
+                    marginBottom: "10px",
+                    marginTop: "10px",
+                  }}
+                >
                   Do you want fee structure also?
                 </p>
                 <Box
@@ -583,7 +601,7 @@ export const BonafideForm = () => {
               <img
                 src="./images/Bonafide.png"
                 alt=""
-                style={{ width: "50%", marginLeft: "15%",marginTop:"5%" }}
+                style={{ width: "50%", marginLeft: "15%", marginTop: "5%" }}
               />
             </Box>
           </Grid>
@@ -614,7 +632,7 @@ export const BonafideForm = () => {
                   sx={{
                     minWidth: 295,
                     marginBottom: 2,
-                    backgroundColor:"rgb(243 244 246)",
+                    backgroundColor: "rgb(243 244 246)",
                     marginTop: 2,
                   }}
                 >
@@ -674,7 +692,6 @@ export const BonafideForm = () => {
             <Grid
               item
               lg={6}
-             
               sx={{
                 display: { xs: "none", sm: "none", md: "none", lg: "block" },
               }}

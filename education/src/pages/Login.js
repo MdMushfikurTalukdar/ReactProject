@@ -22,6 +22,7 @@ import Checkbox from "@mui/material/Checkbox";
 import { Url } from "../components/BaseUrl";
 import { jwtDecode } from "jwt-decode";
 
+
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
 export const LoginPage = () => {
@@ -90,6 +91,8 @@ export const LoginPage = () => {
           navigate("/admin-dashboard");
         } else if (response.role === "caretaker") {
           navigate("/caretaker-dashboard");
+        } else if (response.role === "registrar") {
+            navigate("/registrar-dashboard");
         } else if (response.role === "office") {
           let config = {
             method: "get",
@@ -110,6 +113,7 @@ export const LoginPage = () => {
               console.log(error);
             });
         } else {
+         
           navigate("/dashboard");
         }
 

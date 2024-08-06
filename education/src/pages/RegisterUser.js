@@ -79,8 +79,9 @@ export const RegisterUser = () => {
           "principal",
           "caretaker",
           "department",
+          "registrar"
         ],
-        "Invalid role, must be one of: student, faculty, super-admin,office,principal,caretaker",
+        "Invalid role, must be one of: student, faculty,registrar,office,principal,caretaker",
         "department"
       )
       .required("role is required"),

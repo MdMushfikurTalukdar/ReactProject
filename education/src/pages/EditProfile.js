@@ -23,7 +23,7 @@ import { enqueueSnackbar } from "notistack";
 import emailValidator from "email-validator";
 import NavbarNew from "../components/NavbarNew";
 import { FaCameraRetro } from "react-icons/fa";
-import { BaseUrl } from "../components/BaseUrl";
+import { BaseUrl, Url } from "../components/BaseUrl";
 
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 const phoneNumberRegex = /^\d{10}$/;
@@ -165,7 +165,7 @@ export const EditProfile = () => {
           let config = {
             method: "post",
             maxBodyLength: Infinity,
-            url: "https://amarnath013.pythonanywhere.com/api/user/token/refresh/",
+            url: `${Url}/token/refresh/`,
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
@@ -247,168 +247,113 @@ export const EditProfile = () => {
   const [file, setFile] = useState("");
   const [imgPreview, setImgPreview] = useState("");
   const [loading, setLoading] = useState(false);
+  const [slug,setSlug]=useState('');
 
   useEffect(() => {
-    let config = {
-      method: "GET",
-      maxBodyLength: Infinity,
-      url: `${BaseUrl}/profile/`,
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-      },
-    };
+    const token = sessionStorage?.getItem("accesstoken");
+    const token1 = sessionStorage?.getItem("refreshtoken");
 
-    axios
-      .request(config)
-      .then((response) => {
-        console.log(response.data);
-        const token = sessionStorage.getItem("accesstoken");
-        if (token) {
-          let currentDate = new Date();
-          const decodedToken = jwtDecode(token);
+    if (token && token1) {
+      const response = jwtDecode(token);
 
-          if (decodedToken.exp * 1000 - currentDate.getTime() < 59 * 60 * 1000) {
-            try {
-              regenerateToken(); // Wait for the token regeneration to complete
-            } catch (error) {
-              
-              console.error(
-                "Error in request interceptor while regenerating token:",
-                error
-              );
-            }
-          }
-        }else{
-          navigate('/login');
-        }
-        setUserProfile(response?.data);
-        setIsCorrespndanceSame(
-          response?.data?.personal_information?.isCorrespndance_same
-        );
-        setValue(
-          "first_name",
-          response.data.personal_information?.first_name || ""
-        );
-        setValue(
-          "last_name",
-          response.data.personal_information?.last_name || ""
-        );
-        setValue(
-          "father_name",
-          response.data.personal_information?.father_name || ""
-        );
-        setValue(
-          "middle_name",
-          response.data.personal_information?.middle_name || ""
-        );
-        setValue(
-          "date_of_birth",
-          response.data.personal_information?.date_of_birth || ""
-        );
-        setValue("gender", response.data.personal_information?.gender || "");
-        setValue("email", response.data.contact_information?.email || "");
-        setValue(
-          "permanent_address",
-          response.data.personal_information?.permanent_address || ""
-        );
-        setValue(
-          "isCorrespndance_same",
-          response.data.personal_information?.isCorrespndance_same || "false"
-        );
-        setValue(
-          "correspndance_address",
-          response.data.personal_information?.correspndance_address || ""
-        );
-        setValue(
-          "permanent_address",
-          response.data.personal_information?.permanent_address || ""
-        );
-        setValue(
-          "student_email",
-          response.data.contact_information?.student_email || ""
-        );
-        setValue(
-          "student_phone_number",
-          response.data.contact_information?.student_phone_number || ""
-        );
-        setValue(
-          "fathers_mobile_number",
-          response.data.contact_information?.fathers_mobile_number || ""
-        );
+      const config = {
+        method: "get",
+        maxBodyLength: Infinity,
+        url: `${Url}/colleges-slugs/?search=${response.college}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
 
-        setValue(
-          "registration_year",
-          response.data.academic_information?.registration_year || ""
-        );
-        setValue("year", response.data.academic_information?.year || "");
-        setValue(
-          "last_qualification",
-          response.data.academic_information?.last_qualification || ""
-        );
-        setValue("school", response.data.academic_information?.school || "");
-        setValue("board", response.data.academic_information?.board || "");
-        setValue("branch", response.data.academic_information?.branch || "");
-        setValue(
-          "merit_serial_number",
-          response.data.academic_information?.merit_serial_number || ""
-        );
-        setValue(
-          "category",
-          response.data.academic_information?.category || ""
-        );
-        setValue(
-          "college_name",
-          response.data.academic_information?.college_name || ""
-        );
-        setValue(
-          "date_of_admission",
-          response.data.academic_information?.date_of_admission || ""
-        );
-        setValue("session", response.data.academic_information?.session || "");
-        setValue(
-          "university_reg_no",
-          response.data.academic_information?.university_reg_no || ""
-        );
-        setValue(
-          "TC_or_CL_no",
-          response.data.tc_information?.TC_or_CL_no || ""
-        );
-        setValue(
-          "issuing_date_tc",
-          response.data.tc_information?.issuing_date_tc || ""
-        );
-        setValue("purpose", response.data.tc_information?.purpose || "");
-        setValue(
-          "character_certificate_issued",
-          response.data.tc_information?.character_certificate_issued || ""
-        );
-        setValue(
-          "character_certificate_no",
-          response.data.tc_information?.character_certificate_no || ""
-        );
-        setValue(
-          "issuing_date_cr",
-          response.data.tc_information?.issuing_date_cr || ""
-        );
-      })
+      axios
+        .request(config)
+        .then((response1) => {
+          console.log(JSON.stringify(response1.data));
+          setSlug(response1?.data?.[0]?.slug);
 
-      .catch((error) => {
-        console.log(error);
-        if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
-          enqueueSnackbar("Logging out", {
-            variant: "error",
-            anchorOrigin: {
-              vertical: "bottom",
-              horizontal: "center",
+          const profileConfig = {
+            method: "GET",
+            maxBodyLength: Infinity,
+            url: `${Url}/${response1?.data?.[0]?.slug}/profile/`,
+            headers: {
+              Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
             },
-            autoHideDuration: 3000,
-          });  
-          navigate("/login");
-        }
-      });
-  }, [setValue]);
+          };
 
-  // console.log(errors);
+          return axios.request(profileConfig);
+        })
+        .then((response) => {
+          const token = sessionStorage.getItem("accesstoken");
+          if (token) {
+            let currentDate = new Date();
+            const decodedToken = jwtDecode(token);
+
+            if (decodedToken.exp * 1000 - currentDate.getTime() < 59 * 60 * 1000) {
+              regenerateToken().catch((error) => {
+                console.error("Error in request interceptor while regenerating token:", error);
+                navigate('/login');
+              });
+            }
+          } else {
+            navigate('/login');
+          }
+          console.log(response);
+          setUserProfile(response?.data);
+          setIsCorrespndanceSame(response?.data?.personal_information?.isCorrespndance_same);
+          setValue("first_name", response.data.personal_information?.first_name || "");
+          setValue("last_name", response.data.personal_information?.last_name || "");
+          setValue("father_name", response.data.personal_information?.father_name || "");
+          setValue("middle_name", response.data.personal_information?.middle_name || "");
+          setValue("date_of_birth", response.data.personal_information?.date_of_birth || "");
+          setValue("gender", response.data.personal_information?.gender || "");
+          setValue("email", response.data.contact_information?.email || "");
+          setValue("permanent_address", response.data.personal_information?.permanent_address || "");
+          setValue("isCorrespndance_same", response.data.personal_information?.isCorrespndance_same || "false");
+          setValue("correspndance_address", response.data.personal_information?.correspndance_address || "");
+          setValue("student_email", response.data.contact_information?.student_email || "");
+          setValue("student_phone_number", response.data.contact_information?.student_phone_number || "");
+          setValue("fathers_mobile_number", response.data.contact_information?.fathers_mobile_number || "");
+          setValue("registration_year", response.data.academic_information?.registration_year || "");
+          setValue("year", response.data.academic_information?.year || "");
+          setValue("last_qualification", response.data.academic_information?.last_qualification || "");
+          setValue("school", response.data.academic_information?.school || "");
+          setValue("board", response.data.academic_information?.board || "");
+          setValue("branch", response.data.academic_information?.branch || "");
+          setValue("merit_serial_number", response.data.academic_information?.merit_serial_number || "");
+          setValue("category", response.data.academic_information?.category || "");
+          setValue("college_name", response.data.academic_information?.college_name || "");
+          setValue("date_of_admission", response.data.academic_information?.date_of_admission || "");
+          setValue("session", response.data.academic_information?.session || "");
+          setValue("university_reg_no", response.data.academic_information?.university_reg_no || "");
+          setValue("TC_or_CL_no", response.data.tc_information?.TC_or_CL_no || "");
+          setValue("issuing_date_tc", response.data.tc_information?.issuing_date_tc || "");
+          setValue("purpose", response.data.tc_information?.purpose || "");
+          setValue("character_certificate_issued", response.data.tc_information?.character_certificate_issued || "");
+          setValue("character_certificate_no", response.data.tc_information?.character_certificate_no || "");
+          setValue("issuing_date_cr", response.data.tc_information?.issuing_date_cr || "");
+        })
+        .catch((error) => {
+          console.log(error);
+          if (error?.response?.data?.errors?.detail === "Given token not valid for any token type") {
+            enqueueSnackbar("Logging out", {
+              variant: "error",
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "center",
+              },
+              autoHideDuration: 3000,
+            });
+            navigate("/login");
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      navigate("/login");
+    }
+  }, []);
+
 
   const UpdateSubmit = (data) => {
     console.log(file);
@@ -470,7 +415,7 @@ export const EditProfile = () => {
       data.merit_serial_number
     );
     formData.append("academic_information.category", data.category);
-    formData.append("academic_information.college_name", data.college_name);
+    // formData.append("academic_information.college_name", data.college_name);
     formData.append(
       "academic_information.date_of_admission",
       data.date_of_admission
@@ -498,7 +443,7 @@ export const EditProfile = () => {
     let config = {
       method: "put",
       maxBodyLength: Infinity,
-      url: `${BaseUrl}/profile/`,
+      url: `${BaseUrl}/${slug}/profile/`,
       headers: {
         "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
@@ -1194,6 +1139,7 @@ export const EditProfile = () => {
                             {...register("college_name")}
                             error={!!errors.college_name}
                             helperText={errors.college_name?.message}
+                            disabled
                           />
                         </Grid>
 
