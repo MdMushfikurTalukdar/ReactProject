@@ -336,13 +336,14 @@ export const RegistrarDashboard = () => {
                         }}
                       >
                         <CardActionArea>
-                          <CardMedia
+                          <center>
+                            <img
                             src={`data:image/*;base64,${decodeURIComponent(
                               data?.supporting_document
                             )}`}
                             alt="Marksheet"
-                            style={{ width: "150px", height: "150px" }}
-                          />
+                            style={{  height: "280px",objectFit:"cover",marginTop:"10px" }}
+                          /></center>
                           <CardContent style={{ padding: "15px" }}>
                             <Typography
                               textAlign="center"
