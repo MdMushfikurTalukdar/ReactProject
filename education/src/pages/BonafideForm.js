@@ -122,6 +122,7 @@ export const BonafideForm = () => {
   const [previewUrl, setPreviewUrl] = useState(null);
   const [name, setName] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [loading1, setLoading1] = useState(true);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const navigate = useNavigate();
@@ -129,6 +130,7 @@ export const BonafideForm = () => {
   const [responsive, setResponsive] = useState(
     window.innerWidth < 669 ? true : false
   );
+  const[profile,setProfile]=useState([]);
 
   const regenerateToken = () => {
     if (sessionStorage?.getItem("accesstoken")) {
@@ -239,7 +241,7 @@ export const BonafideForm = () => {
     } else {
       navigate("/login");
     }
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     const token = sessionStorage.getItem("accesstoken");
@@ -293,6 +295,7 @@ export const BonafideForm = () => {
           )
           .then((response) => {
             setLoading(false);
+            console.log(response);
             setResult(response.data.reverse());
           })
           .catch((error) => {
@@ -308,7 +311,85 @@ export const BonafideForm = () => {
     
   }, []);
 
+  useEffect(() => {
+    const token = sessionStorage?.getItem("accesstoken");
+    const token1 = sessionStorage?.getItem("refreshtoken");
+
+    if (token && token1) {
+      const response = jwtDecode(token);
+
+      let config = {
+        method: "get",
+        maxBodyLength: Infinity,
+        url: `${Url}/colleges-slugs/?search=${response.college}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      axios
+        .request(config)
+        .then((response1) => {
+          console.log(JSON.stringify(response1.data));
+
+          setCollege(response1?.data?.[0]?.slug);
+
+          let config = {
+            method: "GET",
+            maxBodyLength: Infinity,
+            url: `${BaseUrl}/${response1?.data?.[0]?.slug}/profile/`,
+            headers: {
+              Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+            },
+          };
+
+          axios
+            .request(config)
+            .then((response) => {
+              console.log(response);
+              setProfile(response.data);
+              setLoading1(false);
+            })
+            .catch((error) => {
+              console.log(error);
+              if (
+                error?.response?.data?.errors?.detail ===
+                "Given token not valid for any token type"
+              ) {
+                enqueueSnackbar("Logging out", {
+                  variant: "error",
+                  anchorOrigin: {
+                    vertical: "bottom",
+                    horizontal: "center",
+                  },
+                  autoHideDuration: 3000,
+                });
+                navigate("/login");
+              }
+            });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      navigate("/login");
+    }
+  }, []);
+ 
+ 
   const onSubmit = (data) => {
+
+    if(profile?.academic_information?.branch===null || profile?.academic_information?.registration_year===null || profile?.academic_information?.session===null || profile?.academic_information?.date_of_admission===null){
+      return enqueueSnackbar("Update Your Profile first.", {
+        variant: "warning",
+        anchorOrigin: {
+          vertical: "bottom",
+          horizontal: "center",
+        },
+        autoHideDuration: 1000,
+      });
+    }
+    
     const token = sessionStorage.getItem("accesstoken");
     const token1 = sessionStorage.getItem("refreshtoken");
 
@@ -330,20 +411,7 @@ export const BonafideForm = () => {
       navigate("/login");
     }
     const formData = new FormData();
-    formData.append("college", "1");
-    formData.append(
-      "student",
-      sessionStorage?.getItem("accesstoken") === null
-        ? null
-        : jwtDecode(sessionStorage?.getItem("accesstoken")).user_id
-    );
-    formData.append(
-      "roll_no",
-      sessionStorage?.getItem("accesstoken") === null
-        ? null
-        : jwtDecode(sessionStorage?.getItem("accesstoken")).user_id
-    );
-    formData.append("status", "pending");
+    
     formData.append("supporting_document", data.file[0]);
     formData.append("fee_structure", "true");
     formData.append("required_for", data.purpose);
@@ -400,7 +468,7 @@ export const BonafideForm = () => {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - result.length) : 0;
 
-  if (loading) {
+  if (loading || loading1) {
     return (
       <Box
         display="flex"

@@ -230,6 +230,32 @@ export const RegistrarDashboard = () => {
           }
         )
         .then((res) => {
+
+          const token = sessionStorage.getItem("accesstoken");
+          const token1 = sessionStorage.getItem("refreshtoken");
+         
+          if (token && token1) {
+            let currentDate = new Date();
+            const decodedToken = jwtDecode(token);
+  
+            if (
+              decodedToken.exp * 1000 - currentDate.getTime() <
+              59 * 60 * 1000
+            ) {
+              try {
+                regenerateToken(); // Wait for the token regeneration to complete
+              } catch (error) {
+                console.error(
+                  "Error in request interceptor while regenerating token:",
+                  error
+                );
+              }
+            }
+          }else{
+            navigate('/login');
+          }
+          console.log(res.data);
+
           setResult((prev) => {
             prev.map((data) =>
               data.id === id ? { ...data, status: "approved" } : data
@@ -273,6 +299,31 @@ export const RegistrarDashboard = () => {
           }
         )
         .then((res) => {
+
+          const token = sessionStorage.getItem("accesstoken");
+          const token1 = sessionStorage.getItem("refreshtoken");
+         
+          if (token && token1) {
+            let currentDate = new Date();
+            const decodedToken = jwtDecode(token);
+  
+            if (
+              decodedToken.exp * 1000 - currentDate.getTime() <
+              59 * 60 * 1000
+            ) {
+              try {
+                regenerateToken(); // Wait for the token regeneration to complete
+              } catch (error) {
+                console.error(
+                  "Error in request interceptor while regenerating token:",
+                  error
+                );
+              }
+            }
+          }else{
+            navigate('/login');
+          }
+
           setResult((prev) => {
             prev.map((data) =>
               data.id === id ? { ...data, status: "rejected" } : data
@@ -388,7 +439,7 @@ export const RegistrarDashboard = () => {
 
       <Box sx={{ marginBottom: "10%" }}>
         {request &&
-          (result.length > 0 ? (
+          (result?.length > 0 ? (
             <Box>
               <p
                 style={{
@@ -463,7 +514,7 @@ export const RegistrarDashboard = () => {
                                 marginBottom="0%"
                               >
                                 Registration No.:{" "}
-                                {data?.student_details?.registration_number}
+                                {data?.student_details?.academic_information?.registration_number}
                               </Typography>
                               <Grid container sx={{ padding: "20px" }}>
                                 <Grid item xs={12} lg={6} md={6} sm={6}>
@@ -548,7 +599,7 @@ export const RegistrarDashboard = () => {
           ))}
 
         {approved &&
-          (result.length > 0 ? (
+          (result?.length > 0 ? (
             <Box>
               <p
                 style={{
@@ -701,7 +752,7 @@ export const RegistrarDashboard = () => {
           ))}
 
         {reject &&
-          (result.length > 0 ? (
+          (result?.length > 0 ? (
             <Box>
               <p
                 style={{
