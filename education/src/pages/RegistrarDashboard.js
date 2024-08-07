@@ -14,6 +14,7 @@ import {
   CardActions,
   CardContent,
   CardMedia,
+  CircularProgress,
   Divider,
   Grid,
   Typography,
@@ -22,6 +23,7 @@ import {
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { enqueueSnackbar } from "notistack";
+import { error } from "jquery";
 
 export const RegistrarDashboard = () => {
   const navigate = useNavigate();
@@ -212,9 +214,104 @@ export const RegistrarDashboard = () => {
     }
   };
 
-  const handleVerification = (e) => {};
-  const handleReject = (e) => {};
+  const handleVerification = (id) => {
+    const token = sessionStorage.getItem("accesstoken");
+    const token1 = sessionStorage.getItem("refreshtoken");
 
+    if (token && token1) {
+      axios
+        .patch(
+          `${Url}/${college}/bonafide/${id}/approve/`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+            },
+          }
+        )
+        .then((res) => {
+          setResult((prev) => {
+            prev.map((data) =>
+              data.id === id ? { ...data, status: "approved" } : data
+            );
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+          if (
+            error?.response?.data?.errors?.detail ===
+            "Given token not valid for any token type"
+          ) {
+            enqueueSnackbar("Logging out", {
+              variant: "error",
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "center",
+              },
+              autoHideDuration: 3000,
+            });
+            navigate("/login");
+          }
+        });
+    } else {
+      navigate("/login");
+    }
+  };
+  const handleReject = (id) => {
+    const token = sessionStorage.getItem("accesstoken");
+    const token1 = sessionStorage.getItem("refreshtoken");
+
+    if (token && token1) {
+      axios
+        .patch(
+          `${Url}/${college}/bonafide/${id}/reject/`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+            },
+          }
+        )
+        .then((res) => {
+          setResult((prev) => {
+            prev.map((data) =>
+              data.id === id ? { ...data, status: "rejected" } : data
+            );
+          });
+        })
+        .catch((error) => {
+          if (
+            error?.response?.data?.errors?.detail ===
+            "Given token not valid for any token type"
+          ) {
+            enqueueSnackbar("Logging out", {
+              variant: "error",
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "center",
+              },
+              autoHideDuration: 3000,
+            });
+            navigate("/login");
+          }
+        });
+    } else {
+      navigate("/login");
+    }
+  };
+
+  if (loading) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="80vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
   return (
     <div className="bg-gray-100 min-h-screen">
       <NavbarNew />
@@ -320,121 +417,123 @@ export const RegistrarDashboard = () => {
                   spacing={2}
                   sx={{ width: "100vw", marginTop: "50px" }}
                 >
-                  {result.map((data, index) => (
-                    <Grid
-                      item
-                      lg={6}
-                      sm={12}
-                      xs={12}
-                      md={12}
-                      sx={{ display: "flex", justifyContent: "center" }}
-                      key={index}
-                    >
-                      <Card
-                        sx={{
-                          minWidth: { lg: 545, md: 545, xs: 300, sm: 445 },
-                        }}
+                  {result.map((data, index) =>
+                    data?.status === "pending" ? (
+                      <Grid
+                        item
+                        lg={6}
+                        sm={12}
+                        xs={12}
+                        md={12}
+                        sx={{ display: "flex", justifyContent: "center" }}
+                        key={index}
                       >
-                        <CardActionArea>
-                          <center>
-                            <img
-                              src={`data:image/*;base64,${decodeURIComponent(
-                                data?.supporting_document
-                              )}`}
-                              alt="Marksheet"
-                              style={{
-                                height: "280px",
-                                objectFit: "cover",
-                                marginTop: "10px",
-                              }}
-                            />
-                          </center>
-                          <CardContent style={{ padding: "15px" }}>
-                            <Typography
-                              textAlign="center"
-                              variant="body2"
-                              fontSize="1.2rem"
-                              color="text.secondary"
-                            >
-                              {data.name}
-                            </Typography>
-                            <Typography
-                              variant="body2"
-                              textAlign="center"
-                              color="text.secondary"
-                              marginBottom="0%"
-                            >
-                              Registration No.:{" "}
-                              {data?.student_details?.registration_number}
-                            </Typography>
-                            <Grid container sx={{ padding: "20px" }}>
-                              <Grid item xs={12} lg={6} md={6} sm={6}>
-                                <Box sx={{ display: "flex", gap: "5px" }}>
+                        <Card
+                          sx={{
+                            minWidth: { lg: 545, md: 545, xs: 300, sm: 445 },
+                          }}
+                        >
+                          <CardActionArea>
+                            <center>
+                              <img
+                                src={`data:image/*;base64,${decodeURIComponent(
+                                  data?.supporting_document
+                                )}`}
+                                alt="Marksheet"
+                                style={{
+                                  height: "280px",
+                                  objectFit: "cover",
+                                  marginTop: "10px",
+                                }}
+                              />
+                            </center>
+                            <CardContent style={{ padding: "15px" }}>
+                              <Typography
+                                textAlign="center"
+                                variant="body2"
+                                fontSize="1.2rem"
+                                color="text.secondary"
+                              >
+                                {data.name}
+                              </Typography>
+                              <Typography
+                                variant="body2"
+                                textAlign="center"
+                                color="text.secondary"
+                                marginBottom="0%"
+                              >
+                                Registration No.:{" "}
+                                {data?.student_details?.registration_number}
+                              </Typography>
+                              <Grid container sx={{ padding: "20px" }}>
+                                <Grid item xs={12} lg={6} md={6} sm={6}>
+                                  <Box sx={{ display: "flex", gap: "5px" }}>
+                                    <Typography
+                                      textAlign="center"
+                                      variant="body2"
+                                      color="text.secondary"
+                                    >
+                                      Applied Date:{data.applied_date}
+                                    </Typography>
+                                  </Box>
+                                  <Box sx={{ display: "flex", gap: "5px" }}>
+                                    <Typography
+                                      variant="body2"
+                                      color="text.secondary"
+                                      marginTop="5px"
+                                    >
+                                      Bonafide Number:{" "}
+                                      <span>{data.bonafide_number}</span>
+                                    </Typography>
+                                  </Box>
+                                  <Box sx={{ display: "flex", gap: "5px" }}>
+                                    <Typography
+                                      variant="body2"
+                                      color="text.secondary"
+                                      marginTop="5px"
+                                    >
+                                      Status: <span>{data.status}</span>
+                                    </Typography>
+                                  </Box>
+                                </Grid>
+                                <Grid item xs={12} lg={6} md={6} sm={6}>
                                   <Typography
                                     textAlign="center"
                                     variant="body2"
                                     color="text.secondary"
+                                    marginTop="10px"
                                   >
-                                    Applied Date:{data.applied_date}
+                                    Required For: {data.required_for}
                                   </Typography>
-                                </Box>
-                                <Box sx={{ display: "flex", gap: "5px" }}>
-                                  <Typography
-                                    variant="body2"
-                                    color="text.secondary"
-                                    marginTop="5px"
-                                  >
-                                    Bonafide Number:{" "}
-                                    <span>{data.bonafide_number}</span>
-                                  </Typography>
-                                </Box>
-                                <Box sx={{ display: "flex", gap: "5px" }}>
-                                  <Typography
-                                    variant="body2"
-                                    color="text.secondary"
-                                    marginTop="5px"
-                                  >
-                                    Status: <span>{data.status}</span>
-                                  </Typography>
-                                </Box>
+                                </Grid>
                               </Grid>
-                              <Grid item xs={12} lg={6} md={6} sm={6}>
-                                <Typography
-                                  textAlign="center"
-                                  variant="body2"
-                                  color="text.secondary"
-                                  marginTop="10px"
-                                >
-                                  Required For: {data.required_for}
-                                </Typography>
-                              </Grid>
-                            </Grid>
-                          </CardContent>
-                        </CardActionArea>
-                        <CardActions
-                          style={{
-                            padding: "0px 15px 15px 15px",
-                            float: "right",
-                          }}
-                        >
-                          <Button
-                            variant="contained"
-                            // onClick={(e) => handleVerification(data.id)}
-                            style={{ backgroundColor: "rgb(107, 169, 169)" }}
+                            </CardContent>
+                          </CardActionArea>
+                          <CardActions
+                            style={{
+                              padding: "0px 15px 15px 15px",
+                              float: "right",
+                            }}
                           >
-                            Accept
-                          </Button>
-                          <Button
-                            variant="contained"
-                            // onClick={(e) => handleReject(data.id)}
-                            style={{ backgroundColor: "rgb(107, 169, 169)" }}
-                          >
-                            Reject
-                          </Button>
-                        </CardActions>
-                      </Card>
-                    </Grid>
-                  ))}
+                            <Button
+                              variant="contained"
+                              onClick={(e) => handleVerification(data.id)}
+                              style={{ backgroundColor: "rgb(107, 169, 169)" }}
+                            >
+                              Accept
+                            </Button>
+                            <Button
+                              variant="contained"
+                              onClick={(e) => handleReject(data.id)}
+                              style={{ backgroundColor: "rgb(107, 169, 169)" }}
+                            >
+                              Reject
+                            </Button>
+                          </CardActions>
+                        </Card>
+                      </Grid>
+                    ) : null
+                  )}
                 </Grid>
               </Box>
             </Box>
@@ -448,8 +547,8 @@ export const RegistrarDashboard = () => {
             </center>
           ))}
 
-        {approved && 
-        (result.length > 0 ? (
+        {approved &&
+          (result.length > 0 ? (
             <Box>
               <p
                 style={{
@@ -459,7 +558,7 @@ export const RegistrarDashboard = () => {
                   marginTop: "20px",
                 }}
               >
-                Bonafide Requests
+                Approved Bonafide Requests
               </p>
               <center>
                 <Divider
@@ -478,121 +577,116 @@ export const RegistrarDashboard = () => {
                   spacing={2}
                   sx={{ width: "100vw", marginTop: "50px" }}
                 >
-                  {result.map((data, index) => (
-                    <Grid
-                      item
-                      lg={6}
-                      sm={12}
-                      xs={12}
-                      md={12}
-                      sx={{ display: "flex", justifyContent: "center" }}
-                      key={index}
-                    >
-                      <Card
-                        sx={{
-                          minWidth: { lg: 545, md: 545, xs: 300, sm: 445 },
-                        }}
+                  {result.map((data, index) =>
+                    data?.status === "approved" ? (
+                      <Grid
+                        item
+                        lg={6}
+                        sm={12}
+                        xs={12}
+                        md={12}
+                        sx={{ display: "flex", justifyContent: "center" }}
+                        key={index}
                       >
-                        <CardActionArea>
-                          <center>
-                            <img
-                              src={`data:image/*;base64,${decodeURIComponent(
-                                data?.supporting_document
-                              )}`}
-                              alt="Marksheet"
-                              style={{
-                                height: "280px",
-                                objectFit: "cover",
-                                marginTop: "10px",
-                              }}
-                            />
-                          </center>
-                          <CardContent style={{ padding: "15px" }}>
-                            <Typography
-                              textAlign="center"
-                              variant="body2"
-                              fontSize="1.2rem"
-                              color="text.secondary"
-                            >
-                              {data.name}
-                            </Typography>
-                            <Typography
-                              variant="body2"
-                              textAlign="center"
-                              color="text.secondary"
-                              marginBottom="0%"
-                            >
-                              Registration No.:{" "}
-                              {data?.student_details?.registration_number}
-                            </Typography>
-                            <Grid container sx={{ padding: "20px" }}>
-                              <Grid item xs={12} lg={6} md={6} sm={6}>
-                                <Box sx={{ display: "flex", gap: "5px" }}>
+                        <Card
+                          sx={{
+                            minWidth: { lg: 545, md: 545, xs: 300, sm: 445 },
+                          }}
+                        >
+                          <CardActionArea>
+                            <center>
+                              <img
+                                src={`data:image/*;base64,${decodeURIComponent(
+                                  data?.supporting_document
+                                )}`}
+                                alt="Marksheet"
+                                style={{
+                                  height: "280px",
+                                  objectFit: "cover",
+                                  marginTop: "10px",
+                                }}
+                              />
+                            </center>
+                            <CardContent style={{ padding: "15px" }}>
+                              <Typography
+                                textAlign="center"
+                                variant="body2"
+                                fontSize="1.2rem"
+                                color="text.secondary"
+                              >
+                                {data.name}
+                              </Typography>
+                              <Typography
+                                variant="body2"
+                                textAlign="center"
+                                color="text.secondary"
+                                marginBottom="0%"
+                              >
+                                Registration No.:{" "}
+                                {data?.student_details?.registration_number}
+                              </Typography>
+                              <Grid container sx={{ padding: "20px" }}>
+                                <Grid item xs={12} lg={6} md={6} sm={6}>
+                                  <Box sx={{ display: "flex", gap: "5px" }}>
+                                    <Typography
+                                      textAlign="center"
+                                      variant="body2"
+                                      color="text.secondary"
+                                    >
+                                      Applied Date:{data.applied_date}
+                                    </Typography>
+                                  </Box>
+                                  <Box sx={{ display: "flex", gap: "5px" }}>
+                                    <Typography
+                                      variant="body2"
+                                      color="text.secondary"
+                                      marginTop="5px"
+                                    >
+                                      Bonafide Number:{" "}
+                                      <span>{data.bonafide_number}</span>
+                                    </Typography>
+                                  </Box>
+                                  <Box sx={{ display: "flex", gap: "5px" }}>
+                                    <Typography
+                                      variant="body2"
+                                      color="text.secondary"
+                                      marginTop="5px"
+                                    >
+                                      Status: <span>{data.status}</span>
+                                    </Typography>
+                                  </Box>
+                                </Grid>
+                                <Grid item xs={12} lg={6} md={6} sm={6}>
                                   <Typography
                                     textAlign="center"
                                     variant="body2"
                                     color="text.secondary"
+                                    marginTop="10px"
                                   >
-                                    Applied Date:{data.applied_date}
+                                    Required For: {data.required_for}
                                   </Typography>
-                                </Box>
-                                <Box sx={{ display: "flex", gap: "5px" }}>
-                                  <Typography
-                                    variant="body2"
-                                    color="text.secondary"
-                                    marginTop="5px"
-                                  >
-                                    Bonafide Number:{" "}
-                                    <span>{data.bonafide_number}</span>
-                                  </Typography>
-                                </Box>
-                                <Box sx={{ display: "flex", gap: "5px" }}>
-                                  <Typography
-                                    variant="body2"
-                                    color="text.secondary"
-                                    marginTop="5px"
-                                  >
-                                    Status: <span>{data.status}</span>
-                                  </Typography>
-                                </Box>
+                                </Grid>
                               </Grid>
-                              <Grid item xs={12} lg={6} md={6} sm={6}>
-                                <Typography
-                                  textAlign="center"
-                                  variant="body2"
-                                  color="text.secondary"
-                                  marginTop="10px"
-                                >
-                                  Required For: {data.required_for}
-                                </Typography>
-                              </Grid>
-                            </Grid>
-                          </CardContent>
-                        </CardActionArea>
-                        <CardActions
-                          style={{
-                            padding: "0px 15px 15px 15px",
-                            float: "right",
-                          }}
-                        >
-                          <Button
-                            variant="contained"
-                            // onClick={(e) => handleVerification(data.id)}
-                            style={{ backgroundColor: "rgb(107, 169, 169)" }}
+                            </CardContent>
+                          </CardActionArea>
+                          <CardActions
+                            style={{
+                              padding: "0px 15px 15px 15px",
+                              float: "right",
+                            }}
                           >
-                            Accept
-                          </Button>
-                          <Button
-                            variant="contained"
-                            // onClick={(e) => handleReject(data.id)}
-                            style={{ backgroundColor: "rgb(107, 169, 169)" }}
-                          >
-                            Reject
-                          </Button>
-                        </CardActions>
-                      </Card>
-                    </Grid>
-                  ))}
+                            <Button
+                              variant="contained"
+                              onClick={(e) => handleReject(data.id)}
+                              style={{ backgroundColor: "rgb(107, 169, 169)" }}
+                            >
+                              Reject
+                            </Button>
+                          </CardActions>
+                        </Card>
+                      </Grid>
+                    ) : null
+                  )}
                 </Grid>
               </Box>
             </Box>
@@ -605,165 +699,159 @@ export const RegistrarDashboard = () => {
               />
             </center>
           ))}
-        
-        {reject && 
-        (result.length > 0 ? (
-          <Box>
-            <p
-              style={{
-                fontSize: "2.0rem",
-                fontWeight: "500",
-                textAlign: "center",
-                marginTop: "20px",
-              }}
-            >
-              Bonafide Requests
-            </p>
-            <center>
-              <Divider
-                sx={{
-                  backgroundColor: "blue",
-                  width: { lg: "17%", xs: "10%", md: "5%" },
-                  fontWeight: "800",
+
+        {reject &&
+          (result.length > 0 ? (
+            <Box>
+              <p
+                style={{
+                  fontSize: "2.0rem",
+                  fontWeight: "500",
                   textAlign: "center",
-                  marginTop: "5px",
+                  marginTop: "20px",
                 }}
-              />
-            </center>
-            <Box sx={{ padding: "7px" }}>
-              <Grid
-                container
-                spacing={2}
-                sx={{ width: "100vw", marginTop: "50px" }}
               >
-                {result.map((data, index) => (
-                  <Grid
-                    item
-                    lg={6}
-                    sm={12}
-                    xs={12}
-                    md={12}
-                    sx={{ display: "flex", justifyContent: "center" }}
-                    key={index}
-                  >
-                    <Card
-                      sx={{
-                        minWidth: { lg: 545, md: 545, xs: 300, sm: 445 },
-                      }}
-                    >
-                      <CardActionArea>
-                        <center>
-                          <img
-                            src={`data:image/*;base64,${decodeURIComponent(
-                              data?.supporting_document
-                            )}`}
-                            alt="Marksheet"
-                            style={{
-                              height: "280px",
-                              objectFit: "cover",
-                              marginTop: "10px",
-                            }}
-                          />
-                        </center>
-                        <CardContent style={{ padding: "15px" }}>
-                          <Typography
-                            textAlign="center"
-                            variant="body2"
-                            fontSize="1.2rem"
-                            color="text.secondary"
-                          >
-                            {data.name}
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            textAlign="center"
-                            color="text.secondary"
-                            marginBottom="0%"
-                          >
-                            Registration No.:{" "}
-                            {data?.student_details?.registration_number}
-                          </Typography>
-                          <Grid container sx={{ padding: "20px" }}>
-                            <Grid item xs={12} lg={6} md={6} sm={6}>
-                              <Box sx={{ display: "flex", gap: "5px" }}>
-                                <Typography
-                                  textAlign="center"
-                                  variant="body2"
-                                  color="text.secondary"
-                                >
-                                  Applied Date:{data.applied_date}
-                                </Typography>
-                              </Box>
-                              <Box sx={{ display: "flex", gap: "5px" }}>
-                                <Typography
-                                  variant="body2"
-                                  color="text.secondary"
-                                  marginTop="5px"
-                                >
-                                  Bonafide Number:{" "}
-                                  <span>{data.bonafide_number}</span>
-                                </Typography>
-                              </Box>
-                              <Box sx={{ display: "flex", gap: "5px" }}>
-                                <Typography
-                                  variant="body2"
-                                  color="text.secondary"
-                                  marginTop="5px"
-                                >
-                                  Status: <span>{data.status}</span>
-                                </Typography>
-                              </Box>
-                            </Grid>
-                            <Grid item xs={12} lg={6} md={6} sm={6}>
+                Rejected Bonafide Requests
+              </p>
+              <center>
+                <Divider
+                  sx={{
+                    backgroundColor: "blue",
+                    width: { lg: "17%", xs: "10%", md: "5%" },
+                    fontWeight: "800",
+                    textAlign: "center",
+                    marginTop: "5px",
+                  }}
+                />
+              </center>
+              <Box sx={{ padding: "7px" }}>
+                <Grid
+                  container
+                  spacing={2}
+                  sx={{ width: "100vw", marginTop: "50px" }}
+                >
+                  {result.map((data, index) =>
+                    data?.status === "rejected" ? (
+                      <Grid
+                        item
+                        lg={6}
+                        sm={12}
+                        xs={12}
+                        md={12}
+                        sx={{ display: "flex", justifyContent: "center" }}
+                        key={index}
+                      >
+                        <Card
+                          sx={{
+                            minWidth: { lg: 545, md: 545, xs: 300, sm: 445 },
+                          }}
+                        >
+                          <CardActionArea>
+                            <center>
+                              <img
+                                src={`data:image/*;base64,${decodeURIComponent(
+                                  data?.supporting_document
+                                )}`}
+                                alt="Marksheet"
+                                style={{
+                                  height: "280px",
+                                  objectFit: "cover",
+                                  marginTop: "10px",
+                                }}
+                              />
+                            </center>
+                            <CardContent style={{ padding: "15px" }}>
                               <Typography
                                 textAlign="center"
                                 variant="body2"
+                                fontSize="1.2rem"
                                 color="text.secondary"
-                                marginTop="10px"
                               >
-                                Required For: {data.required_for}
+                                {data.name}
                               </Typography>
-                            </Grid>
-                          </Grid>
-                        </CardContent>
-                      </CardActionArea>
-                      <CardActions
-                        style={{
-                          padding: "0px 15px 15px 15px",
-                          float: "right",
-                        }}
-                      >
-                        <Button
-                          variant="contained"
-                          // onClick={(e) => handleVerification(data.id)}
-                          style={{ backgroundColor: "rgb(107, 169, 169)" }}
-                        >
-                          Accept
-                        </Button>
-                        <Button
-                          variant="contained"
-                          // onClick={(e) => handleReject(data.id)}
-                          style={{ backgroundColor: "rgb(107, 169, 169)" }}
-                        >
-                          Reject
-                        </Button>
-                      </CardActions>
-                    </Card>
-                  </Grid>
-                ))}
-              </Grid>
+                              <Typography
+                                variant="body2"
+                                textAlign="center"
+                                color="text.secondary"
+                                marginBottom="0%"
+                              >
+                                Registration No.:{" "}
+                                {data?.student_details?.registration_number}
+                              </Typography>
+                              <Grid container sx={{ padding: "20px" }}>
+                                <Grid item xs={12} lg={6} md={6} sm={6}>
+                                  <Box sx={{ display: "flex", gap: "5px" }}>
+                                    <Typography
+                                      textAlign="center"
+                                      variant="body2"
+                                      color="text.secondary"
+                                    >
+                                      Applied Date:{data.applied_date}
+                                    </Typography>
+                                  </Box>
+                                  <Box sx={{ display: "flex", gap: "5px" }}>
+                                    <Typography
+                                      variant="body2"
+                                      color="text.secondary"
+                                      marginTop="5px"
+                                    >
+                                      Bonafide Number:{" "}
+                                      <span>{data.bonafide_number}</span>
+                                    </Typography>
+                                  </Box>
+                                  <Box sx={{ display: "flex", gap: "5px" }}>
+                                    <Typography
+                                      variant="body2"
+                                      color="text.secondary"
+                                      marginTop="5px"
+                                    >
+                                      Status: <span>{data.status}</span>
+                                    </Typography>
+                                  </Box>
+                                </Grid>
+                                <Grid item xs={12} lg={6} md={6} sm={6}>
+                                  <Typography
+                                    textAlign="center"
+                                    variant="body2"
+                                    color="text.secondary"
+                                    marginTop="10px"
+                                  >
+                                    Required For: {data.required_for}
+                                  </Typography>
+                                </Grid>
+                              </Grid>
+                            </CardContent>
+                          </CardActionArea>
+                          <CardActions
+                            style={{
+                              padding: "0px 15px 15px 15px",
+                              float: "right",
+                            }}
+                          >
+                            <Button
+                              variant="contained"
+                              onClick={(e) => handleVerification(data.id)}
+                              style={{ backgroundColor: "rgb(107, 169, 169)" }}
+                            >
+                              Accept
+                            </Button>
+                          </CardActions>
+                        </Card>
+                      </Grid>
+                    ) : null
+                  )}
+                </Grid>
+              </Box>
             </Box>
-          </Box>
-        ) : (
-          <center>
-            <img
-              src="./images/No_data.png"
-              alt=""
-              style={{ width: "250px" }}
-            />
-          </center>
-        ))
-        }
+          ) : (
+            <center>
+              <img
+                src="./images/No_data.png"
+                alt=""
+                style={{ width: "250px" }}
+              />
+            </center>
+          ))}
       </Box>
       <Footer />
     </div>

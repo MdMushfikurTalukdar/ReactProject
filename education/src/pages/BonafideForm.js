@@ -364,9 +364,11 @@ export const BonafideForm = () => {
           },
           autoHideDuration: 1000,
         });
-        setTimeout(() => {
-          window.location.reload();
-        }, 3000);
+
+        console.log(response);
+
+        setResult([...result,{bonafide_number:response.data.bonafide_number,required_for:data.purpose,status:'pending',applied_date:response.data.applied_date}])
+       
       })
       .catch((error) => {
         console.error(error);
