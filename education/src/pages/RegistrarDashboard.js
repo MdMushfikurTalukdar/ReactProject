@@ -215,6 +215,9 @@ export const RegistrarDashboard = () => {
   };
 
   const handleVerification = (id) => {
+    
+    console.log(id);
+
     const token = sessionStorage.getItem("accesstoken");
     const token1 = sessionStorage.getItem("refreshtoken");
 
@@ -256,11 +259,11 @@ export const RegistrarDashboard = () => {
           }
           console.log(res.data);
 
-          setResult((prev) => {
+          setResult((prev) => 
             prev.map((data) =>
               data.id === id ? { ...data, status: "approved" } : data
-            );
-          });
+            )
+          );
         })
         .catch((error) => {
           console.log(error);
@@ -324,11 +327,11 @@ export const RegistrarDashboard = () => {
             navigate('/login');
           }
 
-          setResult((prev) => {
+          setResult((prev) => 
             prev.map((data) =>
               data.id === id ? { ...data, status: "rejected" } : data
-            );
-          });
+            )
+          );
         })
         .catch((error) => {
           if (
@@ -674,7 +677,7 @@ export const RegistrarDashboard = () => {
                                 marginBottom="0%"
                               >
                                 Registration No.:{" "}
-                                {data?.student_details?.registration_number}
+                                {data?.student_details?.academic_information?.registration_number}
                               </Typography>
                               <Grid container sx={{ padding: "20px" }}>
                                 <Grid item xs={12} lg={6} md={6} sm={6}>
@@ -827,7 +830,7 @@ export const RegistrarDashboard = () => {
                                 marginBottom="0%"
                               >
                                 Registration No.:{" "}
-                                {data?.student_details?.registration_number}
+                                {data?.student_details?.academic_information?.registration_number}
                               </Typography>
                               <Grid container sx={{ padding: "20px" }}>
                                 <Grid item xs={12} lg={6} md={6} sm={6}>
