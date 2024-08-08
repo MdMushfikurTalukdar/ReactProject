@@ -123,14 +123,15 @@ export const BonafideForm = () => {
   const [name, setName] = useState(null);
   const [loading, setLoading] = useState(true);
   const [loading1, setLoading1] = useState(true);
+  const [loading2, setLoading2] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const navigate = useNavigate();
-  const [college,setCollege]=useState();
+  const [college, setCollege] = useState();
   const [responsive, setResponsive] = useState(
     window.innerWidth < 669 ? true : false
   );
-  const[profile,setProfile]=useState([]);
+  const [profile, setProfile] = useState([]);
 
   const regenerateToken = () => {
     if (sessionStorage?.getItem("accesstoken")) {
@@ -264,7 +265,7 @@ export const BonafideForm = () => {
     } else {
       navigate("/login");
     }
-   
+
     if (token && token1) {
       const response = jwtDecode(token);
 
@@ -282,33 +283,33 @@ export const BonafideForm = () => {
         .then((response1) => {
           console.log(JSON.stringify(response1.data));
           axios
-          .get(
-            `${BaseUrl}/${response1?.data?.[0]?.slug}/bonafide/?search=${
-              jwtDecode(sessionStorage?.getItem("accesstoken"))
-                ?.registration_number
-            }`,
-            {
-              headers: {
-                Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-              },
-            }
-          )
-          .then((response) => {
-            setLoading(false);
-            console.log(response);
-            setResult(response.data.reverse());
-          })
-          .catch((error) => {
-            console.error(error);
-          });
+            .get(
+              `${BaseUrl}/${response1?.data?.[0]?.slug}/bonafide/?search=${
+                jwtDecode(sessionStorage?.getItem("accesstoken"))
+                  ?.registration_number
+              }`,
+              {
+                headers: {
+                  Authorization: `Bearer ${sessionStorage.getItem(
+                    "accesstoken"
+                  )}`,
+                },
+              }
+            )
+            .then((response) => {
+              setLoading(false);
+              console.log(response);
+              setResult(response.data.reverse());
+            })
+            .catch((error) => {
+              console.error(error);
+            });
           setCollege(response1?.data?.[0]?.slug);
-        }).catch(error=>{
-
         })
-      }else{
-        navigate('/login');
-      } 
-    
+        .catch((error) => {});
+    } else {
+      navigate("/login");
+    }
   }, []);
 
   useEffect(() => {
@@ -375,11 +376,16 @@ export const BonafideForm = () => {
       navigate("/login");
     }
   }, []);
- 
- 
-  const onSubmit = (data) => {
 
-    if(profile?.academic_information?.branch===null || profile?.academic_information?.registration_year===null || profile?.academic_information?.session===null || profile?.academic_information?.date_of_admission===null){
+  const onSubmit = (data) => {
+    setLoading2(true);
+
+    if (
+      profile?.academic_information?.branch === null ||
+      profile?.academic_information?.registration_year === null ||
+      profile?.academic_information?.session === null ||
+      profile?.academic_information?.date_of_admission === null
+    ) {
       return enqueueSnackbar("Update Your Profile first.", {
         variant: "warning",
         anchorOrigin: {
@@ -389,7 +395,7 @@ export const BonafideForm = () => {
         autoHideDuration: 1000,
       });
     }
-    
+
     const token = sessionStorage.getItem("accesstoken");
     const token1 = sessionStorage.getItem("refreshtoken");
 
@@ -411,7 +417,7 @@ export const BonafideForm = () => {
       navigate("/login");
     }
     const formData = new FormData();
-    
+
     formData.append("supporting_document", data.file[0]);
     formData.append("fee_structure", "true");
     formData.append("required_for", data.purpose);
@@ -434,11 +440,19 @@ export const BonafideForm = () => {
         });
 
         console.log(response);
-
-        setResult([...result,{bonafide_number:response.data.bonafide_number,required_for:data.purpose,status:'pending',applied_date:response.data.applied_date}])
-       
+        setLoading2(false);
+        setResult([
+          ...result,
+          {
+            bonafide_number: response.data.bonafide_number,
+            required_for: data.purpose,
+            status: "pending",
+            applied_date: response.data.applied_date,
+          },
+        ]);
       })
       .catch((error) => {
+        setLoading2(false);
         console.error(error);
         if (
           error?.response?.data?.errors?.detail ===
@@ -648,7 +662,12 @@ export const BonafideForm = () => {
                     width: { lg: "80%", md: "70%", xs: "100%", sm: "90%" },
                   }}
                 >
-                  Send Request
+                  {!loading2 && <p>Send Request</p>}
+                  {loading2 && (
+                    <CircularProgress
+                      style={{ color: "white", width: "20px", height: "22px" }}
+                    />
+                  )}
                 </Button>
               </form>
             </Box>

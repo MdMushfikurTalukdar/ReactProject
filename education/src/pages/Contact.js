@@ -7,6 +7,7 @@ import {
   Container,
   Box,
   CardMedia,
+  CircularProgress,
 } from "@mui/material";
 import { Header } from "../components/Home/Header";
 import Footer from "../components/Home/Footer";
@@ -20,7 +21,8 @@ export const Contact = () => {
   const [imageIndex, setImageIndex] = React.useState(0);
   const images = React.useMemo(() => ["contactUs.jpg", "contactUs1.jpg"], []);
   const [url, setUrl] = React.useState("");
-  const navigate=useNavigate();
+  const navigate = useNavigate();
+  const [loading, setLoading] = React.useState(false);
   const [formData, setFormData] = React.useState({
     name: "",
     email: "",
@@ -30,7 +32,7 @@ export const Contact = () => {
     principal_name: "",
     established_date: "",
     college_logo: "",
-    college_code: ""
+    college_code: "",
   });
 
   React.useEffect(() => {
@@ -69,7 +71,7 @@ export const Contact = () => {
   };
 
   const handleSubmit = () => {
-    console.log(formData);
+    setLoading(true);
     if (
       formData.name !== "" &&
       formData.email !== "" &&
@@ -79,7 +81,7 @@ export const Contact = () => {
       formData.established_date !== "" &&
       formData.college_logo !== "" &&
       formData.principal_name !== "" &&
-      formData.college_code!==""
+      formData.college_code !== ""
     ) {
       let data = new FormData();
       data.append("name", formData.name);
@@ -104,6 +106,7 @@ export const Contact = () => {
         .request(config)
         .then((response) => {
           console.log(response);
+          setLoading(false);
           enqueueSnackbar(response?.data?.message, {
             variant: "success",
             anchorOrigin: {
@@ -112,8 +115,8 @@ export const Contact = () => {
             },
             autoHideDuration: 3000,
           });
-          navigate('/login');
           
+          navigate("/login");
         })
         .catch((error) => {
           console.log(error);
@@ -310,7 +313,12 @@ export const Contact = () => {
                 }}
                 onClick={handleSubmit}
               >
-                Send Message
+                {!loading && <p>Submit Message</p>}
+                {loading && (
+                  <CircularProgress
+                    style={{ color: "white", width: "20px", height: "22px" }}
+                  />
+                )}
               </Button>
             </Grid>
           </Grid>

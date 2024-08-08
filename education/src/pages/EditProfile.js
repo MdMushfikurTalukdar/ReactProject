@@ -24,6 +24,8 @@ import emailValidator from "email-validator";
 import NavbarNew from "../components/NavbarNew";
 import { FaCameraRetro } from "react-icons/fa";
 import { BaseUrl, Url } from "../components/BaseUrl";
+import { ClimbingBoxLoader } from "react-spinners";
+
 
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 const phoneNumberRegex = /^\d{10}$/;
@@ -149,6 +151,7 @@ const schema = yup.object().shape({
 
 export const EditProfile = () => {
   const navigate = useNavigate();
+  
 
   const regenerateToken = () => {
     if (sessionStorage?.getItem("accesstoken")) {
@@ -246,7 +249,7 @@ export const EditProfile = () => {
   const [userProfile, setUserProfile] = useState([]);
   const [file, setFile] = useState("");
   const [imgPreview, setImgPreview] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [slug,setSlug]=useState('');
 
   useEffect(() => {
@@ -298,6 +301,7 @@ export const EditProfile = () => {
             navigate('/login');
           }
           console.log(response);
+          setLoading(false);
           setUserProfile(response?.data);
           setIsCorrespndanceSame(response?.data?.personal_information?.isCorrespndance_same);
           setValue("first_name", response.data.personal_information?.first_name || "");
@@ -518,6 +522,20 @@ export const EditProfile = () => {
     let url = URL.createObjectURL(e.target.files[0]);
     setImgPreview(url);
   };
+
+  if (loading) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="80vh"
+      >
+        <ClimbingBoxLoader />
+      </Box>
+    );
+  }
+
   return (
     <Box className="logout-container">
       <div className="circle circle1"></div>

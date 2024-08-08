@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  CircularProgress,
   Divider,
   Grid,
   TextField,
@@ -27,6 +28,7 @@ export const RegisterUser = () => {
   const navigate = useNavigate();
   const [file, setFile] = useState("");
   const { name } = useParams();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (sessionStorage?.getItem("accesstoken")) {
@@ -162,6 +164,8 @@ export const RegisterUser = () => {
   });
 
   const handleSubmitFile = async (e) => {
+
+    setLoading(true);
     console.log(file);
 
     if (!file.name.endsWith("csv")) {
@@ -210,6 +214,9 @@ export const RegisterUser = () => {
         navigate("/login");
       }
       if (response) {
+
+        setLoading(false);
+
         enqueueSnackbar(response.data.message, {
           variant: "success",
           anchorOrigin: {
@@ -221,7 +228,7 @@ export const RegisterUser = () => {
       }
     } catch (error) {
       console.error(error);
-
+      
       if (
         error?.response?.data?.errors?.detail ===
         "Given token not valid for any token type"
@@ -240,6 +247,7 @@ export const RegisterUser = () => {
   };
 
   const onSubmit = (data) => {
+    setLoading(true);
     const token = sessionStorage.getItem("accesstoken");
     const token1 = sessionStorage.getItem("refreshtoken");
 
@@ -263,7 +271,7 @@ export const RegisterUser = () => {
       })
         .then((res) => {
           console.log(res);
-
+          setLoading(false);
           const token = sessionStorage.getItem("accesstoken");
           const token1 = sessionStorage.getItem("refreshtoken");
 
@@ -301,6 +309,7 @@ export const RegisterUser = () => {
         })
         .catch((err) => {
           console.log(err);
+          setLoading(false);
           enqueueSnackbar(err?.response?.data?.message, {
             variant: "error",
             anchorOrigin: {
@@ -352,7 +361,12 @@ export const RegisterUser = () => {
                 className="parentGrid_small_screen"
               >
                 <h2 style={{ marginRight: "35%", color: "rgb(107 169 169)" }}>
-                  Create Account
+                {!loading && <p>Create Account</p>}
+                {loading && (
+                  <CircularProgress
+                    style={{ color: "white", width: "20px", height: "22px" }}
+                  />
+                )}
                 </h2>
 
                 <form onSubmit={handleSubmit(onSubmit)}>
@@ -651,7 +665,12 @@ export const RegisterUser = () => {
                 }}
                 type="submit"
               >
-                Create Account
+                {!loading && <p>Create Account</p>}
+                {loading && (
+                  <CircularProgress
+                    style={{ color: "white", width: "20px", height: "22px" }}
+                  />
+                )}
               </Button>
             </form>
 
