@@ -20,6 +20,7 @@ import {
   Typography,
 } from "@mui/material";
 
+import {ClimbingBoxLoader} from "react-spinners"
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { enqueueSnackbar } from "notistack";
@@ -362,7 +363,7 @@ export const RegistrarDashboard = () => {
         alignItems="center"
         height="80vh"
       >
-        <CircularProgress />
+        <ClimbingBoxLoader />
       </Box>
     );
   }

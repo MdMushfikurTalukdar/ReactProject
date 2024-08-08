@@ -15,8 +15,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 import { FaUpload } from "react-icons/fa";
-import { BaseUrl } from "../components/BaseUrl";
+import { BaseUrl, Url } from "../components/BaseUrl";
 import { jwtDecode } from "jwt-decode";
+import NavbarNew from "../components/NavbarNew";
+import Footer from "../components/Home/Footer";
 
 export const RegisterUser = () => {
   const [responsive, setResponsive] = useState(
@@ -52,6 +54,70 @@ export const RegisterUser = () => {
     setResponsive(window.innerWidth < 900 ? true : false);
   };
 
+  const regenerateToken = () => {
+    if (sessionStorage?.getItem("accesstoken")) {
+      const response = jwtDecode(sessionStorage?.getItem("accesstoken"));
+      const response1 = jwtDecode(sessionStorage?.getItem("refreshtoken"));
+      if (
+        response.exp < Math.floor(Date.now() / 1000) ||
+        response1.exp < Math.floor(Date.now() / 1000)
+      ) {
+        navigate("/login");
+      } else {
+        if (
+          sessionStorage.getItem("refreshtoken") &&
+          sessionStorage.getItem("accesstoken")
+        ) {
+          let data = {
+            refresh: sessionStorage?.getItem("refreshtoken"),
+          };
+
+          let config = {
+            method: "post",
+            maxBodyLength: Infinity,
+            url: `${Url}/token/refresh/`,
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
+            },
+            data: data,
+          };
+
+          axios
+            .request(config)
+            .then((response) => {
+              console.log(JSON.stringify(response.data));
+              sessionStorage.setItem("accesstoken", response.data.access);
+            })
+            .catch((error) => {
+              if (error?.message === "Request failed with status code 500") {
+                navigate("/login");
+              }
+              if (
+                error?.response?.data?.errors?.detail ===
+                "Given token not valid for any token type"
+              ) {
+                enqueueSnackbar("Logging out", {
+                  variant: "error",
+                  anchorOrigin: {
+                    vertical: "bottom",
+                    horizontal: "center",
+                  },
+                  autoHideDuration: 3000,
+                });
+                navigate("/login");
+              }
+              console.log(error);
+            });
+        } else {
+          navigate("/login");
+        }
+      }
+    } else {
+      navigate("/login");
+    }
+  };
+
   const { enqueueSnackbar } = useSnackbar();
 
   const schema = yup.object().shape({
@@ -79,7 +145,7 @@ export const RegisterUser = () => {
           "principal",
           "caretaker",
           "department",
-          "registrar"
+          "registrar",
         ],
         "Invalid role, must be one of: student, faculty,registrar,office,principal,caretaker",
         "department"
@@ -123,6 +189,26 @@ export const RegisterUser = () => {
         }
       );
 
+      const token = sessionStorage.getItem("accesstoken");
+      const token1 = sessionStorage.getItem("refreshtoken");
+
+      if (token && token1) {
+        let currentDate = new Date();
+        const decodedToken = jwtDecode(token);
+
+        if (decodedToken.exp * 1000 - currentDate.getTime() < 59 * 60 * 1000) {
+          try {
+            regenerateToken(); // Wait for the token regeneration to complete
+          } catch (error) {
+            console.error(
+              "Error in request interceptor while regenerating token:",
+              error
+            );
+          }
+        }
+      } else {
+        navigate("/login");
+      }
       if (response) {
         enqueueSnackbar(response.data.message, {
           variant: "success",
@@ -136,7 +222,10 @@ export const RegisterUser = () => {
     } catch (error) {
       console.error(error);
 
-      if (error?.response?.data?.errors?.detail === "Given token not valid for any token type") {
+      if (
+        error?.response?.data?.errors?.detail ===
+        "Given token not valid for any token type"
+      ) {
         enqueueSnackbar("Logging out", {
           variant: "error",
           anchorOrigin: {
@@ -174,6 +263,31 @@ export const RegisterUser = () => {
       })
         .then((res) => {
           console.log(res);
+
+          const token = sessionStorage.getItem("accesstoken");
+          const token1 = sessionStorage.getItem("refreshtoken");
+
+          if (token && token1) {
+            let currentDate = new Date();
+            const decodedToken = jwtDecode(token);
+
+            if (
+              decodedToken.exp * 1000 - currentDate.getTime() <
+              59 * 60 * 1000
+            ) {
+              try {
+                regenerateToken(); // Wait for the token regeneration to complete
+              } catch (error) {
+                console.error(
+                  "Error in request interceptor while regenerating token:",
+                  error
+                );
+              }
+            }
+          } else {
+            navigate("/login");
+          }
+
           enqueueSnackbar(res.data.message, {
             variant: "success",
             anchorOrigin: {
@@ -196,7 +310,10 @@ export const RegisterUser = () => {
             autoHideDuration: 3000,
           });
 
-          if (err?.response?.data?.errors?.detail === "Given token not valid for any token type") {
+          if (
+            err?.response?.data?.errors?.detail ===
+            "Given token not valid for any token type"
+          ) {
             enqueueSnackbar("Logging out", {
               variant: "error",
               anchorOrigin: {
@@ -216,6 +333,7 @@ export const RegisterUser = () => {
   };
   return (
     <div className="App">
+      <NavbarNew />
       {responsive && (
         <div className="parentdiv_small_screen">
           <img
@@ -401,12 +519,52 @@ export const RegisterUser = () => {
             style={{ backgroundColor: "#6c42ec" }}
           >
             <div style={{ color: "white" }}>
-              <h1 className="largeScreen_typography"> Stay on top of</h1>
-              <h1 className="largeScreen_typography1">time tracking</h1>
+              <h1
+                style={{
+                  position: "relative",
+                  top: "5rem",
+                  left: "5rem",
+                  width: "400px",
+                  height: "auto",
+                }}
+              >
+                {" "}
+                Dashboard
+              </h1>
+              <h4
+                style={{
+                  position: "relative",
+                  top: "6rem",
+                  left: "5rem",
+                  width: "400px",
+                  height: "auto",
+                }}
+              >
+                Empowering Workspaces,
+                <br />
+              </h4>
+              <h4
+                style={{
+                  position: "relative",
+                  top: "6rem",
+                  left: "6rem",
+                  width: "400px",
+                  height: "auto",
+                }}
+              >
+                {" "}
+                Inspiring Innovation
+                <br />
+              </h4>
 
               <img
                 src="../images/register_page_icon.png"
-                className="img"
+                style={{
+                  position: "relative",
+                  top: "10rem",
+                  width: "400px",
+                  height: "auto",
+                }}
                 alt=""
               />
             </div>
@@ -576,6 +734,7 @@ export const RegisterUser = () => {
           </Grid>
         </Grid>
       )}
+      <Footer />
     </div>
   );
 };

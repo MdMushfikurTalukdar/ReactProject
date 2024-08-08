@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import NavbarNew from "../components/NavbarNew";
-
+import {ClimbingBoxLoader} from "react-spinners"
 import Footer from "../components/Home/Footer";
 import { useNavigate } from "react-router-dom";
 import { Url } from "../components/BaseUrl";
@@ -30,6 +30,7 @@ export const AdminDashboard = () => {
   const navigate = useNavigate();
 
   const [result, setResult] = useState([]);
+  const [load, setLoad] = useState(true);
 
   useEffect(() => {
     if (sessionStorage?.getItem("accesstoken")) {
@@ -59,6 +60,7 @@ export const AdminDashboard = () => {
       .request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
+        setLoad(false);
         setResult(response.data);
       })
       .catch((error) => {
@@ -158,6 +160,21 @@ export const AdminDashboard = () => {
         }
       });
   };
+
+  if (load) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="80vh"
+      >
+        <ClimbingBoxLoader />
+      </Box>
+    );
+  }
+
+
 
   return (
     <div className="bg-gray-100 min-h-screen">

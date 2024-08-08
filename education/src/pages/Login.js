@@ -107,6 +107,7 @@ export const LoginPage = () => {
             .request(config)
             .then((response1) => {
               console.log(JSON.stringify(response1.data));
+              
               navigate(`/register/${response1.data[0].slug}`);
             })
             .catch((error) => {
