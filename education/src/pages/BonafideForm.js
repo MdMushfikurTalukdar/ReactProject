@@ -214,6 +214,7 @@ export const BonafideForm = () => {
     register,
     handleSubmit,
     control,
+    reset,
     formState: { errors },
     setValue,
     trigger,
@@ -430,6 +431,10 @@ export const BonafideForm = () => {
         },
       })
       .then((response) => {
+
+        reset();
+        setPreviewUrl('');
+        setName('');
         enqueueSnackbar("Request sent successfully", {
           variant: "success",
           anchorOrigin: {

@@ -20,7 +20,7 @@ import {
   Typography,
 } from "@mui/material";
 
-import {ClimbingBoxLoader} from "react-spinners"
+import { ClimbingBoxLoader } from "react-spinners";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { enqueueSnackbar } from "notistack";
@@ -216,32 +216,31 @@ export const RegistrarDashboard = () => {
   };
 
   const handleVerification = (id) => {
-    
     console.log(id);
 
     const token = sessionStorage.getItem("accesstoken");
     const token1 = sessionStorage.getItem("refreshtoken");
 
+    let data = JSON.stringify({
+      status: "approved",
+    });
+
     if (token && token1) {
       axios
-        .patch(
-          `${Url}/${college}/bonafide/${id}/approve/`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-            },
-          }
-        )
+        .patch(`${Url}/${college}/bonafide/${id}/approve/`, data, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+          },
+        })
         .then((res) => {
-
           const token = sessionStorage.getItem("accesstoken");
           const token1 = sessionStorage.getItem("refreshtoken");
-         
+
           if (token && token1) {
             let currentDate = new Date();
             const decodedToken = jwtDecode(token);
-  
+
             if (
               decodedToken.exp * 1000 - currentDate.getTime() <
               59 * 60 * 1000
@@ -255,12 +254,12 @@ export const RegistrarDashboard = () => {
                 );
               }
             }
-          }else{
-            navigate('/login');
+          } else {
+            navigate("/login");
           }
           console.log(res.data);
 
-          setResult((prev) => 
+          setResult((prev) =>
             prev.map((data) =>
               data.id === id ? { ...data, status: "approved" } : data
             )
@@ -291,26 +290,25 @@ export const RegistrarDashboard = () => {
     const token = sessionStorage.getItem("accesstoken");
     const token1 = sessionStorage.getItem("refreshtoken");
 
+    let data = JSON.stringify({
+      status: "rejected",
+    });
     if (token && token1) {
       axios
-        .patch(
-          `${Url}/${college}/bonafide/${id}/reject/`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-            },
-          }
-        )
+        .patch(`${Url}/${college}/bonafide/${id}/approve/`, data, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+          },
+        })
         .then((res) => {
-
           const token = sessionStorage.getItem("accesstoken");
           const token1 = sessionStorage.getItem("refreshtoken");
-         
+
           if (token && token1) {
             let currentDate = new Date();
             const decodedToken = jwtDecode(token);
-  
+
             if (
               decodedToken.exp * 1000 - currentDate.getTime() <
               59 * 60 * 1000
@@ -324,11 +322,11 @@ export const RegistrarDashboard = () => {
                 );
               }
             }
-          }else{
-            navigate('/login');
+          } else {
+            navigate("/login");
           }
 
-          setResult((prev) => 
+          setResult((prev) =>
             prev.map((data) =>
               data.id === id ? { ...data, status: "rejected" } : data
             )
@@ -442,30 +440,44 @@ export const RegistrarDashboard = () => {
       </Box>
 
       <Box sx={{ marginBottom: "10%" }}>
+        {request && (
+          <>
+            <p
+              style={{
+                fontSize: "2.0rem",
+                fontWeight: "500",
+                textAlign: "center",
+                marginTop: "20px",
+              }}
+            >
+              Bonafide Requests
+            </p>
+            <center>
+              <Divider
+                sx={{
+                  backgroundColor: "blue",
+                  width: { lg: "17%", xs: "10%", md: "5%" },
+                  fontWeight: "800",
+                  textAlign: "center",
+                  marginTop: "5px",
+                }}
+              />
+            </center>
+            {result.some((item) => item.status === "pending") ? null : (
+              <center>
+                <img
+                  src="./images/No_data.png"
+                  alt=""
+                  style={{ width: "250px", marginTop: "50px" }}
+                />
+              </center>
+            )}
+          </>
+        )}
+
         {request &&
           (result?.length > 0 ? (
             <Box>
-              <p
-                style={{
-                  fontSize: "2.0rem",
-                  fontWeight: "500",
-                  textAlign: "center",
-                  marginTop: "20px",
-                }}
-              >
-                Bonafide Requests
-              </p>
-              <center>
-                <Divider
-                  sx={{
-                    backgroundColor: "blue",
-                    width: { lg: "17%", xs: "10%", md: "5%" },
-                    fontWeight: "800",
-                    textAlign: "center",
-                    marginTop: "5px",
-                  }}
-                />
-              </center>
               <Box sx={{ padding: "7px" }}>
                 <Grid
                   container
@@ -518,7 +530,10 @@ export const RegistrarDashboard = () => {
                                 marginBottom="0%"
                               >
                                 Registration No.:{" "}
-                                {data?.student_details?.academic_information?.registration_number}
+                                {
+                                  data?.student_details?.academic_information
+                                    ?.registration_number
+                                }
                               </Typography>
                               <Grid container sx={{ padding: "20px" }}>
                                 <Grid item xs={12} lg={6} md={6} sm={6}>
@@ -602,30 +617,43 @@ export const RegistrarDashboard = () => {
             </center>
           ))}
 
+        {approved && (
+          <>
+            <p
+              style={{
+                fontSize: "2.0rem",
+                fontWeight: "500",
+                textAlign: "center",
+                marginTop: "20px",
+              }}
+            >
+              Approved Bonafide Requests
+            </p>
+            <center>
+              <Divider
+                sx={{
+                  backgroundColor: "blue",
+                  width: { lg: "17%", xs: "10%", md: "5%" },
+                  fontWeight: "800",
+                  textAlign: "center",
+                  marginTop: "5px",
+                }}
+              />
+            </center>
+            {result.some((item) => item.status === "approved") ? null : (
+              <center>
+                <img
+                  src="./images/No_data.png"
+                  alt=""
+                  style={{ width: "250px", marginTop: "50px" }}
+                />
+              </center>
+            )}
+          </>
+        )}
         {approved &&
           (result?.length > 0 ? (
             <Box>
-              <p
-                style={{
-                  fontSize: "2.0rem",
-                  fontWeight: "500",
-                  textAlign: "center",
-                  marginTop: "20px",
-                }}
-              >
-                Approved Bonafide Requests
-              </p>
-              <center>
-                <Divider
-                  sx={{
-                    backgroundColor: "blue",
-                    width: { lg: "17%", xs: "10%", md: "5%" },
-                    fontWeight: "800",
-                    textAlign: "center",
-                    marginTop: "5px",
-                  }}
-                />
-              </center>
               <Box sx={{ padding: "7px" }}>
                 <Grid
                   container
@@ -678,7 +706,10 @@ export const RegistrarDashboard = () => {
                                 marginBottom="0%"
                               >
                                 Registration No.:{" "}
-                                {data?.student_details?.academic_information?.registration_number}
+                                {
+                                  data?.student_details?.academic_information
+                                    ?.registration_number
+                                }
                               </Typography>
                               <Grid container sx={{ padding: "20px" }}>
                                 <Grid item xs={12} lg={6} md={6} sm={6}>
@@ -730,13 +761,13 @@ export const RegistrarDashboard = () => {
                               float: "right",
                             }}
                           >
-                            <Button
+                            {/* <Button
                               variant="contained"
                               onClick={(e) => handleReject(data.id)}
                               style={{ backgroundColor: "rgb(107, 169, 169)" }}
                             >
                               Reject
-                            </Button>
+                            </Button> */}
                           </CardActions>
                         </Card>
                       </Grid>
@@ -755,30 +786,43 @@ export const RegistrarDashboard = () => {
             </center>
           ))}
 
+        {reject && (
+          <>
+            <p
+              style={{
+                fontSize: "2.0rem",
+                fontWeight: "500",
+                textAlign: "center",
+                marginTop: "20px",
+              }}
+            >
+              Rejected Bonafide Requests
+            </p>
+            <center>
+              <Divider
+                sx={{
+                  backgroundColor: "blue",
+                  width: { lg: "17%", xs: "10%", md: "5%" },
+                  fontWeight: "800",
+                  textAlign: "center",
+                  marginTop: "5px",
+                }}
+              />
+            </center>
+            {result.some((item) => item.status === "rejected") ? null : (
+              <center>
+                <img
+                  src="./images/No_data.png"
+                  alt=""
+                  style={{ width: "250px", marginTop: "50px" }}
+                />
+              </center>
+            )}
+          </>
+        )}
         {reject &&
           (result?.length > 0 ? (
             <Box>
-              <p
-                style={{
-                  fontSize: "2.0rem",
-                  fontWeight: "500",
-                  textAlign: "center",
-                  marginTop: "20px",
-                }}
-              >
-                Rejected Bonafide Requests
-              </p>
-              <center>
-                <Divider
-                  sx={{
-                    backgroundColor: "blue",
-                    width: { lg: "17%", xs: "10%", md: "5%" },
-                    fontWeight: "800",
-                    textAlign: "center",
-                    marginTop: "5px",
-                  }}
-                />
-              </center>
               <Box sx={{ padding: "7px" }}>
                 <Grid
                   container
@@ -831,7 +875,10 @@ export const RegistrarDashboard = () => {
                                 marginBottom="0%"
                               >
                                 Registration No.:{" "}
-                                {data?.student_details?.academic_information?.registration_number}
+                                {
+                                  data?.student_details?.academic_information
+                                    ?.registration_number
+                                }
                               </Typography>
                               <Grid container sx={{ padding: "20px" }}>
                                 <Grid item xs={12} lg={6} md={6} sm={6}>
@@ -883,13 +930,13 @@ export const RegistrarDashboard = () => {
                               float: "right",
                             }}
                           >
-                            <Button
+                            {/* <Button
                               variant="contained"
                               onClick={(e) => handleVerification(data.id)}
                               style={{ backgroundColor: "rgb(107, 169, 169)" }}
                             >
                               Accept
-                            </Button>
+                            </Button> */}
                           </CardActions>
                         </Card>
                       </Grid>

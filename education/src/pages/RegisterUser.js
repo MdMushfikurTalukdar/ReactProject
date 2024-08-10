@@ -29,6 +29,8 @@ export const RegisterUser = () => {
   const [file, setFile] = useState("");
   const { name } = useParams();
   const [loading, setLoading] = useState(false);
+  const [loading1, setLoading1] = useState(false);
+  const [id, setId] = useState(0);
 
   useEffect(() => {
     if (sessionStorage?.getItem("accesstoken")) {
@@ -120,6 +122,27 @@ export const RegisterUser = () => {
     }
   };
 
+  useEffect(() => {
+    let config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: `${Url}/id-count/`,
+      headers: {
+        Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
+      },
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        setId(response.data[0].id_count);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   const { enqueueSnackbar } = useSnackbar();
 
   const schema = yup.object().shape({
@@ -164,8 +187,7 @@ export const RegisterUser = () => {
   });
 
   const handleSubmitFile = async (e) => {
-
-    setLoading(true);
+    setLoading1(true);
     console.log(file);
 
     if (!file.name.endsWith("csv")) {
@@ -188,6 +210,7 @@ export const RegisterUser = () => {
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
           },
           maxBodyLength: Infinity,
         }
@@ -214,21 +237,41 @@ export const RegisterUser = () => {
         navigate("/login");
       }
       if (response) {
-
-        setLoading(false);
-
-        enqueueSnackbar(response.data.message, {
-          variant: "success",
-          anchorOrigin: {
-            vertical: "bottom",
-            horizontal: "center",
+        let config = {
+          method: "get",
+          maxBodyLength: Infinity,
+          url: `${Url}/id-count/`,
+          headers: {
+            Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
           },
-          autoHideDuration: 3000,
-        });
+        };
+
+        axios
+          .request(config)
+          .then((response) => {
+            console.log(JSON.stringify(response.data));
+            setId(response.data[0].id_count);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+
+        setLoading1(false);
+
+        if (response?.data?.message) {
+          enqueueSnackbar(response.data.message, {
+            variant: "success",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 3000,
+          });
+        }
       }
     } catch (error) {
       console.error(error);
-      
+      setLoading1(false);
       if (
         error?.response?.data?.errors?.detail ===
         "Given token not valid for any token type"
@@ -271,6 +314,8 @@ export const RegisterUser = () => {
       })
         .then((res) => {
           console.log(res);
+          setId((id) => id + 1);
+
           setLoading(false);
           const token = sessionStorage.getItem("accesstoken");
           const token1 = sessionStorage.getItem("refreshtoken");
@@ -296,29 +341,43 @@ export const RegisterUser = () => {
             navigate("/login");
           }
 
-          enqueueSnackbar(res.data.message, {
-            variant: "success",
-            anchorOrigin: {
-              vertical: "bottom",
-              horizontal: "center",
-            },
-            autoHideDuration: 3000,
-          });
-
-          sessionStorage.setItem("bonafied", false);
+          if (res?.data?.message) {
+            enqueueSnackbar(res.data.message, {
+              variant: "success",
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "center",
+              },
+              autoHideDuration: 3000,
+            });
+          }
         })
         .catch((err) => {
           console.log(err);
           setLoading(false);
-          enqueueSnackbar(err?.response?.data?.message, {
-            variant: "error",
-            anchorOrigin: {
-              vertical: "bottom",
-              horizontal: "center",
-            },
-            autoHideDuration: 3000,
-          });
-
+          if (err?.message) {
+            enqueueSnackbar(err?.message, {
+              variant: "error",
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "center",
+              },
+              autoHideDuration: 3000,
+            });
+          }
+          if (
+            err?.response?.data?.message ===
+            "User already exists with this registration number and college"
+          ) {
+            enqueueSnackbar(err?.response?.data?.message, {
+              variant: "error",
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "center",
+              },
+              autoHideDuration: 3000,
+            });
+          }
           if (
             err?.response?.data?.errors?.detail ===
             "Given token not valid for any token type"
@@ -361,12 +420,12 @@ export const RegisterUser = () => {
                 className="parentGrid_small_screen"
               >
                 <h2 style={{ marginRight: "35%", color: "rgb(107 169 169)" }}>
-                {!loading && <p>Create Account</p>}
-                {loading && (
-                  <CircularProgress
-                    style={{ color: "white", width: "20px", height: "22px" }}
-                  />
-                )}
+                  {!loading && <p>Create Account</p>}
+                  {loading && (
+                    <CircularProgress
+                      style={{ color: "white", width: "20px", height: "22px" }}
+                    />
+                  )}
                 </h2>
 
                 <form onSubmit={handleSubmit(onSubmit)}>
@@ -435,7 +494,16 @@ export const RegisterUser = () => {
                     }}
                     type="submit"
                   >
-                    Create Account
+                    {!loading && <p>Create Account</p>}
+                    {loading && (
+                      <CircularProgress
+                        style={{
+                          color: "white",
+                          width: "20px",
+                          height: "22px",
+                        }}
+                      />
+                    )}
                   </Button>
                 </form>
 
@@ -513,7 +581,16 @@ export const RegisterUser = () => {
                     type="submit"
                     onClick={handleSubmitFile}
                   >
-                    Create Account
+                    {!loading1 && <p>Create Account</p>}
+                    {loading1 && (
+                      <CircularProgress
+                        style={{
+                          color: "white",
+                          width: "20px",
+                          height: "22px",
+                        }}
+                      />
+                    )}
                   </Button>
                 </Box>
               </Grid>
@@ -568,6 +645,21 @@ export const RegisterUser = () => {
               >
                 {" "}
                 Inspiring Innovation
+                <br />
+              </h4>
+
+              <h4
+                style={{
+                  position: "relative",
+                  top: "8rem",
+                  left: "5.0rem",
+                  width: "400px",
+                  height: "auto",
+                  fontSize:"1.3rem"
+                }}
+              >
+                {" "}
+                Total Registered Id:{id}
                 <br />
               </h4>
 
@@ -746,7 +838,12 @@ export const RegisterUser = () => {
                   type="submit"
                   onClick={handleSubmitFile}
                 >
-                  Create Account
+                  {!loading1 && <p>Create Account</p>}
+                  {loading1 && (
+                    <CircularProgress
+                      style={{ color: "white", width: "20px", height: "22px" }}
+                    />
+                  )}
                 </Button>
               </Box>
             </Box>

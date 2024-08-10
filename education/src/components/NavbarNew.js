@@ -243,13 +243,22 @@ export const NavbarNew = () => {
   const [showNotifications, setShowNotifications] = useState(false);
 
   const deleteNotification = (id) => {
+    
+    let data = JSON.stringify({
+      "ids": [
+        id
+      ]
+    });
+
     let config = {
       method: "delete",
       maxBodyLength: Infinity,
-      url: `${BaseUrl}/notification/${id}/`,
+      url: `${BaseUrl}/notification/delete_all_notification/`,
       headers: {
+        'Content-Type': 'application/json', 
         Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
       },
+      data : data
     };
 
     axios
