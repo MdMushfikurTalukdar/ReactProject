@@ -86,8 +86,6 @@ const schema = yup.object().shape({
   year: yup
     .number()
     .integer("Registration year must be an integer")
-    .min(1000, "year must be a of 4 digit")
-    .max(9999, "year must be a of 4 digit")
     .required("year is required"),
 
   school: yup.string(),
