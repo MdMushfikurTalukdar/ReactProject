@@ -78,7 +78,7 @@ const VerifySemesterRegistration = () => {
       <div className="printHide">
         <h2 className="text1 mb-4">Semester Registration List</h2>
         <div>
-          {searchResults.map((data, index) => (
+          {searchResults?.map((data, index) => (
             <div key={index} className="id-card" onClick={() => handleCardClick(data.id,data.student_details.personal_information.registration_number)}>
               <div className="info">
                 <p>

@@ -68,7 +68,9 @@ export const NavbarNew = () => {
     // { name: "Semester Registration Request", link: "/verifySemesterRegistration" }
   ];
 
-  const office = [{ name: "Add Branch", link: "/sem-branch-register" }];
+  const office = [{ name: "Add Branch", link: "/sem-branch-register" },
+    {name: "User Management", link: "/user-management"}
+  ];
 
   const fees_add = [
     { name: "Add Fees", link: "/add-fees" },

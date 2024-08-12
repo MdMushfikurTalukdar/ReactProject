@@ -39,6 +39,7 @@ import { AdminDashboard } from "./pages/AdminDashboard.js";
 import { CaretakerDashboard } from "./pages/CaretakerDashboard.js";
 import { CaretakerNoDues } from "./pages/CaretakerNoDues.js";
 import { RegistrarDashboard } from "./pages/RegistrarDashboard.js";
+import { UserManagement } from "./pages/UserManagement.js";
 
 function App() {
   return (
@@ -70,6 +71,7 @@ function App() {
               path="/semesterRegistration"
               element={<SemesterRegistration />}
             />
+            <Route path='/user-management' element={<UserManagement/>}/>
             <Route path='/No-dues-for-degree-approval' element={<NoDuesForDegreeApproval/>}/>
             <Route path="/add-fees" element={<AddFeesCaretaker/>}/>
             <Route path="/hostel-room-allotment" element={<HostelRoomAllotment/>}/>
