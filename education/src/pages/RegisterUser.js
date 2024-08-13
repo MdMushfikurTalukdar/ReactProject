@@ -200,7 +200,18 @@ export const RegisterUser = () => {
   const handleSubmitFile = async (e) => {
     setLoading1(true);
     
-    
+    if(!file){
+      setLoading1(false);
+      return enqueueSnackbar("Please Select a File.", {
+        variant: "warning",
+        anchorOrigin: {
+          vertical: "bottom",
+          horizontal: "center",
+        },
+        autoHideDuration: 3000,
+      });
+      
+    }
 
     if (!file.name.endsWith("csv")) {
       return enqueueSnackbar("Only csv file will be accepted", {
@@ -251,6 +262,7 @@ export const RegisterUser = () => {
       if (response) {
 
         setFileName("");
+        setFile("");
 
         let config = {
           method: "get",
@@ -283,10 +295,15 @@ export const RegisterUser = () => {
             autoHideDuration: 3000,
           });
         }
+        setTimeout(()=>{
+          window.location.reload();
+        },2000);
+        
       }
     } catch (error) {
       console.error(error);
       setFileName("");
+      setFile("");
       setLoading1(false);
       if (
         error?.response?.data?.errors?.detail ===
