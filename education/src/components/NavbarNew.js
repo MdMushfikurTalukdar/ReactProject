@@ -105,7 +105,7 @@ export const NavbarNew = () => {
       name: "Verify Semester Registration",
       link: "/verifySemesterRegistration",
     },
-    { name: "Update Branch Subjects", link: "/underDevelopment" },
+    { name: "Add Branch Subjects", link: "/sem-sub-register" },
     { name: "Sign No Dues(for TC)", link: "/underDevelopment" },
   ];
 

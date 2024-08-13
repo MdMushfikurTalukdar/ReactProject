@@ -281,7 +281,7 @@ export const SemBranch = () => {
           <img
             src="./images/enrollment.png"
             alt=""
-            style={{ width: "250px", borderRadius: "10px" }}
+            style={{ width: "250px", borderRadius: "10px",marginBottom:"20px" }}
           />
         </center>
         <Box

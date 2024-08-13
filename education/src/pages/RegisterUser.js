@@ -26,6 +26,7 @@ export const RegisterUser = () => {
     window.innerWidth < 900 ? true : false
   ); // Check if the screen is smaller than 1024
   const navigate = useNavigate();
+  const [fileName,setFileName]=useState('');
   const [file, setFile] = useState("");
   const { name } = useParams();
   const [loading, setLoading] = useState(false);
@@ -145,6 +146,16 @@ export const RegisterUser = () => {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFileName(file.name);
+      setFile(file);
+      console.log(file.name);
+    }
+  };
+
+
   const schema = yup.object().shape({
     registration_number: yup
       .string()
@@ -188,7 +199,8 @@ export const RegisterUser = () => {
 
   const handleSubmitFile = async (e) => {
     setLoading1(true);
-    console.log(file);
+    
+    
 
     if (!file.name.endsWith("csv")) {
       return enqueueSnackbar("Only csv file will be accepted", {
@@ -563,10 +575,11 @@ export const RegisterUser = () => {
                         accept="*"
                         alt=""
                         style={{ display: "none" }}
-                        onChange={(e) => setFile(e.target.files[0])}
+                        onChange={handleFileChange}
                       />
                       Upload
                     </Button>
+                    {fileName && <p style={{marginTop:"5px",marginBottom:"3px"}}>{fileName}</p>}
                   </div>
                 </Box>
                 <Box>
@@ -686,7 +699,7 @@ export const RegisterUser = () => {
             <h2
               style={{
                 marginRight: "35%",
-                marginTop: "20px",
+                marginTop: "0px",
                 color: "rgb(107 169 169)",
               }}
             >
@@ -819,10 +832,12 @@ export const RegisterUser = () => {
                       accept="*"
                       alt=""
                       style={{ display: "none" }}
-                      onChange={(e) => setFile(e.target.files[0])}
+                      onChange={handleFileChange}
+                       
                     />
                     Upload
                   </Button>
+                  {fileName && <p style={{marginTop:"5px",marginBottom:"3px"}}>{fileName}</p>}
                 </div>
               </Box>
 
