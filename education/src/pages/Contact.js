@@ -119,7 +119,18 @@ export const Contact = () => {
           navigate("/login");
         })
         .catch((error) => {
-          console.log(error);
+          
+          setLoading(false);
+          if(error?.response?.data?.errors?.non_field_errors?.[0]){
+            enqueueSnackbar(error?.response?.data?.errors?.non_field_errors?.[0], {
+              variant: "error",
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "center",
+              },
+              autoHideDuration: 3000,
+            });
+          }
         });
     } else {
       enqueueSnackbar("Please fill all the fields", {

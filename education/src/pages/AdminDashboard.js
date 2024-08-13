@@ -79,6 +79,13 @@ export const AdminDashboard = () => {
         },
       })
       .then((response) => {
+
+        setResult((prev)=>
+          prev.map((item)=>
+           item.id===e ? {...item,is_verified:true}:item
+          )
+        );
+
         console.log(response);
         enqueueSnackbar("Email Sent.", {
           variant: "success",
@@ -254,13 +261,14 @@ export const AdminDashboard = () => {
           }}
         />
       </center>
-      <Box sx={{padding:"7px"}}>
+      <Box sx={{padding:"7px",marginBottom:"20px"}}>
         {result?.length===0 && <center>
               <img src="./images/No_data.png" alt="" style={{width:"250px",marginTop:"50px"}}/>
             </center>}
         <Grid container spacing={2} sx={{ width: "100vw", marginTop: "50px" }}>
           {result?.length > 0 &&
             result?.map((data, index) => (
+
               <Grid
                 item
                 lg={6}
@@ -319,6 +327,9 @@ export const AdminDashboard = () => {
                           </Typography>
                           <Typography variant="body2" color="text.secondary" marginTop="5px">
                             <MdDialerSip />: <span>{data?.phone_number}</span>
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary" marginTop="5px">
+                            Status: <span>{data?.is_verified ? <span>Accepted</span> : <span>Pending</span>}</span>
                           </Typography>
                         </Grid>
                       </Grid>
