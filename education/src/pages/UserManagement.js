@@ -353,10 +353,12 @@ export const UserManagement = () => {
             </Box>
           </center>
         )}
-
+        <center>
+            <h2 style={{marginTop:"20px"}}>User Management</h2>
+        </center>
         <TableContainer
           component={Paper}
-          sx={{ maxWidth: 800, margin: "auto", marginTop: 5, minWidth: 200 }}
+          sx={{ maxWidth: 900, margin: "auto", marginTop: 5, minWidth: 200 }}
         >
           <Table>
             <TableHead sx={{ backgroundColor: "rgb(107, 169, 169)" }}>
