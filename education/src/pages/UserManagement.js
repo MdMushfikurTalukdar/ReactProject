@@ -32,9 +32,14 @@ export const UserManagement = () => {
   const [college, setCollege] = useState("");
   const [edit, setEdit] = useState(false);
   const [hide, setHide] = useState(false);
+  const [delete1, setDelete1] = useState(false);
+  const [load,setLoad]=useState(false);
   const [editInfo, setEditInfo] = useState({
     registration_number: "",
     role: "",
+    id: "",
+  });
+  const [deleteInfo, setDeleteInfo] = useState({
     id: "",
   });
 
@@ -158,38 +163,45 @@ export const UserManagement = () => {
     setEditInfo({ registration_number, role, id });
   };
 
-  const handleDelete = (id) => {
+  const handleDelete1 = (id) => {
+    setDelete1(true);
+    setDeleteInfo({ id });
+  };
+  const handleDelete = () => {
+
+    setLoad(true);
     const token = sessionStorage.getItem("accesstoken");
     const token1 = sessionStorage.getItem("refreshtoken");
 
     if (token && token1) {
-     
-        let currentDate = new Date();
-        const decodedToken = jwtDecode(token);
+      let currentDate = new Date();
+      const decodedToken = jwtDecode(token);
 
-        if (decodedToken.exp * 1000 - currentDate.getTime() < 59 * 60 * 1000) {
-          try {
-            regenerateToken(); // Wait for the token regeneration to complete
-          } catch (error) {
-            console.error(
-              "Error in request interceptor while regenerating token:",
-              error
-            );
-          }
+      if (decodedToken.exp * 1000 - currentDate.getTime() < 59 * 60 * 1000) {
+        try {
+          regenerateToken(); // Wait for the token regeneration to complete
+        } catch (error) {
+          console.error(
+            "Error in request interceptor while regenerating token:",
+            error
+          );
         }
-    
+      }
+
       axios
-        .delete(`${Url}/${college}/user-management/${id}/`, {
+        .delete(`${Url}/${college}/user-management/${deleteInfo.id}/`, {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
           },
         })
         .then((res) => {
-          setUsers(users.filter((prev) => prev.id !== id));
+          setLoad(false);
+          setDelete1(false);
+          setUsers(users.filter((prev) => prev.id !== deleteInfo.id));
         })
         .catch((error) => {
           console.log(error);
-
+          setLoad(false);
           if (
             error?.response?.data?.errors?.detail ===
             "Given token not valid for any token type"
@@ -211,46 +223,82 @@ export const UserManagement = () => {
   };
 
   const handleUpdate = (id) => {
-    // axios
-    //   .patch(
-    //     `${Url}/${college}/user-management/${id}/`,
-    //     {
-    //       "role": editInfo.role,
-    //     },
-    //     {
-    //       headers: {
-    //         Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-    //       },
-    //     }
-    //   )
-    //   .then((res) => {
-    if (
-      editInfo.role !== "office" &&
-      editInfo.role !== "caretaker" &&
-      editInfo.role !== "student" &&
-      editInfo.role !== "hod"
-    ) {
-      setHide(true);
-      return;
-    } else {
-      setHide(false);
-    }
-    setUsers((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, role: editInfo.role } : item
-      )
-    );
+    const token = sessionStorage.getItem("accesstoken");
+    const token1 = sessionStorage.getItem("refreshtoken");
 
-    enqueueSnackbar("Successfully updated.", {
-      variant: "success",
-      anchorOrigin: {
-        vertical: "bottom",
-        horizontal: "center",
-      },
-      autoHideDuration: 3000,
-    });
-    setEdit(false);
-    //   });
+    if (token && token1) {
+      let currentDate = new Date();
+      const decodedToken = jwtDecode(token);
+
+      if (decodedToken.exp * 1000 - currentDate.getTime() < 59 * 60 * 1000) {
+        try {
+          regenerateToken(); // Wait for the token regeneration to complete
+        } catch (error) {
+          console.error(
+            "Error in request interceptor while regenerating token:",
+            error
+          );
+        }
+      }
+      if (
+        editInfo.role !== "office" &&
+        editInfo.role !== "caretaker" &&
+        editInfo.role !== "student" &&
+        editInfo.role !== "hod"
+      ) {
+        setHide(true);
+        return;
+      } else {
+        setHide(false);
+      }
+      axios
+        .patch(
+          `${Url}/${college}/user-management/${id}/`,
+          {
+            role: editInfo.role,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+            },
+          }
+        )
+        .then((res) => {
+          setUsers((prev) =>
+            prev.map((item) =>
+              item.id === id ? { ...item, role: editInfo.role } : item
+            )
+          );
+
+          enqueueSnackbar("Successfully updated.", {
+            variant: "success",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 3000,
+          });
+          setEdit(false);
+        })
+        .catch((error) => {
+          if (
+            error?.response?.data?.errors?.detail ===
+            "Given token not valid for any token type"
+          ) {
+            enqueueSnackbar("Logging out", {
+              variant: "error",
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "center",
+              },
+              autoHideDuration: 3000,
+            });
+            navigate("/login");
+          }
+        });
+    } else {
+      navigate("/login");
+    }
   };
 
   if (loading) {
@@ -353,8 +401,61 @@ export const UserManagement = () => {
             </Box>
           </center>
         )}
+
+        {delete1 && (
+          <center>
+            <Box
+              sx={{
+                padding: "20px",
+                width: "300px",
+                position: "fixed",
+                top: "15vh",
+                zIndex: "100",
+                left: { xs: "5vw", md: "40vw", lg: "45vw", sm: "25vw" },
+                backgroundColor: "white", // Optional: to make it visible on the page
+                boxShadow: 7, // Optional: adds shadow
+                borderRadius: "8px", // Optional: rounded corners
+              }}
+            >
+              <center
+                style={{ display: "flex", justifyContent: "space-between" }}
+              >
+                <h3 style={{ position: "relative", left: "90px" }}>Alert!!</h3>
+                <RxCross1
+                  style={{ cursor: "pointer" }}
+                  onClick={(e) => setDelete1(false)}
+                />
+              </center>
+              <center>
+                <img src="../images/warning.jpg" alt="" style={{width:"100px"}}/>
+              </center>
+              <h3>Do you want to delete this record??</h3>
+              <Box sx={{display:"flex",gap:"5px"}}>
+              <Button
+                variant="contained"
+                sx={{ width: "70%", marginTop: "15px" }}
+                onClick={handleDelete}
+              >
+                 {!load && <p>Yes</p>}
+                  {load && (
+                    <CircularProgress
+                      style={{ color: "white", width: "20px", height: "22px" }}
+                    />
+                  )}
+              </Button>
+              <Button
+                variant="contained"
+                sx={{ width: "70%", marginTop: "15px" }}
+                onClick={(e)=>setDelete1(false)}
+              >
+                No
+              </Button>
+              </Box>
+            </Box>
+          </center>
+        )}
         <center>
-            <h2 style={{marginTop:"20px"}}>User Management</h2>
+          <h2 style={{ marginTop: "20px" }}>User Management</h2>
         </center>
         <TableContainer
           component={Paper}
@@ -385,7 +486,7 @@ export const UserManagement = () => {
                     >
                       <FaEdit style={{ fontSize: "1.2rem" }} />
                     </Button>
-                    <Button onClick={(e) => handleDelete(user.id)}>
+                    <Button onClick={(e) => handleDelete1(user.id)}>
                       <MdDelete style={{ fontSize: "1.2rem" }} />
                     </Button>
                   </TableCell>
@@ -393,7 +494,9 @@ export const UserManagement = () => {
               ))}
             </TableBody>
           </Table>
+          
         </TableContainer>
+        {users.length===0 ?<p style={{textAlign:"center",marginTop:"100px",fontSize:"1.5rem"}}>No records available</p>:null}
       </Box>
       <Footer />
     </Box>

@@ -249,6 +249,9 @@ export const RegisterUser = () => {
         navigate("/login");
       }
       if (response) {
+
+        setFileName("");
+
         let config = {
           method: "get",
           maxBodyLength: Infinity,
@@ -283,6 +286,7 @@ export const RegisterUser = () => {
       }
     } catch (error) {
       console.error(error);
+      setFileName("");
       setLoading1(false);
       if (
         error?.response?.data?.errors?.detail ===
@@ -415,7 +419,7 @@ export const RegisterUser = () => {
     <div className="App">
       <NavbarNew />
       {responsive && (
-        <div className="parentdiv_small_screen">
+        <div className="parentdiv_small_screen" style={{height:"90vh"}}>
           <img
             src="../images/logo.png"
             alt=""
