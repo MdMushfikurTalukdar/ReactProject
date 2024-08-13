@@ -335,39 +335,7 @@ export const Contact = () => {
         </Container>
       </div>
 
-      <Container maxWidth="lg">
-        <Grid container spacing={2} sx={{ p: 1, alignItems: "center" }}>
-          <Grid item xs={12} sm={12} md={4} lg={4}>
-            <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-              <Phone style={{ color: "rgb(107, 169, 169)" }} />
-              <a href="tel:+1 (123) 456-7890">+1 (123) 456-7890</a>
-            </div>
-          </Grid>
-          <Grid item xs={12} sm={12} md={4} lg={4}>
-            <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-              <p>
-                {" "}
-                <Email style={{ color: "rgb(107, 169, 169)" }} />
-              </p>
-
-              <a href="mailto:info@example.com">info@example.com</a>
-            </div>
-          </Grid>
-          <Grid item xs={12} sm={12} md={4} lg={4}>
-            <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-              <LocationOn style={{ color: "rgb(107, 169, 169)" }} />
-              <a
-                href="https://www.google.com/maps/search/?api=1&query=123+Main+St,+Anytown,+USA+12345"
-                rel="noreferrer"
-                target="_blank"
-              >
-                123 Main St, Anytown, USA 12345
-              </a>
-            </div>
-          </Grid>
-        </Grid>
-      </Container>
-
+     
       <Footer />
     </>
   );

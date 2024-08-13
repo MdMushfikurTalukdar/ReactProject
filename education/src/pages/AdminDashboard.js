@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import NavbarNew from "../components/NavbarNew";
-import {ClimbingBoxLoader} from "react-spinners"
+import { ClimbingBoxLoader } from "react-spinners";
 import Footer from "../components/Home/Footer";
 import { useNavigate } from "react-router-dom";
 import { Url } from "../components/BaseUrl";
@@ -15,6 +15,7 @@ import {
   CardContent,
   CardMedia,
   Chip,
+  CircularProgress,
   Divider,
   Grid,
   Typography,
@@ -31,6 +32,7 @@ export const AdminDashboard = () => {
 
   const [result, setResult] = useState([]);
   const [load, setLoad] = useState(true);
+  const [load1, setLoad1] = useState(false);
 
   useEffect(() => {
     if (sessionStorage?.getItem("accesstoken")) {
@@ -69,20 +71,26 @@ export const AdminDashboard = () => {
   }, []);
 
   const handleVerification = (e) => {
+    setLoad1(true);
+
     const data = {
       is_verified: true,
     };
     axios
-      .put(`https://smart-backend-uebh.onrender.com/api/user/college-requests/${e}/verify/`, data, {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-        },
-      })
+      .put(
+        `https://smart-backend-uebh.onrender.com/api/user/college-requests/${e}/verify/`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+          },
+        }
+      )
       .then((response) => {
-
-        setResult((prev)=>
-          prev.map((item)=>
-           item.id===e ? {...item,is_verified:true}:item
+        setLoad1(false);
+        setResult((prev) =>
+          prev.map((item) =>
+            item.id === e ? { ...item, is_verified: true } : item
           )
         );
 
@@ -97,6 +105,7 @@ export const AdminDashboard = () => {
         });
       })
       .catch((err) => {
+        setLoad1(false);
         console.log(err);
         if (err.message === "Request failed with status code 500") {
           enqueueSnackbar("Already action is taken.", {
@@ -108,7 +117,20 @@ export const AdminDashboard = () => {
             autoHideDuration: 3000,
           });
         }
-        if (err?.response?.data?.errors?.detail === "Given token not valid for any token type") {
+        if(err?.response?.data?.errors?.non_field_errors?.[0]==="The 'is_verified' field cannot be changed once it is set to True."){
+          enqueueSnackbar("Already action is taken.", {
+            variant: "warning",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 3000,
+          });
+        }
+        if (
+          err?.response?.data?.errors?.detail ===
+          "Given token not valid for any token type"
+        ) {
           enqueueSnackbar("Logging out", {
             variant: "error",
             anchorOrigin: {
@@ -126,11 +148,15 @@ export const AdminDashboard = () => {
       is_verified: false,
     };
     axios
-      .put(`https://smart-backend-uebh.onrender.com/api/user/college-requests/${e}/verify/`, data, {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-        },
-      })
+      .put(
+        `https://smart-backend-uebh.onrender.com/api/user/college-requests/${e}/verify/`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+          },
+        }
+      )
       .then((response) => {
         console.log(response);
         enqueueSnackbar("Email Sent.", {
@@ -154,7 +180,10 @@ export const AdminDashboard = () => {
             autoHideDuration: 3000,
           });
         }
-        if (err?.response?.data?.errors?.detail === "Given token not valid for any token type") {
+        if (
+          err?.response?.data?.errors?.detail ===
+          "Given token not valid for any token type"
+        ) {
           enqueueSnackbar("Logging out", {
             variant: "error",
             anchorOrigin: {
@@ -180,8 +209,6 @@ export const AdminDashboard = () => {
       </Box>
     );
   }
-
-
 
   return (
     <div className="bg-gray-100 min-h-screen">
@@ -261,14 +288,19 @@ export const AdminDashboard = () => {
           }}
         />
       </center>
-      <Box sx={{padding:"7px",marginBottom:"20px"}}>
-        {result?.length===0 && <center>
-              <img src="./images/No_data.png" alt="" style={{width:"250px",marginTop:"50px"}}/>
-            </center>}
+      <Box sx={{ padding: "7px", marginBottom: "20px" }}>
+        {result?.length === 0 && (
+          <center>
+            <img
+              src="./images/No_data.png"
+              alt=""
+              style={{ width: "250px", marginTop: "50px" }}
+            />
+          </center>
+        )}
         <Grid container spacing={2} sx={{ width: "100vw", marginTop: "50px" }}>
           {result?.length > 0 &&
             result?.map((data, index) => (
-
               <Grid
                 item
                 lg={6}
@@ -295,58 +327,101 @@ export const AdminDashboard = () => {
                       >
                         {data?.college_name}
                       </Typography>
-                      <Typography  textAlign="center" variant="body2" color="text.secondary">
-                            College Address: {data?.college_address}
-                          </Typography>
-                      <Typography variant="body2" textAlign="center" color="text.secondary"  marginBottom="0%">
-                            Principal Name: {data?.principal_name}
-                          </Typography>
-                      <Grid container sx={{padding:"20px"}}>
+                      <Typography
+                        textAlign="center"
+                        variant="body2"
+                        color="text.secondary"
+                      >
+                        College Address: {data?.college_address}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        textAlign="center"
+                        color="text.secondary"
+                        marginBottom="0%"
+                      >
+                        Principal Name: {data?.principal_name}
+                      </Typography>
+                      <Grid container sx={{ padding: "20px" }}>
                         <Grid item xs={12} lg={6} md={6} sm={6}>
                           <Box sx={{ display: "flex", gap: "5px" }}>
-                            <Typography  textAlign="center" variant="body2" color="text.secondary">
+                            <Typography
+                              textAlign="center"
+                              variant="body2"
+                              color="text.secondary"
+                            >
                               <IoMdPerson style={{ fontSize: "1.2rem" }} />
                             </Typography>
-                            <Typography textAlign="center" variant="body2" color="text.secondary">{data?.name}</Typography>
+                            <Typography
+                              textAlign="center"
+                              variant="body2"
+                              color="text.secondary"
+                            >
+                              {data?.name}
+                            </Typography>
                           </Box>
                           <Box sx={{ display: "flex", gap: "5px" }}>
-                            <Typography  textAlign="center" variant="body2" color="text.secondary">
+                            <Typography
+                              textAlign="center"
+                              variant="body2"
+                              color="text.secondary"
+                            >
                               <MdEmail style={{ fontSize: "1.2rem" }} />
                             </Typography>
-                            <Typography  textAlign="center" variant="body2" color="text.secondary">{data?.email}</Typography>
+                            <Typography
+                              textAlign="center"
+                              variant="body2"
+                              color="text.secondary"
+                            >
+                              {data?.email}
+                            </Typography>
                           </Box>
-                         
-
-                          
                         </Grid>
                         <Grid item xs={12} lg={6} md={6} sm={6}>
                           <Typography variant="body2" color="text.secondary">
                             <SlCalender />
                             {"  "}
-                            {data?.established_date} 
+                            {data?.established_date}
                           </Typography>
-                          <Typography variant="body2" color="text.secondary" marginTop="5px">
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            marginTop="5px"
+                          >
                             <MdDialerSip />: <span>{data?.phone_number}</span>
                           </Typography>
-                          <Typography variant="body2" color="text.secondary" marginTop="5px">
-                            Status: <span>{data?.is_verified ? <span>Accepted</span> : <span>Pending</span>}</span>
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            marginTop="5px"
+                          >
+                            Status:{" "}
+                            <span>
+                              {data?.is_verified ? (
+                                <span>Accepted</span>
+                              ) : (
+                                <span>Pending</span>
+                              )}
+                            </span>
                           </Typography>
                         </Grid>
                       </Grid>
                     </CardContent>
                   </CardActionArea>
-                  <CardActions style={{ padding: "0px 15px 15px 15px",float:"right" }}>
+                  <CardActions
+                    style={{ padding: "0px 15px 15px 15px", float: "right" }}
+                  >
                     <Button
                       variant="contained"
                       onClick={(e) => handleVerification(data.id)}
-                      style={{backgroundColor: "rgb(107, 169, 169)"}}
+                      style={{ backgroundColor: "rgb(107, 169, 169)" }}
                     >
                       Accept
                     </Button>
                     <Button
                       variant="contained"
                       onClick={(e) => handleReject(data.id)}
-                      style={{backgroundColor: "rgb(107, 169, 169)"}}
+                      style={{ backgroundColor: "rgb(107, 169, 169)" }}
                     >
                       Reject
                     </Button>
