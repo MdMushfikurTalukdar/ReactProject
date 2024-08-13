@@ -267,6 +267,7 @@ export const SemBranch = () => {
           margin: "auto",
           marginTop: 5,
           marginBottom: 18,
+          height:"70vh"
         }}
       >
         <Typography

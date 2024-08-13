@@ -38,6 +38,71 @@ export const UserManagement = () => {
     id: "",
   });
 
+  const regenerateToken = () => {
+    if (sessionStorage?.getItem("accesstoken")) {
+      const response = jwtDecode(sessionStorage?.getItem("accesstoken"));
+      const response1 = jwtDecode(sessionStorage?.getItem("refreshtoken"));
+      if (
+        response.exp < Math.floor(Date.now() / 1000) ||
+        response1.exp < Math.floor(Date.now() / 1000)
+      ) {
+        navigate("/login");
+      } else {
+        if (
+          sessionStorage.getItem("refreshtoken") &&
+          sessionStorage.getItem("accesstoken")
+        ) {
+          let data = {
+            refresh: sessionStorage?.getItem("refreshtoken"),
+          };
+
+          let config = {
+            method: "post",
+            maxBodyLength: Infinity,
+            url:
+              "https://amarnath013.pythonanywhere.com/api/user/token/refresh/",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
+            },
+            data: data,
+          };
+
+          axios
+            .request(config)
+            .then((response) => {
+              console.log(JSON.stringify(response.data));
+              sessionStorage.setItem("accesstoken", response.data.access);
+            })
+            .catch((error) => {
+              if (error?.message === "Request failed with status code 500") {
+                navigate("/login");
+              }
+              if (
+                error?.response?.data?.errors?.detail ===
+                "Given token not valid for any token type"
+              ) {
+                enqueueSnackbar("Logging out", {
+                  variant: "error",
+                  anchorOrigin: {
+                    vertical: "bottom",
+                    horizontal: "center",
+                  },
+                  autoHideDuration: 3000,
+                });
+                navigate("/login");
+              }
+              console.log(error);
+            });
+        } else {
+          navigate("/login");
+        }
+      }
+    } else {
+      navigate("/login");
+    }
+  };
+
   useEffect(() => {
     let config = {
       method: "get",
@@ -94,15 +159,55 @@ export const UserManagement = () => {
   };
 
   const handleDelete = (id) => {
-    axios
-      .delete(`${Url}/${college}/user-management/${id}/`, {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-        },
-      })
-      .then((res) => {
-        setUsers(users.filter((prev) => prev.id !== id));
-      });
+    const token = sessionStorage.getItem("accesstoken");
+    const token1 = sessionStorage.getItem("refreshtoken");
+
+    if (token && token1) {
+     
+        let currentDate = new Date();
+        const decodedToken = jwtDecode(token);
+
+        if (decodedToken.exp * 1000 - currentDate.getTime() < 59 * 60 * 1000) {
+          try {
+            regenerateToken(); // Wait for the token regeneration to complete
+          } catch (error) {
+            console.error(
+              "Error in request interceptor while regenerating token:",
+              error
+            );
+          }
+        }
+    
+      axios
+        .delete(`${Url}/${college}/user-management/${id}/`, {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+          },
+        })
+        .then((res) => {
+          setUsers(users.filter((prev) => prev.id !== id));
+        })
+        .catch((error) => {
+          console.log(error);
+
+          if (
+            error?.response?.data?.errors?.detail ===
+            "Given token not valid for any token type"
+          ) {
+            enqueueSnackbar("Logging out", {
+              variant: "error",
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "center",
+              },
+              autoHideDuration: 3000,
+            });
+            navigate("/login");
+          }
+        });
+    } else {
+      navigate("/login");
+    }
   };
 
   const handleUpdate = (id) => {
@@ -127,8 +232,8 @@ export const UserManagement = () => {
     ) {
       setHide(true);
       return;
-    }else{
-        setHide(false);
+    } else {
+      setHide(false);
     }
     setUsers((prev) =>
       prev.map((item) =>
@@ -233,9 +338,11 @@ export const UserManagement = () => {
                   })
                 }
               />
-              {hide && <p style={{ color: "red",fontSize:"0.67rem" }}>
-               * Role must be between office,caretaker,student,hod.{" "}
-              </p>}
+              {hide && (
+                <p style={{ color: "red", fontSize: "0.67rem" }}>
+                  * Role must be between office,caretaker,student,hod.{" "}
+                </p>
+              )}
               <Button
                 variant="contained"
                 sx={{ width: "70%", marginTop: "15px" }}
@@ -252,7 +359,7 @@ export const UserManagement = () => {
           sx={{ maxWidth: 800, margin: "auto", marginTop: 5, minWidth: 200 }}
         >
           <Table>
-            <TableHead sx={{backgroundColor: "rgb(107, 169, 169)",}}>
+            <TableHead sx={{ backgroundColor: "rgb(107, 169, 169)" }}>
               <TableRow>
                 <TableCell align="center">Role</TableCell>
 

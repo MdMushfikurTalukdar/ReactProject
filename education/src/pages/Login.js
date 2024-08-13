@@ -176,7 +176,7 @@ export const LoginPage = () => {
       <Style />
       <Header />
 
-      <div className=" flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 loginBody">
+      <div className=" flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 loginBody" style={{height:"90vh"}}>
         <Box
           className="max-w-md w-full space-y-8"
           sx={{
