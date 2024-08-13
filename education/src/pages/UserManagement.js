@@ -252,7 +252,7 @@ export const UserManagement = () => {
           sx={{ maxWidth: 800, margin: "auto", marginTop: 5, minWidth: 200 }}
         >
           <Table>
-            <TableHead>
+            <TableHead sx={{backgroundColor: "rgb(107, 169, 169)",}}>
               <TableRow>
                 <TableCell align="center">Role</TableCell>
 
