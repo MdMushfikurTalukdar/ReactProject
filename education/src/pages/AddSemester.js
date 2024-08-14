@@ -19,12 +19,12 @@ import { useNavigate } from "react-router-dom";
 import {  Url } from "../components/BaseUrl";
 
 const schema = yup.object().shape({
-  subject_name: yup.string().required("Subject name is required"),
-  subject_code: yup.string().required("Subject code is required"),
-  name: yup.string().required("Name is required"),
+  semester_name: yup.string().required("Semester name is required"),
+  branch: yup.string().required("branch code is required"),
+  subject_code:yup.string().required("branch code is required")
 });
 
-export const SemSubject = () => {
+export const AddSemester = () => {
   const navigate = useNavigate();
   const [branch, setBranch] = useState("");
 
@@ -120,17 +120,20 @@ export const SemSubject = () => {
   } = useForm({ resolver: yupResolver(schema) });
 
   const onSubmit = (data) => {
-    var subject_code = data.subject_code.toLowerCase();
+    var subject_code = data.subject_code.toUppercase();
+
+    var subject_code_array=subject_code.split(",");
+   
     let data1 = JSON.stringify({
-      subject_name: data.subject_name,
-      subject_code: subject_code,
-      instructor: data.name,
+      semester_name: data.semester_name,
+      branch: data.branch,
+      subject_codes: subject_code_array
     });
 
     let config = {
       method: "post",
       maxBodyLength: Infinity,
-      url: `${Url}/${jwtDecode(sessionStorage.getItem('accesstoken').college_name)}/subject/`,
+      url: `${Url}/${jwtDecode(sessionStorage.getItem('accesstoken').college_name)}/semester_subjects/`,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
@@ -247,26 +250,27 @@ export const SemSubject = () => {
           }}
         >
           <form onSubmit={handleSubmit(onSubmit)}>
-          <FormControl fullWidth>
+          <FormControl fullWidth error={!!errors.semester_name}>
               <TextField
                 type="text"
-                label={branch}
+                label="Semester Name"
                 variant="outlined"
                 fullWidth
                 style={{ marginBottom: "5px" }}
                 disabled
               />
+            <FormHelperText>{errors?.semester_name?.message}</FormHelperText>  
             </FormControl>
-            <FormControl fullWidth error={!!errors.subject_name}>
+            <FormControl fullWidth error={!!errors.branch}>
               <TextField
                 type="text"
-                label="Subject Name*"
+                label="Branch *"
                 variant="outlined"
                 fullWidth
                 style={{ marginBottom: "5px" }}
-                {...register("subject_name")}
+                {...register("branch")}
               />
-              <FormHelperText>{errors?.subject_name?.message}</FormHelperText>
+              <FormHelperText>{errors?.branch?.message}</FormHelperText>
             </FormControl>
             <FormControl fullWidth error={!!errors.subject_code}>
               <TextField
@@ -279,17 +283,7 @@ export const SemSubject = () => {
               />
               <FormHelperText>{errors?.subject_code?.message}</FormHelperText>
             </FormControl>
-            <FormControl fullWidth error={!!errors.name}>
-              <TextField
-                type="text"
-                label="Name*"
-                variant="outlined"
-                fullWidth
-                {...register("name")}
-                style={{ marginBottom: "5px" }}
-              />
-              <FormHelperText>{errors?.name?.message}</FormHelperText>
-            </FormControl>
+           
             <center>
               <Button
                 variant="contained"
@@ -302,7 +296,7 @@ export const SemSubject = () => {
                 }}
                 type="submit"
               >
-                Add Subject
+                Add Semester
               </Button>
             </center>
           </form>
@@ -313,4 +307,4 @@ export const SemSubject = () => {
   );
 };
 
-export default SemSubject;
+export default AddSemester;

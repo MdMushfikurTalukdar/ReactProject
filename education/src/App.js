@@ -40,6 +40,7 @@ import { CaretakerDashboard } from "./pages/CaretakerDashboard.js";
 import { CaretakerNoDues } from "./pages/CaretakerNoDues.js";
 import { RegistrarDashboard } from "./pages/RegistrarDashboard.js";
 import { UserManagement } from "./pages/UserManagement.js";
+import AddSemester from "./pages/AddSemester.js";
 
 function App() {
   return (
@@ -78,6 +79,7 @@ function App() {
             <Route path="/caretaker-dashboard" element={<CaretakerDashboard/>}/>
             <Route path="/hostel-no-due-request" element={<CaretakerNoDues/>}/>
             <Route path="/sem-sub-register" element={<SemSubject/>}/>
+            <Route path="/sem-register" element={<AddSemester/>}/>
             <Route path="/sem-branch-register" element={<SemBranch/>}/>
             <Route path="/hostel-mess-fee-payment" element={<HostelfeePayment/>} />
             <Route path="/registrar-dashboard" element={<RegistrarDashboard/>} />

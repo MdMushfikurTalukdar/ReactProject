@@ -69,7 +69,8 @@ export const NavbarNew = () => {
   ];
 
   const office = [{ name: "Add Branch", link: "/sem-branch-register" },
-    {name: "User Management", link: "/user-management"}
+    {name: "User Management", link: "/user-management"},
+    {name:"Register" , link:`/register/${jwtDecode(sessionStorage.getItem("accesstoken").college_name)}`}
   ];
 
   const fees_add = [
@@ -105,8 +106,10 @@ export const NavbarNew = () => {
       name: "Verify Semester Registration",
       link: "/verifySemesterRegistration",
     },
-    { name: "Add Branch Subjects", link: "/sem-sub-register" },
+    { name: "Add Subjects", link: "/sem-sub-register" },
+    { name: "Add Semester", link: "/sem-register" },
     { name: "Sign No Dues(for TC)", link: "/underDevelopment" },
+    
   ];
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
