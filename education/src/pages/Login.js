@@ -94,25 +94,7 @@ export const LoginPage = () => {
         } else if (response.role === "registrar") {
             navigate("/registrar-dashboard");
         } else if (response.role === "office") {
-          let config = {
-            method: "get",
-            maxBodyLength: Infinity,
-            url: `${Url}/colleges-slugs/?search=${response.college}`,
-            headers: {
-              Authorization: `Bearer ${res.data.token.access}`,
-            },
-          };
-
-          axios
-            .request(config)
-            .then((response1) => {
-              console.log(JSON.stringify(response1.data));
-              
-              navigate(`/register/${response1.data[0].slug}`);
-            })
-            .catch((error) => {
-              console.log(error);
-            });
+          navigate(`/register/${jwtDecode(res.data.token.access).college}`);
         } else {
          
           navigate("/dashboard");

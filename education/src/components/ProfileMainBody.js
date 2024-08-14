@@ -45,26 +45,11 @@ export const ProfileMainBody = () => {
     if (token && token1) {
       const response = jwtDecode(token);
 
-      let config = {
-        method: "get",
-        maxBodyLength: Infinity,
-        url: `${Url}/colleges-slugs/?search=${response.college}`,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
-      axios
-        .request(config)
-        .then((response1) => {
-          console.log(JSON.stringify(response1.data));
-
-          setCollege(response1?.data?.[0]?.slug);
 
           let config = {
             method: "GET",
             maxBodyLength: Infinity,
-            url: `${BaseUrl}/${response1?.data?.[0]?.slug}/profile/`,
+            url: `${BaseUrl}/${response?.college}/profile/`,
             headers: {
               Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
             },
@@ -93,10 +78,6 @@ export const ProfileMainBody = () => {
                 navigate("/login");
               }
             });
-        })
-        .catch((error) => {
-          console.log(error);
-        });
     } else {
       navigate("/login");
     }

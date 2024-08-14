@@ -140,39 +140,19 @@ export const RegistrarDashboard = () => {
     if (token && token1) {
       const response = jwtDecode(token);
 
-      let config = {
-        method: "get",
-        maxBodyLength: Infinity,
-        url: `${Url}/colleges-slugs/?search=${response.college}`,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
       axios
-        .request(config)
-        .then((response1) => {
-          console.log(JSON.stringify(response1.data));
-          axios
-            .get(`${BaseUrl}/${response1?.data?.[0]?.slug}/bonafide/`, {
-              headers: {
-                Authorization: `Bearer ${sessionStorage.getItem(
-                  "accesstoken"
-                )}`,
-              },
-            })
-            .then((response) => {
-              setLoading(false);
-              console.log(response.data);
-              setResult(response.data.reverse());
-            })
-            .catch((error) => {
-              console.error(error);
-            });
-          setCollege(response1?.data?.[0]?.slug);
+        .get(`${BaseUrl}/${response?.college}/bonafide/`, {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+          },
+        })
+        .then((response) => {
+          setLoading(false);
+          console.log(response.data);
+          setResult(response.data.reverse());
         })
         .catch((error) => {
-          console.log(error);
+          console.error(error);
           if (
             error?.response?.data?.errors?.detail ===
             "Given token not valid for any token type"
@@ -227,7 +207,7 @@ export const RegistrarDashboard = () => {
 
     if (token && token1) {
       axios
-        .patch(`${Url}/${college}/bonafide/${id}/approve/`, data, {
+        .patch(`${Url}/${jwtDecode(sessionStorage.getItem('accesstoken')).college}/bonafide/${id}/approve/`, data, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
@@ -295,7 +275,7 @@ export const RegistrarDashboard = () => {
     });
     if (token && token1) {
       axios
-        .patch(`${Url}/${college}/bonafide/${id}/approve/`, data, {
+        .patch(`${Url}/${jwtDecode(sessionStorage.getItem('accesstoken')).college}/bonafide/${id}/approve/`, data, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,

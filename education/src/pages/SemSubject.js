@@ -6,6 +6,7 @@ import {
   Button,
   FormControl,
   FormHelperText,
+  Grid,
 } from "@mui/material";
 import Footer from "../components/Home/Footer";
 import NavbarNew from "../components/NavbarNew";
@@ -14,9 +15,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import axios from "axios";
 import { enqueueSnackbar } from "notistack";
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
 import { useNavigate } from "react-router-dom";
-import {  Url } from "../components/BaseUrl";
+import { Url } from "../components/BaseUrl";
 
 const schema = yup.object().shape({
   subject_name: yup.string().required("Subject name is required"),
@@ -61,7 +62,6 @@ export const SemSubject = () => {
           axios
             .request(config)
             .then((response) => {
-              console.log(JSON.stringify(response.data));
               sessionStorage.setItem("accesstoken", response.data.access);
             })
             .catch((error) => {
@@ -82,7 +82,6 @@ export const SemSubject = () => {
                 });
                 navigate("/login");
               }
-              console.log(error);
             });
         } else {
           navigate("/login");
@@ -130,13 +129,16 @@ export const SemSubject = () => {
     let config = {
       method: "post",
       maxBodyLength: Infinity,
-      url: `${Url}/${jwtDecode(sessionStorage.getItem('accesstoken').college_name)}/subject/`,
+      url: `${Url}/${
+        jwtDecode(sessionStorage.getItem("accesstoken")).college
+      }/subject/`,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
       },
       data: data1,
     };
+
     const token = sessionStorage.getItem("accesstoken");
     const token1 = sessionStorage.getItem("refreshtoken");
 
@@ -144,10 +146,6 @@ export const SemSubject = () => {
       axios
         .request(config)
         .then((response) => {
-          console.log(response.data);
-          const token = sessionStorage.getItem("accesstoken");
-          const token1 = sessionStorage.getItem("refreshtoken");
-
           if (token && token1) {
             let currentDate = new Date();
             const decodedToken = jwtDecode(token);
@@ -180,8 +178,6 @@ export const SemSubject = () => {
           reset();
         })
         .catch((error) => {
-          console.log(error);
-
           if (
             error?.response?.data?.errors?.detail ===
             "Given token not valid for any token type"
@@ -213,100 +209,97 @@ export const SemSubject = () => {
   return (
     <Box>
       <NavbarNew />
+
+      <h4 style={{textAlign:"center",marginTop:"30px",fontSize:"1.4rem"}}>Subject Register</h4>
       <Box
-        elevation={3}
         sx={{
-          padding: 4,
+          padding: { xs: 2, md: 4 },
           borderRadius: 2,
-          maxWidth: 400,
+          maxWidth: "90vw",
           margin: "auto",
           marginTop: 4,
           marginBottom: 9,
+          minHeight: "70vh",
+          display: "flex",
+          flexDirection: { xs: "column", md: "row" },
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 4,
         }}
       >
-        <Typography
-          variant="h5"
-          component="h1"
-          gutterBottom
-          sx={{ textAlign: "center", marginBottom: 2 }}
-        >
-          Subject Enrollment
-        </Typography>
-        <center>
-          <img
-            src="./images/enrollment.png"
-            alt=""
-            style={{ width: "250px", borderRadius: "10px" }}
-          />
-        </center>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 3,
-          }}
-        >
-          <form onSubmit={handleSubmit(onSubmit)}>
-          <FormControl fullWidth>
-              <TextField
-                type="text"
-                label={branch}
-                variant="outlined"
-                fullWidth
-                style={{ marginBottom: "5px" }}
-                disabled
+        
+        <Grid container spacing={4}>
+          <Grid item xs={12} md={6}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <img
+                src="./images/enrollment.png"
+                alt="Enrollment"
+                style={{ width: "100%", maxWidth: "300px", borderRadius: "10px" }}
               />
-            </FormControl>
-            <FormControl fullWidth error={!!errors.subject_name}>
-              <TextField
-                type="text"
-                label="Subject Name*"
-                variant="outlined"
-                fullWidth
-                style={{ marginBottom: "5px" }}
-                {...register("subject_name")}
-              />
-              <FormHelperText>{errors?.subject_name?.message}</FormHelperText>
-            </FormControl>
-            <FormControl fullWidth error={!!errors.subject_code}>
-              <TextField
-                type="text"
-                label="Subject Code*"
-                variant="outlined"
-                fullWidth
-                style={{ marginBottom: "5px" }}
-                {...register("subject_code")}
-              />
-              <FormHelperText>{errors?.subject_code?.message}</FormHelperText>
-            </FormControl>
-            <FormControl fullWidth error={!!errors.name}>
-              <TextField
-                type="text"
-                label="Name*"
-                variant="outlined"
-                fullWidth
-                {...register("name")}
-                style={{ marginBottom: "5px" }}
-              />
-              <FormHelperText>{errors?.name?.message}</FormHelperText>
-            </FormControl>
-            <center>
-              <Button
-                variant="contained"
-                color="primary"
-                sx={{
-                  alignSelf: "center",
-                  paddingX: 4,
-                  paddingY: 1,
-                  marginTop: 1,
-                }}
-                type="submit"
-              >
-                Add Subject
-              </Button>
-            </center>
-          </form>
-        </Box>
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Box
+              component="form"
+              onSubmit={handleSubmit(onSubmit)}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 3,
+              }}
+            >
+              <FormControl fullWidth error={!!errors.subject_name}>
+                <TextField
+                  type="text"
+                  label="Subject Name*"
+                  variant="outlined"
+                  fullWidth
+                  {...register("subject_name")}
+                />
+                <FormHelperText>{errors?.subject_name?.message}</FormHelperText>
+              </FormControl>
+              <FormControl fullWidth error={!!errors.subject_code}>
+                <TextField
+                  type="text"
+                  label="Subject Code*"
+                  variant="outlined"
+                  fullWidth
+                  {...register("subject_code")}
+                />
+                <FormHelperText>{errors?.subject_code?.message}</FormHelperText>
+              </FormControl>
+              <FormControl fullWidth error={!!errors.name}>
+                <TextField
+                  type="text"
+                  label="Name*"
+                  variant="outlined"
+                  fullWidth
+                  {...register("name")}
+                />
+                <FormHelperText>{errors?.name?.message}</FormHelperText>
+              </FormControl>
+              <Box sx={{ display: "flex", justifyContent: "center" }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={{
+                    paddingX: 4,
+                    paddingY: 1.5,
+                    marginTop: 2,
+                  }}
+                  type="submit"
+                >
+                  Add Subject
+                </Button>
+              </Box>
+            </Box>
+          </Grid>
+        </Grid>
       </Box>
       <Footer />
     </Box>

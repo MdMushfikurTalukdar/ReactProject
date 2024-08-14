@@ -256,34 +256,18 @@ export const EditProfile = () => {
 
     if (token && token1) {
       const response = jwtDecode(token);
-
-      const config = {
-        method: "get",
-        maxBodyLength: Infinity,
-        url: `${Url}/colleges-slugs/?search=${response.college}`,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
-      axios
-        .request(config)
-        .then((response1) => {
-          console.log(JSON.stringify(response1.data));
-          setSlug(response1?.data?.[0]?.slug);
-
+          console.log(response.college);
           const profileConfig = {
             method: "GET",
             maxBodyLength: Infinity,
-            url: `${Url}/${response1?.data?.[0]?.slug}/profile/`,
+            url: `${Url}/${response?.college}/profile/`,
             headers: {
               Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
             },
           };
 
-          return axios.request(profileConfig);
-        })
-        .then((response) => {
+          axios
+          .request(profileConfig).then((response) => {
           const token = sessionStorage.getItem("accesstoken");
           if (token) {
             let currentDate = new Date();
@@ -445,7 +429,7 @@ export const EditProfile = () => {
     let config = {
       method: "put",
       maxBodyLength: Infinity,
-      url: `${BaseUrl}/${slug}/profile/`,
+      url: `${BaseUrl}/${jwtDecode(sessionStorage.getItem('accesstoken')).college}/profile/`,
       headers: {
         "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,

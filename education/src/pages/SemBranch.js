@@ -105,27 +105,7 @@ export const SemBranch = () => {
         (response.role !== "super-admin" && response.role !== "office")
       ) {
         navigate("/login");
-      } else {
-        let config = {
-          method: "get",
-          maxBodyLength: Infinity,
-          url: `${Url}/colleges-slugs/?search=${response.college}`,
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-          },
-        };
-
-        axios
-          .request(config)
-          .then((response1) => {
-            console.log(JSON.stringify(response1.data));
-            setCollege(response1.data[0].slug);
-            // navigate(`/register/${response1.data[0].slug}`);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }
+      } 
     } else {
       navigate("/login");
     }
@@ -167,7 +147,7 @@ export const SemBranch = () => {
     let config = {
       method: "post",
       maxBodyLength: Infinity,
-      url: `${Url}/${college}/branch/`,
+      url: `${Url}/${jwtDecode(sessionStorage.getItem('accesstoken')).college}/branch/`,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,

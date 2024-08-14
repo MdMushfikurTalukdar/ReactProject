@@ -74,11 +74,11 @@ export const BonafideCertificate = () => {
   useEffect(() => {
     const token = sessionStorage.getItem("accesstoken");
     const token1 = sessionStorage.getItem("refreshtoken");
-
+  
     if (token && token1) {
       let currentDate = new Date();
       const decodedToken = jwtDecode(token);
-
+  
       if (decodedToken.exp * 1000 - currentDate.getTime() < 59 * 60 * 1000) {
         try {
           regenerateToken(); // Wait for the token regeneration to complete
@@ -89,57 +89,38 @@ export const BonafideCertificate = () => {
           );
         }
       }
-    } else {
-      navigate("/login");
-    }
-
-    if (token && token1) {
+  
       const response = jwtDecode(token);
-
-      let config = {
-        method: "get",
-        maxBodyLength: Infinity,
-        url: `${Url}/colleges-slugs/?search=${response.college}`,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
+  
       axios
-        .request(config)
-        .then((response1) => {
-          console.log(JSON.stringify(response1.data));
-          axios
-            .get(`${BaseUrl}/${response1?.data?.[0]?.slug}/bonafide/?search=${jwtDecode(sessionStorage.getItem('accesstoken')).registration_number}`, {
-              headers: {
-                Authorization: `Bearer ${sessionStorage.getItem(
-                  "accesstoken"
-                )}`,
+        .get(
+          `${BaseUrl}/${response.college}/bonafide/?search=${jwtDecode(
+            sessionStorage.getItem("accesstoken")
+          ).registration_number}`,
+          {
+            headers: {
+              Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+            },
+          }
+        )
+        .then((response) => {
+          setLoading(false);
+          if (response?.data?.[0]?.status === "pending") {
+            enqueueSnackbar("Bonafide Certificate is not verified yet.", {
+              variant: "warning",
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "center",
               },
-            })
-            .then((response) => {
-              setLoading(false);
-              if(response?.data?.[0]?.status==='pending')
-              {
-                enqueueSnackbar("Bonafide Certificate is not verified yet.", {
-                  variant: "warning",
-                  anchorOrigin: {
-                    vertical: "bottom",
-                    horizontal: "center",
-                  },
-                  autoHideDuration: 1000,
-                });
-                navigate('/dashboard');
-              }
-              setResult(response.data);
-            })
-            .catch((error) => {
-              console.error(error);
+              autoHideDuration: 1000,
             });
-          setCollege(response1?.data?.[0]?.slug);
+            navigate("/dashboard");
+          }
+          setResult(response.data);
         })
         .catch((error) => {
-          console.log(error);
+          console.error(error);
+  
           if (
             error?.response?.data?.errors?.detail ===
             "Given token not valid for any token type"
@@ -155,10 +136,12 @@ export const BonafideCertificate = () => {
             navigate("/login");
           }
         });
+      setCollege(response.college);
     } else {
       navigate("/login");
     }
   }, []);
+  
 
   if (loading) {
     return (

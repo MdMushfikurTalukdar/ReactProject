@@ -33,7 +33,7 @@ export const UserManagement = () => {
   const [edit, setEdit] = useState(false);
   const [hide, setHide] = useState(false);
   const [delete1, setDelete1] = useState(false);
-  const [load,setLoad]=useState(false);
+  const [load, setLoad] = useState(false);
   const [editInfo, setEditInfo] = useState({
     registration_number: "",
     role: "",
@@ -109,38 +109,38 @@ export const UserManagement = () => {
   };
 
   useEffect(() => {
-    let config = {
-      method: "get",
-      maxBodyLength: Infinity,
-      url: `${Url}/colleges-slugs/?search=${
-        jwtDecode(sessionStorage.getItem("accesstoken")).college
-      }`,
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-      },
-    };
-
     axios
-      .request(config)
-      .then((response1) => {
-        setCollege(response1.data[0].slug);
-        axios
-          .get(`${Url}/${response1.data[0].slug}/user-management/`, {
-            headers: {
-              Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-            },
-          })
-          .then((response) => {
-            setUsers(response.data);
-            setLoading(false);
-          })
-          .catch((error) => {
-            setError(error.message);
-            setLoading(false);
-          });
+      .get(
+        `${Url}/${jwtDecode(
+          sessionStorage.getItem("accesstoken")
+        ).college}/user-management/`,
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+          },
+        }
+      )
+      .then((response) => {
+        setUsers(response.data);
+        setLoading(false);
       })
       .catch((error) => {
-        console.log(error);
+        setError(error.message);
+        setLoading(false);
+        if (
+          error?.response?.data?.errors?.detail ===
+          "Given token not valid for any token type"
+        ) {
+          enqueueSnackbar("Logging out", {
+            variant: "error",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 3000,
+          });
+          navigate("/login");
+        }
       });
   }, []);
 
@@ -168,7 +168,6 @@ export const UserManagement = () => {
     setDeleteInfo({ id });
   };
   const handleDelete = () => {
-
     setLoad(true);
     const token = sessionStorage.getItem("accesstoken");
     const token1 = sessionStorage.getItem("refreshtoken");
@@ -189,7 +188,7 @@ export const UserManagement = () => {
       }
 
       axios
-        .delete(`${Url}/${college}/user-management/${deleteInfo.id}/`, {
+        .delete(`${Url}/${jwtDecode(sessionStorage.getItem('accesstoken')).college}/user-management/${deleteInfo.id}/`, {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
           },
@@ -253,7 +252,7 @@ export const UserManagement = () => {
       }
       axios
         .patch(
-          `${Url}/${college}/user-management/${id}/`,
+          `${Url}/${jwtDecode(sessionStorage.getItem('accesstoken')).college}/user-management/${id}/`,
           {
             role: editInfo.role,
           },
@@ -427,29 +426,33 @@ export const UserManagement = () => {
                 />
               </center>
               <center>
-                <img src="../images/warning.jpg" alt="" style={{width:"100px"}}/>
+                <img
+                  src="../images/warning.jpg"
+                  alt=""
+                  style={{ width: "100px" }}
+                />
               </center>
               <h3>Do you want to delete this record??</h3>
-              <Box sx={{display:"flex",gap:"5px"}}>
-              <Button
-                variant="contained"
-                sx={{ width: "70%", marginTop: "15px" }}
-                onClick={handleDelete}
-              >
-                 {!load && <p>Yes</p>}
+              <Box sx={{ display: "flex", gap: "5px" }}>
+                <Button
+                  variant="contained"
+                  sx={{ width: "70%", marginTop: "15px" }}
+                  onClick={handleDelete}
+                >
+                  {!load && <p>Yes</p>}
                   {load && (
                     <CircularProgress
                       style={{ color: "white", width: "20px", height: "22px" }}
                     />
                   )}
-              </Button>
-              <Button
-                variant="contained"
-                sx={{ width: "70%", marginTop: "15px" }}
-                onClick={(e)=>setDelete1(false)}
-              >
-                No
-              </Button>
+                </Button>
+                <Button
+                  variant="contained"
+                  sx={{ width: "70%", marginTop: "15px" }}
+                  onClick={(e) => setDelete1(false)}
+                >
+                  No
+                </Button>
               </Box>
             </Box>
           </center>
@@ -494,9 +497,18 @@ export const UserManagement = () => {
               ))}
             </TableBody>
           </Table>
-          
         </TableContainer>
-        {users.length===0 ?<p style={{textAlign:"center",marginTop:"100px",fontSize:"1.5rem"}}>No records available</p>:null}
+        {users.length === 0 ? (
+          <p
+            style={{
+              textAlign: "center",
+              marginTop: "100px",
+              fontSize: "1.5rem",
+            }}
+          >
+            No records available
+          </p>
+        ) : null}
       </Box>
       <Footer />
     </Box>

@@ -50,7 +50,7 @@ export const AddSemester = () => {
             method: "post",
             maxBodyLength: Infinity,
             url:
-              "https://amarnath013.pythonanywhere.com/api/user/token/refresh/",
+              `${Url}/token/refresh/`,
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
@@ -120,7 +120,7 @@ export const AddSemester = () => {
   } = useForm({ resolver: yupResolver(schema) });
 
   const onSubmit = (data) => {
-    var subject_code = data.subject_code.toUppercase();
+    var subject_code = data.subject_code.toUpperCase();
 
     var subject_code_array=subject_code.split(",");
    
@@ -130,10 +130,11 @@ export const AddSemester = () => {
       subject_codes: subject_code_array
     });
 
+     console.log(data1);
     let config = {
       method: "post",
       maxBodyLength: Infinity,
-      url: `${Url}/${jwtDecode(sessionStorage.getItem('accesstoken').college_name)}/semester_subjects/`,
+      url: `${Url}/${jwtDecode(sessionStorage.getItem('accesstoken')).college}/semester/`,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
@@ -257,7 +258,7 @@ export const AddSemester = () => {
                 variant="outlined"
                 fullWidth
                 style={{ marginBottom: "5px" }}
-                disabled
+                {...register("semester_name")}
               />
             <FormHelperText>{errors?.semester_name?.message}</FormHelperText>  
             </FormControl>

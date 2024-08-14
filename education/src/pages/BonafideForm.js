@@ -27,6 +27,7 @@ import {
   TableHead,
   Grid,
   CircularProgress,
+  CardMedia,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
@@ -127,7 +128,6 @@ export const BonafideForm = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const navigate = useNavigate();
-  const [college, setCollege] = useState();
   const [responsive, setResponsive] = useState(
     window.innerWidth < 669 ? true : false
   );
@@ -269,23 +269,10 @@ export const BonafideForm = () => {
 
     if (token && token1) {
       const response = jwtDecode(token);
-
-      let config = {
-        method: "get",
-        maxBodyLength: Infinity,
-        url: `${Url}/colleges-slugs/?search=${response.college}`,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
-      axios
-        .request(config)
-        .then((response1) => {
-          console.log(JSON.stringify(response1.data));
+      
           axios
             .get(
-              `${BaseUrl}/${response1?.data?.[0]?.slug}/bonafide/?search=${
+              `${BaseUrl}/${response.college}/bonafide/?search=${
                 jwtDecode(sessionStorage?.getItem("accesstoken"))
                   ?.registration_number
               }`,
@@ -305,9 +292,7 @@ export const BonafideForm = () => {
             .catch((error) => {
               console.error(error);
             });
-          setCollege(response1?.data?.[0]?.slug);
-        })
-        .catch((error) => {});
+         
     } else {
       navigate("/login");
     }
@@ -320,26 +305,10 @@ export const BonafideForm = () => {
     if (token && token1) {
       const response = jwtDecode(token);
 
-      let config = {
-        method: "get",
-        maxBodyLength: Infinity,
-        url: `${Url}/colleges-slugs/?search=${response.college}`,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
-      axios
-        .request(config)
-        .then((response1) => {
-          console.log(JSON.stringify(response1.data));
-
-          setCollege(response1?.data?.[0]?.slug);
-
           let config = {
             method: "GET",
             maxBodyLength: Infinity,
-            url: `${BaseUrl}/${response1?.data?.[0]?.slug}/profile/`,
+            url: `${BaseUrl}/${response?.college}/profile/`,
             headers: {
               Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
             },
@@ -369,10 +338,7 @@ export const BonafideForm = () => {
                 navigate("/login");
               }
             });
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+        
     } else {
       navigate("/login");
     }
@@ -424,7 +390,7 @@ export const BonafideForm = () => {
     formData.append("required_for", data.purpose);
 
     axios
-      .post(`${BaseUrl}/${college}/bonafide/`, formData, {
+      .post(`${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/bonafide/`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
@@ -527,10 +493,10 @@ export const BonafideForm = () => {
                 }}
               >
                 <center>
-                  <img
-                    src="./images/Bonafide.png"
+                  <CardMedia
+                    src="../images/Bonafide.png"
                     alt=""
-                    style={{ width: "55%", marginTop: "20px" }}
+                    sx={{ width: {lg:"35%",xs:"55%"}, marginTop: "20px" }}
                   />
                 </center>
               </Box>
@@ -693,7 +659,7 @@ export const BonafideForm = () => {
               }}
             >
               <img
-                src="./images/Bonafide.png"
+                src="../images/Bonafide.png"
                 alt=""
                 style={{ width: "50%", marginLeft: "15%", marginTop: "5%" }}
               />
