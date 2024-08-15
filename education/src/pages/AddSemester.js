@@ -174,7 +174,7 @@ export const AddSemester = () => {
     const token1 = sessionStorage.getItem("refreshtoken");
 
     if (token && token1) {
-      var subject_code = data.subject_code.toUpperCase();
+      var subject_code = data.subject_code.toLowerCase();
 
       var subject_code_array = subject_code.split(",");
 
@@ -254,7 +254,21 @@ export const AddSemester = () => {
             });
             navigate("/login");
           }
-          enqueueSnackbar(error?.response?.data?.errors?.subject_code[0], {
+
+          if (error?.response?.data?.errors?.non_field_errors?.[0]){
+            enqueueSnackbar(error?.response?.data?.errors?.non_field_errors?.[0], {
+              variant: "error",
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "center",
+              },
+              autoHideDuration: 1000,
+            });
+          } 
+
+
+          if(error?.response?.data?.errors?.subject_code?.[0]){
+          enqueueSnackbar(error?.response?.data?.errors?.subject_code?.[0], {
             variant: "error",
             anchorOrigin: {
               vertical: "bottom",
@@ -262,6 +276,7 @@ export const AddSemester = () => {
             },
             autoHideDuration: 1000,
           });
+        }
         });
     } else {
       navigate("/login");

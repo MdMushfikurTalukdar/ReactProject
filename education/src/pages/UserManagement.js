@@ -12,6 +12,8 @@ import {
   Typography,
   Button,
   TextField,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import axios from "axios";
 import { Url } from "../components/BaseUrl";
@@ -29,7 +31,7 @@ export const UserManagement = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [college, setCollege] = useState("");
+  const [load1, setload1] = useState(false);
   const [edit, setEdit] = useState(false);
   const [hide, setHide] = useState(false);
   const [delete1, setDelete1] = useState(false);
@@ -38,10 +40,62 @@ export const UserManagement = () => {
     registration_number: "",
     role: "",
     id: "",
+    branch: "",
   });
   const [deleteInfo, setDeleteInfo] = useState({
     id: "",
   });
+
+  const branches = [
+    { name: "Computer Science and Engineering", abbreviation: "CSE" },
+    { name: "Mechanical Engineering", abbreviation: "ME" },
+    { name: "Electrical Engineering", abbreviation: "EE" },
+    { name: "Civil Engineering", abbreviation: "CE" },
+    { name: "Electronics and Communication Engineering", abbreviation: "ECE" },
+    { name: "Chemical Engineering", abbreviation: "CHE" },
+    { name: "Information Technology", abbreviation: "IT" },
+    { name: "Biomedical Engineering", abbreviation: "BME" },
+    { name: "Aeronautical Engineering", abbreviation: "AE" },
+    { name: "Automobile Engineering", abbreviation: "AU" },
+    { name: "Biotechnology Engineering", abbreviation: "BT" },
+    { name: "Industrial Engineering", abbreviation: "IE" },
+    { name: "Environmental Engineering", abbreviation: "EN" },
+    { name: "Petroleum Engineering", abbreviation: "PE" },
+    { name: "Instrumentation Engineering", abbreviation: "IE" },
+    { name: "Agricultural Engineering", abbreviation: "AG" },
+    { name: "Mining Engineering", abbreviation: "MN" },
+    { name: "Marine Engineering", abbreviation: "MRE" },
+    { name: "Textile Engineering", abbreviation: "TE" },
+    { name: "Food Technology", abbreviation: "FT" },
+    { name: "Production Engineering", abbreviation: "PR" },
+    { name: "Metallurgical Engineering", abbreviation: "MT" },
+    { name: "Polymer Engineering", abbreviation: "PM" },
+    { name: "Naval Architecture", abbreviation: "NA" },
+    { name: "Power Engineering", abbreviation: "PW" },
+    { name: "Robotics Engineering", abbreviation: "RE" },
+    { name: "Software Engineering", abbreviation: "SE" },
+    { name: "Geological Engineering", abbreviation: "GE" },
+    { name: "Structural Engineering", abbreviation: "ST" },
+    { name: "Mechatronics Engineering", abbreviation: "MTX" },
+    { name: "Aerospace Engineering", abbreviation: "ASP" },
+    { name: "Marine Technology", abbreviation: "MRT" },
+    { name: "Nano Engineering", abbreviation: "NE" },
+    { name: "Materials Science and Engineering", abbreviation: "MSE" },
+    { name: "Telecommunication Engineering", abbreviation: "TCE" },
+    { name: "Nuclear Engineering", abbreviation: "NE" },
+    { name: "Optical Engineering", abbreviation: "OE" },
+    { name: "Automotive Engineering", abbreviation: "AUE" },
+    { name: "Systems Engineering", abbreviation: "SYE" },
+    { name: "Renewable Energy Engineering", abbreviation: "REE" },
+    { name: "Biochemical Engineering", abbreviation: "BCE" },
+    { name: "Mining and Mineral Engineering", abbreviation: "MME" },
+    { name: "Safety Engineering", abbreviation: "SE" },
+    { name: "Corrosion Engineering", abbreviation: "CE" },
+    { name: "Plastics Engineering", abbreviation: "PLE" },
+    { name: "Petrochemical Engineering", abbreviation: "PCE" },
+    { name: "Energy Engineering", abbreviation: "EE" },
+    { name: "Computer Science and Business Systems", abbreviation: "CSBS" },
+  ];
 
   const regenerateToken = () => {
     if (sessionStorage?.getItem("accesstoken")) {
@@ -64,8 +118,7 @@ export const UserManagement = () => {
           let config = {
             method: "post",
             maxBodyLength: Infinity,
-            url:
-              "https://amarnath013.pythonanywhere.com/api/user/token/refresh/",
+            url: `${Url}/token/refresh/`,
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
@@ -111,9 +164,9 @@ export const UserManagement = () => {
   useEffect(() => {
     axios
       .get(
-        `${Url}/${jwtDecode(
-          sessionStorage.getItem("accesstoken")
-        ).college}/user-management/`,
+        `${Url}/${
+          jwtDecode(sessionStorage.getItem("accesstoken")).college
+        }/user-management/`,
         {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
@@ -188,11 +241,16 @@ export const UserManagement = () => {
       }
 
       axios
-        .delete(`${Url}/${jwtDecode(sessionStorage.getItem('accesstoken')).college}/user-management/${deleteInfo.id}/`, {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-          },
-        })
+        .delete(
+          `${Url}/${
+            jwtDecode(sessionStorage.getItem("accesstoken")).college
+          }/user-management/${deleteInfo.id}/`,
+          {
+            headers: {
+              Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+            },
+          }
+        )
         .then((res) => {
           setLoad(false);
           setDelete1(false);
@@ -222,6 +280,8 @@ export const UserManagement = () => {
   };
 
   const handleUpdate = (id) => {
+
+    setload1(true);
     const token = sessionStorage.getItem("accesstoken");
     const token1 = sessionStorage.getItem("refreshtoken");
 
@@ -243,7 +303,10 @@ export const UserManagement = () => {
         editInfo.role !== "office" &&
         editInfo.role !== "caretaker" &&
         editInfo.role !== "student" &&
-        editInfo.role !== "hod"
+        editInfo.role !== "hod" &&
+        editInfo.role !== "faculty" &&
+        editInfo.role !== "staff" &&
+        editInfo.role !== "registrar"
       ) {
         setHide(true);
         return;
@@ -252,9 +315,12 @@ export const UserManagement = () => {
       }
       axios
         .patch(
-          `${Url}/${jwtDecode(sessionStorage.getItem('accesstoken')).college}/user-management/${id}/`,
+          `${Url}/${
+            jwtDecode(sessionStorage.getItem("accesstoken")).college
+          }/user-management/${id}/`,
           {
             role: editInfo.role,
+            branch: editInfo.branch,
           },
           {
             headers: {
@@ -268,6 +334,7 @@ export const UserManagement = () => {
               item.id === id ? { ...item, role: editInfo.role } : item
             )
           );
+          setload1(false);
 
           enqueueSnackbar("Successfully updated.", {
             variant: "success",
@@ -280,6 +347,7 @@ export const UserManagement = () => {
           setEdit(false);
         })
         .catch((error) => {
+          setload1(false);
           if (
             error?.response?.data?.errors?.detail ===
             "Given token not valid for any token type"
@@ -332,6 +400,7 @@ export const UserManagement = () => {
     );
   }
 
+  console.log(editInfo);
   return (
     <Box>
       <NavbarNew />
@@ -385,9 +454,36 @@ export const UserManagement = () => {
                   })
                 }
               />
+
+              {editInfo.role === "hod" && (
+                <Select
+                  fullWidth
+                  value={editInfo.branch || ""}
+                  onChange={(e) =>
+                    setEditInfo({
+                      ...editInfo,
+                      branch: e.target.value,
+                    })
+                  }
+                  displayEmpty
+                >
+                  <MenuItem value="" disabled>
+                    Select Branch
+                  </MenuItem>
+                  {branches.map((branch) => (
+                    <MenuItem
+                      key={branch.abbreviation}
+                      value={branch.abbreviation}
+                    >
+                      {branch.abbreviation}
+                    </MenuItem>
+                  ))}
+                </Select>
+              )}
               {hide && (
                 <p style={{ color: "red", fontSize: "0.67rem" }}>
-                  * Role must be between office,caretaker,student,hod.{" "}
+                  * Role must be between
+                  office,caretaker,student,hod,faculty,staff,registrar .{" "}
                 </p>
               )}
               <Button
@@ -395,7 +491,12 @@ export const UserManagement = () => {
                 sx={{ width: "70%", marginTop: "15px" }}
                 onClick={(e) => handleUpdate(editInfo.id)}
               >
-                Edit
+              {!load1 && <p>Edit</p>}
+                  {load1 && (
+                    <CircularProgress
+                      style={{ color: "white", width: "20px", height: "22px" }}
+                    />
+                  )}
               </Button>
             </Box>
           </center>
@@ -462,7 +563,13 @@ export const UserManagement = () => {
         </center>
         <TableContainer
           component={Paper}
-          sx={{ maxWidth: 900, margin: "auto", marginTop: 5, minWidth: 200 }}
+          sx={{
+            maxWidth: 900,
+            margin: "auto",
+            marginTop: 5,
+            minWidth: 200,
+            marginBottom: "40px",
+          }}
         >
           <Table>
             <TableHead sx={{ backgroundColor: "rgb(107, 169, 169)" }}>

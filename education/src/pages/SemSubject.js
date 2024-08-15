@@ -51,7 +51,7 @@ export const SemSubject = () => {
             method: "post",
             maxBodyLength: Infinity,
             url:
-              "https://amarnath013.pythonanywhere.com/api/user/token/refresh/",
+              `${Url}/token/refresh/`,
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
@@ -100,12 +100,7 @@ export const SemSubject = () => {
         (response.role !== "super-admin" && response.role !== "hod")
       ) {
         navigate("/login");
-      } else {
-        const branch = response.registration_number;
-
-        let str1 = branch.split("-");
-        setBranch(str1[1].slice(0, -3));
-      }
+      } 
     } else {
       navigate("/login");
     }

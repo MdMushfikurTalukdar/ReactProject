@@ -107,7 +107,7 @@ const schema = yup.object().shape({
       "Date has wrong format. Use one of these formats instead: YYYY-MM-DD."
     )
     .required("Date Of Admission is required"),
-  session: yup.string(),
+  session: yup.string().required(),
   university_reg_no: yup.string(),
   TC_or_CL_no: yup
     .string()

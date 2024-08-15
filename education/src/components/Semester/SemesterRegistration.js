@@ -91,10 +91,14 @@ export function SemesterRegistration() {
   });
 
   useEffect(() => {
+
+    const token = sessionStorage.getItem("accesstoken");
+    const token1 = sessionStorage.getItem("refreshtoken");
+    if (token && token1) {
     let config = {
       method: "GET",
       maxBodyLength: Infinity,
-      url: `${BaseUrl}/profile/`,
+      url: `${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/profile/`,
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
       },
@@ -109,14 +113,19 @@ export function SemesterRegistration() {
       .catch((error) => {
         console.log(error);
       });
+    }else{
+      navigate('/login');
+    }
   }, []);
 
   useEffect(() => {
-    console.log(userProfile?.personal_information?.registration_number);
+    const token = sessionStorage.getItem("accesstoken");
+    const token1 = sessionStorage.getItem("refreshtoken");
+    if (token && token1) {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `${BaseUrl}/semester-registrations/?search=${userProfile?.personal_information?.registration_number}`,
+      url: `${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/semester-registrations/?search=${userProfile?.personal_information?.registration_number}`,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
@@ -133,6 +142,9 @@ export function SemesterRegistration() {
       .catch((error) => {
         console.log(error);
       });
+    }else{
+      navigate("/login");
+    }
   }, [userProfile]);
 
   useEffect(() => {
@@ -146,11 +158,16 @@ export function SemesterRegistration() {
     }
   }, []);
 
+ 
+
   useEffect(() => {
+    const token = sessionStorage.getItem("accesstoken");
+    const token1 = sessionStorage.getItem("refreshtoken");
+    if (token && token1) {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `${BaseUrl}/semester/?search`,
+      url: `${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/semester/?search`,
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
       },
@@ -176,13 +193,20 @@ export function SemesterRegistration() {
       .catch((error) => {
         console.log(error);
       });
+    }else{
+      navigate('/login');
+    }
   }, []);
 
   const fetchBranches = (semester) => {
+
+    const token = sessionStorage.getItem("accesstoken");
+    const token1 = sessionStorage.getItem("refreshtoken");
+    if (token && token1) {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `${BaseUrl}/semester/?search=${semester}`,
+      url: `${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/semester/?search=${semester}`,
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
       },
@@ -208,6 +232,9 @@ export function SemesterRegistration() {
       .catch((error) => {
         console.log(error);
       });
+    }else{
+      navigate("/login");
+    }
   };
 
   const handleSemesterChange = (event) => {
@@ -251,7 +278,11 @@ export function SemesterRegistration() {
   }, [selectedSemester, branches2]);
 
   const onSubmit = (data) => {
-    console.log(data);
+
+    const token = sessionStorage.getItem("accesstoken");
+    const token1 = sessionStorage.getItem("refreshtoken");
+    if (token && token1) {
+    console.log("data");
 
     if(userProfile?.personal_information?.first_name===null)
       return enqueueSnackbar("name field is empty", { variant: "error" });
@@ -263,7 +294,7 @@ export function SemesterRegistration() {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `${BaseUrl}/semester/?search`,
+      url: `${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/semester/?search`,
       headers: {
         Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
       },
@@ -279,13 +310,16 @@ export function SemesterRegistration() {
 
         let data1 = JSON.stringify({
           semester: b,
-          student: `${jwtDecode(sessionStorage?.getItem("accesstoken")).user_id}`,
+          status:"pending"
+          
         });
 
+        console.log(data1);
+        
         let config = {
           method: "post",
           maxBodyLength: Infinity,
-          url: `${BaseUrl}/semester-registrations/`,
+          url: `${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/semester-registrations/`,
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
@@ -298,6 +332,16 @@ export function SemesterRegistration() {
           .then((response) => {
             console.log(response.data);
 
+            setResult(prevResult => [
+              ...prevResult,
+              {
+                status: "pending",
+                semester:{
+                  semester_name: response.data?.semester?.semester_name,
+                },
+                applied_date: response.data?.applied_date,
+              }
+            ]);
             enqueueSnackbar("Request sent successfully", {
               variant: "success",
               anchorOrigin: {
@@ -307,14 +351,36 @@ export function SemesterRegistration() {
               autoHideDuration: 1000,
             });
     
-            setTimeout(() => {
-              window.location.reload();
-            }, 3000);
+            // setTimeout(() => {
+            //   window.location.reload();
+            // }, 3000);
 
           })
           .catch((error) => {
             console.log(error);
-            
+            if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+              enqueueSnackbar("Logging out", {
+                variant: "error",
+                anchorOrigin: {
+                  vertical: "bottom",
+                  horizontal: "center",
+                },
+                autoHideDuration: 3000,
+              });  
+              navigate("/login");
+            }
+
+            if(error?.response?.data?.errors?.non_field_errors?.[0]){
+              enqueueSnackbar(error?.response?.data?.errors?.non_field_errors?.[0], {
+                variant: "error",
+                anchorOrigin: {
+                  vertical: "bottom",
+                  horizontal: "center",
+                },
+                autoHideDuration: 3000,
+              });  
+              
+            }
           });
       })
       .catch((error) => {
@@ -331,6 +397,9 @@ export function SemesterRegistration() {
           navigate("/login");
         }
       });
+    }else{
+      navigate("/login");
+    }
   };
 
   if (loading || loading1 || loading2) {
