@@ -16,17 +16,68 @@ import axios from "axios";
 import { enqueueSnackbar } from "notistack";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
-import {  Url } from "../components/BaseUrl";
+import { Url } from "../components/BaseUrl";
 
 const schema = yup.object().shape({
   semester_name: yup.string().required("Semester name is required"),
-  branch: yup.string().required("branch code is required"),
-  subject_code:yup.string().required("branch code is required")
+  subject_code: yup.string().required("branch code is required"),
 });
 
 export const AddSemester = () => {
   const navigate = useNavigate();
   const [branch, setBranch] = useState("");
+
+  const branches = [
+    { name: "Computer Science and Engineering", abbreviation: "CSE" },
+    { name: "Mechanical Engineering", abbreviation: "ME" },
+    { name: "Electrical Engineering", abbreviation: "EE" },
+    { name: "Civil Engineering", abbreviation: "CE" },
+    { name: "Electronics and Communication Engineering", abbreviation: "ECE" },
+    { name: "Chemical Engineering", abbreviation: "CHE" },
+    { name: "Information Technology", abbreviation: "IT" },
+    { name: "Biomedical Engineering", abbreviation: "BME" },
+    { name: "Aeronautical Engineering", abbreviation: "AE" },
+    { name: "Automobile Engineering", abbreviation: "AU" },
+    { name: "Biotechnology Engineering", abbreviation: "BT" },
+    { name: "Industrial Engineering", abbreviation: "IE" },
+    { name: "Environmental Engineering", abbreviation: "EN" },
+    { name: "Petroleum Engineering", abbreviation: "PE" },
+    { name: "Instrumentation Engineering", abbreviation: "IE" },
+    { name: "Agricultural Engineering", abbreviation: "AG" },
+    { name: "Mining Engineering", abbreviation: "MN" },
+    { name: "Marine Engineering", abbreviation: "MRE" },
+    { name: "Textile Engineering", abbreviation: "TE" },
+    { name: "Food Technology", abbreviation: "FT" },
+    { name: "Production Engineering", abbreviation: "PR" },
+    { name: "Metallurgical Engineering", abbreviation: "MT" },
+    { name: "Polymer Engineering", abbreviation: "PM" },
+    { name: "Naval Architecture", abbreviation: "NA" },
+    { name: "Power Engineering", abbreviation: "PW" },
+    { name: "Robotics Engineering", abbreviation: "RE" },
+    { name: "Software Engineering", abbreviation: "SE" },
+    { name: "Geological Engineering", abbreviation: "GE" },
+    { name: "Structural Engineering", abbreviation: "ST" },
+    { name: "Mechatronics Engineering", abbreviation: "MTX" },
+    { name: "Aerospace Engineering", abbreviation: "ASP" },
+    { name: "Marine Technology", abbreviation: "MRT" },
+    { name: "Nano Engineering", abbreviation: "NE" },
+    { name: "Materials Science and Engineering", abbreviation: "MSE" },
+    { name: "Telecommunication Engineering", abbreviation: "TCE" },
+    { name: "Nuclear Engineering", abbreviation: "NE" },
+    { name: "Optical Engineering", abbreviation: "OE" },
+    { name: "Automotive Engineering", abbreviation: "AUE" },
+    { name: "Systems Engineering", abbreviation: "SYE" },
+    { name: "Renewable Energy Engineering", abbreviation: "REE" },
+    { name: "Biochemical Engineering", abbreviation: "BCE" },
+    { name: "Mining and Mineral Engineering", abbreviation: "MME" },
+    { name: "Safety Engineering", abbreviation: "SE" },
+    { name: "Corrosion Engineering", abbreviation: "CE" },
+    { name: "Plastics Engineering", abbreviation: "PLE" },
+    { name: "Petrochemical Engineering", abbreviation: "PCE" },
+    { name: "Energy Engineering", abbreviation: "EE" },
+    { name: "Computer Science and Business Systems", abbreviation: "CSBS" }
+];
+
 
   const regenerateToken = () => {
     if (sessionStorage?.getItem("accesstoken")) {
@@ -49,8 +100,7 @@ export const AddSemester = () => {
           let config = {
             method: "post",
             maxBodyLength: Infinity,
-            url:
-              `${Url}/token/refresh/`,
+            url: `${Url}/token/refresh/`,
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
@@ -102,10 +152,10 @@ export const AddSemester = () => {
       ) {
         navigate("/login");
       } else {
-        const branch = response.registration_number;
-
-        let str1 = branch.split("-");
-        setBranch(str1[1].slice(0, -3));
+        branches.map((item)=>
+          item.abbreviation===jwtDecode(sessionStorage.getItem("accesstoken")).branch?setBranch(item.name):null
+          
+        )
       }
     } else {
       navigate("/login");
@@ -120,31 +170,35 @@ export const AddSemester = () => {
   } = useForm({ resolver: yupResolver(schema) });
 
   const onSubmit = (data) => {
-    var subject_code = data.subject_code.toUpperCase();
-
-    var subject_code_array=subject_code.split(",");
-   
-    let data1 = JSON.stringify({
-      semester_name: data.semester_name,
-      branch: data.branch,
-      subject_codes: subject_code_array
-    });
-
-     console.log(data1);
-    let config = {
-      method: "post",
-      maxBodyLength: Infinity,
-      url: `${Url}/${jwtDecode(sessionStorage.getItem('accesstoken')).college}/semester/`,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-      },
-      data: data1,
-    };
     const token = sessionStorage.getItem("accesstoken");
     const token1 = sessionStorage.getItem("refreshtoken");
 
     if (token && token1) {
+      var subject_code = data.subject_code.toUpperCase();
+
+      var subject_code_array = subject_code.split(",");
+
+      let data1 = JSON.stringify({
+        semester_name: data.semester_name,
+        branch: jwtDecode(sessionStorage.getItem("accesstoken")).branch,
+        subject_codes: subject_code_array,
+        branch_name: branch
+      });
+
+      console.log(data1);
+      let config = {
+        method: "post",
+        maxBodyLength: Infinity,
+        url: `${Url}/${
+          jwtDecode(sessionStorage.getItem("accesstoken")).college
+        }/semester/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+        },
+        data: data1,
+      };
+
       axios
         .request(config)
         .then((response) => {
@@ -251,7 +305,7 @@ export const AddSemester = () => {
           }}
         >
           <form onSubmit={handleSubmit(onSubmit)}>
-          <FormControl fullWidth error={!!errors.semester_name}>
+            <FormControl fullWidth error={!!errors.semester_name}>
               <TextField
                 type="text"
                 label="Semester Name"
@@ -260,18 +314,7 @@ export const AddSemester = () => {
                 style={{ marginBottom: "5px" }}
                 {...register("semester_name")}
               />
-            <FormHelperText>{errors?.semester_name?.message}</FormHelperText>  
-            </FormControl>
-            <FormControl fullWidth error={!!errors.branch}>
-              <TextField
-                type="text"
-                label="Branch *"
-                variant="outlined"
-                fullWidth
-                style={{ marginBottom: "5px" }}
-                {...register("branch")}
-              />
-              <FormHelperText>{errors?.branch?.message}</FormHelperText>
+              <FormHelperText>{errors?.semester_name?.message}</FormHelperText>
             </FormControl>
             <FormControl fullWidth error={!!errors.subject_code}>
               <TextField
@@ -284,7 +327,7 @@ export const AddSemester = () => {
               />
               <FormHelperText>{errors?.subject_code?.message}</FormHelperText>
             </FormControl>
-           
+
             <center>
               <Button
                 variant="contained"

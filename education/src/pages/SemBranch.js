@@ -134,7 +134,41 @@ export const SemBranch = () => {
     { name: "Environmental Engineering", abbreviation: "EN" },
     { name: "Petroleum Engineering", abbreviation: "PE" },
     { name: "Instrumentation Engineering", abbreviation: "IE" },
-  ];
+    { name: "Agricultural Engineering", abbreviation: "AG" },
+    { name: "Mining Engineering", abbreviation: "MN" },
+    { name: "Marine Engineering", abbreviation: "MRE" },
+    { name: "Textile Engineering", abbreviation: "TE" },
+    { name: "Food Technology", abbreviation: "FT" },
+    { name: "Production Engineering", abbreviation: "PR" },
+    { name: "Metallurgical Engineering", abbreviation: "MT" },
+    { name: "Polymer Engineering", abbreviation: "PM" },
+    { name: "Naval Architecture", abbreviation: "NA" },
+    { name: "Power Engineering", abbreviation: "PW" },
+    { name: "Robotics Engineering", abbreviation: "RE" },
+    { name: "Software Engineering", abbreviation: "SE" },
+    { name: "Geological Engineering", abbreviation: "GE" },
+    { name: "Structural Engineering", abbreviation: "ST" },
+    { name: "Mechatronics Engineering", abbreviation: "MTX" },
+    { name: "Aerospace Engineering", abbreviation: "ASP" },
+    { name: "Marine Technology", abbreviation: "MRT" },
+    { name: "Nano Engineering", abbreviation: "NE" },
+    { name: "Materials Science and Engineering", abbreviation: "MSE" },
+    { name: "Telecommunication Engineering", abbreviation: "TCE" },
+    { name: "Nuclear Engineering", abbreviation: "NE" },
+    { name: "Optical Engineering", abbreviation: "OE" },
+    { name: "Automotive Engineering", abbreviation: "AUE" },
+    { name: "Systems Engineering", abbreviation: "SYE" },
+    { name: "Renewable Energy Engineering", abbreviation: "REE" },
+    { name: "Biochemical Engineering", abbreviation: "BCE" },
+    { name: "Mining and Mineral Engineering", abbreviation: "MME" },
+    { name: "Safety Engineering", abbreviation: "SE" },
+    { name: "Corrosion Engineering", abbreviation: "CE" },
+    { name: "Plastics Engineering", abbreviation: "PLE" },
+    { name: "Petrochemical Engineering", abbreviation: "PCE" },
+    { name: "Energy Engineering", abbreviation: "EE" },
+    { name: "Computer Science and Business Systems", abbreviation: "CSBS" }
+];
+
 
   const onSubmit = (data) => {
     setLoad(true);
