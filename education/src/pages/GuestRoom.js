@@ -32,7 +32,7 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
-import { BaseUrl } from "../components/BaseUrl";
+import { BaseUrl, Url } from "../components/BaseUrl";
 import { MdDateRange } from "react-icons/md";
 
 // Validation schema
@@ -91,7 +91,7 @@ export const GuestRoom = () => {
           let config = {
             method: "post",
             maxBodyLength: Infinity,
-            url: "https://amarnath013.pythonanywhere.com/api/user/token/refresh/",
+            url: `${Url}/token/refresh/`,
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
@@ -148,7 +148,7 @@ export const GuestRoom = () => {
       let config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: `${BaseUrl}/guest-room-allotments/?search=${jwtDecode(sessionStorage?.getItem("accesstoken"))?.registration_number}`,
+        url: `${BaseUrl}/${jwtDecode(sessionStorage?.getItem("accesstoken"))?.college}/guest-room-allotments/?search=${jwtDecode(sessionStorage?.getItem("accesstoken"))?.registration_number}`,
         headers: {
           Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
         },
@@ -211,7 +211,7 @@ export const GuestRoom = () => {
     let config = {
       method: "post",
       maxBodyLength: Infinity,
-      url: `${BaseUrl}/guest-room-allotments/`,
+      url: `${BaseUrl}/${jwtDecode(sessionStorage?.getItem("accesstoken"))?.college}/guest-room-allotments/`,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
@@ -480,7 +480,7 @@ export const GuestRoom = () => {
           gutterBottom
           style={{fontSize:"1.2rem"}}
         >
-          Approved Requests
+          Previous Requests
         </Typography>
         <Divider sx={{ mb: 3 }} />
 

@@ -44,7 +44,7 @@ import LastPageIcon from "@mui/icons-material/LastPage";
 import NavbarNew from "../components/NavbarNew";
 import Footer from "../components/Home/Footer";
 import { enqueueSnackbar } from "notistack";
-import { BaseUrl } from "./BaseUrl";
+import { BaseUrl, Url } from "./BaseUrl";
 
 const settings = {
   infinite: true,
@@ -174,7 +174,7 @@ const ComplaintForm = () => {
           let config = {
             method: "post",
             maxBodyLength: Infinity,
-            url: "https://amarnath013.pythonanywhere.com/api/user/token/refresh/",
+            url: `${Url}/token/refresh/`,
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
@@ -249,7 +249,7 @@ const ComplaintForm = () => {
 
     const fetchProfileData = async () => {
       try {
-        const response = await fetch(`${BaseUrl}/profile`, {
+        const response = await fetch(`${BaseUrl}/${jwtDecode(sessionStorage?.getItem("accesstoken"))?.college}/profile`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -284,7 +284,7 @@ const ComplaintForm = () => {
 
     const fetchComplaints = async () => {
       try {
-        const response = await fetch(`${BaseUrl}/complaints`, {
+        const response = await fetch(`${BaseUrl}/${jwtDecode(sessionStorage?.getItem("accesstoken"))?.college}/complaints`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -318,7 +318,7 @@ const ComplaintForm = () => {
       let config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: `${BaseUrl}/complaints/`,
+        url: `${BaseUrl}/${jwtDecode(sessionStorage?.getItem("accesstoken"))?.college}/complaints/`,
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
         },
@@ -377,6 +377,11 @@ const ComplaintForm = () => {
   const currentDate = new Date();
 
   const onSubmit = (data) => {
+    const token = sessionStorage.getItem("accesstoken");
+    const token1 = sessionStorage.getItem("refreshtoken");
+   
+    if (token && token1) {
+
     let data1 = JSON.stringify({
       name: profileData?.name,
       branch: profileData?.branch,
@@ -392,7 +397,7 @@ const ComplaintForm = () => {
     let config = {
       method: "post",
       maxBodyLength: Infinity,
-      url: `${BaseUrl}/complaints/`,
+      url: `${BaseUrl}/${jwtDecode(sessionStorage?.getItem("accesstoken"))?.college}/complaints/`,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
@@ -456,6 +461,9 @@ const ComplaintForm = () => {
           navigate("/login");
         }
       });
+    }else{
+      navigate("/login");
+    }
   };
 
   const handleChangePage = (event, newPage) => {
@@ -736,7 +744,7 @@ const ComplaintForm = () => {
                   </Card>
                 ))
             ) : (
-              <TableContainer component={Paper} style={{ marginTop: "20px" }}>
+              <TableContainer component={Paper} style={{ marginTop: "20px",marginBottom:"50px" }}>
                 <Table
                   sx={{ minWidth: 500 }}
                   aria-label="custom pagination table"
