@@ -3,6 +3,7 @@ import "./VerifySemesterRegistration.css";
 import axios from "axios";
 import { Box, CircularProgress } from "@mui/material";
 import { BaseUrl } from "../BaseUrl";
+import { jwtDecode } from "jwt-decode";
 
 const ApprovedList = () => {
   const [print, setPrint] = useState(false);
@@ -17,7 +18,7 @@ const ApprovedList = () => {
         const config = {
           method: "get",
           maxBodyLength: Infinity,
-          url: `${BaseUrl}/verify-semester-registration/?status=approved`,
+          url: `${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/verify-semester-registration/?status=approved`,
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
@@ -115,7 +116,7 @@ const ApprovedList = () => {
            
 
             return (
-              <div key={index} className="id-card">
+              <div key={index} className="id-card" style={{marginBottom:"50px"}}>
                 <div className="info">
                   <p>
                     <span className="label">Name:</span>{" "}

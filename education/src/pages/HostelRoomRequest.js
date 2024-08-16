@@ -36,7 +36,7 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
-import { BaseUrl } from "../components/BaseUrl";
+import { BaseUrl, Url } from "../components/BaseUrl";
 
 // Validation schema
 const exactTwoDecimalRegex = /^\d+\.\d{2}$/;
@@ -123,7 +123,7 @@ export const HostelRoomRequest = () => {
           let config = {
             method: "post",
             maxBodyLength: Infinity,
-            url: "https://amarnath013.pythonanywhere.com/api/user/token/refresh/",
+            url: `${Url}/token/refresh/`,
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
@@ -188,7 +188,7 @@ export const HostelRoomRequest = () => {
       if(token && token1){ 
       try {
         const userProfileResponse = await axios.get(
-          `${BaseUrl}/profile/`,
+          `${BaseUrl}/${jwtDecode(sessionStorage?.getItem("accesstoken"))?.college}/profile/`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -198,7 +198,7 @@ export const HostelRoomRequest = () => {
         setUserProfile(userProfileResponse.data);
 
         const hostelAllotmentsResponse = await axios.get(
-          `${BaseUrl}/hostel-allotments/?search=${jwtDecode(sessionStorage?.getItem("accesstoken"))?.registration_number}`,
+          `${BaseUrl}/${jwtDecode(sessionStorage?.getItem("accesstoken"))?.college}/hostel-allotments/?search=${jwtDecode(sessionStorage?.getItem("accesstoken"))?.registration_number}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -209,7 +209,7 @@ export const HostelRoomRequest = () => {
         setResult(hostelAllotmentsResponse.data.reverse());
 
         const hostelRoomAllotmentsResponse = await axios.get(
-          `${BaseUrl}/hostel-room-allotments/?search=${jwtDecode(sessionStorage?.getItem("accesstoken"))?.registration_number}`,
+          `${BaseUrl}/${jwtDecode(sessionStorage?.getItem("accesstoken"))?.college}/hostel-room-allotments/?search=${jwtDecode(sessionStorage?.getItem("accesstoken"))?.registration_number}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -308,7 +308,7 @@ export const HostelRoomRequest = () => {
     if(token && token1){
     try {
       const response = await axios.post(
-        `${BaseUrl}/hostel-allotments/`,
+        `${BaseUrl}/${jwtDecode(sessionStorage?.getItem("accesstoken"))?.college}/hostel-allotments/`,
         formData,
         {
           headers: {

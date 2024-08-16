@@ -35,7 +35,7 @@ const VerifySemesterRegistration = () => {
     const fetchApprovedStudents = async () => {
       try {
         const response = await axios.get(
-          `${BaseUrl}/semester-registrations/`,
+          `${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/semester-registrations/`,
           {
             headers: {
               Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
@@ -102,7 +102,6 @@ const VerifySemesterRegistration = () => {
         </div>
       </div>
 
-      {/* Approve list */}
       <ApprovedList />
       <Footer />
     </>

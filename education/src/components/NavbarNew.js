@@ -70,7 +70,7 @@ export const NavbarNew = () => {
 
   const office = [{ name: "Add Branch", link: "/sem-branch-register" },
     {name: "User Management", link: "/user-management"},
-    {name:"Register" , link:`/register/${jwtDecode(sessionStorage.getItem("accesstoken")).college}`}
+    {name:"Register" , link:sessionStorage?.getItem("accesstoken")?`/register/${jwtDecode(sessionStorage?.getItem("accesstoken")).college}`:null}
   ];
 
   const fees_add = [

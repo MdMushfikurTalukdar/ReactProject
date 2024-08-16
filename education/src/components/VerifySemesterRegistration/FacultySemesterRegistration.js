@@ -21,7 +21,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { enqueueSnackbar } from "notistack";
 import Footer from "../Home/Footer";
-import { BaseUrl } from "../BaseUrl";
+import { BaseUrl, Url } from "../BaseUrl";
 
 const FacultySemesterRegistration = () => {
   const { id } = useParams();
@@ -47,7 +47,7 @@ const FacultySemesterRegistration = () => {
           let config = {
             method: "post",
             maxBodyLength: Infinity,
-            url: "https://amarnath013.pythonanywhere.com/api/user/token/refresh/",
+            url: `${Url}/token/refresh/`,
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
@@ -98,7 +98,7 @@ const FacultySemesterRegistration = () => {
         let config = {
           method: 'get',
           maxBodyLength: Infinity,
-          url: `${BaseUrl}/semester-registrations/${id}`,
+          url: `${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/semester-registrations/${id}`,
           headers: {
             'Authorization': `Bearer ${sessionStorage.getItem("accesstoken")}`
           }
@@ -206,7 +206,7 @@ const FacultySemesterRegistration = () => {
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: `${BaseUrl}/verify-semester-registration/`,
+      url: `${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/verify-semester-registration/`,
       headers: { 
         'Content-Type': 'application/json', 
         'Authorization': `Bearer ${sessionStorage?.getItem('accesstoken')}`
@@ -401,7 +401,7 @@ const FacultySemesterRegistration = () => {
           </Box>
         
 
-        <Grid container justifyContent="center" spacing={2} style={{ marginTop: "40px" }}>
+        <Grid container justifyContent="center" spacing={2} style={{ marginTop: "40px",marginBottom:"20px" }}>
           <Grid item>
             <Button variant="contained" color="primary" onClick={() => onSubmit("approved")}>
               Approve
