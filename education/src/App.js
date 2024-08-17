@@ -41,6 +41,7 @@ import { CaretakerNoDues } from "./pages/CaretakerNoDues.js";
 import { RegistrarDashboard } from "./pages/RegistrarDashboard.js";
 import { UserManagement } from "./pages/UserManagement.js";
 import AddSemester from "./pages/AddSemester.js";
+import RoomRegistration from "./pages/RoomRegistration.js";
 
 function App() {
   return (
@@ -52,6 +53,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/leave" element={<Leave />} />
+            <Route path="/room-register" element={<RoomRegistration />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/profileEdit" element={<EditProfile />} />
             <Route path="/about" element={<About/>}/>

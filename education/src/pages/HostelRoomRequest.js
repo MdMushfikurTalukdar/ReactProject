@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
 import NavbarNew from "../components/NavbarNew";
 import {
@@ -24,6 +24,9 @@ import {
   TableHead,
   Grid,
   CircularProgress,
+  MenuItem,
+  Select,
+  InputLabel,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
@@ -67,6 +70,7 @@ const schema = yup.object().shape({
     //   return acceptedFormats?.includes(file?.type);
     // })
     .required("image file is required"),
+    RoomType:yup.string().required("This field is required")
   
 });
 
@@ -84,7 +88,7 @@ export const HostelRoomRequest = () => {
   const [loading, setLoading] = useState(true);
   const [loading1, setLoading1] = useState(true);
 
-  const theme = useTheme();
+
 
   const {
     register,
@@ -92,6 +96,7 @@ export const HostelRoomRequest = () => {
     formState: { errors },
     setValue,
     reset,
+    control
   } = useForm({
     resolver: yupResolver(schema),
   });
@@ -298,12 +303,15 @@ export const HostelRoomRequest = () => {
       "registration_number",
       userProfile?.academic_information?.registration_number
     );
-    formData.append("status", "applied");
+    formData.append("status", "pending");
     formData.append("cgpa", data.cgpa);
     formData.append("latest_marksheet", data.file);
+    formData.append("prefered_room_type", data.RoomType);
 
     const token = sessionStorage.getItem("accesstoken");
     const token1 = sessionStorage.getItem("refreshtoken");
+
+    console.log(data);
 
     if(token && token1){
     try {
@@ -469,6 +477,50 @@ export const HostelRoomRequest = () => {
                 />
               </FormControl>
 
+
+              <FormControl
+            fullWidth
+            variant="outlined"
+            margin="normal"
+            error={!!errors.RoomType?.message}
+            
+          >
+            <InputLabel id="numberOfPersons-label">
+
+              Number of Persons
+             
+            </InputLabel>
+            <Controller
+          
+              name="RoomType"
+              control={control}
+              render={({ field }) => (
+                
+                <Select
+                  labelId="numberOfPersons-label"
+                  id="RoomType"
+                  label="Room Type"
+                  {...field}
+                  defaultValue=""
+                  sx={{
+                    width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
+                  }}
+                >
+                  <MenuItem value="Single">Single</MenuItem>
+                  <MenuItem value="Double">Double</MenuItem>
+                  <MenuItem value="Triple">Triple</MenuItem>
+                  
+                  
+                </Select>
+                
+              )}
+            />
+            {errors.RoomType && (
+              <FormHelperText>{errors.RoomType.message}</FormHelperText>
+            )}
+          </FormControl>
+
+
               <FormControl
                 fullWidth
                 error={!!errors.file?.message}
@@ -503,6 +555,7 @@ export const HostelRoomRequest = () => {
                       style={{ display: "none" }}
                     />
                   </Button>
+                  
                 </Box>
                 {previewUrl && (
                   <Box sx={{ marginTop: 2 }}>
