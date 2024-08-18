@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Grid,
   TextField,
@@ -7,7 +7,7 @@ import {
   MenuItem,
   Box,
   Divider,
-  CardMedia,
+  CircularProgress,
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -46,15 +46,21 @@ const RoomRegistration = () => {
     control,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
 
+  const fileInputRef = useRef(null);
+  const textInputRef = useRef(null);
   const navigate = useNavigate();
   const [fileName, setFileName] = useState("");
   const [file, setFile] = useState("");
+  const [loading1, setLoading1] = useState(false);
+  const [loading2, setLoading2] = useState(false);
 
   const handleFileChange = (e) => {
+    console.log("clicked");
     const file = e.target.files[0];
     if (file) {
       setFileName(file.name);
@@ -84,14 +90,20 @@ const RoomRegistration = () => {
     if (sessionStorage?.getItem("accesstoken")) {
       const response = jwtDecode(sessionStorage?.getItem("accesstoken"));
       const response1 = jwtDecode(sessionStorage?.getItem("refreshtoken"));
-      if (response.exp < Math.floor(Date.now() / 1000) || response1.exp < Math.floor(Date.now() / 1000)) {
+      if (
+        response.exp < Math.floor(Date.now() / 1000) ||
+        response1.exp < Math.floor(Date.now() / 1000)
+      ) {
         navigate("/login");
-      }else{
-        if (sessionStorage.getItem("refreshtoken") && sessionStorage.getItem("accesstoken")) {
+      } else {
+        if (
+          sessionStorage.getItem("refreshtoken") &&
+          sessionStorage.getItem("accesstoken")
+        ) {
           let data = {
             refresh: sessionStorage?.getItem("refreshtoken"),
           };
-    
+
           let config = {
             method: "post",
             maxBodyLength: Infinity,
@@ -102,7 +114,7 @@ const RoomRegistration = () => {
             },
             data: data,
           };
-    
+
           axios
             .request(config)
             .then((response) => {
@@ -110,10 +122,13 @@ const RoomRegistration = () => {
               sessionStorage.setItem("accesstoken", response.data.access);
             })
             .catch((error) => {
-              if(error?.message==='Request failed with status code 500'){
-                navigate('/login');
+              if (error?.message === "Request failed with status code 500") {
+                navigate("/login");
               }
-              if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+              if (
+                error?.response?.data?.errors?.detail ===
+                "Given token not valid for any token type"
+              ) {
                 enqueueSnackbar("Logging out", {
                   variant: "error",
                   anchorOrigin: {
@@ -121,7 +136,7 @@ const RoomRegistration = () => {
                     horizontal: "center",
                   },
                   autoHideDuration: 3000,
-                });  
+                });
                 navigate("/login");
               }
               console.log(error);
@@ -133,90 +148,225 @@ const RoomRegistration = () => {
     } else {
       navigate("/login");
     }
-   
   };
 
+  const handleSubmitFile = async (e) => {
+    setLoading1(true);
 
-  const onSubmit = (data) => {
-    console.log(data);
-    // Handle form submission
+    if (!file) {
+      setLoading1(false);
+      return enqueueSnackbar("Please Select a File.", {
+        variant: "warning",
+        anchorOrigin: {
+          vertical: "bottom",
+          horizontal: "center",
+        },
+        autoHideDuration: 3000,
+      });
+    }
 
-    const token = sessionStorage.getItem("accesstoken");
-    const token1 = sessionStorage.getItem("refreshtoken");
+    if (!file.name.endsWith("csv")) {
+      return enqueueSnackbar("Only csv file will be accepted", {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "bottom",
+          horizontal: "center",
+        },
+        autoHideDuration: 3000,
+      });
+    }
+    const formData = new FormData();
+    formData.append("file", file);
 
-    if (token && token1) {
-
-    let data1 = JSON.stringify({
-      room_no: data.room_no,
-      capacity: data.capacity,
-      room_type: data.room_type,
-      status: data.status,
-    });
-
-    let config = {
-      method: "post",
-      maxBodyLength: Infinity,
-      url: `${Url}/${
-        jwtDecode(sessionStorage.getItem("accesstoken")).college
-      }/hostel-room-registrations/`,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-      },
-      data: data1,
-    };
-
-    axios
-      .request(config)
-      .then((response) => {
-        console.log(response.data);
-
-        enqueueSnackbar("Registration successful", { variant: "success" });
-
-        const token = sessionStorage.getItem("accesstoken");
-        const token1 = sessionStorage.getItem("refreshtoken");
-
-        if (token && token1) {
-          let currentDate = new Date();
-          const decodedToken = jwtDecode(token);
-
-          if (
-            decodedToken.exp * 1000 - currentDate.getTime() <
-            59 * 60 * 1000
-          ) {
-            try {
-              regenerateToken(); // Wait for the token regeneration to complete
-            } catch (error) {
-              console.error(
-                "Error in request interceptor while regenerating token:",
-                error
-              );
-            }
-          }
-        } else {
-          navigate("/login");
+    try {
+      const response = await axios.post(
+        `${Url}/${
+          jwtDecode(sessionStorage.getItem("accesstoken")).college
+        }/hostel-room-registrations/`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+          },
+          maxBodyLength: Infinity,
         }
-      })
-      .catch((error) => {
-        console.log(error);
+      );
 
-        if (
-          error?.response?.data?.errors?.detail ===
-          "Given token not valid for any token type"
-        ) {
-          enqueueSnackbar("Logging out", {
-            variant: "error",
+      const token = sessionStorage.getItem("accesstoken");
+      const token1 = sessionStorage.getItem("refreshtoken");
+
+      if (token && token1) {
+        let currentDate = new Date();
+        const decodedToken = jwtDecode(token);
+
+        if (decodedToken.exp * 1000 - currentDate.getTime() < 59 * 60 * 1000) {
+          try {
+            regenerateToken(); // Wait for the token regeneration to complete
+          } catch (error) {
+            console.error(
+              "Error in request interceptor while regenerating token:",
+              error
+            );
+          }
+        }
+      } else {
+        navigate("/login");
+      }
+      if (response) {
+        if (response?.data?.message) {
+          enqueueSnackbar(response.data.message, {
+            variant: "success",
             anchorOrigin: {
               vertical: "bottom",
               horizontal: "center",
             },
             autoHideDuration: 3000,
           });
-          navigate("/login");
         }
-      });
-    }else{
+        setFileName("");
+        setFile(null);
+        setLoading1(false);
+
+        // Reset file input
+        if (fileInputRef.current) {
+          fileInputRef.current.value = null;
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      setFileName("");
+      setFile(null);
+      setLoading1(false);
+
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = null;
+      }
+
+      if (error?.response?.data?.errors?.non_field_errors?.[0]) {
+        enqueueSnackbar(error?.response?.data?.errors?.non_field_errors?.[0], {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 3000,
+        });
+      }
+      if (
+        error?.response?.data?.errors?.detail ===
+        "Given token not valid for any token type"
+      ) {
+        enqueueSnackbar("Logging out", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 3000,
+        });
         navigate("/login");
+      }
+    }
+  };
+
+  const onSubmit = (data) => {
+    console.log(data);
+    setLoading2(true);
+    
+    const token = sessionStorage.getItem("accesstoken");
+    const token1 = sessionStorage.getItem("refreshtoken");
+
+    if (token && token1) {
+      let data1 = JSON.stringify({
+        room_no: data.room_no,
+        capacity: data.capacity,
+        room_type: data.room_type,
+        status: data.status,
+      });
+
+      let config = {
+        method: "post",
+        maxBodyLength: Infinity,
+        url: `${Url}/${
+          jwtDecode(sessionStorage.getItem("accesstoken")).college
+        }/hostel-room-registrations/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+        },
+        data: data1,
+      };
+
+      axios
+        .request(config)
+        .then((response) => {
+          console.log(response.data);
+          setLoading2(false);
+          
+         
+          enqueueSnackbar("Registration successful", { variant: "success" });
+          // reset();
+          const token = sessionStorage.getItem("accesstoken");
+          const token1 = sessionStorage.getItem("refreshtoken");
+
+          if (token && token1) {
+            let currentDate = new Date();
+            const decodedToken = jwtDecode(token);
+
+            if (
+              decodedToken.exp * 1000 - currentDate.getTime() <
+              59 * 60 * 1000
+            ) {
+              try {
+                regenerateToken(); // Wait for the token regeneration to complete
+              } catch (error) {
+                console.error(
+                  "Error in request interceptor while regenerating token:",
+                  error
+                );
+              }
+            }
+          } else {
+            navigate("/login");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          setLoading2(false);
+          
+          if (error?.response?.data?.errors?.non_field_errors?.[0]) {
+            enqueueSnackbar(
+              error?.response?.data?.errors?.non_field_errors?.[0],
+              {
+                variant: "error",
+                anchorOrigin: {
+                  vertical: "bottom",
+                  horizontal: "center",
+                },
+                autoHideDuration: 3000,
+              }
+            );
+          }
+          if (
+            error?.response?.data?.errors?.detail ===
+            "Given token not valid for any token type"
+          ) {
+            enqueueSnackbar("Logging out", {
+              variant: "error",
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "center",
+              },
+              autoHideDuration: 3000,
+            });
+            navigate("/login");
+          }
+        });
+
+    } else {
+      navigate("/login");
     }
   };
 
@@ -245,8 +395,8 @@ const RoomRegistration = () => {
             <img
               src="../images/hostelRoom.jpg"
               alt="Room"
-              sx={{
-                width: {lg:"70%",xs:"100%",sm:"70%",md:"70%"},
+              style={{
+                width: "80%",
                 height: "auto",
                 borderRadius: 8,
               }}
@@ -275,6 +425,7 @@ const RoomRegistration = () => {
                     <TextField
                       {...field}
                       label="Room Number"
+                      
                       variant="outlined"
                       margin="normal"
                       fullWidth
@@ -293,6 +444,7 @@ const RoomRegistration = () => {
                     <TextField
                       {...field}
                       label="Capacity"
+                      
                       margin="normal"
                       variant="outlined"
                       fullWidth
@@ -312,6 +464,7 @@ const RoomRegistration = () => {
                       {...field}
                       select
                       label="Room Type"
+                      
                       margin="normal"
                       variant="outlined"
                       fullWidth
@@ -339,6 +492,7 @@ const RoomRegistration = () => {
                       margin="normal"
                       variant="outlined"
                       fullWidth
+                      
                       sx={{
                         width: { lg: "80%", md: "80%", xs: "100%", sm: "90%" },
                       }}
@@ -356,14 +510,23 @@ const RoomRegistration = () => {
                     marginTop: 2,
                     width: { xs: "85%", sm: "50%" },
                     backgroundColor: "rgb(107 169 169)",
-                    //   marginLeft:{lg:"40px",md:"30px"}
                   }}
                 >
-                  Register Room
+                 {!loading2 && <p>Register Room</p>}
+                  {loading2 && (
+                    <CircularProgress
+                      style={{ color: "white", width: "20px", height: "22px" }}
+                    />
+                  )}
                 </Button>
               </center>
             </form>
-            <Divider component="span" role="presentation" className="Divider"sx={{ marginTop:"10px"}}>
+            <Divider
+              component="span"
+              role="presentation"
+              className="Divider"
+              sx={{ marginTop: "10px" }}
+            >
               <Typography>or</Typography>
             </Divider>
 
@@ -400,11 +563,12 @@ const RoomRegistration = () => {
                     marginTop: "10px",
                   }}
                 >
-                  <input
+                  <TextField
                     type="file"
                     accept="*"
                     alt=""
                     style={{ display: "none" }}
+                    inputRef={fileInputRef}
                     onChange={handleFileChange}
                   />
                   Upload
@@ -417,25 +581,26 @@ const RoomRegistration = () => {
               </div>
             </Box>
             <Box>
-             <center> <Button
-                variant="contained"
-                sx={{
-                  width: { xs: "85%", sm: "50%" },
-                  backgroundColor: "rgb(107 169 169)",
-                  textAlign: "start",
-                  marginTop: "20px",
-                }}
-                type="submit"
-                //   onClick={handleSubmitFile}
-              >
-                {/* {!loading1 && <p>Create Account</p>}
+              <center>
+                {" "}
+                <Button
+                  variant="contained"
+                  sx={{
+                    width: { xs: "85%", sm: "50%" },
+                    backgroundColor: "rgb(107 169 169)",
+                    textAlign: "start",
+                    marginTop: "20px",
+                  }}
+                  type="submit"
+                  onClick={handleSubmitFile}
+                >
+                  {!loading1 && <p> Register Room</p>}
                   {loading1 && (
                     <CircularProgress
                       style={{ color: "white", width: "20px", height: "22px" }}
                     />
-                  )} */}
-                Register Room
-              </Button>
+                  )}
+                </Button>
               </center>
             </Box>
           </Grid>
