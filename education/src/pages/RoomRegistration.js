@@ -47,6 +47,7 @@ const RoomRegistration = () => {
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
@@ -307,7 +308,18 @@ const RoomRegistration = () => {
           
          
           enqueueSnackbar("Registration successful", { variant: "success" });
-          // reset();
+          reset({
+            room_no: "",
+            capacity: "",
+            room_type: "",
+            status: "",
+          });
+          setValue("room_no","");
+          setValue("room_type","");
+          setValue("capacity","");
+          setValue("status","");
+
+
           const token = sessionStorage.getItem("accesstoken");
           const token1 = sessionStorage.getItem("refreshtoken");
 
@@ -418,6 +430,7 @@ const RoomRegistration = () => {
             </Typography>
             <form onSubmit={handleSubmit(onSubmit)}>
               <center>
+                
                 <Controller
                   name="room_no"
                   control={control}
@@ -463,6 +476,7 @@ const RoomRegistration = () => {
                     <TextField
                       {...field}
                       select
+                   
                       label="Room Type"
                       
                       margin="normal"
@@ -489,6 +503,7 @@ const RoomRegistration = () => {
                     <TextField
                       {...field}
                       label="Status"
+
                       margin="normal"
                       variant="outlined"
                       fullWidth
