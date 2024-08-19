@@ -247,7 +247,7 @@ export const HostelRoomRequest = () => {
         }   
         console.log(hostelRoomAllotmentsResponse.data)
         setAllotedRoom(hostelRoomAllotmentsResponse.data);
-        setLoading1(false);
+        
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -259,7 +259,7 @@ export const HostelRoomRequest = () => {
     fetchData();
   }, [navigate]);
 
-  if (loading || loading1) {
+  if (loading) {
     return (
       <Box
         display="flex"
