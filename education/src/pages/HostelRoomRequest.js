@@ -33,7 +33,7 @@ import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
-import {Footer} from "../components/Footer";
+import { Footer } from "../components/Footer";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
@@ -60,18 +60,17 @@ const schema = yup.object().shape({
       }
       return true;
     }),
-    file: yup
+  file: yup
     .mixed()
     // .test("fileType", "Only image files are allowed", (value) => {
     //   if (!value) return true; // No file selected is valid
-  
+
     //   const acceptedFormats = ["image/jpeg", "image/png", "image/jpg"];
     //   const file = value?.[0];
     //   return acceptedFormats?.includes(file?.type);
     // })
     .required("image file is required"),
-    RoomType:yup.string().required("This field is required")
-  
+  RoomType: yup.string().required("This field is required"),
 });
 
 // Component
@@ -79,7 +78,7 @@ export const HostelRoomRequest = () => {
   const navigate = useNavigate();
   const [previewUrl, setPreviewUrl] = useState(null);
   const [name, setName] = useState(null);
-  const [userProfile, setUserProfile] = useState(null);
+  const [file,setFile]=useState('');
   const [result, setResult] = useState([]);
   const [allotedRoom, setAllotedRoom] = useState([]);
   const [page, setPage] = useState(0);
@@ -88,15 +87,13 @@ export const HostelRoomRequest = () => {
   const [loading, setLoading] = useState(true);
   const [loading1, setLoading1] = useState(true);
 
-
-
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
     reset,
-    control
+    control,
   } = useForm({
     resolver: yupResolver(schema),
   });
@@ -117,14 +114,20 @@ export const HostelRoomRequest = () => {
     if (sessionStorage?.getItem("accesstoken")) {
       const response = jwtDecode(sessionStorage?.getItem("accesstoken"));
       const response1 = jwtDecode(sessionStorage?.getItem("refreshtoken"));
-      if (response.exp < Math.floor(Date.now() / 1000) || response1.exp < Math.floor(Date.now() / 1000)) {
+      if (
+        response.exp < Math.floor(Date.now() / 1000) ||
+        response1.exp < Math.floor(Date.now() / 1000)
+      ) {
         navigate("/login");
-      }else{
-        if (sessionStorage.getItem("refreshtoken") && sessionStorage.getItem("accesstoken")) {
+      } else {
+        if (
+          sessionStorage.getItem("refreshtoken") &&
+          sessionStorage.getItem("accesstoken")
+        ) {
           let data = {
             refresh: sessionStorage?.getItem("refreshtoken"),
           };
-    
+
           let config = {
             method: "post",
             maxBodyLength: Infinity,
@@ -135,7 +138,7 @@ export const HostelRoomRequest = () => {
             },
             data: data,
           };
-    
+
           axios
             .request(config)
             .then((response) => {
@@ -143,10 +146,13 @@ export const HostelRoomRequest = () => {
               sessionStorage.setItem("accesstoken", response.data.access);
             })
             .catch((error) => {
-              if(error?.message==='Request failed with status code 500'){
-                navigate('/login');
+              if (error?.message === "Request failed with status code 500") {
+                navigate("/login");
               }
-              if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+              if (
+                error?.response?.data?.errors?.detail ===
+                "Given token not valid for any token type"
+              ) {
                 enqueueSnackbar("Logging out", {
                   variant: "error",
                   anchorOrigin: {
@@ -154,7 +160,7 @@ export const HostelRoomRequest = () => {
                     horizontal: "center",
                   },
                   autoHideDuration: 3000,
-                });  
+                });
                 navigate("/login");
               }
               console.log(error);
@@ -166,10 +172,7 @@ export const HostelRoomRequest = () => {
     } else {
       navigate("/login");
     }
-   
   };
-
-
 
   useEffect(() => {
     const accessToken = sessionStorage.getItem("accesstoken");
@@ -181,79 +184,61 @@ export const HostelRoomRequest = () => {
 
     const decodedToken = jwtDecode(accessToken);
 
-    if (decodedToken.exp < Math.floor(Date.now() / 1000) || ( decodedToken.role!=="student" && decodedToken.role!=="super-admin" ) ) {
+    if (
+      decodedToken.exp < Math.floor(Date.now() / 1000) ||
+      (decodedToken.role !== "student" && decodedToken.role !== "super-admin")
+    ) {
       navigate("/login");
     }
 
     const fetchData = async () => {
-
       const token = sessionStorage.getItem("accesstoken");
-        const token1 = sessionStorage.getItem("refreshtoken");
+      const token1 = sessionStorage.getItem("refreshtoken");
 
-      if(token && token1){ 
-      try {
-        const userProfileResponse = await axios.get(
-          `${BaseUrl}/${jwtDecode(sessionStorage?.getItem("accesstoken"))?.college}/profile/`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        setUserProfile(userProfileResponse.data);
+      if (token && token1) {
+        let config = {
+          method: "get",
+          maxBodyLength: Infinity,
+          url: `${BaseUrl}/${
+            jwtDecode(sessionStorage?.getItem("accesstoken"))?.college
+          }/hostel-allotments/?search=${
+            jwtDecode(sessionStorage?.getItem("accesstoken"))
+              ?.registration_number
+          }`,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        };
 
-        const hostelAllotmentsResponse = await axios.get(
-          `${BaseUrl}/${jwtDecode(sessionStorage?.getItem("accesstoken"))?.college}/hostel-allotments/?search=${jwtDecode(sessionStorage?.getItem("accesstoken"))?.registration_number}`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        setLoading(false);
-        setResult(hostelAllotmentsResponse.data.reverse());
+        axios
+          .request(config)
+          .then((response) => {
+            setLoading(false);
+            setResult(response.data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
 
-        const hostelRoomAllotmentsResponse = await axios.get(
-          `${BaseUrl}/${jwtDecode(sessionStorage?.getItem("accesstoken"))?.college}/hostel-room-allotments/?search=${jwtDecode(sessionStorage?.getItem("accesstoken"))?.registration_number}`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
+        // const hostelRoomAllotmentsResponse = await axios.get(
+        //   `${BaseUrl}/${
+        //     jwtDecode(sessionStorage?.getItem("accesstoken"))?.college
+        //   }/hostel-room-allotments/?search=${
+        //     jwtDecode(sessionStorage?.getItem("accesstoken"))
+        //       ?.registration_number
+        //   }`,
+        //   {
+        //     headers: {
+        //       Authorization: `Bearer ${accessToken}`,
+        //     },
+        //   }
+        // );
 
-        const token = sessionStorage.getItem("accesstoken");
-        const token1 = sessionStorage.getItem("refreshtoken");
-       
-        if (token && token1) {
-          let currentDate = new Date();
-          const decodedToken = jwtDecode(token);
-  
-          if (
-            decodedToken.exp * 1000 - currentDate.getTime() <
-            59 * 60 * 1000
-          ) {
-            try {
-              regenerateToken(); // Wait for the token regeneration to complete
-            } catch (error) {
-              console.error(
-                "Error in request interceptor while regenerating token:",
-                error
-              );
-            }
-          }
-        }else{
-          navigate('/login');
-        }   
-        console.log(hostelRoomAllotmentsResponse.data)
-        setAllotedRoom(hostelRoomAllotmentsResponse.data);
-        
-      } catch (error) {
-        console.error("Error fetching data:", error);
+        // console.log(hostelRoomAllotmentsResponse.data);
+        // setAllotedRoom(hostelRoomAllotmentsResponse.data);
+      } else {
+        navigate("/login");
       }
-    }else{
-      navigate('/login');
-    }
     };
 
     fetchData();
@@ -283,507 +268,559 @@ export const HostelRoomRequest = () => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setName(file.name);
+    setFile(file);
     setValue("file", file);
     setPreviewUrl(URL.createObjectURL(file));
   };
 
-  const onSubmit = async (data) => {
-
+  const onSubmit = (data) => {
     const acceptedFormats = ["image/jpeg", "image/png", "image/jpg"];
-    
-    if(data?.file?.length===0){
+  
+    if (data?.file?.length === 0) {
       return enqueueSnackbar("Marksheet field is empty", { variant: "error" });
     }
-    if(!acceptedFormats.includes(data.file?.type)){
-     
-      return enqueueSnackbar("Only jpeg,png,jpg files are supported", { variant: "error" });
+    if (!acceptedFormats.includes(data.file?.type)) {
+      return enqueueSnackbar("Only jpeg, png, jpg files are supported", {
+        variant: "error",
+      });
     }
-    const formData = new FormData();
-    formData.append(
-      "registration_number",
-      userProfile?.academic_information?.registration_number
-    );
-    formData.append("status", "pending");
-    formData.append("cgpa", data.cgpa);
-    formData.append("latest_marksheet", data.file);
-    formData.append("prefered_room_type", data.RoomType);
-
+  
     const token = sessionStorage.getItem("accesstoken");
     const token1 = sessionStorage.getItem("refreshtoken");
-
-    console.log(data);
-
-    if(token && token1){
-    try {
-      const response = await axios.post(
-        `${BaseUrl}/${jwtDecode(sessionStorage?.getItem("accesstoken"))?.college}/hostel-allotments/`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
+  
+    console.log(
+      jwtDecode(sessionStorage?.getItem("accesstoken"))?.registration_number
+    );
+  
+    if (token && token1) {
+      const formData = new FormData();
+      formData.append(
+        "registration_number",
+        jwtDecode(sessionStorage?.getItem("accesstoken"))?.registration_number
       );
-      console.log("Request sent successfully:", response.data);
+      console.log(file);
+      formData.append("status", "pending");
+      formData.append("cgpa", data.cgpa);
+      // formData.append("latest_marksheet", file);
+      formData.append("prefered_room_type", data.RoomType);
+  
 
-      const token = sessionStorage.getItem("accesstoken");
-      const token1 = sessionStorage.getItem("refreshtoken");
+      console.log();
+      // let config = {
+      //   method: "post",
+      //   maxBodyLength: Infinity,
+      //   url: `${Url}/${
+      //     jwtDecode(sessionStorage?.getItem("accesstoken"))?.college
+      //   }/hostel-allotments/`,
+      //   headers: {
+      //     Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+      //   },
+      //   data: formData,
+      // };
+  
      
-      if (token && token1) {
-        let currentDate = new Date();
-        const decodedToken = jwtDecode(token);
-
-        if (
-          decodedToken.exp * 1000 - currentDate.getTime() <
-          59 * 60 * 1000
-        ) {
-          try {
-            regenerateToken(); // Wait for the token regeneration to complete
-          } catch (error) {
-            console.error(
-              "Error in request interceptor while regenerating token:",
-              error
-            );
+        axios.post(
+          `${Url}/${
+          jwtDecode(sessionStorage?.getItem("accesstoken"))?.college
+        }/hostel-allotments/`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+            },
+            maxBodyLength: Infinity,
           }
-        }
-      }else{
-        navigate('/login');
-      }   
-      enqueueSnackbar("Request sent successfully", {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "bottom",
-          horizontal: "center",
-        },
-        autoHideDuration: 1000,
-      });
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-    } catch (error) {
-      console.error("Error sending request:", error);
-      if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
-        enqueueSnackbar("Logging out", {
-          variant: "error",
-          anchorOrigin: {
-            vertical: "bottom",
-            horizontal: "center",
-          },
-          autoHideDuration: 3000,
-        });  
-        navigate("/login");
-      }
-      enqueueSnackbar(
-        error?.response?.data?.errors?.non_field_errors?.[0] ||
-          "Failed to send request",
-        {
-          variant: "error",
-          anchorOrigin: {
-            vertical: "bottom",
-            horizontal: "center",
-          },
-          autoHideDuration: 1000,
-        }
-      );
-    }
-    }else{
-      navigate('/login');
+        ).then(response=>{
+          console.log(response);
+          setResult([...result,{
+            status:"pending",
+            allotedRoom:[
+              {
+              hostel_room:"not alloted by now"
+              }
+          ]
+          }])
+          enqueueSnackbar("Request was successfull", {
+            variant: "success",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 3000,
+          });
+        }).catch((error) => {
+              console.log(error);
+              if (
+                error?.response?.data?.errors?.detail ===
+                "Given token not valid for any token type"
+              ) {
+                enqueueSnackbar("Logging out", {
+                  variant: "error",
+                  anchorOrigin: {
+                    vertical: "bottom",
+                    horizontal: "center",
+                  },
+                  autoHideDuration: 3000,
+                });
+                navigate("/login");
+              }
+              if (error?.response?.data?.errors?.non_field_errors?.[0]) {
+                enqueueSnackbar(
+                  error?.response?.data?.errors?.non_field_errors?.[0],
+                  {
+                    variant: "error",
+                    anchorOrigin: {
+                      vertical: "bottom",
+                      horizontal: "center",
+                    },
+                    autoHideDuration: 1000,
+                  }
+                );
+              }
+            });
+
+     
+      
+    } else {
+      navigate("/login");
     }
   };
-
+  
   return (
     <div className="container-fluid">
       <NavbarNew />
-      <Box
-        className="bonafide-form"
-        sx={{  borderRadius: 3 , padding: 0 }}
-      >
-      <Typography
-        variant="p"
-        align="center"
-        gutterBottom
-        sx={{ fontSize:20, marginTop:"20px" }}
-      >
-        Hostel Room Allotment Request
-      </Typography>
-      <Grid
-        container
-        sx={{ padding: { lg: 5, md: 5, xs: 1, sm: 1 },
-       
-      }}
-      >
-        <Grid item xs={12} sm={12} md={12} lg={6} sx={{padding:{lg:3},
-        position:"relative",
-        top:{lg:"-20px"}
-        }}>
-          <Box>
-            <Box
-              sx={{
-                display: {
-                  md: "block",
-                  lg: "none",
-                  xs: "block",
-                  sm: "block",
-                },
-              }}
-            >
-              <center>
-                <img
-                  src="./images/hostelRoom.jpg"
-                  alt=""
-                  style={{
-                    width: "310px",
-                    textAlign: "center",
-                    borderRadius: "9px",
-                  }}
-                />
-              </center>
-            </Box>
-            <Box
-              sx={{
-                backgroundColor: {xs:"rgb(243 244 246)",lg:"transparent"},
-                padding: {lg:"45px",md:"35px",xs:"20px",sm:"20px"},
-                marginTop: {lg:"5px",md:"42px",xs:"29px",sm:"29px"},
-                marginLeft: {lg:"42px",md:"42px",xs:"0px",sm:"0px"},
-                borderRadius: "15px"
-              }}
-            >
-            <form onSubmit={handleSubmit(onSubmit)} >
-              <FormControl fullWidth variant="outlined" margin="normal" >
-                <Typography variant="p" style={{fontSize:"1.1rem"}}>
-                  Registration / Employee Number
-                </Typography>
-                <Typography variant="body1" sx={{ marginBottom: "10px",marginTop:"5px" }}>
-                  {userProfile?.academic_information?.registration_number}
-                </Typography>
-              </FormControl>
-
-              <FormControl
-                fullWidth
-                variant="outlined"
-                error={!!errors?.cgpa?.message}
-               
-              >
-                <TextField
-                  label="Current CGPA"
-                  type="text"
-                  {...register("cgpa")}
-                  error={!!errors.cgpa}
-                  helperText={errors?.cgpa?.message}
-                  sx={{
-                    width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
-                  }}
-                />
-              </FormControl>
-
-
-              <FormControl
-            fullWidth
-            variant="outlined"
-            margin="normal"
-            error={!!errors.RoomType?.message}
-            
+      <Box className="bonafide-form" sx={{ borderRadius: 3, padding: 0 }}>
+        <Typography
+          variant="p"
+          align="center"
+          gutterBottom
+          sx={{ fontSize: 20, marginTop: "20px" }}
+        >
+          Hostel Room Allotment Request
+        </Typography>
+        <Grid container sx={{ padding: { lg: 5, md: 5, xs: 1, sm: 1 } }}>
+          <Grid
+            item
+            xs={12}
+            sm={12}
+            md={12}
+            lg={6}
+            sx={{
+              padding: { lg: 3 },
+              position: "relative",
+              top: { lg: "-20px" },
+            }}
           >
-            <InputLabel id="numberOfPersons-label">
-
-              Number of Persons
-             
-            </InputLabel>
-            <Controller
-          
-              name="RoomType"
-              control={control}
-              render={({ field }) => (
-                
-                <Select
-                  labelId="numberOfPersons-label"
-                  id="RoomType"
-                  label="Room Type"
-                  {...field}
-                  defaultValue=""
-                  sx={{
-                    width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
-                  }}
-                >
-                  <MenuItem value="Single">Single</MenuItem>
-                  <MenuItem value="Double">Double</MenuItem>
-                  <MenuItem value="Triple">Triple</MenuItem>
-                  
-                  
-                </Select>
-                
-              )}
-            />
-            {errors.RoomType && (
-              <FormHelperText>{errors.RoomType.message}</FormHelperText>
-            )}
-          </FormControl>
-
-
-              <FormControl
-                fullWidth
-                error={!!errors.file?.message}
-                margin="normal"
+            <Box>
+              <Box
+                sx={{
+                  display: {
+                    md: "block",
+                    lg: "none",
+                    xs: "block",
+                    sm: "block",
+                  },
+                }}
               >
-                <Box
-                  sx={{
-                    gap: "15px",
-                    alignItems: "center",
-                  }}
-                >
-                  <Typography variant="p" gutterBottom style={{fontSize:"1.1rem"}}>
-                    Latest Semester Marksheet
-                  </Typography><br/>
+                <center>
+                  <img
+                    src="./images/hostelRoom.jpg"
+                    alt=""
+                    style={{
+                      width: "310px",
+                      textAlign: "center",
+                      borderRadius: "9px",
+                    }}
+                  />
+                </center>
+              </Box>
+              <Box
+                sx={{
+                  backgroundColor: {
+                    xs: "rgb(243 244 246)",
+                    lg: "transparent",
+                  },
+                  padding: { lg: "45px", md: "35px", xs: "20px", sm: "20px" },
+                  marginTop: { lg: "5px", md: "42px", xs: "29px", sm: "29px" },
+                  marginLeft: { lg: "42px", md: "42px", xs: "0px", sm: "0px" },
+                  borderRadius: "15px",
+                }}
+              >
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <FormControl fullWidth variant="outlined" margin="normal">
+                    <Typography variant="p" style={{ fontSize: "1.1rem" }}>
+                      Registration / Employee Number
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      sx={{ marginBottom: "10px", marginTop: "5px" }}
+                    >
+                      {jwtDecode(sessionStorage?.getItem("accesstoken"))?.registration_number}
+                    </Typography>
+                  </FormControl>
+
+                  <FormControl
+                    fullWidth
+                    variant="outlined"
+                    error={!!errors?.cgpa?.message}
+                  >
+                    <TextField
+                      label="Current CGPA"
+                      type="text"
+                      {...register("cgpa")}
+                      error={!!errors.cgpa}
+                      helperText={errors?.cgpa?.message}
+                      sx={{
+                        width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
+                      }}
+                    />
+                  </FormControl>
+
+                  <FormControl
+                    fullWidth
+                    variant="outlined"
+                    margin="normal"
+                    error={!!errors.RoomType?.message}
+                  >
+                    <InputLabel id="numberOfPersons-label">
+                      Number of Persons
+                    </InputLabel>
+                    <Controller
+                      name="RoomType"
+                      control={control}
+                      render={({ field }) => (
+                        <Select
+                          labelId="numberOfPersons-label"
+                          id="RoomType"
+                          label="Room Type"
+                          {...field}
+                          defaultValue=""
+                          sx={{
+                            width: {
+                              lg: "70%",
+                              md: "70%",
+                              xs: "100%",
+                              sm: "90%",
+                            },
+                          }}
+                        >
+                          <MenuItem value="single">Single</MenuItem>
+                          <MenuItem value="double">Double</MenuItem>
+                          <MenuItem value="triple">Triple</MenuItem>
+                        </Select>
+                      )}
+                    />
+                    {errors.RoomType && (
+                      <FormHelperText>{errors.RoomType.message}</FormHelperText>
+                    )}
+                  </FormControl>
+
+                  <FormControl
+                    fullWidth
+                    error={!!errors.file?.message}
+                    margin="normal"
+                  >
+                    <Box
+                      sx={{
+                        gap: "15px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography
+                        variant="p"
+                        gutterBottom
+                        style={{ fontSize: "1.1rem" }}
+                      >
+                        Latest Semester Marksheet
+                      </Typography>
+                      <br />
+                      <Button
+                        component="label"
+                        variant="contained"
+                        sx={{
+                          backgroundColor: "rgb(107, 169, 169)",
+                          color: "#fff",
+                          "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
+
+                          width: {
+                            lg: "70%",
+                            md: "70%",
+                            xs: "100%",
+                            sm: "90%",
+                          },
+                          marginTop: "10px",
+                        }}
+                      >
+                        Upload File
+                        <input
+                          type="file"
+                          {...register("file")}
+                          onChange={handleFileChange}
+                          style={{ display: "none" }}
+                        />
+                      </Button>
+                    </Box>
+                    {previewUrl && (
+                      <Box sx={{ marginTop: 2 }}>
+                        <img
+                          src={previewUrl}
+                          alt="Preview"
+                          style={{ width: "150px" }}
+                        />
+                      </Box>
+                    )}
+                    {name && (
+                      <Box sx={{ marginTop: 1, marginBottom: 1 }}>
+                        <Typography>{name}</Typography>
+                      </Box>
+                    )}
+                    {errors?.file && (
+                      <FormHelperText>{errors?.file?.message}</FormHelperText>
+                    )}
+                  </FormControl>
+
                   <Button
-                    component="label"
                     variant="contained"
+                    type="submit"
+                    fullWidth
                     sx={{
+                      marginTop: 2,
+                      marginBottom: 2,
                       backgroundColor: "rgb(107, 169, 169)",
                       color: "#fff",
                       "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
-                      
-                        width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
-                      marginTop:"10px"
+
+                      width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
                     }}
                   >
-                    Upload File
-                    <input
-                      type="file"
-                      {...register("file")}
-                      onChange={handleFileChange}
-                      style={{ display: "none" }}
-                    />
+                    Send Request
                   </Button>
-                  
-                </Box>
-                {previewUrl && (
-                  <Box sx={{ marginTop: 2 }}>
-                    <img
-                      src={previewUrl}
-                      alt="Preview"
-                      style={{ width: "150px" }}
-                    />
-                  </Box>
-                )}
-                {name && (
-                  <Box sx={{ marginTop: 1, marginBottom: 1 }}>
-                    <Typography>{name}</Typography>
-                  </Box>
-                )}
-                {errors?.file && (
-                  <FormHelperText>{errors?.file?.message}</FormHelperText>
-                )}
-              </FormControl>
+                </form>
+              </Box>
+            </Box>
+          </Grid>
 
-              <Button
-                variant="contained"
-                type="submit"
-                fullWidth
+          <Grid item xs={12} sm={12} md={12} lg={6}>
+            <Box>
+              <Box
                 sx={{
-                  marginTop: 2,
-                  marginBottom:2,
-                  backgroundColor: "rgb(107, 169, 169)",
-                  color: "#fff",
-                  "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
-                  
-                    width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
-                  
+                  display: {
+                    md: "none",
+                    lg: "block",
+                    xs: "none",
+                    sm: "none",
+                  },
                 }}
               >
-                Send Request
-              </Button>
-            </form>
-            </Box>
-          </Box>
-        </Grid>
+                <center>
+                  <img
+                    src="./images/hostelRoom.jpg"
+                    alt=""
+                    style={{
+                      width: "310px",
+                      textAlign: "center",
+                      borderRadius: "9px",
+                    }}
+                  />
+                </center>
+              </Box>
 
-        <Grid item xs={12} sm={12} md={12} lg={6}>
-          <Box>
-            
+              <p
+                style={{
+                  textAlign: "center",
+                  marginBottom: "10px",
+                  marginTop: "20px",
+                  fontSize: "1.2rem",
+                }}
+              >
+                Previous Hostel Requests
+              </p>
 
-            <Box
-              sx={{
-                display: {
-                  md: "none",
-                  lg: "block",
-                  xs: "none",
-                  sm: "none",
-                },
-              }}
-            >
-              <center>
-                <img
-                  src="./images/hostelRoom.jpg"
-                  alt=""
-                  style={{
-                    width: "310px",
-                    textAlign: "center",
-                    borderRadius: "9px",
-                  }}
-                />
-              </center>
-            </Box>
-
-            <p style={{textAlign:"center",marginBottom:"10px",marginTop:"20px",fontSize:"1.2rem" }}>
-              Previous Hostel Requests
-            </p>
-
-            <Box
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                flexDirection: "column",
-              }}
-            >
-              {result.length === 0 && (
-                <Typography
-                  variant="body1"
-                  sx={{ marginTop: 3, textAlign: "center",
-                    display:{lg:"none",md:"none",xs:"block",sm:"none"}
-
-                   }}
-                >
-                 <center>
-                 <img src="./images/No_data.png" alt="" style={{width:"310px",borderRadius:"10px",marginTop:"10px"}}/></center>
-                </Typography>
-              )}
-
-              {responsive ? (
-                result.length > 0 &&
-                result.map((data, index) => (
-                  <Card
-                    key={index}
-                    variant="outlined"
+              <Box
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  flexDirection: "column",
+                }}
+              >
+                {result.length === 0 && (
+                  <Typography
+                    variant="body1"
                     sx={{
-                      maxWidth: 305,
-                      marginBottom: 2,
-                      backgroundColor:"rgb(243 244 246)",
-                      marginLeft:"20px",
-                      padding:1
+                      marginTop: 3,
+                      textAlign: "center",
+                      display: {
+                        lg: "none",
+                        md: "none",
+                        xs: "block",
+                        sm: "none",
+                      },
                     }}
                   >
-                    <CardContent>
-                      <Typography
-                        sx={{ fontSize: 16}}
-                        color="text.secondary"
-                        gutterBottom
-                        variant="p"
-                        
-                      >
-                        Previous Request Details
-                      </Typography>
-                      <br/>
-                      <Typography variant="p" color="text.secondary" sx={{ fontSize: 15 }}>
-                        Status: {data?.status}
-                      </Typography>
-                      <br/>
-                      <Typography variant="p" color="text.secondary" sx={{ fontSize: 15}}>
-                      Alloted Room No: 
-                        {allotedRoom.length>0 ? (
-                              <Typography
-                               
-                                variant="p"
-                                color="text.secondary"
-                              >
-                                {" "}{allotedRoom?.[0]?.hostel_room}
-                              </Typography>
-                            ) : <p>Not alloted by now.</p>
-                          }
-                      </Typography>
-                     
-                    </CardContent>
-                  </Card>
-                ))
-              ) : (
-                result.length===0?(<>
-                <center>
-                <img src="./images/No_data.png" alt="" style={{width:"310px",borderRadius:"10px",marginTop:"30px",}}/></center>
-                </>):(
-                <TableContainer component={Paper} sx={{ marginTop: 3 }}>
-                  <Table
-                    sx={{ minWidth: 650 }}
-                    aria-label="previous hostel requests"
-                    style={{ textAlign: "center" }}
-                  >
-                    <TableHead style={{ backgroundColor: "#D2E9E9" }}>
-                      <TableRow>
-                        <TableCell style={{textAlign:"center"}}>Status</TableCell>
-                        <TableCell style={{textAlign:"center"}}>Marksheet Image</TableCell>
-                        <TableCell style={{textAlign:"center"}}>Alloted Room</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {result
-                        .slice(
-                          page * rowsPerPage,
-                          page * rowsPerPage + rowsPerPage
-                        )
-                        .map((data, index) => (
-                          <TableRow key={index}>
-                            <TableCell style={{textAlign:"center" ,backgroundColor:"rgb(243 244 246)"}}>{data?.status}</TableCell>
-                            <TableCell style={{textAlign:"center",backgroundColor:"rgb(243 244 246)"}}>
-                              {data?.latest_marksheet !== null ? (
-                                <img
-                                  src={`data:image/*;base64,${decodeURIComponent(
-                                    data?.latest_marksheet
-                                  )}`}
-                                  alt="Marksheet"
-                                  style={{ width: "150px", height: "150px" }}
-                                />
-                              ) : (
-                                <p>Null</p>
-                              )}
-                            </TableCell>
-                            <TableCell style={{textAlign:"center",backgroundColor:"rgb(243 244 246)"}}>
-                            {allotedRoom.length>0 ? (
-                              <Typography
-                               
-                                variant="p"
-                                color="text.secondary"
-                              >
-                                {" "}{allotedRoom?.[0]?.hostel_room}
-                              </Typography>
-                            ) : <p>Not alloted by now.</p>
-                          }
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                    </TableBody>
-                    <TableFooter style={{ backgroundColor: "#D2E9E9" }}>
-                      <TableRow>
-                        <TablePagination
-                          rowsPerPageOptions={[
-                            5,
-                            10,
-                            25,
-                            { label: "All", value: -1 },
-                          ]}
-                          colSpan={3}
-                          count={result.length}
-                          rowsPerPage={rowsPerPage}
-                          page={page}
-                          SelectProps={{
-                            inputProps: { "aria-label": "rows per page" },
-                            native: true,
-                          }}
-                          onPageChange={handleChangePage}
-                          onRowsPerPageChange={handleChangeRowsPerPage}
-                          ActionsComponent={TablePaginationActions}
-                        />
-                      </TableRow>
-                    </TableFooter>
-                  </Table>
-                </TableContainer>
-              )
-              )}
-            </Box>
+                    <center>
+                      <img
+                        src="./images/No_data.png"
+                        alt=""
+                        style={{
+                          width: "310px",
+                          borderRadius: "10px",
+                          marginTop: "10px",
+                        }}
+                      />
+                    </center>
+                  </Typography>
+                )}
 
-            
-          </Box>
+                {responsive ? (
+                  result.length > 0 &&
+                  result.map((data, index) => (
+                    <Card
+                      key={index}
+                      variant="outlined"
+                      sx={{
+                        maxWidth: 305,
+                        marginBottom: 2,
+                        backgroundColor: "rgb(243 244 246)",
+                        marginLeft: "20px",
+                        padding: 1,
+                      }}
+                    >
+                      <CardContent>
+                        <Typography
+                          sx={{ fontSize: 16 }}
+                          color="text.secondary"
+                          gutterBottom
+                          variant="p"
+                        >
+                          Previous Request Details
+                        </Typography>
+                        <br />
+                        <Typography
+                          variant="p"
+                          color="text.secondary"
+                          sx={{ fontSize: 15 }}
+                        >
+                          Status: {data?.status}
+                        </Typography>
+                        <br />
+                        <Typography
+                          variant="p"
+                          color="text.secondary"
+                          sx={{ fontSize: 15 }}
+                        >
+                          Alloted Room No:{allotedRoom.length > 0 ? (
+                            <Typography variant="body2" color="text.secondary">
+                              {" "}
+                              {allotedRoom?.[0]?.hostel_room}
+                            </Typography>
+                          ) : (
+                            <p>Not alloted by now.</p>
+                          )}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  ))
+                ) : result.length === 0 ? (
+                  <>
+                    <center>
+                      <img
+                        src="./images/No_data.png"
+                        alt=""
+                        style={{
+                          width: "310px",
+                          borderRadius: "10px",
+                          marginTop: "30px",
+                        }}
+                      />
+                    </center>
+                  </>
+                ) : (
+                  <TableContainer component={Paper} sx={{ marginTop: 3 }}>
+                    <Table
+                      sx={{ minWidth: 650 }}
+                      aria-label="previous hostel requests"
+                      style={{ textAlign: "center" }}
+                    >
+                      <TableHead style={{ backgroundColor: "#D2E9E9" }}>
+                        <TableRow>
+                          <TableCell style={{ textAlign: "center" }}>
+                            Status
+                          </TableCell>
+                        
+                          <TableCell style={{ textAlign: "center" }}>
+                            Alloted Room
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {result
+                          .slice(
+                            page * rowsPerPage,
+                            page * rowsPerPage + rowsPerPage
+                          )
+                          .map((data, index) => (
+                            <TableRow key={index}>
+                              <TableCell
+                                style={{
+                                  textAlign: "center",
+                                  backgroundColor: "rgb(243 244 246)",
+                                }}
+                              >
+                                {data?.status}
+                              </TableCell>
+                             
+                              <TableCell
+                                style={{
+                                  textAlign: "center",
+                                  backgroundColor: "rgb(243 244 246)",
+                                }}
+                              >
+                                {allotedRoom.length > 0 ? (
+                                  <Typography
+                                    variant="p"
+                                    color="text.secondary"
+                                  >
+                                    {" "}
+                                    {allotedRoom?.[0]?.hostel_room}
+                                  </Typography>
+                                ) : (
+                                  <p>Not alloted by now.</p>
+                                )}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                      </TableBody>
+                      <TableFooter style={{ backgroundColor: "#D2E9E9" }}>
+                        <TableRow>
+                          <TablePagination
+                            rowsPerPageOptions={[
+                              5,
+                              10,
+                              25,
+                              { label: "All", value: -1 },
+                            ]}
+                            colSpan={3}
+                            count={result.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            SelectProps={{
+                              inputProps: { "aria-label": "rows per page" },
+                              native: true,
+                            }}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                            ActionsComponent={TablePaginationActions}
+                          />
+                        </TableRow>
+                      </TableFooter>
+                    </Table>
+                  </TableContainer>
+                )}
+              </Box>
+            </Box>
+          </Grid>
         </Grid>
-      </Grid>
-    
       </Box>
       <Footer />
     </div>

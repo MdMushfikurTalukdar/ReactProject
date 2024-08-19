@@ -176,7 +176,7 @@ export const LoginPage = () => {
         >
           <center>
             <img
-              src="./images/login.png"
+              src="../images/login.png"
               alt=""
               style={{ width: "150px", textAlign: "center", height: "auto" }}
             />

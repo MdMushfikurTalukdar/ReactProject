@@ -1,13 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { useForm, Controller } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import { TbHomeFilled } from "react-icons/tb";
+
 import {
-  TextField,
   Button,
-  Container,
   Grid,
   Typography,
   Card,
@@ -16,14 +11,16 @@ import {
   Divider,
   CardMedia,
   Box,
-  InputAdornment,
+  Select,
+  MenuItem,
+  InputLabel,
 } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import NavbarNew from "../components/NavbarNew";
 import Footer from "../components/Home/Footer";
-import { BaseUrl } from "../components/BaseUrl";
+import { BaseUrl, Url } from "../components/BaseUrl";
 
 const HostelRoomAllotment = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -31,7 +28,9 @@ const HostelRoomAllotment = () => {
   const [loading, setLoading] = useState(true);
   const [data1, setData1] = useState([]);
   const [loading1, setLoading1] = useState(true);
-  const [hostel_room, setHostel_room] = useState("");
+  const [hostel_room, setHostel_room] = useState(0);
+  const [approvedList, setApprovedList] = useState([]);
+  const hostelRef = useRef(null);
 
   const navigate = useNavigate();
 
@@ -39,25 +38,31 @@ const HostelRoomAllotment = () => {
     if (sessionStorage?.getItem("accesstoken")) {
       const response = jwtDecode(sessionStorage?.getItem("accesstoken"));
       const response1 = jwtDecode(sessionStorage?.getItem("refreshtoken"));
-      if (response.exp < Math.floor(Date.now() / 1000) || response1.exp < Math.floor(Date.now() / 1000)) {
+      if (
+        response.exp < Math.floor(Date.now() / 1000) ||
+        response1.exp < Math.floor(Date.now() / 1000)
+      ) {
         navigate("/login");
-      }else{
-        if (sessionStorage.getItem("refreshtoken") && sessionStorage.getItem("accesstoken")) {
+      } else {
+        if (
+          sessionStorage.getItem("refreshtoken") &&
+          sessionStorage.getItem("accesstoken")
+        ) {
           let data = {
             refresh: sessionStorage?.getItem("refreshtoken"),
           };
-    
+
           let config = {
             method: "post",
             maxBodyLength: Infinity,
-            url: "https://amarnath013.pythonanywhere.com/api/user/token/refresh/",
+            url: `${Url}/token/refresh/`,
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
             },
             data: data,
           };
-    
+
           axios
             .request(config)
             .then((response) => {
@@ -65,10 +70,13 @@ const HostelRoomAllotment = () => {
               sessionStorage.setItem("accesstoken", response.data.access);
             })
             .catch((error) => {
-              if(error?.message==='Request failed with status code 500'){
-                navigate('/login');
+              if (error?.message === "Request failed with status code 500") {
+                navigate("/login");
               }
-              if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+              if (
+                error?.response?.data?.errors?.detail ===
+                "Given token not valid for any token type"
+              ) {
                 enqueueSnackbar("Logging out", {
                   variant: "error",
                   anchorOrigin: {
@@ -76,7 +84,7 @@ const HostelRoomAllotment = () => {
                     horizontal: "center",
                   },
                   autoHideDuration: 3000,
-                });  
+                });
                 navigate("/login");
               }
               console.log(error);
@@ -88,59 +96,37 @@ const HostelRoomAllotment = () => {
     } else {
       navigate("/login");
     }
-   
   };
-
 
   useEffect(() => {
     const config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `${BaseUrl}/hostel-allotments/?search=applied`,
+      url: `${BaseUrl}/${
+        jwtDecode(sessionStorage?.getItem("accesstoken")).college
+      }/hostel-allotments/`,
       headers: {
         Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
       },
     };
 
     const token = sessionStorage.getItem("accesstoken");
-        const token1 = sessionStorage.getItem("refreshtoken");
-     if(token && token1){   
-    axios
-      .request(config)
-      .then((response) => {
-        setData1(response.data);
-        const token = sessionStorage.getItem("accesstoken");
-        const token1 = sessionStorage.getItem("refreshtoken");
-       
-        if (token && token1) {
-          let currentDate = new Date();
-          const decodedToken = jwtDecode(token);
-
-          if (
-            decodedToken.exp * 1000 - currentDate.getTime() <
-            59 * 60 * 1000
-          ) {
-            try {
-              regenerateToken(); // Wait for the token regeneration to complete
-            } catch (error) {
-              console.error(
-                "Error in request interceptor while regenerating token:",
-                error
-              );
-            }
-          }
-        }else{
-          navigate('/login');
-        }      
-        setLoading1(false);
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-        setLoading1(false);
-      });
-    }else{
-      navigate('/login');
+    const token1 = sessionStorage.getItem("refreshtoken");
+    if (token && token1) {
+      axios
+        .request(config)
+        .then((response) => {
+          console.log(response.data);
+          setData1(response.data);
+          setLoading1(false);
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+          setLoading1(false);
+        });
+    } else {
+      navigate("/login");
     }
   }, []);
 
@@ -160,106 +146,156 @@ const HostelRoomAllotment = () => {
   }, [navigate]);
 
   const onSubmit = async (data) => {
+    // if (hostel_room === 0) {
+    //   return enqueueSnackbar("Hostel Room field is required", {
+    //     variant: "error",
+    //   });
+    // }
 
-    if(hostel_room.length===0){
-      return  enqueueSnackbar("Hostel Room field is required", { variant: "error" });
-    }
+    let array = [];
+    console.log(data);
+
+    array.push(parseInt(data));
+
     const jsonData = {
-      registration_number: data,
       hostel_room: hostel_room,
+      allotment_details: array,
     };
-    
-    const config = {
-      method: "post",
-      maxBodyLength: Infinity,
-      url: `${BaseUrl}/hostel-room-allotments/`,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-      },
-      data: jsonData,
-    };
+
+    console.log(hostel_room);
 
     const token = sessionStorage.getItem("accesstoken");
-        const token1 = sessionStorage.getItem("refreshtoken");
-    if(token && token1){    
-    try {
-      const response = await axios.request(config);
-      console.log(response.data);
-
-      const token = sessionStorage.getItem("accesstoken");
-      const token1 = sessionStorage.getItem("refreshtoken");
-     
-      if (token && token1) {
-        let currentDate = new Date();
-        const decodedToken = jwtDecode(token);
-
-        if (
-          decodedToken.exp * 1000 - currentDate.getTime() <
-          59 * 60 * 1000
-        ) {
-          try {
-            regenerateToken(); // Wait for the token regeneration to complete
-          } catch (error) {
-            console.error(
-              "Error in request interceptor while regenerating token:",
-              error
-            );
-          }
-        }
-      }else{
-        navigate('/login');
-      }      
-
-      const data2 = JSON.stringify({ status: "approved" });
-      const configUpdate = {
-        method: "put",
+    const token1 = sessionStorage.getItem("refreshtoken");
+    if (token && token1) {
+      const config = {
+        method: "post",
         maxBodyLength: Infinity,
-        url: `${BaseUrl}/hostel-allotments/${response?.data?.registration_details?.id}/update-status/`,
+        url: `${BaseUrl}/${
+          jwtDecode(sessionStorage?.getItem("accesstoken")).college
+        }/hostel-room-allotments/`,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
         },
-        data: data2,
+        data: jsonData,
       };
-      setHostel_room('');
-      await axios.request(configUpdate);
-      setData1(data1.filter((item) => item.id !== response?.data?.registration_details?.id));
-      enqueueSnackbar("Room allotted successfully", { variant: "success" });
-      fetchAllotmentData();
-    } catch (error) {
-      console.error(error);
-      if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
-        enqueueSnackbar("Logging out", {
-          variant: "error",
-          anchorOrigin: {
-            vertical: "bottom",
-            horizontal: "center",
-          },
-          autoHideDuration: 3000,
-        });  
-        navigate("/login");
-      }
-      if (error?.response?.data?.errors?.hostel_room?.[0]) {
-        enqueueSnackbar(error?.response?.data?.errors?.hostel_room?.[0], {
-          variant: "error",
+
+      axios
+        .request(config)
+        .then((response) => {
+          console.log(response.data);
+
+          let number =
+            response?.data?.allotment_details?.[0]?.prefered_room_type;
+          let add;
+          if (number === "single") {
+            add = 1;
+          } else if (number === "double") {
+            add = 2;
+          } else {
+            add = 3;
+          }
+
+          setData1((prev) =>
+            prev?.filter(
+              (item) =>
+                item.registration_number !==
+                response?.data?.allotment_details?.[0]?.registration_number
+            )
+          );
+
+          setApprovedList((prevList) => [
+            ...prevList,
+            {
+              registration_number:
+                response?.data?.allotment_details?.[0]?.registration_number,
+              room_no: response?.data?.hostel_room?.room_no,
+            },
+          ]);
+
+          // setAllotmentData((prev) =>
+          //   prev.map((item) =>
+          //     item.id === hostel_room
+          //       ? item.current_occupancy+add === item.capacity
+          //         ? { ...item, status: "occupied" }
+          //         : { ...item, current_occupancy: item.current_occupancy + add }
+          //       : item
+          //   )
+          // );
+
+          setHostel_room("");
+
+          if (hostelRef.current) {
+            hostelRef.current.value = "";
+          }
+
+          const token = sessionStorage.getItem("accesstoken");
+          const token1 = sessionStorage.getItem("refreshtoken");
+
+          if (token && token1) {
+            let currentDate = new Date();
+            const decodedToken = jwtDecode(token);
+
+            if (
+              decodedToken.exp * 1000 - currentDate.getTime() <
+              59 * 60 * 1000
+            ) {
+              try {
+                regenerateToken(); // Wait for the token regeneration to complete
+              } catch (error) {
+                console.error(
+                  "Error in request interceptor while regenerating token:",
+                  error
+                );
+              }
+            }
+          } else {
+            navigate("/login");
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          setHostel_room("");
+
+          if (hostelRef.current) {
+            hostelRef.current.value = "";
+          }
+          if (
+            error?.response?.data?.errors?.detail ===
+            "Given token not valid for any token type"
+          ) {
+            enqueueSnackbar("Logging out", {
+              variant: "error",
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "center",
+              },
+              autoHideDuration: 3000,
+            });
+            navigate("/login");
+          }
+          if (error?.response?.data?.errors?.hostel_room?.[0]) {
+            enqueueSnackbar(error?.response?.data?.errors?.hostel_room?.[0], {
+              variant: "error",
+            });
+          }
+          if (error?.response?.data?.errors?.[0])
+            enqueueSnackbar(error?.response?.data?.errors?.[0], {
+              variant: "error",
+            });
         });
-      }
-      if (error?.response?.data?.errors?.[0])
-        enqueueSnackbar(error?.response?.data?.errors?.[0], {
-          variant: "error",
-        });
+    } else {
+      navigate("/login");
     }
-  }else{
-    navigate('/login');
-  }
   };
 
   const fetchAllotmentData = async () => {
     const config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `${BaseUrl}/hostel-room-allotments/`,
+      url: `${BaseUrl}/${
+        jwtDecode(sessionStorage?.getItem("accesstoken")).college
+      }/hostel-room-registrations/`,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
@@ -278,6 +314,38 @@ const HostelRoomAllotment = () => {
 
   useEffect(() => {
     fetchAllotmentData();
+  }, []);
+
+  useEffect(() => {
+    let config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: `${Url}/${
+        jwtDecode(sessionStorage.getItem("accesstoken")).college
+      }/hostel-room-allotments/`,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+      },
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(response.data);
+
+        const approvedData = response.data
+          .filter((item) => item.allotment_details.length > 0) // Filter out items without allotment details
+          .map((item) => ({
+            registration_number: item.allotment_details[0]?.registration_number,
+            room_no: item.hostel_room?.room_no,
+          }));
+
+        setApprovedList(approvedData); // Update state with filtered and mapped data
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, []);
 
   if (loading || loading1) {
@@ -315,8 +383,6 @@ const HostelRoomAllotment = () => {
               sm={12}
               lg={12}
               sx={{
-                // display: { xs: "block", sm: "block", md: "block", lg: "none" },
-
                 width: "100vw",
                 padding: "12",
                 marginTop: "20px",
@@ -348,13 +414,24 @@ const HostelRoomAllotment = () => {
                   marginBottom: "50px",
                 }}
               >
-                  Hostel Room Requests
+                Hostel Room Requests
               </p>
+              {data1.some((item) => item.status === "pending") ? null : (
+                <center>
+                  <img
+                    src="./images/No_data.png"
+                    alt=""
+                    style={{ width: "250px", marginTop: "50px" }}
+                  />
+                </center>
+              )}
               {data1.length === 0 ? (
                 <Typography
                   variant="body1"
                   align="center"
-                  sx={{ marginTop: {xs:"20%",sm:"4%",lg:"4%",md:"4%"} }}
+                  sx={{
+                    marginTop: { xs: "20%", sm: "4%", lg: "4%", md: "4%" },
+                  }}
                 >
                   <center>
                     <img
@@ -374,72 +451,82 @@ const HostelRoomAllotment = () => {
                   justifyContent="center"
                   alignItems="center"
                   flexDirection="column"
-                  minHeight="80vh"
+                  minHeight="20vh"
                   sx={{
                     display: "",
                   }}
                 >
                   <Grid container spacing={3}>
-                    {data1.map((item, index) => (
-                      <Grid
-                        item
-                        xs={12}
-                        sm={12}
-                        lg={4}
-                        md={6}
-                        key={index}
-                        justifyContent="center"
-                        display="flex"
-                      >
-                        <Card
-                         
-                          sx={{
-                            width: {
-                              lg: "70%",
-                              md: "70%",
-                              xs: "88%",
-                              sm: "80%",
-                            },
-                           backgroundColor:"rgb(244, 243, 243)",
-                           border:"2px solid whitesmoke"
-                          }}
+                    {data1.map((item, index) =>
+                      item.status === "pending" ? (
+                        <Grid
+                          item
+                          xs={12}
+                          sm={12}
+                          lg={4}
+                          md={6}
+                          key={index}
+                          justifyContent="center"
+                          display="flex"
                         >
-                          <CardMedia
-                            component="img"
-                            sx={{ height: 260,objectFit:"cover",}}
-                            image={`data:image/jpeg;base64,${item.latest_marksheet}`}
-                            alt="Marksheet"
+                          <Card
+                            sx={{
+                              width: {
+                                lg: "70%",
+                                md: "70%",
+                                xs: "88%",
+                                sm: "80%",
+                              },
+                              backgroundColor: "rgb(244, 243, 243)",
+                              border: "2px solid whitesmoke",
+                            }}
+                          >
+                            <CardMedia
+                              component="img"
+                              sx={{ height: 260, objectFit: "cover" }}
+                              image={`data:image/jpeg;base64,${item.latest_marksheet}`}
+                              alt="Marksheet"
+                            />
 
-                          />
-
-                          <CardContent>
-                           
+                            <CardContent>
                               <Grid container spacing={3}>
                                 <Grid item xs={12}>
                                   <p>
                                     Registration Number:{" "}
                                     {item?.registration_number}
                                   </p>
-                                  
+                                  <p>{item?.prefered_room_type}</p>
                                 </Grid>
                                 <Grid item xs={12}>
-                                  <TextField
+                                  <Select
+                                    labelId="numberOfPersons-label"
+                                    id="RoomType"
+                                    label="Rooms"
+                                    
                                     onChange={(e) =>
                                       setHostel_room(e.target.value)
                                     }
-                                    label="Hostel Room"
-                                    placeholder="Hostel Room"
-                                    variant="outlined"
-                                    fullWidth
-                                    InputProps={{
-                                      startAdornment: (
-                                        <InputAdornment position="start">
-                                          <TbHomeFilled />
-                                        </InputAdornment>
-                                      ),
+                                    sx={{
+                                      width: {
+                                        lg: "90%",
+                                        md: "70%",
+                                        xs: "100%",
+                                        sm: "90%",
+                                      },
                                     }}
-                                  />
+                                  >
+                                    {allotmentData?.map((data, index) =>
+                                      data?.status === "available" ? (
+                                        <MenuItem key={index} value={data.id}>
+                                          {data.room_no}{" "}
+                                          {data.current_occupancy}{" "}
+                                          {data.capacity}
+                                        </MenuItem>
+                                      ) : null
+                                    )}
+                                  </Select>
                                 </Grid>
+
                                 <Grid item xs={12}>
                                   <center>
                                     <Button
@@ -447,8 +534,8 @@ const HostelRoomAllotment = () => {
                                       variant="contained"
                                       color="primary"
                                       fullWidth
-                                      onClick={(e) => {
-                                        onSubmit(item?.registration_number);
+                                      onClick={() => {
+                                        onSubmit(item?.id);
                                       }}
                                       sx={{
                                         width: {
@@ -464,11 +551,11 @@ const HostelRoomAllotment = () => {
                                   </center>
                                 </Grid>
                               </Grid>
-                          
-                          </CardContent>
-                        </Card>
-                      </Grid>
-                    ))}
+                            </CardContent>
+                          </Card>
+                        </Grid>
+                      ) : null
+                    )}
                   </Grid>
                 </Box>
               )}
@@ -503,7 +590,7 @@ const HostelRoomAllotment = () => {
               <Box
                 sx={{ width: { lg: "50%", md: "50%", xs: "90%", sm: "90%" } }}
               >
-                {allotmentData.length === 0 ? (
+                {approvedList.length === 0 ? (
                   <center>
                     <img
                       src="./images/No_data.png"
@@ -516,7 +603,7 @@ const HostelRoomAllotment = () => {
                     />
                   </center>
                 ) : (
-                  allotmentData.map((data, index) => (
+                  approvedList.map((data, index) => (
                     <Card
                       style={{
                         marginTop: "20px",
@@ -525,16 +612,12 @@ const HostelRoomAllotment = () => {
                       }}
                       key={index}
                     >
-                      <CardContent style={{padding:"20px"}}> 
+                      <CardContent style={{ padding: "20px" }}>
                         <Typography variant="subtitle1">
-                          ID: {data?.id}
+                          Registration Number: {data?.registration_number}
                         </Typography>
                         <Typography variant="subtitle1">
-                          Registration Number:{" "}
-                          {data?.registration_details?.registration_number}
-                        </Typography>
-                        <Typography variant="subtitle1">
-                          Hostel Room: {data?.hostel_room}
+                          Hostel Room: {data?.room_no}
                         </Typography>
                       </CardContent>
                     </Card>
