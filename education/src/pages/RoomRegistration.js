@@ -4,7 +4,7 @@ import {
   TextField,
   Button,
   Typography,
-  MenuItem,
+  
   Box,
   Divider,
   CircularProgress,
@@ -21,7 +21,7 @@ import axios from "axios";
 import { enqueueSnackbar } from "notistack";
 import { FaUpload } from "react-icons/fa";
 
-const roomTypes = ["single", "double", "triple"];
+
 const status = ["available", "not-available"];
 
 const validationSchema = Yup.object().shape({
@@ -33,9 +33,6 @@ const validationSchema = Yup.object().shape({
     .required("Capacity is required")
     .min(1, "Capacity must be at least 1")
     .max(3, "Capacity can't be more than 3"),
-  room_type: Yup.string()
-    .required("Room type is required")
-    .oneOf(roomTypes, "valid room type:[single, double, triple]"),
   status: Yup.string()
     .required("Status is required")
     .oneOf(status, "valid room type:[available,not-available]"),
@@ -53,7 +50,6 @@ const RoomRegistration = () => {
   });
 
   const fileInputRef = useRef(null);
-  const textInputRef = useRef(null);
   const navigate = useNavigate();
   const [fileName, setFileName] = useState("");
   const [file, setFile] = useState("");
@@ -275,6 +271,10 @@ const RoomRegistration = () => {
   const onSubmit = (data) => {
     console.log(data);
     setLoading2(true);
+
+    let room_type=["single","double","triple"];
+
+
     
     const token = sessionStorage.getItem("accesstoken");
     const token1 = sessionStorage.getItem("refreshtoken");
@@ -283,7 +283,7 @@ const RoomRegistration = () => {
       let data1 = JSON.stringify({
         room_no: data.room_no,
         capacity: data.capacity,
-        room_type: data.room_type,
+        room_type: room_type[data.capacity-1],
         status: data.status,
       });
 
@@ -469,7 +469,7 @@ const RoomRegistration = () => {
                     />
                   )}
                 />
-                <Controller
+                {/* <Controller
                   name="room_type"
                   control={control}
                   render={({ field }) => (
@@ -495,7 +495,7 @@ const RoomRegistration = () => {
                       ))}
                     </TextField>
                   )}
-                />
+                /> */}
                 <Controller
                   name="status"
                   control={control}

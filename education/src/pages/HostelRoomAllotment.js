@@ -146,11 +146,11 @@ const HostelRoomAllotment = () => {
   }, [navigate]);
 
   const onSubmit = async (data) => {
-    // if (hostel_room === 0) {
-    //   return enqueueSnackbar("Hostel Room field is required", {
-    //     variant: "error",
-    //   });
-    // }
+    if (hostel_room === 0) {
+      return enqueueSnackbar("Hostel Room field is required", {
+        variant: "error",
+      });
+    }
 
     let array = [];
     console.log(data);
@@ -185,17 +185,7 @@ const HostelRoomAllotment = () => {
         .then((response) => {
           console.log(response.data);
 
-          let number =
-            response?.data?.allotment_details?.[0]?.prefered_room_type;
-          let add;
-          if (number === "single") {
-            add = 1;
-          } else if (number === "double") {
-            add = 2;
-          } else {
-            add = 3;
-          }
-
+         
           setData1((prev) =>
             prev?.filter(
               (item) =>
@@ -213,15 +203,21 @@ const HostelRoomAllotment = () => {
             },
           ]);
 
-          // setAllotmentData((prev) =>
-          //   prev.map((item) =>
-          //     item.id === hostel_room
-          //       ? item.current_occupancy+add === item.capacity
-          //         ? { ...item, status: "occupied" }
-          //         : { ...item, current_occupancy: item.current_occupancy + add }
-          //       : item
-          //   )
-          // );
+          setAllotmentData((prev) =>
+            prev.map((item) =>
+              item.id === hostel_room
+                ? {
+                    ...item,
+                    current_occupancy: response?.data?.hostel_room?.current_occupancy,
+                    status:
+                      response?.data?.hostel_room?.current_occupancy === item.capacity
+                        ? "occupied"
+                        : item.status,
+                  }
+                : item
+            )
+          );
+          
 
           setHostel_room("");
 
@@ -255,11 +251,7 @@ const HostelRoomAllotment = () => {
         })
         .catch((error) => {
           console.error(error);
-          setHostel_room("");
-
-          if (hostelRef.current) {
-            hostelRef.current.value = "";
-          }
+         
           if (
             error?.response?.data?.errors?.detail ===
             "Given token not valid for any token type"
@@ -509,7 +501,7 @@ const HostelRoomAllotment = () => {
                                     sx={{
                                       width: {
                                         lg: "90%",
-                                        md: "70%",
+                                        md: "90%",
                                         xs: "100%",
                                         sm: "90%",
                                       },
