@@ -185,7 +185,6 @@ const HostelRoomAllotment = () => {
         .then((response) => {
           console.log(response.data);
 
-         
           setData1((prev) =>
             prev?.filter(
               (item) =>
@@ -208,16 +207,17 @@ const HostelRoomAllotment = () => {
               item.id === hostel_room
                 ? {
                     ...item,
-                    current_occupancy: response?.data?.hostel_room?.current_occupancy,
+                    current_occupancy:
+                      response?.data?.hostel_room?.current_occupancy,
                     status:
-                      response?.data?.hostel_room?.current_occupancy === item.capacity
+                      response?.data?.hostel_room?.current_occupancy ===
+                      item.capacity
                         ? "occupied"
                         : item.status,
                   }
                 : item
             )
           );
-          
 
           setHostel_room("");
 
@@ -251,7 +251,7 @@ const HostelRoomAllotment = () => {
         })
         .catch((error) => {
           console.error(error);
-         
+
           if (
             error?.response?.data?.errors?.detail ===
             "Given token not valid for any token type"
@@ -417,27 +417,7 @@ const HostelRoomAllotment = () => {
                   />
                 </center>
               )}
-              {data1.length === 0 ? (
-                <Typography
-                  variant="body1"
-                  align="center"
-                  sx={{
-                    marginTop: { xs: "20%", sm: "4%", lg: "4%", md: "4%" },
-                  }}
-                >
-                  <center>
-                    <img
-                      src="./images/No_data.png"
-                      alt=""
-                      style={{
-                        width: "310px",
-                        borderRadius: "10px",
-                        marginTop: "30px",
-                      }}
-                    />
-                  </center>
-                </Typography>
-              ) : (
+           
                 <Box
                   display="flex"
                   justifyContent="center"
@@ -487,14 +467,16 @@ const HostelRoomAllotment = () => {
                                     Registration Number:{" "}
                                     {item?.registration_number}
                                   </p>
-                                  <p>{item?.prefered_room_type}</p>
+                                  <p>
+                                    Prefered Room Type:{" "}
+                                    {item?.prefered_room_type}
+                                  </p>
                                 </Grid>
                                 <Grid item xs={12}>
                                   <Select
                                     labelId="numberOfPersons-label"
                                     id="RoomType"
                                     label="Rooms"
-                                    
                                     onChange={(e) =>
                                       setHostel_room(e.target.value)
                                     }
@@ -510,9 +492,9 @@ const HostelRoomAllotment = () => {
                                     {allotmentData?.map((data, index) =>
                                       data?.status === "available" ? (
                                         <MenuItem key={index} value={data.id}>
-                                          {data.room_no}{" "}
-                                          {data.current_occupancy}{" "}
-                                          {data.capacity}
+                                          Room no:{data.room_no} Current
+                                          Occupancy: {data.current_occupancy}{" "}
+                                          Capacity: {data.capacity}
                                         </MenuItem>
                                       ) : null
                                     )}
@@ -550,7 +532,7 @@ const HostelRoomAllotment = () => {
                     )}
                   </Grid>
                 </Box>
-              )}
+              
             </Grid>
             <Grid
               item
@@ -569,12 +551,13 @@ const HostelRoomAllotment = () => {
             >
               <Divider style={{ marginTop: "20px" }} />
               <Typography
-                variant="h6"
+                variant="body2"
                 gutterBottom
                 style={{
                   textAlign: "center",
                   marginTop: "20px",
                   marginBottom: "20px",
+                  fontSize: "1.7rem",
                 }}
               >
                 Approved Allotment Details
@@ -584,15 +567,17 @@ const HostelRoomAllotment = () => {
               >
                 {approvedList.length === 0 ? (
                   <center>
-                    <img
-                      src="./images/No_data.png"
-                      alt=""
+                    <p
                       style={{
-                        width: "310px",
-                        borderRadius: "10px",
-                        marginTop: "30px",
+                        marginBottom: "50px",
+                        marginTop: "50px",
+                        padding: "5vh",
+                        fontSize: "1.2rem",
+                        fontWeight: "600",
                       }}
-                    />
+                    >
+                      No Data available Currently.
+                    </p>
                   </center>
                 ) : (
                   approvedList.map((data, index) => (

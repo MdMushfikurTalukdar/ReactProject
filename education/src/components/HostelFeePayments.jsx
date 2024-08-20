@@ -22,7 +22,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import dayjs from "dayjs";
 import { useSnackbar } from "notistack";
 import { jwtDecode } from "jwt-decode";
-import { BaseUrl } from "./BaseUrl";
+import { BaseUrl, Url } from "./BaseUrl";
 import { CiUser } from "react-icons/ci";
 import { PiIdentificationBadgeThin, PiMoneyWavy } from "react-icons/pi";
 import { IoMdTime } from "react-icons/io";
@@ -95,7 +95,7 @@ function HostelFeePayment() {
           let config = {
             method: "post",
             maxBodyLength: Infinity,
-            url: "https://amarnath013.pythonanywhere.com/api/user/token/refresh/",
+            url: `${Url}/token/refresh/`,
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
@@ -145,7 +145,7 @@ function HostelFeePayment() {
     ) {
       try {
         axios
-          .get(`${BaseUrl}/fees/`, {
+          .get(`${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/hostel-mess-fee/`, {
             headers: {
               Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
             },
@@ -153,7 +153,7 @@ function HostelFeePayment() {
           .then((response) => {
             console.log(response.data);
             setLoading(false);
-            setFees(response.data);
+            setFees(response.data?.[0]);
             const token = sessionStorage.getItem("accesstoken");
             const token1 = sessionStorage.getItem("refreshtoken");
 
@@ -235,9 +235,7 @@ function HostelFeePayment() {
       let config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: `${BaseUrl}/hostel-room-allotments/?search=${
-          jwtDecode(sessionStorage?.getItem("accesstoken"))?.registration_number
-        }`,
+        url: `${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/hostel-room-allotments/`,
         headers: {
           Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
         },
@@ -277,7 +275,7 @@ function HostelFeePayment() {
     ) {
       const fetchProfileData = async () => {
         try {
-          const response = await axios.get(`${BaseUrl}/profile`, {
+          const response = await axios.get(`${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/profile`, {
             headers: {
               Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
               "Content-Type": "application/json",
@@ -355,7 +353,7 @@ function HostelFeePayment() {
         try {
           axios
             .post(
-              `${BaseUrl}/mess-fees-payment/`,
+              `${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/mess-fees-payment/`,
               {
                 registration_details: id,
                 from_date: dayjs(data.startDate).format("YYYY-MM"),
@@ -473,9 +471,7 @@ function HostelFeePayment() {
     const fetchPayments = async () => {
       try {
         const response = await axios.get(
-          `${BaseUrl}/mess-fees-payment/?search=${
-            jwtDecode(sessionStorage?.getItem("accesstoken"))?.registration_number
-          }`,
+          `${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/mess-fees-payment/`,
           {
             headers: {
               Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
@@ -860,7 +856,7 @@ function HostelFeePayment() {
                     </center>
                   </Grid>
                 ) : (
-                  result.map((payment) => (
+                  result?.map((payment) => (
                     <React.Fragment key={payment.id}>
                       <Grid item xs={4}>
                         {payment.fee_type === "maintainance_fee" &&

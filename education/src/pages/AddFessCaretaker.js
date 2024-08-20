@@ -26,7 +26,7 @@ import { useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 import NavbarNew from "../components/NavbarNew";
 import Footer from "../components/Home/Footer";
-import { BaseUrl } from "../components/BaseUrl";
+import { BaseUrl, Url } from "../components/BaseUrl";
 
 // Validation schema using yup
 const schema = yup.object().shape({
@@ -64,7 +64,7 @@ const AddFeesCaretaker = () => {
           let config = {
             method: "post",
             maxBodyLength: Infinity,
-            url: "https://amarnath013.pythonanywhere.com/api/user/token/refresh/",
+            url: `${Url}/token/refresh/`,
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
@@ -134,37 +134,39 @@ const AddFeesCaretaker = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+
+      const token = sessionStorage.getItem("accesstoken");
+      const token1 = sessionStorage.getItem("refreshtoken");
+     
+      if (token && token1) {
+        let currentDate = new Date();
+        const decodedToken = jwtDecode(token);
+
+        if (
+          decodedToken.exp * 1000 - currentDate.getTime() <
+          59 * 60 * 1000
+        ) {
+          try {
+            regenerateToken(); // Wait for the token regeneration to complete
+          } catch (error) {
+            console.error(
+              "Error in request interceptor while regenerating token:",
+              error
+            );
+          }
+        }
+      }else{
+        navigate('/login');
+      }      
       try {
         const config = {
           method: "get",
-          url: `${BaseUrl}/fees/`,
+          url: `${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/hostel-mess-fee/`,
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
           },
         };
-        const token = sessionStorage.getItem("accesstoken");
-        const token1 = sessionStorage.getItem("refreshtoken");
        
-        if (token && token1) {
-          let currentDate = new Date();
-          const decodedToken = jwtDecode(token);
-
-          if (
-            decodedToken.exp * 1000 - currentDate.getTime() <
-            59 * 60 * 1000
-          ) {
-            try {
-              regenerateToken(); // Wait for the token regeneration to complete
-            } catch (error) {
-              console.error(
-                "Error in request interceptor while regenerating token:",
-                error
-              );
-            }
-          }
-        }else{
-          navigate('/login');
-        }      
         const response = await axios.request(config);
         setResult(response.data);
       } catch (error) {
@@ -177,13 +179,15 @@ const AddFeesCaretaker = () => {
 
   const onSubmit = async (data) => {
     const jsonData = JSON.stringify(data);
-
+    const token = sessionStorage.getItem("accesstoken");
+    const token1 = sessionStorage.getItem("refreshtoken");
+    if(token && token1){
     try {
       let config;
       if (editId) {
         config = {
           method: "put",
-          url: `${BaseUrl}/fees/update/${editId}/`,
+          url: `${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/hostel-mess-fee/${editId}/`,
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
@@ -193,7 +197,7 @@ const AddFeesCaretaker = () => {
       } else {
         config = {
           method: "post",
-          url: `${BaseUrl}/fees/create/`,
+          url: `${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/hostel-mess-fee/`,
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
@@ -221,9 +225,7 @@ const AddFeesCaretaker = () => {
             );
           }
         }
-      }else{
-        navigate('/login');
-      }      
+      }   
       const response = await axios.request(config);
       console.log(response.data);
 
@@ -244,6 +246,7 @@ const AddFeesCaretaker = () => {
       setTimeout(() => {
         window.location.reload();
       }, 1500);
+      
     } catch (error) {
       console.error("Error adding/updating data:", error);
       if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
@@ -258,15 +261,19 @@ const AddFeesCaretaker = () => {
         navigate("/login");
       }
     }
+  }else{
+    navigate("/login");
+  }
   };
 
   const handleEdit = (feeId) => {
     // Find the fee with feeId in result state and populate the form fields
 
+    console.log(feeId);
     reset({
-      Maintainance_fees: result.Maintainance_fees,
-      Mess_fees: result.Mess_fees,
-      Security_Deposit: result.Security_Deposit,
+      Maintainance_fees: result?.[0]?.Maintainance_fees,
+      Mess_fees: result?.[0]?.Mess_fees,
+      Security_Deposit: result?.[0]?.Security_Deposit,
     });
     setEditId(feeId);
   };
@@ -451,14 +458,14 @@ const AddFeesCaretaker = () => {
                     </TableHead>
                     <TableBody>
                       <TableRow key={result.id}>
-                        <TableCell>{result.Maintainance_fees}</TableCell>
-                        <TableCell>{result.Mess_fees}</TableCell>
-                        <TableCell>{result.Security_Deposit}</TableCell>
+                        <TableCell>{result?.[0]?.Maintainance_fees}</TableCell>
+                        <TableCell>{result?.[0]?.Mess_fees}</TableCell>
+                        <TableCell>{result?.[0]?.Security_Deposit}</TableCell>
                         <TableCell>
                           <Button
                             variant="outlined"
                             color="primary"
-                            onClick={() => handleEdit(result.id)}
+                            onClick={() => handleEdit(result?.[0]?.id)}
                           >
                             Edit
                           </Button>

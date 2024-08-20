@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  CardMedia,
   CircularProgress,
   Divider,
   Grid,
@@ -702,11 +703,13 @@ export const RegisterUser = () => {
 
             </div>
          
-              <img
-                src="../images/register_page_icon.png"
-                style={{
+              <CardMedia
+              component="img"
+                image="../images/register_page_icon.png"
+                sx={{
                   position: "relative",
                   top: "10rem",
+                  left:{lg:"5rem",md:"2rem"},
                   width: "400px",
                   height: "auto",
                 }}

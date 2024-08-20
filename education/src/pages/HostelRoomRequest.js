@@ -78,14 +78,14 @@ export const HostelRoomRequest = () => {
   const navigate = useNavigate();
   const [previewUrl, setPreviewUrl] = useState(null);
   const [name, setName] = useState(null);
-  const [file,setFile]=useState('');
+  const [file, setFile] = useState("");
   const [result, setResult] = useState([]);
-  const [allotedRoom, setAllotedRoom] = useState([]);
+  const [allotedRoom, setAllotedRoom] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [responsive, setResponsive] = useState(window.innerWidth < 669);
   const [loading, setLoading] = useState(true);
-  const [loading1, setLoading1] = useState(true);
+  const [loading1, setLoading1] = useState(false);
 
   const {
     register,
@@ -220,22 +220,25 @@ export const HostelRoomRequest = () => {
             console.log(error);
           });
 
-        // const hostelRoomAllotmentsResponse = await axios.get(
-        //   `${BaseUrl}/${
-        //     jwtDecode(sessionStorage?.getItem("accesstoken"))?.college
-        //   }/hostel-room-allotments/?search=${
-        //     jwtDecode(sessionStorage?.getItem("accesstoken"))
-        //       ?.registration_number
-        //   }`,
-        //   {
-        //     headers: {
-        //       Authorization: `Bearer ${accessToken}`,
-        //     },
-        //   }
-        // );
+        axios.get(
+          `${Url}/${
+            jwtDecode(sessionStorage?.getItem("accesstoken"))?.college
+          }/hostel-room-allotments/`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        ).then(response=>{
+          console.log(response.data);
+          setAllotedRoom(response?.data?.[0]?.hostel_room?.room_no);
+        }).catch(error=>{
+          console.log(error);
 
-        // console.log(hostelRoomAllotmentsResponse.data);
-        // setAllotedRoom(hostelRoomAllotmentsResponse.data);
+        })
+
+       
+       
       } else {
         navigate("/login");
       }
@@ -274,8 +277,9 @@ export const HostelRoomRequest = () => {
   };
 
   const onSubmit = (data) => {
+    setLoading1(true);
     const acceptedFormats = ["image/jpeg", "image/png", "image/jpg"];
-  
+
     if (data?.file?.length === 0) {
       return enqueueSnackbar("Marksheet field is empty", { variant: "error" });
     }
@@ -284,14 +288,14 @@ export const HostelRoomRequest = () => {
         variant: "error",
       });
     }
-  
+
     const token = sessionStorage.getItem("accesstoken");
     const token1 = sessionStorage.getItem("refreshtoken");
-  
+
     console.log(
       jwtDecode(sessionStorage?.getItem("accesstoken"))?.registration_number
     );
-  
+
     if (token && token1) {
       const formData = new FormData();
       formData.append(
@@ -303,9 +307,8 @@ export const HostelRoomRequest = () => {
       formData.append("cgpa", data.cgpa);
       // formData.append("latest_marksheet", file);
       formData.append("prefered_room_type", data.RoomType);
-  
 
-      console.log();
+     
       // let config = {
       //   method: "post",
       //   maxBodyLength: Infinity,
@@ -317,12 +320,12 @@ export const HostelRoomRequest = () => {
       //   },
       //   data: formData,
       // };
-  
-     
-        axios.post(
+
+      axios
+        .post(
           `${Url}/${
-          jwtDecode(sessionStorage?.getItem("accesstoken"))?.college
-        }/hostel-allotments/`,
+            jwtDecode(sessionStorage?.getItem("accesstoken"))?.college
+          }/hostel-allotments/`,
           formData,
           {
             headers: {
@@ -331,17 +334,21 @@ export const HostelRoomRequest = () => {
             },
             maxBodyLength: Infinity,
           }
-        ).then(response=>{
+        )
+        .then((response) => {
           console.log(response);
-          setResult([...result,{
-            status:"pending",
-            allotedRoom:[
-              {
-              hostel_room:"not alloted by now"
-              }
-          ]
-          }])
-          enqueueSnackbar("Request was successfull", {
+          setResult([
+            ...result,
+            {
+              status: "pending",
+              allotedRoom: [
+                {
+                  hostel_room: "not alloted by now",
+                },
+              ],
+            },
+          ]);
+          enqueueSnackbar("Hostel allotment request is successfull", {
             variant: "success",
             anchorOrigin: {
               vertical: "bottom",
@@ -349,44 +356,62 @@ export const HostelRoomRequest = () => {
             },
             autoHideDuration: 3000,
           });
-        }).catch((error) => {
-              console.log(error);
-              if (
-                error?.response?.data?.errors?.detail ===
-                "Given token not valid for any token type"
-              ) {
-                enqueueSnackbar("Logging out", {
-                  variant: "error",
-                  anchorOrigin: {
-                    vertical: "bottom",
-                    horizontal: "center",
-                  },
-                  autoHideDuration: 3000,
-                });
-                navigate("/login");
-              }
-              if (error?.response?.data?.errors?.non_field_errors?.[0]) {
-                enqueueSnackbar(
-                  error?.response?.data?.errors?.non_field_errors?.[0],
-                  {
-                    variant: "error",
-                    anchorOrigin: {
-                      vertical: "bottom",
-                      horizontal: "center",
-                    },
-                    autoHideDuration: 1000,
-                  }
-                );
-              }
-            });
 
-     
-      
+          setLoading1(false);
+          reset({
+            RoomType:""
+          });
+          setValue("RoomType","");
+          setValue("cgpa","");
+          setPreviewUrl("");
+          setName("");
+        })
+        .catch((error) => {
+
+          setLoading1(false);
+          console.log(error);
+          if (
+            error?.response?.data?.errors?.detail ===
+            "Given token not valid for any token type"
+          ) {
+            enqueueSnackbar("Logging out", {
+              variant: "error",
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "center",
+              },
+              autoHideDuration: 3000,
+            });
+            navigate("/login");
+          }
+          if (error?.response?.data?.errors?.non_field_errors?.[0]) {
+            enqueueSnackbar(
+              error?.response?.data?.errors?.non_field_errors?.[0],
+              {
+                variant: "error",
+                anchorOrigin: {
+                  vertical: "bottom",
+                  horizontal: "center",
+                },
+                autoHideDuration: 1000,
+              }
+            );
+          }
+          reset({
+            RoomType:""
+          });
+  
+          setValue("RoomType","");
+          setValue("cgpa","");
+          setPreviewUrl("");
+          setName("");
+        });
+
     } else {
       navigate("/login");
     }
   };
-  
+
   return (
     <div className="container-fluid">
       <NavbarNew />
@@ -456,7 +481,10 @@ export const HostelRoomRequest = () => {
                       variant="body1"
                       sx={{ marginBottom: "10px", marginTop: "5px" }}
                     >
-                      {jwtDecode(sessionStorage?.getItem("accesstoken"))?.registration_number}
+                      {
+                        jwtDecode(sessionStorage?.getItem("accesstoken"))
+                          ?.registration_number
+                      }
                     </Typography>
                   </FormControl>
 
@@ -484,7 +512,7 @@ export const HostelRoomRequest = () => {
                     error={!!errors.RoomType?.message}
                   >
                     <InputLabel id="numberOfPersons-label">
-                      Number of Persons
+                     Room Type
                     </InputLabel>
                     <Controller
                       name="RoomType"
@@ -495,7 +523,7 @@ export const HostelRoomRequest = () => {
                           id="RoomType"
                           label="Room Type"
                           {...field}
-                          defaultValue=""
+                          
                           sx={{
                             width: {
                               lg: "70%",
@@ -528,7 +556,7 @@ export const HostelRoomRequest = () => {
                       }}
                     >
                       <Typography
-                        variant="p"
+                        variant="p"a
                         gutterBottom
                         style={{ fontSize: "1.1rem" }}
                       >
@@ -594,7 +622,16 @@ export const HostelRoomRequest = () => {
                       width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
                     }}
                   >
-                    Send Request
+                    {!loading1 && <p>Send Request</p>}
+                    {loading1 && (
+                      <CircularProgress
+                        style={{
+                          color: "white",
+                          width: "20px",
+                          height: "22px",
+                        }}
+                      />
+                    )}
                   </Button>
                 </form>
               </Box>
@@ -615,7 +652,7 @@ export const HostelRoomRequest = () => {
               >
                 <center>
                   <img
-                    src="./images/hostelRoom.jpg"
+                    src="../images/hostelRoom.jpg"
                     alt=""
                     style={{
                       width: "310px",
@@ -660,7 +697,7 @@ export const HostelRoomRequest = () => {
                   >
                     <center>
                       <img
-                        src="./images/No_data.png"
+                        src="../images/No_data.png"
                         alt=""
                         style={{
                           width: "310px",
@@ -709,7 +746,8 @@ export const HostelRoomRequest = () => {
                           color="text.secondary"
                           sx={{ fontSize: 15 }}
                         >
-                          Alloted Room No:{allotedRoom.length > 0 ? (
+                          Alloted Room No:
+                          {allotedRoom.length > 0 ? (
                             <Typography variant="body2" color="text.secondary">
                               {" "}
                               {allotedRoom?.[0]?.hostel_room}
@@ -747,7 +785,7 @@ export const HostelRoomRequest = () => {
                           <TableCell style={{ textAlign: "center" }}>
                             Status
                           </TableCell>
-                        
+
                           <TableCell style={{ textAlign: "center" }}>
                             Alloted Room
                           </TableCell>
@@ -769,20 +807,20 @@ export const HostelRoomRequest = () => {
                               >
                                 {data?.status}
                               </TableCell>
-                             
+
                               <TableCell
                                 style={{
                                   textAlign: "center",
                                   backgroundColor: "rgb(243 244 246)",
                                 }}
                               >
-                                {allotedRoom.length > 0 ? (
+                                {allotedRoom !=="" ? (
                                   <Typography
                                     variant="p"
                                     color="text.secondary"
                                   >
                                     {" "}
-                                    {allotedRoom?.[0]?.hostel_room}
+                                    {allotedRoom}
                                   </Typography>
                                 ) : (
                                   <p>Not alloted by now.</p>

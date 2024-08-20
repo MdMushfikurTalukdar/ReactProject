@@ -115,7 +115,7 @@ export const Contact = () => {
             autoHideDuration: 3000,
           });
           
-          navigate("/login");
+          navigate("/after-contact");
         })
         .catch((error) => {
           

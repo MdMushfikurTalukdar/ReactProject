@@ -33,7 +33,7 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { enqueueSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
-import { BaseUrl } from "../components/BaseUrl";
+import { BaseUrl, Url } from "../components/BaseUrl";
 
 // Validation schema
 const schema = yup.object().shape({
@@ -77,7 +77,7 @@ export const HostelNoDueReq = () => {
           let config = {
             method: "post",
             maxBodyLength: Infinity,
-            url: "https://amarnath013.pythonanywhere.com/api/user/token/refresh/",
+            url: `${Url}/token/refresh/`,
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
@@ -123,7 +123,7 @@ export const HostelNoDueReq = () => {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `${BaseUrl}/mess-fees-payment/?search=${jwtDecode(sessionStorage?.getItem("accesstoken"))?.registration_number}`,
+      url: `${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/mess-fees-payment/`,
       headers: { 
         Authorization: `Bearer ${sessionStorage.getItem('accesstoken')}`
       }
@@ -242,7 +242,7 @@ export const HostelNoDueReq = () => {
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: `${BaseUrl}/hostel-no-dues/`,
+      url: `${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/hostel-no-dues/`,
       headers: { 
         'Content-Type': 'application/json', 
         Authorization: `Bearer ${sessionStorage?.getItem('accesstoken')}`
@@ -326,7 +326,7 @@ export const HostelNoDueReq = () => {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `${BaseUrl}/hostel-no-dues/?search=${jwtDecode(sessionStorage?.getItem("accesstoken"))?.registration_number}`,
+      url: `${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/hostel-no-dues/`,
       headers: { 
         'Authorization': `Bearer ${sessionStorage?.getItem('accesstoken')}`
       }
@@ -346,18 +346,18 @@ export const HostelNoDueReq = () => {
   }
   },[]);
 
-  if (loading || loading1) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="80vh"
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
+  // if (loading || loading1) {
+  //   return (
+  //     <Box
+  //       display="flex"
+  //       justifyContent="center"
+  //       alignItems="center"
+  //       height="80vh"
+  //     >
+  //       <CircularProgress />
+  //     </Box>
+  //   );
+  // }
   return (
     <div className="container-fluid" style={{ backgroundColor: "whitesmoke" }}>
       <NavbarNew />
