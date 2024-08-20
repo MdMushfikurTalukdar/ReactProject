@@ -83,9 +83,25 @@ export const CaretakerNoDues = () => {
           overflowX: "none",
           paddingTop: "5vw",
           paddingBottom: "15vw",
+          position: "relative",
+        "&::before": {
+          content: '""',
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          backgroundColor: "rgba(0, 0, 0, 0.6)", // Overlay with opacity
+          zIndex: 1,
+        },
         }}
       >
-        <Grid container>
+        <Grid container sx={{
+          position: "relative",
+          zIndex: 2,
+          color: "white",
+          padding: { xs: "20px", sm: "20px", md: "50px" },
+        }}>
           <Grid item xs={12} sm={12} lg={6} md={6}>
             <p
               style={{ fontSize: "2.6rem", color: "white", marginTop: "40px" }}

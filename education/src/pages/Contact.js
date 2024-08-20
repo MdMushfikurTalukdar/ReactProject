@@ -11,7 +11,6 @@ import {
 } from "@mui/material";
 import { Header } from "../components/Home/Header";
 import Footer from "../components/Home/Footer";
-import { Phone, Email, LocationOn } from "@mui/icons-material";
 import { enqueueSnackbar } from "notistack";
 import axios from "axios";
 import { Url } from "../components/BaseUrl";
@@ -133,6 +132,7 @@ export const Contact = () => {
           }
         });
     } else {
+      setLoading(false);
       enqueueSnackbar("Please fill all the fields", {
         variant: "warning",
         anchorOrigin: {
@@ -157,9 +157,9 @@ export const Contact = () => {
                 image={`./images/${images[imageIndex]}`}
                 sx={{
                   borderRadius: "15px",
-                  marginTop: { lg: "40%", xs: "2%", sm: "2%", md: "40%" },
+                  marginTop: { lg: "50%", xs: "2%", sm: "2%", md: "40%" },
                   marginBottom: "20px",
-
+                  
                   height: { lg: "50%", xs: "100%", md: "50%", sm: "100%" },
                 }}
                 alt="Contact Us Image"
@@ -256,6 +256,7 @@ export const Contact = () => {
                   label="Phone Number"
                   placeholder="Phone Number"
                   variant="outlined"
+                 
                   InputLabelProps={{
                     shrink: true,
                   }}

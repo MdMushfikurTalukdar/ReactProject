@@ -6,7 +6,7 @@ import { Box, Card, CardContent, CardMedia, Container, Grid, Typography } from '
 
 const Products = () => {
   const settings = {
-    dots: false,
+    dots: true,
     infinite: true,
     speed: 1500,
     slidesToShow: 3,
@@ -15,6 +15,12 @@ const Products = () => {
     autoplaySpeed: 3500,
     arrows: false,
     responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+        },
+      },
       {
         breakpoint: 768,
         settings: {
@@ -51,34 +57,43 @@ const Products = () => {
 
   return (
     <Box py={8} bgcolor="grey.100">
-    <Container>
-      <center><p style={{fontSize:"1.8rem"}}>
-       Our Products
-      </p></center>
-      <Slider {...settings}>
-        {products.map((testimonial, index) => (
-          <Grid key={index} container justifyContent="center">
-            <Card sx={{ maxWidth: 345, m: 2 }}>
-              <CardMedia
-                component="img"
-                height="240"
-                style={{objectFit:"contain"}}
-                image={`./images/${testimonial.image}`}
-              
-                alt={testimonial.name}
-              />
-              <CardContent>
-               
-                <Typography variant="body2" color="textSecondary">
-                  {testimonial.description.length>80 ? `${testimonial.description.slice(0,80)}...`:(testimonial.description)}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Slider>
-    </Container>
-  </Box>
+      <Container>
+        <Typography variant="h4" align="center" gutterBottom color="textPrimary" >
+          Our Products
+        </Typography>
+        <Slider {...settings}>
+          {products.map((product, index) => (
+            <Grid key={index} container justifyContent="center">
+              <Card 
+                sx={{ 
+                  maxWidth: 345, 
+                  m: 2, 
+                  borderRadius: '12px',
+                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)', 
+                  transition: 'transform 0.3s ease',
+                  '&:hover': {
+                    transform: 'translateY(-10px)',
+                  }
+                }}
+              >
+                <CardMedia
+                  component="img"
+                  height="240"
+                  sx={{ objectFit: "contain", borderBottom: '1px solid #ddd' }}
+                  image={`./images/${product.image}`}
+                  alt={product.description}
+                />
+                <CardContent>
+                  <Typography variant="body1" color="textPrimary" align="center">
+                    {product.description}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Slider>
+      </Container>
+    </Box>
   );
 };
 

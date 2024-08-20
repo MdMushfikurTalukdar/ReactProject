@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Grid, Typography, Card, CardContent, CardMedia, Container, useTheme, useMediaQuery } from '@mui/material';
+import { Box, Grid, Typography, Card, CardContent, CardMedia, Container, useTheme, useMediaQuery, IconButton } from '@mui/material';
 import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
@@ -57,31 +57,55 @@ const Testimonials = () => {
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 3000,
-    nextArrow: <ArrowForwardIos />,
-    prevArrow: <ArrowBackIos />,
+    nextArrow: (
+      <IconButton>
+        <ArrowForwardIos />
+      </IconButton>
+    ),
+    prevArrow: (
+      <IconButton>
+        <ArrowBackIos />
+      </IconButton>
+    ),
   };
 
   return (
-    <Box py={8} >
+    <Box py={8} bgcolor="#f5f5f5">
       <Container>
         <Typography variant="h4" align="center" gutterBottom>
-          Testimonials
+          What Our Clients Say
         </Typography>
         <Slider {...settings}>
           {testimonials.map((testimonial, index) => (
             <Grid key={index} container justifyContent="center">
-              <Card sx={{ maxWidth: 345, m: 2 }}>
+              <Card 
+                sx={{
+                  maxWidth: 345,
+                  m: 2,
+                  boxShadow: '0 6px 20px rgba(0, 0, 0, 0.15)',
+                  transition: 'transform 0.3s',
+                  '&:hover': {
+                    transform: 'translateY(-10px)',
+                  }
+                }}
+              >
                 <CardMedia
                   component="img"
-                  height="140"
+                  height="200"
                   image={testimonial.image}
                   alt={testimonial.name}
+                  sx={{
+                    filter: 'grayscale(100%)',
+                    '&:hover': {
+                      filter: 'grayscale(0%)',
+                    },
+                  }}
                 />
                 <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
+                  <Typography variant="h6" component="div">
                     {testimonial.name}
                   </Typography>
-                  <Typography variant="subtitle1" color="textSecondary">
+                  <Typography variant="subtitle2" color="textSecondary">
                     {testimonial.title}
                   </Typography>
                   <Typography variant="body2" color="textSecondary">

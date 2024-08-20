@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
@@ -30,7 +29,7 @@ export const Clients = () => {
   ];
 
   const settings = {
-    dots: false,
+    dots: true,
     infinite: true,
     speed: 500,
     slidesToShow: 3,
@@ -56,36 +55,63 @@ export const Clients = () => {
   };
 
   return (
-    <Box py={8} bgcolor="grey.100">
-    <Container>
-      <Typography variant="h4" align="center" gutterBottom>
-        Clients
-      </Typography>
-      <Slider {...settings}>
-        {clients.map((testimonial, index) => (
-          <Grid key={index} container justifyContent="center">
-            <Card sx={{ maxWidth: 345, m: 2 }}>
-              <CardMedia
-                component="img"
-                height="240"
-                style={{objectFit:"scale-down"}}
-                image={testimonial.logo}
-                alt={testimonial.name}
-              />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  {testimonial.name}
-                </Typography>
-               
-                <Typography variant="body2" color="textSecondary">
-                  {testimonial.description.length>80 ? `${testimonial.description.slice(0,80)}...`:(testimonial.description)}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Slider>
-    </Container>
-  </Box>
+    <Box py={8} bgcolor="#f9f9f9">
+      <Container>
+        <Typography variant="h4" align="center" gutterBottom>
+          Our Clients
+        </Typography>
+        <Slider {...settings}>
+          {clients.map((client, index) => (
+            <Grid key={index} container justifyContent="center">
+              <Card
+                sx={{
+                  maxWidth: 345,
+                  m: 2,
+                  p: 1,
+                  boxShadow: '0 6px 20px rgba(0, 0, 0, 0.1)',
+                  transition: 'transform 0.3s, box-shadow 0.3s',
+                  '&:hover': {
+                    transform: 'translateY(-10px)',
+                    boxShadow: '0 12px 24px rgba(0, 0, 0, 0.2)',
+                  }
+                }}
+              >
+                <CardMedia
+                  component="img"
+                  height="200"
+                  image={client.logo}
+                  alt={client.name}
+                  sx={{
+                    objectFit: 'contain',
+                    bgcolor: '#e0e0e0',
+                    padding: '10px',
+                    borderRadius: '8px',
+                  }}
+                />
+                <CardContent>
+                  <Typography
+                    gutterBottom
+                    variant="h6"
+                    component="div"
+                    align="center"
+                  >
+                    {client.name}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    align="center"
+                  >
+                    {client.description.length > 80
+                      ? `${client.description.slice(0, 80)}...`
+                      : client.description}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Slider>
+      </Container>
+    </Box>
   );
 };
