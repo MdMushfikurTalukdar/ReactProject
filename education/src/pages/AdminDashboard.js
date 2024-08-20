@@ -78,7 +78,7 @@ export const AdminDashboard = () => {
     };
     axios
       .put(
-        `https://smart-backend-uebh.onrender.com/api/user/college-requests/${e}/verify/`,
+        `${Url}/college-requests/${e}/verify/`,
         data,
         {
           headers: {
@@ -149,7 +149,7 @@ export const AdminDashboard = () => {
     };
     axios
       .put(
-        `https://smart-backend-uebh.onrender.com/api/user/college-requests/${e}/verify/`,
+        `${Url}/college-requests/${e}/verify/`,
         data,
         {
           headers: {
@@ -218,7 +218,7 @@ export const AdminDashboard = () => {
           width: "100vw",
           textAlign: "center",
           backgroundImage:
-            "url(https://static.vecteezy.com/system/resources/previews/007/625/613/non_2x/co-working-team-meeting-concept-businessman-using-smart-phone-and-laptop-and-digital-tablet-computer-in-modern-office-with-virtual-interface-icons-network-diagram-free-photo.jpg)",
+            "url(https://images.unsplash.com/photo-1544006659-f0b21884ce1d?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)",
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
           backgroundSize: "cover",
@@ -230,7 +230,7 @@ export const AdminDashboard = () => {
         <Grid container>
           <Grid item xs={12} sm={12} lg={6} md={6}>
             <p
-              style={{ fontSize: "2.6rem", color: "black", marginTop: "20px" }}
+              style={{ fontSize: "2.6rem", color: "white", marginTop: "50px" }}
               id="hero"
             >
               Dashboard
@@ -253,7 +253,7 @@ export const AdminDashboard = () => {
                 },
                 marginTop: "10px",
                 fontWeight: "500",
-                color: "black",
+                color: "white",
               }}
               id="hero1"
             >

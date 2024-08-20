@@ -453,12 +453,8 @@ export const RegisterUser = () => {
                 className="parentGrid_small_screen"
               >
                 <h2 style={{ marginRight: "35%", color: "rgb(107 169 169)" }}>
-                  {!loading && <p>Create Account</p>}
-                  {loading && (
-                    <CircularProgress
-                      style={{ color: "white", width: "20px", height: "22px" }}
-                    />
-                  )}
+                  <p>Create Account</p>
+                
                 </h2>
 
                 <form onSubmit={handleSubmit(onSubmit)}>
@@ -634,15 +630,17 @@ export const RegisterUser = () => {
       )}
 
       {!responsive && (
-        <Grid container style={{ height: "100vh", backgroundColor: "#6c42ec" }}>
+        <Grid container style={{ height: "109vh",}}>
+        
           <Grid
             item
             xs={12}
             sm={12}
             md={3}
             lg={3}
-            style={{ backgroundColor: "#6c42ec" }}
+            sx={{height: "fit-content"}}
           >
+              <center>
             <div style={{ color: "white" }}>
               <h1
                 style={{
@@ -651,6 +649,7 @@ export const RegisterUser = () => {
                   left: "5rem",
                   width: "400px",
                   height: "auto",
+                  color:"black"
                 }}
               >
                 {" "}
@@ -663,6 +662,7 @@ export const RegisterUser = () => {
                   left: "5rem",
                   width: "400px",
                   height: "auto",
+                     color:"black"
                 }}
               >
                 Empowering Workspaces,
@@ -675,6 +675,7 @@ export const RegisterUser = () => {
                   left: "6rem",
                   width: "400px",
                   height: "auto",
+                     color:"black"
                 }}
               >
                 {" "}
@@ -689,7 +690,9 @@ export const RegisterUser = () => {
                   left: "5.0rem",
                   width: "400px",
                   height: "auto",
-                  fontSize:"1.3rem"
+                  fontSize:"1.3rem",
+                     color:"black"
+                  
                 }}
               >
                 {" "}
@@ -697,6 +700,8 @@ export const RegisterUser = () => {
                 <br />
               </h4>
 
+            </div>
+         
               <img
                 src="../images/register_page_icon.png"
                 style={{
@@ -707,7 +712,8 @@ export const RegisterUser = () => {
                 }}
                 alt=""
               />
-            </div>
+            
+            </center>
           </Grid>
           <Grid
             item
@@ -717,16 +723,18 @@ export const RegisterUser = () => {
             lg={9}
             className="parentGrid_largeScreen"
           >
+            <center>
             <h2
               style={{
-                marginRight: "35%",
-                marginTop: "0px",
+              //   marginRight: "35%",
+              //   marginTop: "0px",
                 color: "rgb(107 169 169)",
+              //   textAlign:"center"
               }}
             >
               Create Account
             </h2>
-
+            </center>
             <form onSubmit={handleSubmit(onSubmit)}>
               <Box>
                 <TextField

@@ -30,7 +30,7 @@ html {
 }
 .children1_small_screen {
   width: 100vw;
-  min-height: 100%;
+  height: fit-content;
   display: flex;
   justify-content: center;
 }
@@ -39,7 +39,7 @@ html {
   border-radius: 20px 20px 20px 20px;
   text-align: center;
   padding: 25px;
-  height: 100vh;
+  height: fit-content;
   width: 100vw;
 }
 .largeScreen_typography {
@@ -64,7 +64,7 @@ html {
   height: auto;
 }
 .parentGrid_largeScreen {
-  background-color: #e3f4f4;
+ 
   border-radius: 8px 0px 0px 8px;
   text-align: center;
   padding: 25px;

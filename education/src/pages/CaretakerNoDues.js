@@ -76,7 +76,7 @@ export const CaretakerNoDues = () => {
           width: "100vw",
           textAlign: "center",
           backgroundImage:
-            "url(https://static.vecteezy.com/system/resources/previews/007/625/613/non_2x/co-working-team-meeting-concept-businessman-using-smart-phone-and-laptop-and-digital-tablet-computer-in-modern-office-with-virtual-interface-icons-network-diagram-free-photo.jpg)",
+            "url(https://images.unsplash.com/photo-1544006659-f0b21884ce1d?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)",
           backgroundRepeat: "no-repeat",
           backgroundPosition: "bottom-center",
           backgroundSize: "cover",

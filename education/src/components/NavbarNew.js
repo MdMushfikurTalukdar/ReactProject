@@ -93,13 +93,13 @@ export const NavbarNew = () => {
   ];
 
   const admin = [
-    { name: "Add college", link: "/add-college" },
-    { name: "Add Subject", link: "/sem-sub-register" },
-    { name: "Add Branch", link: "/sem-branch-register" },
-    {
-      name: "Verify Semester Registration",
-      link: "/verifySemesterRegistration",
-    },
+    // { name: "Add college", link: "/add-college" },
+    // { name: "Add Subject", link: "/sem-sub-register" },
+    // { name: "Add Branch", link: "/sem-branch-register" },
+    // {
+    //   name: "Verify Semester Registration",
+    //   link: "/verifySemesterRegistration",
+    // },
   ];
 
   const hod = [
