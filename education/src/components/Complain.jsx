@@ -117,7 +117,7 @@ const ComplaintForm = () => {
     name: "",
     branch: "",
   });
- 
+
   const [previousRecord, setPreviousRecord] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -125,6 +125,7 @@ const ComplaintForm = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [loading1, setLoading1] = useState(false);
+  const [key, setKey] = useState(0);
 
   const regenerateToken = () => {
     if (sessionStorage?.getItem("accesstoken")) {
@@ -268,7 +269,6 @@ const ComplaintForm = () => {
     };
 
     fetchProfileData();
-   
   }, [navigate]);
 
   const {
@@ -276,7 +276,7 @@ const ComplaintForm = () => {
     handleSubmit,
     formState: { errors },
     reset,
-    setValue
+    setValue,
   } = useForm({
     resolver: yupResolver(complaintSchema),
   });
@@ -356,10 +356,10 @@ const ComplaintForm = () => {
     const token1 = sessionStorage.getItem("refreshtoken");
 
     if (token && token1) {
-
-      if(profileData?.name===null && profileData?.branch===null)
-      {
-        return enqueueSnackbar("Update the profile first.",{variant:"warning"});
+      if (profileData?.name === null && profileData?.branch === null) {
+        return enqueueSnackbar("Update the profile first.", {
+          variant: "warning",
+        });
       }
       let data1 = JSON.stringify({
         name: profileData?.name,
@@ -429,13 +429,17 @@ const ComplaintForm = () => {
             autoClose: 5000,
           });
           reset({
-            type:"",
-            subject:"",
-            description:""
+            type: "",
+            subject: "",
+            description: "",
           });
-          setValue("type","");
-          setValue("subject","");
-          setValue("description","");
+          setTimeout(() => {
+            setValue("type", "");
+          }, 10);
+          setValue("subject", "");
+          setValue("description", "");
+
+          setKey((prevKey) => prevKey + 1);
         })
         .catch((error) => {
           console.log(error);
@@ -536,7 +540,7 @@ const ComplaintForm = () => {
                 borderRadius: "5px",
               }}
             >
-              <form onSubmit={handleSubmit(onSubmit)}>
+              <form onSubmit={handleSubmit(onSubmit)} key={key}>
                 <Grid
                   container
                   spacing={2}
@@ -593,7 +597,11 @@ const ComplaintForm = () => {
                             <MenuItem value="Others">Others</MenuItem>
                           </Select>
                           {errors.type && (
-                            <Typography color="error">
+                            <Typography
+                              color="error"
+                              fontSize="0.8rem"
+                              marginTop="2px"
+                            >
                               {errors.type.message}
                             </Typography>
                           )}
@@ -699,7 +707,15 @@ const ComplaintForm = () => {
             </Box>
             {previousRecord.length === 0 ? (
               <center>
-                  <p style={{padding:"5vw 0 9vw 0",fontSize:"1.4rem",marginTop:"20px"}}>No data available currently.</p>
+                <p
+                  style={{
+                    padding: "5vw 0 9vw 0",
+                    fontSize: "1.4rem",
+                    marginTop: "20px",
+                  }}
+                >
+                  No data available currently.
+                </p>
               </center>
             ) : responsive ? (
               previousRecord

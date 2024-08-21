@@ -31,7 +31,7 @@ const HostelRoomAllotment = () => {
   const [loading1, setLoading1] = useState(true);
   const [hostel_room, setHostel_room] = useState(0);
   const [approvedList, setApprovedList] = useState([]);
-  const hostelRef = useRef(null);
+  
 
   const navigate = useNavigate();
 
