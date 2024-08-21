@@ -52,7 +52,7 @@ export const HostelNoDueReq = () => {
   const [messToDate, setMessToDate] = useState(null);
 
   useEffect(() => {
-    if (sessionStorage?.getItem("accesstoken")) {
+    if (sessionStorage?.getItem("accesstoken") && sessionStorage?.getItem("refreshtoken")) {
       const response = jwtDecode(sessionStorage?.getItem("accesstoken"));
       if (
         response.exp < Math.floor(Date.now() / 1000) ||

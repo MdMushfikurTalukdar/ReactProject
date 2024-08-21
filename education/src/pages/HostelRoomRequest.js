@@ -60,17 +60,8 @@ const schema = yup.object().shape({
       }
       return true;
     }),
-  file: yup
-    .mixed()
-    // .test("fileType", "Only image files are allowed", (value) => {
-    //   if (!value) return true; // No file selected is valid
-
-    //   const acceptedFormats = ["image/jpeg", "image/png", "image/jpg"];
-    //   const file = value?.[0];
-    //   return acceptedFormats?.includes(file?.type);
-    // })
-    .required("image file is required"),
-  RoomType: yup.string().required("This field is required"),
+  
+ 
 });
 
 // Component
@@ -86,14 +77,17 @@ export const HostelRoomRequest = () => {
   const [responsive, setResponsive] = useState(window.innerWidth < 669);
   const [loading, setLoading] = useState(true);
   const [loading1, setLoading1] = useState(false);
-
+  const [RoomType,setRoomType]=useState("");
+  const [hide,setHide]=useState(false);
+  
+  
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
     reset,
-    control,
+    
   } = useForm({
     resolver: yupResolver(schema),
   });
@@ -110,69 +104,7 @@ export const HostelRoomRequest = () => {
     };
   }, []);
 
-  const regenerateToken = () => {
-    if (sessionStorage?.getItem("accesstoken")) {
-      const response = jwtDecode(sessionStorage?.getItem("accesstoken"));
-      const response1 = jwtDecode(sessionStorage?.getItem("refreshtoken"));
-      if (
-        response.exp < Math.floor(Date.now() / 1000) ||
-        response1.exp < Math.floor(Date.now() / 1000)
-      ) {
-        navigate("/login");
-      } else {
-        if (
-          sessionStorage.getItem("refreshtoken") &&
-          sessionStorage.getItem("accesstoken")
-        ) {
-          let data = {
-            refresh: sessionStorage?.getItem("refreshtoken"),
-          };
-
-          let config = {
-            method: "post",
-            maxBodyLength: Infinity,
-            url: `${Url}/token/refresh/`,
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
-            },
-            data: data,
-          };
-
-          axios
-            .request(config)
-            .then((response) => {
-              console.log(JSON.stringify(response.data));
-              sessionStorage.setItem("accesstoken", response.data.access);
-            })
-            .catch((error) => {
-              if (error?.message === "Request failed with status code 500") {
-                navigate("/login");
-              }
-              if (
-                error?.response?.data?.errors?.detail ===
-                "Given token not valid for any token type"
-              ) {
-                enqueueSnackbar("Logging out", {
-                  variant: "error",
-                  anchorOrigin: {
-                    vertical: "bottom",
-                    horizontal: "center",
-                  },
-                  autoHideDuration: 3000,
-                });
-                navigate("/login");
-              }
-              console.log(error);
-            });
-        } else {
-          navigate("/login");
-        }
-      }
-    } else {
-      navigate("/login");
-    }
-  };
+  const message="Room-type is required";
 
   useEffect(() => {
     const accessToken = sessionStorage.getItem("accesstoken");
@@ -277,17 +209,28 @@ export const HostelRoomRequest = () => {
   };
 
   const onSubmit = (data) => {
-    setLoading1(true);
+    
     const acceptedFormats = ["image/jpeg", "image/png", "image/jpg"];
 
     if (data?.file?.length === 0) {
       return enqueueSnackbar("Marksheet field is empty", { variant: "error" });
     }
+
+    console.log(RoomType);
+
+    if(RoomType==="")
+    {
+      setHide(true);
+      return;
+    }
+
     if (!acceptedFormats.includes(data.file?.type)) {
       return enqueueSnackbar("Only jpeg, png, jpg files are supported", {
         variant: "error",
       });
     }
+ 
+   
 
     const token = sessionStorage.getItem("accesstoken");
     const token1 = sessionStorage.getItem("refreshtoken");
@@ -297,6 +240,8 @@ export const HostelRoomRequest = () => {
     );
 
     if (token && token1) {
+
+      setLoading1(true);
       const formData = new FormData();
       formData.append(
         "registration_number",
@@ -306,36 +251,24 @@ export const HostelRoomRequest = () => {
       formData.append("status", "pending");
       formData.append("cgpa", data.cgpa);
       // formData.append("latest_marksheet", file);
-      formData.append("prefered_room_type", data.RoomType);
+      formData.append("prefered_room_type", RoomType);
 
-     
-      // let config = {
-      //   method: "post",
-      //   maxBodyLength: Infinity,
-      //   url: `${Url}/${
-      //     jwtDecode(sessionStorage?.getItem("accesstoken"))?.college
-      //   }/hostel-allotments/`,
-      //   headers: {
-      //     Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-      //   },
-      //   data: formData,
-      // };
-
-      axios
-        .post(
-          `${Url}/${
+      let config = {
+        method: "post",
+        maxBodyLength: Infinity,
+        url: `${Url}/${
             jwtDecode(sessionStorage?.getItem("accesstoken"))?.college
           }/hostel-allotments/`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-            },
-            maxBodyLength: Infinity,
-          }
-        )
+          headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+              },
+        data: formData,
+      };
+      axios
+      .request(config)
         .then((response) => {
+          setHide(false);
+          setRoomType("");
           console.log(response);
           setResult([
             ...result,
@@ -367,7 +300,8 @@ export const HostelRoomRequest = () => {
           setName("");
         })
         .catch((error) => {
-
+          setHide(false);
+          setRoomType("");
           setLoading1(false);
           console.log(error);
           if (
@@ -514,16 +448,13 @@ export const HostelRoomRequest = () => {
                     <InputLabel id="numberOfPersons-label">
                      Room Type
                     </InputLabel>
-                    <Controller
-                      name="RoomType"
-                      control={control}
-                      render={({ field }) => (
+                
                         <Select
                           labelId="numberOfPersons-label"
                           id="RoomType"
                           label="Room Type"
-                          {...field}
-                          
+                          onChange={(e)=>setRoomType(e.target.value)}
+                          value={RoomType}
                           sx={{
                             width: {
                               lg: "70%",
@@ -537,10 +468,9 @@ export const HostelRoomRequest = () => {
                           <MenuItem value="double">Double</MenuItem>
                           <MenuItem value="triple">Triple</MenuItem>
                         </Select>
-                      )}
-                    />
-                    {errors.RoomType && (
-                      <FormHelperText>{errors.RoomType.message}</FormHelperText>
+                      
+                    {hide && (
+                      <FormHelperText sx={{color:"red"}}>{message}</FormHelperText>
                     )}
                   </FormControl>
 

@@ -10,7 +10,6 @@ import axios from "axios";
 import {
   Box,
   Button,
-  Container,
   Grid,
   Paper,
   TextField,
@@ -19,7 +18,6 @@ import {
   Select,
   InputLabel,
   FormControl,
-  Divider,
   Table,
   TableBody,
   TableCell,
@@ -34,27 +32,17 @@ import {
   useTheme,
   CircularProgress,
 } from "@mui/material";
-import Slider from "react-slick";
+
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
-import NavbarNew from "../components/NavbarNew";
-import Footer from "../components/Home/Footer";
+
 import { enqueueSnackbar } from "notistack";
 import { BaseUrl, Url } from "./BaseUrl";
 
-const settings = {
-  infinite: true,
-  speed: 4000,
-  slidesToShow: 1,
-  slidesToScroll: 1,
-  autoplay: true,
-  autoplaySpeed: 5000,
-  arrows: false,
-};
 const complaintSchema = yup.object().shape({
   type: yup.string().required("Complaint type is required"),
   subject: yup.string().required("Subject is required"),
@@ -123,54 +111,39 @@ function TablePaginationActions(props) {
   );
 }
 
-const slides = [
-  {
-    image: "complaints1.png",
-    title: "Revolutionizing Campus Life with Smart Tech",
-    subtitle:
-      "Revolutionizing the campus experience with smart technology and seamless connectivity.",
-  },
-  // {
-  //   image: "complaints.jpg",
-  //   title: "Welcome to Smart Campus",
-  //   subtitle: "Your journey to excellence starts here",
-  // },
-
-  // {
-  //   image: "complaints2.png",
-  //   title: "Revolutionizing Campus Life with Smart Tech",
-  //   subtitle:
-  //     "Revolutionizing the campus experience with smart technology and seamless connectivity.",
-  // },
-];
-
 const ComplaintForm = () => {
   const [profileData, setProfileData] = useState({
     registrationNo: "",
     name: "",
     branch: "",
   });
-  const [complaints, setComplaints] = useState([]);
+ 
   const [previousRecord, setPreviousRecord] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [responsive, setResponsive] = useState(window.innerWidth < 684);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [loading1, setLoading1] = useState(false);
 
-  
   const regenerateToken = () => {
     if (sessionStorage?.getItem("accesstoken")) {
       const response = jwtDecode(sessionStorage?.getItem("accesstoken"));
       const response1 = jwtDecode(sessionStorage?.getItem("refreshtoken"));
-      if (response.exp < Math.floor(Date.now() / 1000) || response1.exp < Math.floor(Date.now() / 1000)) {
+      if (
+        response.exp < Math.floor(Date.now() / 1000) ||
+        response1.exp < Math.floor(Date.now() / 1000)
+      ) {
         navigate("/login");
-      }else{
-        if (sessionStorage.getItem("refreshtoken") && sessionStorage.getItem("accesstoken")) {
+      } else {
+        if (
+          sessionStorage.getItem("refreshtoken") &&
+          sessionStorage.getItem("accesstoken")
+        ) {
           let data = {
             refresh: sessionStorage?.getItem("refreshtoken"),
           };
-    
+
           let config = {
             method: "post",
             maxBodyLength: Infinity,
@@ -181,7 +154,7 @@ const ComplaintForm = () => {
             },
             data: data,
           };
-    
+
           axios
             .request(config)
             .then((response) => {
@@ -189,10 +162,13 @@ const ComplaintForm = () => {
               sessionStorage.setItem("accesstoken", response.data.access);
             })
             .catch((error) => {
-              if(error?.message==='Request failed with status code 500'){
-                navigate('/login');
+              if (error?.message === "Request failed with status code 500") {
+                navigate("/login");
               }
-              if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+              if (
+                error?.response?.data?.errors?.detail ===
+                "Given token not valid for any token type"
+              ) {
                 enqueueSnackbar("Logging out", {
                   variant: "error",
                   anchorOrigin: {
@@ -200,7 +176,7 @@ const ComplaintForm = () => {
                     horizontal: "center",
                   },
                   autoHideDuration: 3000,
-                });  
+                });
                 navigate("/login");
               }
               console.log(error);
@@ -212,7 +188,6 @@ const ComplaintForm = () => {
     } else {
       navigate("/login");
     }
-   
   };
 
   useEffect(() => {
@@ -226,7 +201,10 @@ const ComplaintForm = () => {
   }, []);
 
   useEffect(() => {
-    if (sessionStorage?.getItem("accesstoken")) {
+    if (
+      sessionStorage?.getItem("accesstoken") &&
+      sessionStorage?.getItem("refreshtoken")
+    ) {
       const response = jwtDecode(sessionStorage?.getItem("accesstoken"));
       if (
         response.exp < Math.floor(Date.now() / 1000) ||
@@ -237,25 +215,29 @@ const ComplaintForm = () => {
     } else {
       navigate("/login");
     }
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     const token = sessionStorage.getItem("accesstoken");
     const token1 = sessionStorage.getItem("refreshtoken");
     if (!token && !token1) {
       navigate("/login");
-  
     }
 
     const fetchProfileData = async () => {
       try {
-        const response = await fetch(`${BaseUrl}/${jwtDecode(sessionStorage?.getItem("accesstoken"))?.college}/profile`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          `${BaseUrl}/${
+            jwtDecode(sessionStorage?.getItem("accesstoken"))?.college
+          }/profile`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
         if (!response.ok) throw new Error("Failed to fetch profile data");
         const data = await response.json();
         if (data) {
@@ -268,7 +250,10 @@ const ComplaintForm = () => {
         });
       } catch (error) {
         console.error("Error fetching profile data:", error);
-        if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+        if (
+          error?.response?.data?.errors?.detail ===
+          "Given token not valid for any token type"
+        ) {
           enqueueSnackbar("Logging out", {
             variant: "error",
             anchorOrigin: {
@@ -276,49 +261,37 @@ const ComplaintForm = () => {
               horizontal: "center",
             },
             autoHideDuration: 3000,
-          });  
+          });
           navigate("/login");
         }
       }
     };
 
-    const fetchComplaints = async () => {
-      try {
-        const response = await fetch(`${BaseUrl}/${jwtDecode(sessionStorage?.getItem("accesstoken"))?.college}/complaints`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
-        if (!response.ok) throw new Error("Failed to fetch complaints");
-        const data = await response.json();
-        setComplaints(data.reverse());
-      } catch (error) {
-        console.error("Error fetching complaints:", error);
-
-      }
-    };
-
     fetchProfileData();
-    fetchComplaints();
-  }, []);
+   
+  }, [navigate]);
 
   const {
     control,
     handleSubmit,
     formState: { errors },
     reset,
+    setValue
   } = useForm({
     resolver: yupResolver(complaintSchema),
   });
 
   useEffect(() => {
-    if (sessionStorage.getItem("accesstoken") !== null && sessionStorage.getItem("refreshtoken")!==null) {
+    if (
+      sessionStorage.getItem("accesstoken") !== null &&
+      sessionStorage.getItem("refreshtoken") !== null
+    ) {
       let config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: `${BaseUrl}/${jwtDecode(sessionStorage?.getItem("accesstoken"))?.college}/complaints/`,
+        url: `${BaseUrl}/${
+          jwtDecode(sessionStorage?.getItem("accesstoken"))?.college
+        }/complaints/`,
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
         },
@@ -330,11 +303,11 @@ const ComplaintForm = () => {
           setPreviousRecord(response.data);
           const token = sessionStorage.getItem("accesstoken");
           const token1 = sessionStorage.getItem("refreshtoken");
-         
+
           if (token && token1) {
             let currentDate = new Date();
             const decodedToken = jwtDecode(token);
-  
+
             if (
               decodedToken.exp * 1000 - currentDate.getTime() <
               59 * 60 * 1000
@@ -348,8 +321,8 @@ const ComplaintForm = () => {
                 );
               }
             }
-          }else{
-            navigate('/login');
+          } else {
+            navigate("/login");
           }
         })
         .catch((error) => {
@@ -372,96 +345,121 @@ const ComplaintForm = () => {
     } else {
       navigate("/login");
     }
-  }, []);
+  }, [navigate]);
 
   const currentDate = new Date();
 
   const onSubmit = (data) => {
+    setLoading1(true);
+
     const token = sessionStorage.getItem("accesstoken");
     const token1 = sessionStorage.getItem("refreshtoken");
-   
+
     if (token && token1) {
 
-    let data1 = JSON.stringify({
-      name: profileData?.name,
-      branch: profileData?.branch,
-      status: "registered",
-      subject: data.subject,
-      complaint_type: data.type.toLowerCase(),
-      complaint_description: data.description,
-      registered_date: `${currentDate.getFullYear()}-${
-        currentDate.getMonth() + 1
-      }-${currentDate.getDate()}`,
-    });
-
-    let config = {
-      method: "post",
-      maxBodyLength: Infinity,
-      url: `${BaseUrl}/${jwtDecode(sessionStorage?.getItem("accesstoken"))?.college}/complaints/`,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-      },
-      data: data1,
-    };
-
-    axios
-      .request(config)
-      .then((response) => {
-        const token = sessionStorage.getItem("accesstoken");
-        const token1 = sessionStorage.getItem("refreshtoken");
-       
-        if (token && token1) {
-          let currentDate = new Date();
-          const decodedToken = jwtDecode(token);
-
-          if (
-            decodedToken.exp * 1000 - currentDate.getTime() <
-            59 * 60 * 1000
-          ) {
-            try {
-              regenerateToken(); // Wait for the token regeneration to complete
-            } catch (error) {
-              console.error(
-                "Error in request interceptor while regenerating token:",
-                error
-              );
-            }
-          }
-        }else{
-          navigate('/login');
-        }
-        toast.success("Complaint registered successfully!", {
-          position: "top-center",
-          autoClose: 5000,
-        });
-        reset();
-        setTimeout(() => {
-          window.location.reload();
-        }, 1500);
-      })
-      .catch((error) => {
-        console.log(error);
-        toast.error("Failed to register complaint.", {
-          position: "top-center",
-          autoClose: 5000,
-        });
-        if (
-          error?.response?.data?.errors?.detail ===
-          "Given token not valid for any token type"
-        ) {
-          enqueueSnackbar("Logging out", {
-            variant: "error",
-            anchorOrigin: {
-              vertical: "bottom",
-              horizontal: "center",
-            },
-            autoHideDuration: 3000,
-          });
-          navigate("/login");
-        }
+      if(profileData?.name===null && profileData?.branch===null)
+      {
+        return enqueueSnackbar("Update the profile first.",{variant:"warning"});
+      }
+      let data1 = JSON.stringify({
+        name: profileData?.name,
+        branch: profileData?.branch,
+        status: "registered",
+        subject: data.subject,
+        complaint_type: data.type.toLowerCase(),
+        complaint_description: data.description,
+        registered_date: `${currentDate.getFullYear()}-${currentDate.getMonth() +
+          1}-${currentDate.getDate()}`,
       });
-    }else{
+
+      let config = {
+        method: "post",
+        maxBodyLength: Infinity,
+        url: `${BaseUrl}/${
+          jwtDecode(sessionStorage?.getItem("accesstoken"))?.college
+        }/complaints/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+        },
+        data: data1,
+      };
+
+      axios
+        .request(config)
+        .then((response) => {
+          setLoading1(false);
+          setPreviousRecord([
+            ...previousRecord,
+            {
+              complaint_type: data.type.toLowerCase(),
+              subject: data.subject,
+              complaint_description: data.description,
+              registered_date: `${currentDate.getFullYear()}-${currentDate.getMonth() +
+                1}-${currentDate.getDate()}`,
+              status: "registered",
+            },
+          ]);
+
+          const token = sessionStorage.getItem("accesstoken");
+          const token1 = sessionStorage.getItem("refreshtoken");
+
+          if (token && token1) {
+            let currentDate = new Date();
+            const decodedToken = jwtDecode(token);
+
+            if (
+              decodedToken.exp * 1000 - currentDate.getTime() <
+              59 * 60 * 1000
+            ) {
+              try {
+                regenerateToken(); // Wait for the token regeneration to complete
+              } catch (error) {
+                console.error(
+                  "Error in request interceptor while regenerating token:",
+                  error
+                );
+              }
+            }
+          } else {
+            navigate("/login");
+          }
+          toast.success("Complaint registered successfully!", {
+            position: "top-center",
+            autoClose: 5000,
+          });
+          reset({
+            type:"",
+            subject:"",
+            description:""
+          });
+          setValue("type","");
+          setValue("subject","");
+          setValue("description","");
+        })
+        .catch((error) => {
+          console.log(error);
+          setLoading1(false);
+          toast.error("Failed to register complaint.", {
+            position: "top-center",
+            autoClose: 5000,
+          });
+          if (
+            error?.response?.data?.errors?.detail ===
+            "Given token not valid for any token type"
+          ) {
+            enqueueSnackbar("Logging out", {
+              variant: "error",
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "center",
+              },
+              autoHideDuration: 3000,
+            });
+            navigate("/login");
+          }
+        });
+    } else {
       navigate("/login");
     }
   };
@@ -654,7 +652,16 @@ const ComplaintForm = () => {
                         backgroundColor: "rgb(107, 169, 169)",
                       }}
                     >
-                      Submit
+                      {!loading1 && <p>Submit</p>}
+                      {loading1 && (
+                        <CircularProgress
+                          style={{
+                            color: "white",
+                            width: "20px",
+                            height: "22px",
+                          }}
+                        />
+                      )}
                     </Button>
                   </Grid>
                 </Grid>
@@ -666,17 +673,16 @@ const ComplaintForm = () => {
             <Box
               sx={{
                 display: { xs: "none", sm: "none", md: "block", lg: "block" },
-               
+
                 marginTop: "50px",
                 borderRadius: "15px",
               }}
             >
-             <img
-                  src={`./images/complaints1.png`}
-                  alt=""
-                  style={{ borderRadius: "10px", width: "450px" }}
-                />
-             
+              <img
+                src={`./images/complaints1.png`}
+                alt=""
+                style={{ borderRadius: "10px", width: "450px" }}
+              />
             </Box>
             <Box sx={{ marginTop: "50px" }}>
               <Typography
@@ -693,29 +699,21 @@ const ComplaintForm = () => {
             </Box>
             {previousRecord.length === 0 ? (
               <center>
-                <img
-                  src="./images/No_data.png"
-                  alt=""
-                  style={{
-                    width: "310px",
-                    borderRadius: "10px",
-                    marginTop: "30px",
-                  }}
-                />
+                  <p style={{padding:"5vw 0 9vw 0",fontSize:"1.4rem",marginTop:"20px"}}>No data available currently.</p>
               </center>
             ) : responsive ? (
               previousRecord
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => (
                   <Card
-                   variant="outlined"
+                    variant="outlined"
                     key={index}
                     sx={{
                       marginBottom: 2,
                       bgcolor: "#f5f5f5",
                       textAlign: "justify",
                       marginTop: "20px",
-                      maxWidth:310
+                      maxWidth: 310,
                     }}
                   >
                     <CardContent>
@@ -744,7 +742,10 @@ const ComplaintForm = () => {
                   </Card>
                 ))
             ) : (
-              <TableContainer component={Paper} style={{ marginTop: "20px",marginBottom:"50px" }}>
+              <TableContainer
+                component={Paper}
+                style={{ marginTop: "20px", marginBottom: "50px" }}
+              >
                 <Table
                   sx={{ minWidth: 500 }}
                   aria-label="custom pagination table"

@@ -14,6 +14,7 @@ import {
   Select,
   MenuItem,
   InputLabel,
+  FormControl,
 } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { jwtDecode } from "jwt-decode";
@@ -146,6 +147,9 @@ const HostelRoomAllotment = () => {
   }, [navigate]);
 
   const onSubmit = async (data) => {
+
+    console.log(hostel_room);
+    
     if (hostel_room === 0) {
       return enqueueSnackbar("Hostel Room field is required", {
         variant: "error",
@@ -218,12 +222,6 @@ const HostelRoomAllotment = () => {
                 : item
             )
           );
-
-          setHostel_room("");
-
-          if (hostelRef.current) {
-            hostelRef.current.value = "";
-          }
 
           const token = sessionStorage.getItem("accesstoken");
           const token1 = sessionStorage.getItem("refreshtoken");
@@ -417,122 +415,131 @@ const HostelRoomAllotment = () => {
                   />
                 </center>
               )}
-           
-                <Box
-                  display="flex"
-                  justifyContent="center"
-                  alignItems="center"
-                  flexDirection="column"
-                  minHeight="20vh"
-                  sx={{
-                    display: "",
-                  }}
-                >
-                  <Grid container spacing={3}>
-                    {data1.map((item, index) =>
-                      item.status === "pending" ? (
-                        <Grid
-                          item
-                          xs={12}
-                          sm={12}
-                          lg={4}
-                          md={6}
-                          key={index}
-                          justifyContent="center"
-                          display="flex"
-                        >
-                          <Card
-                            sx={{
-                              width: {
-                                lg: "70%",
-                                md: "70%",
-                                xs: "88%",
-                                sm: "80%",
-                              },
-                              backgroundColor: "rgb(244, 243, 243)",
-                              border: "2px solid whitesmoke",
-                            }}
-                          >
-                            <CardMedia
-                              component="img"
-                              sx={{ height: 260, objectFit: "cover" }}
-                              image={`data:image/jpeg;base64,${item.latest_marksheet}`}
-                              alt="Marksheet"
-                            />
 
-                            <CardContent>
-                              <Grid container spacing={3}>
-                                <Grid item xs={12}>
-                                  <p>
-                                    Registration Number:{" "}
-                                    {item?.registration_number}
-                                  </p>
-                                  <p>
-                                    Prefered Room Type:{" "}
-                                    {item?.prefered_room_type}
-                                  </p>
-                                </Grid>
-                                <Grid item xs={12}>
+              <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                flexDirection="column"
+                minHeight="20vh"
+                sx={{
+                  display: "",
+                }}
+              >
+                <Grid container spacing={3}>
+                  {data1.map((item, index) =>
+                    item.status === "pending" ? (
+                      <Grid
+                        item
+                        xs={12}
+                        sm={12}
+                        lg={4}
+                        md={6}
+                        key={index}
+                        justifyContent="center"
+                        display="flex"
+                      >
+                        <Card
+                          sx={{
+                            width: {
+                              lg: "70%",
+                              md: "70%",
+                              xs: "88%",
+                              sm: "80%",
+                            },
+                            backgroundColor: "rgb(244, 243, 243)",
+                            border: "2px solid whitesmoke",
+                          }}
+                        >
+                          <CardMedia
+                            component="img"
+                            sx={{ height: 260, objectFit: "cover" }}
+                            image={`data:image/jpeg;base64,${item.latest_marksheet}`}
+                            alt="Marksheet"
+                          />
+
+                          <CardContent>
+                            <Grid container spacing={3}>
+                              <Grid item xs={12}>
+                                <p>
+                                  Registration Number:{" "}
+                                  {item?.registration_number}
+                                </p>
+                                <p>
+                                  Prefered Room Type: {item?.prefered_room_type}
+                                </p>
+                              </Grid>
+                              <Grid item xs={12}>
+                                <FormControl
+                                  fullWidth
+                                  sx={{
+                                    width: {
+                                      lg: "90%",
+                                      md: "90%",
+                                      xs: "100%",
+                                      sm: "90%",
+                                    },
+                                  }}
+                                >
+                                  <InputLabel id="numberOfPersons-label">
+                                    Allot Room
+                                  </InputLabel>
                                   <Select
                                     labelId="numberOfPersons-label"
                                     id="RoomType"
-                                    label="Rooms"
+                                    label="Allot Room"
                                     onChange={(e) =>
                                       setHostel_room(e.target.value)
                                     }
-                                    sx={{
-                                      width: {
-                                        lg: "90%",
-                                        md: "90%",
-                                        xs: "100%",
-                                        sm: "90%",
-                                      },
-                                    }}
                                   >
+                                    {allotmentData?.every(item=>item.status==="occupied")?
+                                    <MenuItem disabled>No available Room.</MenuItem>:null
+                                     
+                                    }
                                     {allotmentData?.map((data, index) =>
                                       data?.status === "available" ? (
                                         <MenuItem key={index} value={data.id}>
-                                          Room no:{data.room_no} Current
-                                          Occupancy: {data.current_occupancy}{" "}
+                                          Room no: {data.room_no} | Current
+                                          Occupancy: {data.current_occupancy} |
                                           Capacity: {data.capacity}
                                         </MenuItem>
                                       ) : null
                                     )}
                                   </Select>
-                                </Grid>
-
-                                <Grid item xs={12}>
-                                  <center>
-                                    <Button
-                                      type="submit"
-                                      variant="contained"
-                                      color="primary"
-                                      fullWidth
-                                      onClick={() => {
-                                        onSubmit(item?.id);
-                                      }}
-                                      sx={{
-                                        width: {
-                                          lg: "30%",
-                                          md: "40%",
-                                          xs: "100%",
-                                          sm: "90%",
-                                        },
-                                      }}
-                                    >
-                                      Submit
-                                    </Button>
-                                  </center>
-                                </Grid>
+                                </FormControl>
                               </Grid>
-                            </CardContent>
-                          </Card>
-                        </Grid>
-                      ) : null
-                    )}
-                  </Grid>
-                </Box>
-              
+
+                              <Grid item xs={12}>
+                                <center>
+                                  <Button
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary"
+                                    fullWidth
+                                    onClick={() => {
+                                      onSubmit(item?.id);
+                                    }}
+                                    sx={{
+                                      width: {
+                                        lg: "30%",
+                                        md: "40%",
+                                        xs: "100%",
+                                        sm: "90%",
+                                      },
+                                    }}
+                                  >
+                                    Submit
+                                  </Button>
+                                </center>
+                              </Grid>
+                            </Grid>
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                    ) : null
+                  )}
+                </Grid>
+              </Box>
             </Grid>
             <Grid
               item
