@@ -13,8 +13,6 @@ import {
   CardActionArea,
   CardActions,
   CardContent,
-  CardMedia,
-  CircularProgress,
   Divider,
   Grid,
   Typography,
@@ -24,7 +22,6 @@ import { ClimbingBoxLoader } from "react-spinners";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { enqueueSnackbar } from "notistack";
-import { error } from "jquery";
 
 export const RegistrarDashboard = () => {
   const navigate = useNavigate();
@@ -35,7 +32,6 @@ export const RegistrarDashboard = () => {
   const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(true);
   const [result, setResult] = useState([]);
-  const [college, setCollege] = useState();
 
   const regenerateToken = () => {
     if (sessionStorage?.getItem("accesstoken")) {
@@ -113,29 +109,11 @@ export const RegistrarDashboard = () => {
     } else {
       navigate("/login");
     }
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     const token = sessionStorage.getItem("accesstoken");
     const token1 = sessionStorage.getItem("refreshtoken");
-
-    if (token && token1) {
-      let currentDate = new Date();
-      const decodedToken = jwtDecode(token);
-
-      if (decodedToken.exp * 1000 - currentDate.getTime() < 59 * 60 * 1000) {
-        try {
-          regenerateToken(); // Wait for the token regeneration to complete
-        } catch (error) {
-          console.error(
-            "Error in request interceptor while regenerating token:",
-            error
-          );
-        }
-      }
-    } else {
-      navigate("/login");
-    }
 
     if (token && token1) {
       const response = jwtDecode(token);
@@ -171,7 +149,7 @@ export const RegistrarDashboard = () => {
     } else {
       navigate("/login");
     }
-  }, []);
+  }, [navigate]);
 
   const handleChange = (number, newValue) => {
     setValue(number);
@@ -207,12 +185,18 @@ export const RegistrarDashboard = () => {
 
     if (token && token1) {
       axios
-        .patch(`${Url}/${jwtDecode(sessionStorage.getItem('accesstoken')).college}/bonafide/${id}/approve/`, data, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-          },
-        })
+        .patch(
+          `${Url}/${
+            jwtDecode(sessionStorage.getItem("accesstoken")).college
+          }/bonafide/${id}/approve/`,
+          data,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+            },
+          }
+        )
         .then((res) => {
           const token = sessionStorage.getItem("accesstoken");
           const token1 = sessionStorage.getItem("refreshtoken");
@@ -275,12 +259,18 @@ export const RegistrarDashboard = () => {
     });
     if (token && token1) {
       axios
-        .patch(`${Url}/${jwtDecode(sessionStorage.getItem('accesstoken')).college}/bonafide/${id}/approve/`, data, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-          },
-        })
+        .patch(
+          `${Url}/${
+            jwtDecode(sessionStorage.getItem("accesstoken")).college
+          }/bonafide/${id}/approve/`,
+          data,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+            },
+          }
+        )
         .then((res) => {
           const token = sessionStorage.getItem("accesstoken");
           const token1 = sessionStorage.getItem("refreshtoken");
@@ -361,24 +351,27 @@ export const RegistrarDashboard = () => {
           paddingTop: "5vw",
           paddingBottom: "15vw",
           position: "relative",
-        "&::before": {
-          content: '""',
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          backgroundColor: "rgba(0, 0, 0, 0.6)", // Overlay with opacity
-          zIndex: 1,
-        },
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            zIndex: 1,
+          },
         }}
       >
-        <Grid container sx={{
-          position: "relative",
-          zIndex: 2,
-          color: "white",
-          padding: { xs: "20px", sm: "20px", md: "50px" },
-        }}>
+        <Grid
+          container
+          sx={{
+            position: "relative",
+            zIndex: 2,
+            color: "white",
+            padding: { xs: "20px", sm: "20px", md: "50px" },
+          }}
+        >
           <Grid item xs={12} sm={12} lg={6} md={6}>
             <p
               style={{ fontSize: "2.6rem", color: "white", marginTop: "40px" }}
@@ -461,11 +454,7 @@ export const RegistrarDashboard = () => {
             </center>
             {result.some((item) => item.status === "pending") ? null : (
               <center>
-                <img
-                  src="./images/No_data.png"
-                  alt=""
-                  style={{ width: "250px", marginTop: "50px" }}
-                />
+                 <p style={{padding:"9vw 0 9vw 0",fontSize:"1.4rem",marginTop:"50px"}}>No data available currently.</p>
               </center>
             )}
           </>

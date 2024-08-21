@@ -19,6 +19,7 @@ import {
   TableCell,
   TableBody,
   InputAdornment,
+  CircularProgress,
 } from "@mui/material";
 import { jwtDecode } from "jwt-decode";
 import { RiMoneyRupeeCircleFill } from "react-icons/ri";
@@ -48,19 +49,24 @@ const schema = yup.object().shape({
 });
 
 const AddFeesCaretaker = () => {
-
   const regenerateToken = () => {
     if (sessionStorage?.getItem("accesstoken")) {
       const response = jwtDecode(sessionStorage?.getItem("accesstoken"));
       const response1 = jwtDecode(sessionStorage?.getItem("refreshtoken"));
-      if (response.exp < Math.floor(Date.now() / 1000) || response1.exp < Math.floor(Date.now() / 1000)) {
+      if (
+        response.exp < Math.floor(Date.now() / 1000) ||
+        response1.exp < Math.floor(Date.now() / 1000)
+      ) {
         navigate("/login");
-      }else{
-        if (sessionStorage.getItem("refreshtoken") && sessionStorage.getItem("accesstoken")) {
+      } else {
+        if (
+          sessionStorage.getItem("refreshtoken") &&
+          sessionStorage.getItem("accesstoken")
+        ) {
           let data = {
             refresh: sessionStorage?.getItem("refreshtoken"),
           };
-    
+
           let config = {
             method: "post",
             maxBodyLength: Infinity,
@@ -71,7 +77,7 @@ const AddFeesCaretaker = () => {
             },
             data: data,
           };
-    
+
           axios
             .request(config)
             .then((response) => {
@@ -79,10 +85,13 @@ const AddFeesCaretaker = () => {
               sessionStorage.setItem("accesstoken", response.data.access);
             })
             .catch((error) => {
-              if(error?.message==='Request failed with status code 500'){
-                navigate('/login');
+              if (error?.message === "Request failed with status code 500") {
+                navigate("/login");
               }
-              if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+              if (
+                error?.response?.data?.errors?.detail ===
+                "Given token not valid for any token type"
+              ) {
                 enqueueSnackbar("Logging out", {
                   variant: "error",
                   anchorOrigin: {
@@ -90,7 +99,7 @@ const AddFeesCaretaker = () => {
                     horizontal: "center",
                   },
                   autoHideDuration: 3000,
-                });  
+                });
                 navigate("/login");
               }
               console.log(error);
@@ -102,7 +111,6 @@ const AddFeesCaretaker = () => {
     } else {
       navigate("/login");
     }
-   
   };
 
   const {
@@ -114,6 +122,7 @@ const AddFeesCaretaker = () => {
     resolver: yupResolver(schema),
   });
 
+  const [loading, setLoading] = useState(false);
   const [result, setResult] = useState([]);
   const [editId, setEditId] = useState(null); // State to hold the id of the fee being edited
   const navigate = useNavigate();
@@ -134,18 +143,14 @@ const AddFeesCaretaker = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-
       const token = sessionStorage.getItem("accesstoken");
       const token1 = sessionStorage.getItem("refreshtoken");
-     
+
       if (token && token1) {
         let currentDate = new Date();
         const decodedToken = jwtDecode(token);
 
-        if (
-          decodedToken.exp * 1000 - currentDate.getTime() <
-          59 * 60 * 1000
-        ) {
+        if (decodedToken.exp * 1000 - currentDate.getTime() < 59 * 60 * 1000) {
           try {
             regenerateToken(); // Wait for the token regeneration to complete
           } catch (error) {
@@ -155,18 +160,20 @@ const AddFeesCaretaker = () => {
             );
           }
         }
-      }else{
-        navigate('/login');
-      }      
+      } else {
+        navigate("/login");
+      }
       try {
         const config = {
           method: "get",
-          url: `${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/hostel-mess-fee/`,
+          url: `${BaseUrl}/${
+            jwtDecode(sessionStorage.getItem("accesstoken")).college
+          }/hostel-mess-fee/`,
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
           },
         };
-       
+
         const response = await axios.request(config);
         setResult(response.data);
       } catch (error) {
@@ -178,92 +185,107 @@ const AddFeesCaretaker = () => {
   }, []);
 
   const onSubmit = async (data) => {
+    setLoading(true);
+
     const jsonData = JSON.stringify(data);
     const token = sessionStorage.getItem("accesstoken");
     const token1 = sessionStorage.getItem("refreshtoken");
-    if(token && token1){
-    try {
-      let config;
-      if (editId) {
-        config = {
-          method: "put",
-          url: `${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/hostel-mess-fee/${editId}/`,
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-          },
-          data: jsonData,
-        };
-      } else {
-        config = {
-          method: "post",
-          url: `${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/hostel-mess-fee/`,
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-          },
-          data: jsonData,
-        };
-      }
-      const token = sessionStorage.getItem("accesstoken");
-      const token1 = sessionStorage.getItem("refreshtoken");
-     
-      if (token && token1) {
-        let currentDate = new Date();
-        const decodedToken = jwtDecode(token);
+    if (token && token1) {
+      try {
+        let config;
+        if (editId) {
+          config = {
+            method: "put",
+            url: `${BaseUrl}/${
+              jwtDecode(sessionStorage.getItem("accesstoken")).college
+            }/hostel-mess-fee/${editId}/`,
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+            },
+            data: jsonData,
+          };
+        } else {
+          config = {
+            method: "post",
+            url: `${BaseUrl}/${
+              jwtDecode(sessionStorage.getItem("accesstoken")).college
+            }/hostel-mess-fee/`,
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+            },
+            data: jsonData,
+          };
+        }
+        const token = sessionStorage.getItem("accesstoken");
+        const token1 = sessionStorage.getItem("refreshtoken");
 
-        if (
-          decodedToken.exp * 1000 - currentDate.getTime() <
-          59 * 60 * 1000
-        ) {
-          try {
-            regenerateToken(); // Wait for the token regeneration to complete
-          } catch (error) {
-            console.error(
-              "Error in request interceptor while regenerating token:",
-              error
-            );
+        if (token && token1) {
+          let currentDate = new Date();
+          const decodedToken = jwtDecode(token);
+
+          if (
+            decodedToken.exp * 1000 - currentDate.getTime() <
+            59 * 60 * 1000
+          ) {
+            try {
+              regenerateToken(); // Wait for the token regeneration to complete
+            } catch (error) {
+              console.error(
+                "Error in request interceptor while regenerating token:",
+                error
+              );
+            }
           }
         }
-      }   
-      const response = await axios.request(config);
-      console.log(response.data);
+        const response = await axios.request(config);
+        console.log(response.data);
+        setLoading(false);
 
-      enqueueSnackbar("Data added successfully", {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "bottom",
-          horizontal: "center",
-        },
-        autoHideDuration: 3000,
-      });
-
-      // Clear form and reset editId state after submission
-      reset();
-      setEditId(null);
-
-      // Fetch updated data after submission
-      setTimeout(() => {
-        window.location.reload();
-      }, 1500);
-      
-    } catch (error) {
-      console.error("Error adding/updating data:", error);
-      if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
-        enqueueSnackbar("Logging out", {
-          variant: "error",
+        enqueueSnackbar("Data added successfully", {
+          variant: "success",
           anchorOrigin: {
             vertical: "bottom",
             horizontal: "center",
           },
           autoHideDuration: 3000,
-        });  
-        navigate("/login");
+        });
+
+        // Clear form and reset editId state after submission
+        reset({
+          Maintainance_fees:"",
+          Mess_fees:"",
+          Security_Deposit:""
+        });
+        setEditId(null);
+
+        setTimeout(()=>{
+          window.location.reload();
+        },2000);
+        
+      } catch (error) {
+        setLoading(false);
+
+        console.error("Error adding/updating data:", error);
+        if (
+          error?.response?.data?.errors?.detail ===
+          "Given token not valid for any token type"
+        ) {
+          enqueueSnackbar("Logging out", {
+            variant: "error",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 3000,
+          });
+          navigate("/login");
+        }
       }
+    } else {
+      navigate("/login");
     }
-  }else{
-    navigate("/login");
-  }
   };
 
   const handleEdit = (feeId) => {
@@ -366,13 +388,12 @@ const AddFeesCaretaker = () => {
 
               <Controller
                 name="Security_Deposit"
-             
                 control={control}
                 render={({ field }) => (
                   <TextField
                     {...field}
                     label="Security Deposit"
-                       placeholder="Security_Deposit..."
+                    placeholder="Security_Deposit..."
                     variant="outlined"
                     fullWidth
                     error={!!errors.Security_Deposit}
@@ -396,7 +417,16 @@ const AddFeesCaretaker = () => {
                 fullWidth
                 style={{ marginTop: "20px" }}
               >
-                {editId ? "Update" : "Submit"}
+                {!loading && <p>{editId ? "Update" : "Submit"}</p>}
+                {loading && (
+                  <CircularProgress
+                    style={{
+                      color: "white",
+                      width: "20px",
+                      height: "22px",
+                    }}
+                  />
+                )}
               </Button>
             </form>
           </Grid>

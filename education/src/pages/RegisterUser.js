@@ -33,6 +33,7 @@ export const RegisterUser = () => {
   const [loading, setLoading] = useState(false);
   const [loading1, setLoading1] = useState(false);
   const [id, setId] = useState(0);
+  const [loading3,setLoading3]=useState(true);
 
   useEffect(() => {
     if (sessionStorage?.getItem("accesstoken")) {
@@ -46,7 +47,7 @@ export const RegisterUser = () => {
     } else {
       navigate("/login");
     }
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     window.addEventListener("resize", resize);
@@ -54,7 +55,7 @@ export const RegisterUser = () => {
     return () => {
       window.removeEventListener("resize", resize);
     };
-  }, []);
+  }, [navigate]);
 
   const resize = () => {
     setResponsive(window.innerWidth < 900 ? true : false);
@@ -139,6 +140,7 @@ export const RegisterUser = () => {
       .then((response) => {
         console.log(JSON.stringify(response.data));
         setId(response.data[0].id_count);
+        setLoading3(false);
       })
       .catch((error) => {
         console.log(error);
@@ -320,6 +322,57 @@ export const RegisterUser = () => {
         });
         navigate("/login");
       }
+
+      if (
+        error?.response?.data?.errors?.password2?.[0] ===
+        "This field is required."
+      ){
+        enqueueSnackbar("confirm password is required", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 3000,
+        });
+      }else if(error?.response?.data?.errors?.password?.[0] ===
+        "This field is required."){
+          enqueueSnackbar("password is required", {
+            variant: "error",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 3000,
+          });
+        }else if(error?.response?.data?.errors?.registration_number?.[0] ===
+          "This field is required."){
+            enqueueSnackbar("registration number is required", {
+              variant: "error",
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "center",
+              },
+              autoHideDuration: 3000,
+            });
+          }else if(error?.response?.data?.errors?.role?.[0] ===
+            "This field is required."){
+              enqueueSnackbar("Role is required", {
+                variant: "error",
+                anchorOrigin: {
+                  vertical: "bottom",
+                  horizontal: "center",
+                },
+                autoHideDuration: 3000,
+              });
+              
+            }
+
+            setTimeout(()=>{
+              window.location.reload();
+            },2000);
+
+           
     }
   };
 
@@ -433,6 +486,23 @@ export const RegisterUser = () => {
       navigate("/login");
     }
   };
+
+  if (loading3) {
+    return (
+      <>
+      <NavbarNew/>
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="80vh"
+      >
+        <CircularProgress />
+      </Box>
+      <Footer/>
+      </>
+    );
+  }
   return (
     <div className="App">
       <NavbarNew />

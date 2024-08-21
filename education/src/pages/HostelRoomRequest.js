@@ -747,7 +747,7 @@ export const HostelRoomRequest = () => {
                           sx={{ fontSize: 15 }}
                         >
                           Alloted Room No:
-                          {allotedRoom.length > 0 ? (
+                          {allotedRoom? (
                             <Typography variant="body2" color="text.secondary">
                               {" "}
                               {allotedRoom?.[0]?.hostel_room}
@@ -814,7 +814,7 @@ export const HostelRoomRequest = () => {
                                   backgroundColor: "rgb(243 244 246)",
                                 }}
                               >
-                                {allotedRoom !=="" ? (
+                                {allotedRoom ? (
                                   <Typography
                                     variant="p"
                                     color="text.secondary"

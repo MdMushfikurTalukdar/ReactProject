@@ -41,7 +41,9 @@ const schema = yup.object().shape({
     .when("startDate", (startDate, schema) =>
       startDate
         ? schema.min(
-            dayjs(startDate).add(1, "month").toDate(),
+            dayjs(startDate)
+              .add(1, "month")
+              .toDate(),
             "End date cannot be before start date"
           )
         : schema
@@ -60,6 +62,7 @@ function HostelFeePayment() {
   const [result, setResult] = useState([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [loading1, setLoading1] = useState(false);
   const [id, setId] = useState("");
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -138,80 +141,6 @@ function HostelFeePayment() {
     }
   };
 
-  const fetchData = async () => {
-    if (
-      sessionStorage.getItem("accesstoken") !== null &&
-      sessionStorage.getItem("refreshtoken")
-    ) {
-      try {
-        axios
-          .get(`${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/hostel-mess-fee/`, {
-            headers: {
-              Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-            },
-          })
-          .then((response) => {
-            console.log(response.data);
-            setLoading(false);
-            setFees(response.data?.[0]);
-            const token = sessionStorage.getItem("accesstoken");
-            const token1 = sessionStorage.getItem("refreshtoken");
-
-            if (token && token1) {
-              let currentDate = new Date();
-              const decodedToken = jwtDecode(token);
-
-              if (
-                decodedToken.exp * 1000 - currentDate.getTime() <
-                59 * 60 * 1000
-              ) {
-                try {
-                  regenerateToken(); // Wait for the token regeneration to complete
-                } catch (error) {
-                  console.error(
-                    "Error in request interceptor while regenerating token:",
-                    error
-                  );
-                }
-              }
-            } else {
-              navigate("/login");
-            }
-          })
-          .catch((error) => {
-            if (
-              error?.response?.data?.errors?.detail ===
-              "Given token not valid for any token type"
-            ) {
-              enqueueSnackbar("Logging out", {
-                variant: "error",
-                anchorOrigin: {
-                  vertical: "bottom",
-                  horizontal: "center",
-                },
-                autoHideDuration: 3000,
-              });
-              navigate("/login");
-            }
-          });
-      } catch (error) {
-        console.error("Failed to fetch fees:", error);
-        if (error?.response?.data?.message === "ID does not Exists") {
-          enqueueSnackbar("Fees Structure is not added by caretaker", {
-            variant: "error",
-            anchorOrigin: {
-              vertical: "bottom",
-              horizontal: "center",
-            },
-            autoHideDuration: 3000,
-          });
-          navigate("/dashboard");
-        }
-      }
-    } else {
-      navigate("/login");
-    }
-  };
 
   useEffect(() => {
     if (sessionStorage?.getItem("accesstoken")) {
@@ -225,7 +154,7 @@ function HostelFeePayment() {
     } else {
       navigate("/login");
     }
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     if (
@@ -235,7 +164,9 @@ function HostelFeePayment() {
       let config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: `${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/hostel-room-allotments/`,
+        url: `${BaseUrl}/${
+          jwtDecode(sessionStorage.getItem("accesstoken")).college
+        }/hostel-room-allotments/`,
         headers: {
           Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
         },
@@ -267,7 +198,8 @@ function HostelFeePayment() {
     } else {
       navigate("/login");
     }
-  }, []);
+  }, [navigate]);
+
   useEffect(() => {
     if (
       sessionStorage.getItem("accesstoken") !== null &&
@@ -275,12 +207,19 @@ function HostelFeePayment() {
     ) {
       const fetchProfileData = async () => {
         try {
-          const response = await axios.get(`${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/profile`, {
-            headers: {
-              Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-              "Content-Type": "application/json",
-            },
-          });
+          const response = await axios.get(
+            `${BaseUrl}/${
+              jwtDecode(sessionStorage.getItem("accesstoken")).college
+            }/profile`,
+            {
+              headers: {
+                Authorization: `Bearer ${sessionStorage.getItem(
+                  "accesstoken"
+                )}`,
+                "Content-Type": "application/json",
+              },
+            }
+          );
           const data = response.data;
           setProfileData({
             registrationNo: data?.academic_information?.registration_number,
@@ -310,20 +249,98 @@ function HostelFeePayment() {
     } else {
       navigate("/login");
     }
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     const token = sessionStorage.getItem("accesstoken");
     const token1 = sessionStorage.getItem("refreshtoken");
 
     if (token && token1) {
-      fetchData();
-    } else {
-      navigate("/login");
-    }
-  }, []);
+    
+        try {
+          axios
+            .get(
+              `${BaseUrl}/${
+                jwtDecode(sessionStorage.getItem("accesstoken")).college
+              }/hostel-mess-fee/`,
+              {
+                headers: {
+                  Authorization: `Bearer ${sessionStorage.getItem(
+                    "accesstoken"
+                  )}`,
+                },
+              }
+            )
+            .then((response) => {
+              console.log(response.data);
+              setLoading(false);
+              setFees(response.data?.[0]);
+              const token = sessionStorage.getItem("accesstoken");
+              const token1 = sessionStorage.getItem("refreshtoken");
+  
+              if (token && token1) {
+                let currentDate = new Date();
+                const decodedToken = jwtDecode(token);
+  
+                if (
+                  decodedToken.exp * 1000 - currentDate.getTime() <
+                  59 * 60 * 1000
+                ) {
+                  try {
+                    regenerateToken(); // Wait for the token regeneration to complete
+                  } catch (error) {
+                    console.error(
+                      "Error in request interceptor while regenerating token:",
+                      error
+                    );
+                  }
+                }
+              } else {
+                navigate("/login");
+              }
+            })
+            .catch((error) => {
+              if (
+                error?.response?.data?.errors?.detail ===
+                "Given token not valid for any token type"
+              ) {
+                enqueueSnackbar("Logging out", {
+                  variant: "error",
+                  anchorOrigin: {
+                    vertical: "bottom",
+                    horizontal: "center",
+                  },
+                  autoHideDuration: 3000,
+                });
+                navigate("/login");
+              }
+            });
+        } catch (error) {
+          console.error("Failed to fetch fees:", error);
+          if (error?.response?.data?.message === "ID does not Exists") {
+            enqueueSnackbar("Fees Structure is not added by caretaker", {
+              variant: "error",
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "center",
+              },
+              autoHideDuration: 3000,
+            });
+            navigate("/dashboard");
+          }
+        }
+      } else {
+        navigate("/login");
+      }
+  }, [navigate]);
 
   const onSubmit = async (data) => {
+    setLoading1(true);
+
+    console.log(profileData.name);
+    if(profileData.name===null){
+      return enqueueSnackbar("Update the profile first.",{variant:"error"});
+    }
     const token = sessionStorage.getItem("accesstoken");
     const token1 = sessionStorage.getItem("refreshtoken");
 
@@ -353,7 +370,9 @@ function HostelFeePayment() {
         try {
           axios
             .post(
-              `${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/mess-fees-payment/`,
+              `${BaseUrl}/${
+                jwtDecode(sessionStorage.getItem("accesstoken")).college
+              }/mess-fees-payment/`,
               {
                 registration_details: id,
                 from_date: dayjs(data.startDate).format("YYYY-MM"),
@@ -373,6 +392,8 @@ function HostelFeePayment() {
               }
             )
             .then((response) => {
+              setLoading1(false);
+
               const token = sessionStorage.getItem("accesstoken");
               const token1 = sessionStorage.getItem("refreshtoken");
 
@@ -405,11 +426,13 @@ function HostelFeePayment() {
                 },
                 autoHideDuration: 3000,
               });
-              setTimeout(() => {
-                window.location.reload();
-              }, 2000);
+
+              setResult([...result,{fee_type:data.feeType,from_date:dayjs(data.startDate).format("YYYY-MM"),to_date:dayjs(data.endDate).format("YYYY-MM")}])
+             
             })
             .catch((error) => {
+              setLoading1(false);
+              console.log(profileData.name);
               console.error("Payment request error:", error);
               if (
                 error?.response?.data?.errors?.detail ===
@@ -471,7 +494,9 @@ function HostelFeePayment() {
     const fetchPayments = async () => {
       try {
         const response = await axios.get(
-          `${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/mess-fees-payment/`,
+          `${BaseUrl}/${
+            jwtDecode(sessionStorage.getItem("accesstoken")).college
+          }/mess-fees-payment/`,
           {
             headers: {
               Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
@@ -492,7 +517,7 @@ function HostelFeePayment() {
     } else {
       navigate("/login");
     }
-  }, []);
+  }, [navigate]);
 
   const handleStartDateChange = (date) => {
     setValue("startDate", date, { shouldValidate: true });
@@ -502,7 +527,6 @@ function HostelFeePayment() {
     setValue("endDate", date, { shouldValidate: true });
   };
 
-  console.log(fees);
   useEffect(() => {
     if (watch("startDate") && watch("endDate")) {
       const differenceInMonths = dayjs(watch("endDate")).diff(
@@ -801,7 +825,16 @@ function HostelFeePayment() {
                       style={{ backgroundColor: "#8ecccc" }}
                       fullWidth
                     >
-                      Request For Payment
+                      {!loading1 && <p>Request For Payment</p>}
+                      {loading1 && (
+                        <CircularProgress
+                          style={{
+                            color: "white",
+                            width: "20px",
+                            height: "22px",
+                          }}
+                        />
+                      )}
                     </Button>
                   </Grid>
                 </Grid>
