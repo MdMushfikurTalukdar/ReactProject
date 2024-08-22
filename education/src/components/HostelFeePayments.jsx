@@ -338,7 +338,7 @@ function HostelFeePayment() {
     setLoading1(true);
 
     console.log(profileData.name);
-    if(profileData.name===null){
+    if(profileData?.name===null){
       return enqueueSnackbar("Update the profile first.",{variant:"error"});
     }
     const token = sessionStorage.getItem("accesstoken");
@@ -448,7 +448,7 @@ function HostelFeePayment() {
                 });
                 navigate("/login");
               }
-              enqueueSnackbar("Caretaker have not alloted a room to you yet.", {
+              enqueueSnackbar("Something went wrong.", {
                 variant: "error",
                 anchorOrigin: {
                   vertical: "bottom",
@@ -536,11 +536,11 @@ function HostelFeePayment() {
       setValue("noOfMonths", differenceInMonths, { shouldValidate: true });
       const feeType = watch("feeType");
       let monthlyCharge = 0;
-      if (feeType === "mess_fee") monthlyCharge = fees.Mess_fees;
+      if (feeType === "mess_fee") monthlyCharge = fees?.Mess_fees;
       else if (feeType === "maintainance_fee")
-        monthlyCharge = fees.Maintainance_fees;
+        monthlyCharge = fees?.Maintainance_fees;
       else if (feeType === "security_fee")
-        monthlyCharge = fees.Security_Deposit;
+        monthlyCharge = fees?.Security_Deposit;
 
       setValue("monthlyCharges", monthlyCharge, { shouldValidate: true });
       setTotal(differenceInMonths * monthlyCharge);
@@ -794,8 +794,8 @@ function HostelFeePayment() {
                           placeholder="Monthly Charges"
                           variant="outlined"
                           fullWidth
-                          error={!!errors.monthlyCharges}
-                          helperText={errors.monthlyCharges?.message}
+                          error={!!errors?.monthlyCharges}
+                          helperText={errors?.monthlyCharges?.message}
                           disabled
                           InputProps={{
                             startAdornment: (
@@ -890,19 +890,19 @@ function HostelFeePayment() {
                   </Grid>
                 ) : (
                   result?.map((payment) => (
-                    <React.Fragment key={payment.id}>
+                    <React.Fragment key={payment?.id}>
                       <Grid item xs={4}>
-                        {payment.fee_type === "maintainance_fee" &&
+                        {payment?.fee_type === "maintainance_fee" &&
                           "Maintenance Fee"}
-                        {payment.fee_type === "mess_fee" && "Mess Fee"}
-                        {payment.fee_type === "security_fee" &&
+                        {payment?.fee_type === "mess_fee" && "Mess Fee"}
+                        {payment?.fee_type === "security_fee" &&
                           "Security Money"}
                       </Grid>
                       <Grid item xs={4}>
-                        {payment.from_date}
+                        {payment?.from_date}
                       </Grid>
                       <Grid item xs={4}>
-                        {payment.to_date}
+                        {payment?.to_date}
                       </Grid>
                     </React.Fragment>
                   ))

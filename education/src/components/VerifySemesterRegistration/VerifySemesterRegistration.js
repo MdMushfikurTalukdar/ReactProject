@@ -3,7 +3,7 @@ import "./VerifySemesterRegistration.css";
 import ApprovedList from "./ApprovedList";
 import NavbarNew from "../NavbarNew";
 import Footer from "../Home/Footer";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { Box, CircularProgress } from "@mui/material";

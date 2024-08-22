@@ -29,7 +29,7 @@ const FacultySemesterRegistration = () => {
   const [profileDetails, setProfileDetails] = useState(null);
   const [remark, setRemark] = useState('no');
   const [isTextFieldDisabled, setIsTextFieldDisabled] = useState(true);
-  const isMobile = useMediaQuery('(max-width: 600px)');
+ 
   const navigate = useNavigate();
  
   const regenerateToken = () => {

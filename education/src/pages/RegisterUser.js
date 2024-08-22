@@ -126,24 +126,39 @@ export const RegisterUser = () => {
   };
 
   useEffect(() => {
-    let config = {
-      method: "get",
-      maxBodyLength: Infinity,
-      url: `${Url}/id-count/`,
-      headers: {
-        Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
-      },
-    };
-
     axios
-      .request(config)
+      .get(
+        `${Url}/${
+          jwtDecode(sessionStorage.getItem("accesstoken")).college
+        }/user-management/`,
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+          },
+        }
+      )
       .then((response) => {
-        console.log(JSON.stringify(response.data));
-        setId(response.data[0].id_count);
+        console.log(response.data);
+       setId(response.data.length);
         setLoading3(false);
       })
       .catch((error) => {
-        console.log(error);
+        
+        setLoading(false);
+        if (
+          error?.response?.data?.errors?.detail ===
+          "Given token not valid for any token type"
+        ) {
+          enqueueSnackbar("Logging out", {
+            variant: "error",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 3000,
+          });
+          navigate("/login");
+        }
       });
   }, []);
 
@@ -267,24 +282,40 @@ export const RegisterUser = () => {
         setFileName("");
         setFile("");
 
-        let config = {
-          method: "get",
-          maxBodyLength: Infinity,
-          url: `${Url}/id-count/`,
-          headers: {
-            Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
-          },
-        };
-
         axios
-          .request(config)
-          .then((response) => {
-            console.log(JSON.stringify(response.data));
-            setId(response.data[0].id_count);
-          })
-          .catch((error) => {
-            console.log(error);
+      .get(
+        `${Url}/${
+          jwtDecode(sessionStorage.getItem("accesstoken")).college
+        }/user-management/`,
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response.data);
+       setId(response.data.length);
+        setLoading(false);
+      })
+      .catch((error) => {
+        
+        setLoading(false);
+        if (
+          error?.response?.data?.errors?.detail ===
+          "Given token not valid for any token type"
+        ) {
+          enqueueSnackbar("Logging out", {
+            variant: "error",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 3000,
           });
+          navigate("/login");
+        }
+      });
 
         setLoading1(false);
 
@@ -308,6 +339,18 @@ export const RegisterUser = () => {
       setFileName("");
       setFile("");
       setLoading1(false);
+
+      if(error?.response?.data?.errors?.registration_number?.[0]==="user with this registration number already exists."){
+
+        enqueueSnackbar("user with this registration number already exists.", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 3000,
+        });
+      }
       if (
         error?.response?.data?.errors?.detail ===
         "Given token not valid for any token type"
