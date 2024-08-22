@@ -10,6 +10,7 @@ import {
   Box,
   InputAdornment,
   CircularProgress,
+  Divider,
 } from "@mui/material";
 import { MdDateRange } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
@@ -141,7 +142,6 @@ function HostelFeePayment() {
     }
   };
 
-
   useEffect(() => {
     if (sessionStorage?.getItem("accesstoken")) {
       const response = jwtDecode(sessionStorage?.getItem("accesstoken"));
@@ -256,90 +256,89 @@ function HostelFeePayment() {
     const token1 = sessionStorage.getItem("refreshtoken");
 
     if (token && token1) {
-    
-        try {
-          axios
-            .get(
-              `${BaseUrl}/${
-                jwtDecode(sessionStorage.getItem("accesstoken")).college
-              }/hostel-mess-fee/`,
-              {
-                headers: {
-                  Authorization: `Bearer ${sessionStorage.getItem(
-                    "accesstoken"
-                  )}`,
-                },
-              }
-            )
-            .then((response) => {
-              console.log(response.data);
-              setLoading(false);
-              setFees(response.data?.[0]);
-              const token = sessionStorage.getItem("accesstoken");
-              const token1 = sessionStorage.getItem("refreshtoken");
-  
-              if (token && token1) {
-                let currentDate = new Date();
-                const decodedToken = jwtDecode(token);
-  
-                if (
-                  decodedToken.exp * 1000 - currentDate.getTime() <
-                  59 * 60 * 1000
-                ) {
-                  try {
-                    regenerateToken(); // Wait for the token regeneration to complete
-                  } catch (error) {
-                    console.error(
-                      "Error in request interceptor while regenerating token:",
-                      error
-                    );
-                  }
-                }
-              } else {
-                navigate("/login");
-              }
-            })
-            .catch((error) => {
-              if (
-                error?.response?.data?.errors?.detail ===
-                "Given token not valid for any token type"
-              ) {
-                enqueueSnackbar("Logging out", {
-                  variant: "error",
-                  anchorOrigin: {
-                    vertical: "bottom",
-                    horizontal: "center",
-                  },
-                  autoHideDuration: 3000,
-                });
-                navigate("/login");
-              }
-            });
-        } catch (error) {
-          console.error("Failed to fetch fees:", error);
-          if (error?.response?.data?.message === "ID does not Exists") {
-            enqueueSnackbar("Fees Structure is not added by caretaker", {
-              variant: "error",
-              anchorOrigin: {
-                vertical: "bottom",
-                horizontal: "center",
+      try {
+        axios
+          .get(
+            `${BaseUrl}/${
+              jwtDecode(sessionStorage.getItem("accesstoken")).college
+            }/hostel-mess-fee/`,
+            {
+              headers: {
+                Authorization: `Bearer ${sessionStorage.getItem(
+                  "accesstoken"
+                )}`,
               },
-              autoHideDuration: 3000,
-            });
-            navigate("/dashboard");
-          }
+            }
+          )
+          .then((response) => {
+            console.log(response.data);
+            setLoading(false);
+            setFees(response.data?.[0]);
+            const token = sessionStorage.getItem("accesstoken");
+            const token1 = sessionStorage.getItem("refreshtoken");
+
+            if (token && token1) {
+              let currentDate = new Date();
+              const decodedToken = jwtDecode(token);
+
+              if (
+                decodedToken.exp * 1000 - currentDate.getTime() <
+                59 * 60 * 1000
+              ) {
+                try {
+                  regenerateToken(); // Wait for the token regeneration to complete
+                } catch (error) {
+                  console.error(
+                    "Error in request interceptor while regenerating token:",
+                    error
+                  );
+                }
+              }
+            } else {
+              navigate("/login");
+            }
+          })
+          .catch((error) => {
+            if (
+              error?.response?.data?.errors?.detail ===
+              "Given token not valid for any token type"
+            ) {
+              enqueueSnackbar("Logging out", {
+                variant: "error",
+                anchorOrigin: {
+                  vertical: "bottom",
+                  horizontal: "center",
+                },
+                autoHideDuration: 3000,
+              });
+              navigate("/login");
+            }
+          });
+      } catch (error) {
+        console.error("Failed to fetch fees:", error);
+        if (error?.response?.data?.message === "ID does not Exists") {
+          enqueueSnackbar("Fees Structure is not added by caretaker", {
+            variant: "error",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 3000,
+          });
+          navigate("/dashboard");
         }
-      } else {
-        navigate("/login");
       }
+    } else {
+      navigate("/login");
+    }
   }, [navigate]);
 
   const onSubmit = async (data) => {
     setLoading1(true);
 
     console.log(profileData.name);
-    if(profileData?.name===null){
-      return enqueueSnackbar("Update the profile first.",{variant:"error"});
+    if (profileData?.name === null) {
+      return enqueueSnackbar("Update the profile first.", { variant: "error" });
     }
     const token = sessionStorage.getItem("accesstoken");
     const token1 = sessionStorage.getItem("refreshtoken");
@@ -427,8 +426,14 @@ function HostelFeePayment() {
                 autoHideDuration: 3000,
               });
 
-              setResult([...result,{fee_type:data.feeType,from_date:dayjs(data.startDate).format("YYYY-MM"),to_date:dayjs(data.endDate).format("YYYY-MM")}])
-             
+              setResult([
+                ...result,
+                {
+                  fee_type: data.feeType,
+                  from_date: dayjs(data.startDate).format("YYYY-MM"),
+                  to_date: dayjs(data.endDate).format("YYYY-MM"),
+                },
+              ]);
             })
             .catch((error) => {
               setLoading1(false);
@@ -565,13 +570,26 @@ function HostelFeePayment() {
       <Box elevation={0} sx={{ p: { lg: 1, md: 1, xs: 0 }, mt: 3 }}>
         <p
           style={{
-            marginBottom: "50px",
+            marginBottom: "20px",
             textAlign: "center",
             fontSize: "1.4rem",
           }}
         >
           Hostel/Mess Fee Payment
         </p>
+
+        <center>
+          <Divider
+            sx={{
+              backgroundColor: "blue",
+              width: { lg: "7%", xs: "30%", md: "10%" },
+              fontWeight: "800",
+              textAlign: "center",
+              marginTop: "5px",
+              marginBottom: "20px",
+            }}
+          />
+        </center>
         <Box
           sx={{
             display: {
@@ -845,11 +863,23 @@ function HostelFeePayment() {
                 style={{
                   textAlign: "center",
                   fontSize: "1.3rem",
-                  marginBottom: "20px",
+                  marginBottom: "10px",
+                  marginTop:"50px"
                 }}
               >
                 Previous Fee Payments
               </p>
+              <center>
+                <Divider
+                  sx={{
+                    backgroundColor: "blue",
+                    width: { lg: "22%", xs: "30%", md: "10%",sm:"12%" },
+                    fontWeight: "800",
+                    textAlign: "center",
+                    marginTop: "5px",
+                  }}
+                />
+              </center>
               <Grid
                 container
                 spacing={1}
@@ -879,7 +909,7 @@ function HostelFeePayment() {
                   <Grid item xs={12}>
                     <center style={{ marginTop: "20px" }}>
                       <img
-                        src="./images/No_data.png"
+                        src="./images/semester_no_data.png"
                         alt=""
                         style={{
                           width: "280px",

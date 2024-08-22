@@ -550,11 +550,12 @@ const ComplaintForm = () => {
                 >
                   <Grid item xs={12}>
                     <TextField
+                      
                       label="Registration/ Employee No"
                       fullWidth
                       value={profileData?.registrationNo}
                       disabled
-                      variant="outlined"
+                      variant="standard"
                     />
                   </Grid>
 
@@ -564,7 +565,7 @@ const ComplaintForm = () => {
                       fullWidth
                       value={profileData?.name}
                       disabled
-                      variant="outlined"
+                      variant="standard"
                     />
                   </Grid>
 
@@ -574,7 +575,7 @@ const ComplaintForm = () => {
                       fullWidth
                       value={profileData?.branch}
                       disabled
-                      variant="outlined"
+                     variant="standard"
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -584,7 +585,8 @@ const ComplaintForm = () => {
                       render={({ field }) => (
                         <FormControl fullWidth variant="outlined">
                           <InputLabel>Complaint Type</InputLabel>
-                          <Select {...field} label="Complaint Type">
+                          <Select {...field} label="Complaint Type"
+                          variant="standard">
                             <MenuItem value="Ragging related">
                               Ragging related
                             </MenuItem>
@@ -616,9 +618,10 @@ const ComplaintForm = () => {
                       control={control}
                       render={({ field }) => (
                         <TextField
+
                           {...field}
                           label="Subject"
-                          variant="outlined"
+                         variant="standard"
                           fullWidth
                           error={!!errors.subject}
                           helperText={
@@ -637,7 +640,7 @@ const ComplaintForm = () => {
                         <TextField
                           {...field}
                           label="Description"
-                          variant="outlined"
+                          variant="standard"
                           fullWidth
                           multiline
                           rows={4}
@@ -699,7 +702,7 @@ const ComplaintForm = () => {
                   marginBottom: "5%",
                   textAlign: "center",
                   marginTop: "10px",
-                  fontSize: "1.2rem",
+                  fontSize: "1.4rem",
                 }}
               >
                 Previous Complaints
@@ -710,7 +713,7 @@ const ComplaintForm = () => {
                 <p
                   style={{
                     padding: "5vw 0 9vw 0",
-                    fontSize: "1.4rem",
+                    fontSize: "1.0rem",
                     marginTop: "20px",
                   }}
                 >

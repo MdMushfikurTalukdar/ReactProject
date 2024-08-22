@@ -27,13 +27,14 @@ export const RegisterUser = () => {
     window.innerWidth < 900 ? true : false
   ); // Check if the screen is smaller than 1024
   const navigate = useNavigate();
-  const [fileName,setFileName]=useState('');
+  const [fileName, setFileName] = useState("");
   const [file, setFile] = useState("");
   const { name } = useParams();
   const [loading, setLoading] = useState(false);
   const [loading1, setLoading1] = useState(false);
   const [id, setId] = useState(0);
-  const [loading3,setLoading3]=useState(true);
+  const [loading3, setLoading3] = useState(true);
+  const [key, setKey] = useState(0);
 
   useEffect(() => {
     if (sessionStorage?.getItem("accesstoken")) {
@@ -139,11 +140,10 @@ export const RegisterUser = () => {
       )
       .then((response) => {
         console.log(response.data);
-       setId(response.data.length);
+        setId(response.data.length);
         setLoading3(false);
       })
       .catch((error) => {
-        
         setLoading(false);
         if (
           error?.response?.data?.errors?.detail ===
@@ -172,7 +172,6 @@ export const RegisterUser = () => {
       console.log(file.name);
     }
   };
-
 
   const schema = yup.object().shape({
     registration_number: yup
@@ -217,8 +216,8 @@ export const RegisterUser = () => {
 
   const handleSubmitFile = async (e) => {
     setLoading1(true);
-    
-    if(!file){
+
+    if (!file) {
       setLoading1(false);
       return enqueueSnackbar("Please Select a File.", {
         variant: "warning",
@@ -228,7 +227,6 @@ export const RegisterUser = () => {
         },
         autoHideDuration: 3000,
       });
-      
     }
 
     if (!file.name.endsWith("csv")) {
@@ -278,44 +276,44 @@ export const RegisterUser = () => {
         navigate("/login");
       }
       if (response) {
-
         setFileName("");
         setFile("");
-
+        setKey(key + 1);
         axios
-      .get(
-        `${Url}/${
-          jwtDecode(sessionStorage.getItem("accesstoken")).college
-        }/user-management/`,
-        {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-          },
-        }
-      )
-      .then((response) => {
-        console.log(response.data);
-       setId(response.data.length);
-        setLoading(false);
-      })
-      .catch((error) => {
-        
-        setLoading(false);
-        if (
-          error?.response?.data?.errors?.detail ===
-          "Given token not valid for any token type"
-        ) {
-          enqueueSnackbar("Logging out", {
-            variant: "error",
-            anchorOrigin: {
-              vertical: "bottom",
-              horizontal: "center",
-            },
-            autoHideDuration: 3000,
+          .get(
+            `${Url}/${
+              jwtDecode(sessionStorage.getItem("accesstoken")).college
+            }/user-management/`,
+            {
+              headers: {
+                Authorization: `Bearer ${sessionStorage.getItem(
+                  "accesstoken"
+                )}`,
+              },
+            }
+          )
+          .then((response) => {
+            console.log(response.data);
+            setId(response.data.length);
+            setLoading(false);
+          })
+          .catch((error) => {
+            setLoading(false);
+            if (
+              error?.response?.data?.errors?.detail ===
+              "Given token not valid for any token type"
+            ) {
+              enqueueSnackbar("Logging out", {
+                variant: "error",
+                anchorOrigin: {
+                  vertical: "bottom",
+                  horizontal: "center",
+                },
+                autoHideDuration: 3000,
+              });
+              navigate("/login");
+            }
           });
-          navigate("/login");
-        }
-      });
 
         setLoading1(false);
 
@@ -329,19 +327,21 @@ export const RegisterUser = () => {
             autoHideDuration: 3000,
           });
         }
-        setTimeout(()=>{
-          window.location.reload();
-        },2000);
-        
+        // setTimeout(()=>{
+        //   window.location.reload();
+        // },2000);
       }
     } catch (error) {
       console.error(error);
       setFileName("");
       setFile("");
       setLoading1(false);
+      setKey(key + 1);
 
-      if(error?.response?.data?.errors?.registration_number?.[0]==="user with this registration number already exists."){
-
+      if (
+        error?.response?.data?.errors?.registration_number?.[0] ===
+        "user with this registration number already exists."
+      ) {
         enqueueSnackbar("user with this registration number already exists.", {
           variant: "error",
           anchorOrigin: {
@@ -369,7 +369,7 @@ export const RegisterUser = () => {
       if (
         error?.response?.data?.errors?.password2?.[0] ===
         "This field is required."
-      ){
+      ) {
         enqueueSnackbar("confirm password is required", {
           variant: "error",
           anchorOrigin: {
@@ -378,44 +378,42 @@ export const RegisterUser = () => {
           },
           autoHideDuration: 3000,
         });
-      }else if(error?.response?.data?.errors?.password?.[0] ===
-        "This field is required."){
-          enqueueSnackbar("password is required", {
-            variant: "error",
-            anchorOrigin: {
-              vertical: "bottom",
-              horizontal: "center",
-            },
-            autoHideDuration: 3000,
-          });
-        }else if(error?.response?.data?.errors?.registration_number?.[0] ===
-          "This field is required."){
-            enqueueSnackbar("registration number is required", {
-              variant: "error",
-              anchorOrigin: {
-                vertical: "bottom",
-                horizontal: "center",
-              },
-              autoHideDuration: 3000,
-            });
-          }else if(error?.response?.data?.errors?.role?.[0] ===
-            "This field is required."){
-              enqueueSnackbar("Role is required", {
-                variant: "error",
-                anchorOrigin: {
-                  vertical: "bottom",
-                  horizontal: "center",
-                },
-                autoHideDuration: 3000,
-              });
-              
-            }
-
-            setTimeout(()=>{
-              window.location.reload();
-            },2000);
-
-           
+      } else if (
+        error?.response?.data?.errors?.password?.[0] ===
+        "This field is required."
+      ) {
+        enqueueSnackbar("password is required", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 3000,
+        });
+      } else if (
+        error?.response?.data?.errors?.registration_number?.[0] ===
+        "This field is required."
+      ) {
+        enqueueSnackbar("registration number is required", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 3000,
+        });
+      } else if (
+        error?.response?.data?.errors?.role?.[0] === "This field is required."
+      ) {
+        enqueueSnackbar("Role is required", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          autoHideDuration: 3000,
+        });
+      }
     }
   };
 
@@ -533,483 +531,505 @@ export const RegisterUser = () => {
   if (loading3) {
     return (
       <>
-      <NavbarNew/>
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="80vh"
-      >
-        <CircularProgress />
-      </Box>
-      <Footer/>
+        <NavbarNew />
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          height="80vh"
+        >
+          <CircularProgress />
+        </Box>
+        <Footer />
       </>
     );
   }
   return (
     <div className="App">
       <NavbarNew />
-      {responsive && (
-        <div className="parentdiv_small_screen" style={{height:"90vh"}}>
-          <img
-            src="../images/logo.png"
-            alt=""
-            style={{ height: "auto", width: "70px" }}
-          />
-          <div className="children1_small_screen">
-            <Grid container>
-              <Grid
-                item
-                xs={12}
-                sm={12}
-                md={9}
-                lg={9}
-                className="parentGrid_small_screen"
-              >
-                <h2 style={{ marginRight: "35%", color: "rgb(107 169 169)" }}>
-                  <p>Create Account</p>
-                
-                </h2>
+      <Box>
+        {responsive && (
+          <div className="parentdiv_small_screen">
+            <img
+              src="../images/logo.png"
+              alt=""
+              style={{ height: "auto", width: "70px" }}
+            />
+            <div className="children1_small_screen">
+              <Grid container>
+                <Grid
+                  item
+                  xs={12}
+                  sm={12}
+                  md={9}
+                  lg={9}
+                  className="parentGrid_small_screen"
+                >
+                  <h2 style={{ marginRight: "35%", color: "rgb(107 169 169)" }}>
+                    <p>Create Account</p>
+                  </h2>
 
-                <form onSubmit={handleSubmit(onSubmit)}>
-                  <Box>
-                    <TextField
-                      type="text"
-                      label="Registration number"
-                      placeholder="Registration number"
-                      sx={{
-                        width: { lg: "50%", md: "50%", sm: "50%", xs: "80%" },
-                        marginTop: "12px",
-                      }}
-                      {...register("registration_number")}
-                      helperText={errors.registration_number?.message}
-                    />
-                  </Box>
-                  <Box>
-                    <TextField
-                      type="password"
-                      label="password"
-                      placeholder="password"
-                      sx={{
-                        width: { lg: "50%", md: "50%", sm: "50%", xs: "80%" },
-                        marginTop: "12px",
-                      }}
-                      {...register("password")}
-                      helperText={errors.password?.message}
-                    />
-                  </Box>
-                  <Box>
-                    <TextField
-                      type="password"
-                      label="confirm password"
-                      placeholder="confirm password..."
-                      sx={{
-                        width: { lg: "50%", md: "50%", sm: "50%", xs: "80%" },
-                        marginBottom: "10px",
-                        marginTop: "10px",
-                      }}
-                      {...register("password2")}
-                      helperText={errors.password2?.message}
-                    />
-                  </Box>
-                  <Box>
-                    <TextField
-                      type="text"
-                      label="Role"
-                      placeholder="Role..."
-                      required
-                      sx={{
-                        width: { lg: "50%", md: "50%", sm: "50%", xs: "80%" },
-                        marginBottom: "10px",
-                        marginTop: "10px",
-                      }}
-                      {...register("role")}
-                      helperText={errors.role?.message}
-                    />
-                  </Box>
-
-                  <Button
-                    variant="contained"
-                    sx={{
-                      width: { xs: "85%", sm: "50%" },
-                      backgroundColor: "rgb(107 169 169)",
-                      textAlign: "start",
-                    }}
-                    type="submit"
-                  >
-                    {!loading && <p>Create Account</p>}
-                    {loading && (
-                      <CircularProgress
-                        style={{
-                          color: "white",
-                          width: "20px",
-                          height: "22px",
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    <Box>
+                      <TextField
+                        type="text"
+                        label="Registration number"
+                        placeholder="Registration number"
+                        sx={{
+                          width: { lg: "50%", md: "50%", sm: "50%", xs: "80%" },
+                          marginTop: "12px",
                         }}
+                        {...register("registration_number")}
+                        helperText={errors.registration_number?.message}
                       />
-                    )}
-                  </Button>
-                </form>
-
-                <p style={{ fontSize: "0.8rem", marginTop: "10px" }}>
-                  Already have an account?{" "}
-                  <span
-                    style={{ color: "rgb(107 169 169)" }}
-                    onClick={(e) => navigate("/login")}
-                  >
-                    Login
-                  </span>
-                </p>
-
-                <Divider
-                  component="span"
-                  role="presentation"
-                  className="Divider"
-                >
-                  <Typography>or</Typography>
-                </Divider>
-
-                <Box
-                  style={{
-                    width: "100%",
-                    textAlign: "-webkit-center",
-                    marginTop: "10px",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: "80%",
-                      border: "1px dotted grey",
-                      padding: "11px",
-                      backgroundColor: "whitesmoke",
-                      borderRadius: "10px",
-                    }}
-                  >
-                    <p
-                      className="text-bold text-xl"
-                      style={{ color: "rgb(107 169 169)" }}
-                    >
-                      Upload a csv file
-                    </p>
-                    <Box className="mt-3 text-xl">
-                      <FaUpload style={{ color: "rgb(107 169 169)" }} />
                     </Box>
-                    <Button
-                      component="label"
-                      variant="contained"
-                      style={{
-                        backgroundColor: "rgb(107 169 169)",
-                        marginTop: "10px",
-                      }}
-                    >
-                      <input
-                        type="file"
-                        accept="*"
-                        alt=""
-                        style={{ display: "none" }}
-                        onChange={handleFileChange}
-                      />
-                      Upload
-                    </Button>
-                    {fileName && <p style={{marginTop:"5px",marginBottom:"3px"}}>{fileName}</p>}
-                  </div>
-                </Box>
-                <Box>
-                  <Button
-                    variant="contained"
-                    sx={{
-                      width: { xs: "85%", sm: "50%" },
-                      backgroundColor: "rgb(107 169 169)",
-                      textAlign: "start",
-                      marginTop: "20px",
-                    }}
-                    type="submit"
-                    onClick={handleSubmitFile}
-                  >
-                    {!loading1 && <p>Create Account</p>}
-                    {loading1 && (
-                      <CircularProgress
-                        style={{
-                          color: "white",
-                          width: "20px",
-                          height: "22px",
+                    <Box>
+                      <TextField
+                        type="password"
+                        label="password"
+                        placeholder="password"
+                        sx={{
+                          width: { lg: "50%", md: "50%", sm: "50%", xs: "80%" },
+                          marginTop: "12px",
                         }}
+                        {...register("password")}
+                        helperText={errors.password?.message}
                       />
-                    )}
-                  </Button>
-                </Box>
-              </Grid>
-            </Grid>
-          </div>
-        </div>
-      )}
+                    </Box>
+                    <Box>
+                      <TextField
+                        type="password"
+                        label="confirm password"
+                        placeholder="confirm password..."
+                        sx={{
+                          width: { lg: "50%", md: "50%", sm: "50%", xs: "80%" },
+                          marginBottom: "10px",
+                          marginTop: "10px",
+                        }}
+                        {...register("password2")}
+                        helperText={errors.password2?.message}
+                      />
+                    </Box>
+                    <Box>
+                      <TextField
+                        type="text"
+                        label="Role"
+                        placeholder="Role..."
+                        required
+                        sx={{
+                          width: { lg: "50%", md: "50%", sm: "50%", xs: "80%" },
+                          marginBottom: "10px",
+                          marginTop: "10px",
+                        }}
+                        {...register("role")}
+                        helperText={errors.role?.message}
+                      />
+                    </Box>
 
-      {!responsive && (
-        <Grid container style={{ height: "109vh",}}>
-        
-          <Grid
-            item
-            xs={12}
-            sm={12}
-            md={3}
-            lg={3}
-            sx={{height: "fit-content"}}
-          >
-              <center>
-            <div style={{ color: "white" }}>
-              <h1
-                style={{
-                  position: "relative",
-                  top: "5rem",
-                  left: "5rem",
-                  width: "400px",
-                  height: "auto",
-                  color:"black"
-                }}
-              >
-                {" "}
-                Dashboard
-              </h1>
-              <h4
-                style={{
-                  position: "relative",
-                  top: "6rem",
-                  left: "5rem",
-                  width: "400px",
-                  height: "auto",
-                     color:"black"
-                }}
-              >
-                Empowering Workspaces,
-                <br />
-              </h4>
-              <h4
-                style={{
-                  position: "relative",
-                  top: "6rem",
-                  left: "6rem",
-                  width: "400px",
-                  height: "auto",
-                     color:"black"
-                }}
-              >
-                {" "}
-                Inspiring Innovation
-                <br />
-              </h4>
+                    <Button
+                      variant="contained"
+                      sx={{
+                        width: { xs: "85%", sm: "50%" },
+                        backgroundColor: "rgb(107 169 169)",
+                        textAlign: "start",
+                      }}
+                      type="submit"
+                    >
+                      {!loading && <p>Create Account</p>}
+                      {loading && (
+                        <CircularProgress
+                          style={{
+                            color: "white",
+                            width: "20px",
+                            height: "22px",
+                          }}
+                        />
+                      )}
+                    </Button>
+                  </form>
 
-              <h4
-                style={{
-                  position: "relative",
-                  top: "8rem",
-                  left: "5.0rem",
-                  width: "400px",
-                  height: "auto",
-                  fontSize:"1.3rem",
-                     color:"black"
-                  
-                }}
-              >
-                {" "}
-                Total Registered Id:{id}
-                <br />
-              </h4>
-
-            </div>
-         
-              <CardMedia
-              component="img"
-                image="../images/register_page_icon.png"
-                sx={{
-                  position: "relative",
-                  top: "10rem",
-                  left:{lg:"5rem",md:"2rem"},
-                  width: "400px",
-                  height: "auto",
-                }}
-                alt=""
-              />
-            
-            </center>
-          </Grid>
-          <Grid
-            item
-            xs={12}
-            sm={12}
-            md={9}
-            lg={9}
-            className="parentGrid_largeScreen"
-          >
-            <center>
-            <h2
-              style={{
-              //   marginRight: "35%",
-              //   marginTop: "0px",
-                color: "rgb(107 169 169)",
-              //   textAlign:"center"
-              }}
-            >
-              Create Account
-            </h2>
-            </center>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <Box>
-                <TextField
-                  type="text"
-                  label="Registration Number"
-                  placeholder="0123442"
-                  sx={{
-                    width: "50%",
-                    marginTop: "12px",
-                  }}
-                  {...register("registration_number")}
-                  helperText={errors?.registration_number?.message}
-                />
-              </Box>
-              <Box>
-                <TextField
-                  type="password"
-                  label="Password"
-                  placeholder="password..."
-                  sx={{
-                    width: "50%",
-                    marginTop: "12px",
-                  }}
-                  {...register("password")}
-                  helperText={errors?.password?.message}
-                />
-              </Box>
-              <Box>
-                <TextField
-                  type="password"
-                  label="Confirm Password"
-                  placeholder="confirmPassword..."
-                  sx={{
-                    width: "50%",
-                    marginBottom: "10px",
-                    marginTop: "10px",
-                  }}
-                  {...register("password2")}
-                  helperText={errors?.password2?.message}
-                />
-              </Box>
-              <Box>
-                <TextField
-                  type="text"
-                  label="Role"
-                  placeholder="Role..."
-                  sx={{
-                    width: { lg: "50%", md: "50%", sm: "50%", xs: "80%" },
-                    marginBottom: "10px",
-                    marginTop: "10px",
-                  }}
-                  {...register("role")}
-                  helperText={errors?.role?.message}
-                />
-              </Box>
-              <Button
-                variant="contained"
-                style={{
-                  width: "50%",
-                  backgroundColor: "rgb(107 169 169)",
-                  textAlign: "start",
-                }}
-                type="submit"
-              >
-                {!loading && <p>Create Account</p>}
-                {loading && (
-                  <CircularProgress
-                    style={{ color: "white", width: "20px", height: "22px" }}
-                  />
-                )}
-              </Button>
-            </form>
-
-            <p style={{ fontSize: "0.8rem", marginTop: "10px" }}>
-              Already have an account?{" "}
-              <span
-                className="cursor-pointer"
-                onClick={(e) => navigate("/login")}
-                style={{ color: "rgb(107 169 169)" }}
-              >
-                Login
-              </span>
-            </p>
-
-            <Divider component="span" role="presentation" className="Divider">
-              <Typography>or</Typography>
-            </Divider>
-
-            <Box
-              container
-              sx={{
-                marginTop: "20px",
-              }}
-            >
-              <Box style={{ width: "100%", textAlign: "-webkit-center" }}>
-                <div
-                  style={{
-                    width: "50%",
-                    border: "1px dotted grey",
-                    padding: "5px",
-                    backgroundColor: "whitesmoke",
-                    borderRadius: "10px",
-                  }}
-                >
-                  <p
-                    className="text-bold text-xl"
-                    style={{ color: "rgb(107 169 169)" }}
-                  >
-                    Upload a csv file
+                  <p style={{ fontSize: "0.8rem", marginTop: "10px" }}>
+                    Already have an account?{" "}
+                    <span
+                      style={{ color: "rgb(107 169 169)" }}
+                      onClick={(e) => navigate("/login")}
+                    >
+                      Login
+                    </span>
                   </p>
-                  <Box className="mt-3 text-xl">
-                    <FaUpload style={{ color: "rgb(107 169 169)" }} />
-                  </Box>
-                  <Button
-                    component="label"
-                    variant="contained"
+
+                  <Divider
+                    component="span"
+                    role="presentation"
+                    className="Divider"
+                  >
+                    <Typography>or</Typography>
+                  </Divider>
+
+                  <Box
                     style={{
-                      backgroundColor: "rgb(107 169 169)",
+                      width: "100%",
+                      textAlign: "-webkit-center",
                       marginTop: "10px",
                     }}
+                    key={key}
                   >
-                    <input
-                      type="file"
-                      accept="*"
-                      alt=""
-                      style={{ display: "none" }}
-                      onChange={handleFileChange}
-                       
-                    />
-                    Upload
-                  </Button>
-                  {fileName && <p style={{marginTop:"5px",marginBottom:"3px"}}>{fileName}</p>}
-                </div>
-              </Box>
+                    <div
+                      style={{
+                        width: "80%",
+                        border: "1px dotted grey",
+                        padding: "11px",
+                        backgroundColor: "whitesmoke",
+                        borderRadius: "10px",
+                      }}
+                    >
+                      <p
+                        className="text-bold text-xl"
+                        style={{ color: "rgb(107 169 169)" }}
+                      >
+                        Upload a csv file
+                      </p>
+                      <Box className="mt-3 text-xl">
+                        <FaUpload style={{ color: "rgb(107 169 169)" }} />
+                      </Box>
+                      <Button
+                        component="label"
+                        variant="contained"
+                        style={{
+                          backgroundColor: "rgb(107 169 169)",
+                          marginTop: "10px",
+                        }}
+                      >
+                        <input
+                          type="file"
+                          accept="*"
+                          alt=""
+                          style={{ display: "none" }}
+                          onChange={handleFileChange}
+                        />
+                        Upload
+                      </Button>
+                      {fileName && (
+                        <p style={{ marginTop: "5px", marginBottom: "3px" }}>
+                          {fileName}
+                        </p>
+                      )}
+                    </div>
+                  </Box>
+                  <Box>
+                    <Button
+                      variant="contained"
+                      sx={{
+                        width: { xs: "85%", sm: "50%" },
+                        backgroundColor: "rgb(107 169 169)",
+                        textAlign: "start",
+                        marginTop: "20px",
+                      }}
+                      type="submit"
+                      onClick={handleSubmitFile}
+                    >
+                      {!loading1 && <p>Create Account</p>}
+                      {loading1 && (
+                        <CircularProgress
+                          style={{
+                            color: "white",
+                            width: "20px",
+                            height: "22px",
+                          }}
+                        />
+                      )}
+                    </Button>
+                  </Box>
+                </Grid>
+              </Grid>
+            </div>
+          </div>
+        )}
 
-              <Box>
-                <Button
-                  variant="contained"
-                  sx={{
-                    width: { xs: "85%", sm: "50%" },
-                    backgroundColor: "rgb(107 169 169)",
-                    textAlign: "start",
-                    marginTop: "20px",
-                  }}
-                  type="submit"
-                  onClick={handleSubmitFile}
+        {!responsive && (
+          <div className="children1_large_screen">
+          
+              <Grid container>
+                <Grid
+                  item
+                  xs={12}
+                  sm={12}
+                  md={3}
+                  lg={3}
+                  // sx={{ height: "fit-content" }}
                 >
-                  {!loading1 && <p>Create Account</p>}
-                  {loading1 && (
-                    <CircularProgress
-                      style={{ color: "white", width: "20px", height: "22px" }}
+                  <center>
+                    <div style={{ color: "white" }}>
+                      <h1
+                        style={{
+                          position: "relative",
+                          top: "5rem",
+                          left: "5rem",
+                          width: "400px",
+                          height: "auto",
+                          color: "black",
+                        }}
+                      >
+                        {" "}
+                        Dashboard
+                      </h1>
+                      <h4
+                        style={{
+                          position: "relative",
+                          top: "6rem",
+                          left: "5rem",
+                          width: "400px",
+                          height: "auto",
+                          color: "black",
+                        }}
+                      >
+                        Empowering Workspaces,
+                        <br />
+                      </h4>
+                      <h4
+                        style={{
+                          position: "relative",
+                          top: "6rem",
+                          left: "6rem",
+                          width: "400px",
+                          height: "auto",
+                          color: "black",
+                        }}
+                      >
+                        {" "}
+                        Inspiring Innovation
+                        <br />
+                      </h4>
+
+                      <h4
+                        style={{
+                          position: "relative",
+                          top: "8rem",
+                          left: "5.0rem",
+                          width: "400px",
+                          height: "auto",
+                          fontSize: "1.3rem",
+                          color: "black",
+                        }}
+                      >
+                        {" "}
+                        Total Registered Id:{id}
+                        <br />
+                      </h4>
+                    </div>
+
+                    <CardMedia
+                      component="img"
+                      image="../images/register_page_icon.png"
+                      sx={{
+                        position: "relative",
+                        top: "10rem",
+                        left: { lg: "5rem", md: "2rem" },
+                        width: "400px",
+                        height: "auto",
+                      }}
+                      alt=""
                     />
-                  )}
-                </Button>
-              </Box>
-            </Box>
-          </Grid>
-        </Grid>
-      )}
+                  </center>
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  sm={12}
+                  md={9}
+                  lg={9}
+                  className="parentGrid_largeScreen"
+                >
+                  <center>
+                    <h2
+                      style={{
+                        //   marginRight: "35%",
+                        //   marginTop: "0px",
+                        color: "rgb(107 169 169)",
+                        //   textAlign:"center"
+                      }}
+                    >
+                      Create Account
+                    </h2>
+                  </center>
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    <Box>
+                      <TextField
+                        type="text"
+                        label="Registration Number"
+                        placeholder="0123442"
+                        sx={{
+                          width: "50%",
+                          marginTop: "12px",
+                        }}
+                        {...register("registration_number")}
+                        helperText={errors?.registration_number?.message}
+                      />
+                    </Box>
+                    <Box>
+                      <TextField
+                        type="password"
+                        label="Password"
+                        placeholder="password..."
+                        sx={{
+                          width: "50%",
+                          marginTop: "12px",
+                        }}
+                        {...register("password")}
+                        helperText={errors?.password?.message}
+                      />
+                    </Box>
+                    <Box>
+                      <TextField
+                        type="password"
+                        label="Confirm Password"
+                        placeholder="confirmPassword..."
+                        sx={{
+                          width: "50%",
+                          marginBottom: "10px",
+                          marginTop: "10px",
+                        }}
+                        {...register("password2")}
+                        helperText={errors?.password2?.message}
+                      />
+                    </Box>
+                    <Box>
+                      <TextField
+                        type="text"
+                        label="Role"
+                        placeholder="Role..."
+                        sx={{
+                          width: { lg: "50%", md: "50%", sm: "50%", xs: "80%" },
+                          marginBottom: "10px",
+                          marginTop: "10px",
+                        }}
+                        {...register("role")}
+                        helperText={errors?.role?.message}
+                      />
+                    </Box>
+                    <Button
+                      variant="contained"
+                      style={{
+                        width: "50%",
+                        backgroundColor: "rgb(107 169 169)",
+                        textAlign: "start",
+                      }}
+                      type="submit"
+                    >
+                      {!loading && <p>Create Account</p>}
+                      {loading && (
+                        <CircularProgress
+                          style={{
+                            color: "white",
+                            width: "20px",
+                            height: "22px",
+                          }}
+                        />
+                      )}
+                    </Button>
+                  </form>
+
+                  <p style={{ fontSize: "0.8rem", marginTop: "10px" }}>
+                    Already have an account?{" "}
+                    <span
+                      className="cursor-pointer"
+                      onClick={(e) => navigate("/login")}
+                      style={{ color: "rgb(107 169 169)" }}
+                    >
+                      Login
+                    </span>
+                  </p>
+
+                  <Divider
+                    component="span"
+                    role="presentation"
+                    className="Divider"
+                  >
+                    <Typography>or</Typography>
+                  </Divider>
+
+                  <Box
+                    container
+                    sx={{
+                      marginTop: "20px",
+                    }}
+                    key={key}
+                  >
+                    <Box style={{ width: "100%", textAlign: "-webkit-center" }}>
+                      <div
+                        style={{
+                          width: "50%",
+                          border: "1px dotted grey",
+                          padding: "5px",
+                          backgroundColor: "whitesmoke",
+                          borderRadius: "10px",
+                        }}
+                      >
+                        <p
+                          className="text-bold text-xl"
+                          style={{ color: "rgb(107 169 169)" }}
+                        >
+                          Upload a csv file
+                        </p>
+                        <Box className="mt-3 text-xl">
+                          <FaUpload style={{ color: "rgb(107 169 169)" }} />
+                        </Box>
+                        <Button
+                          component="label"
+                          variant="contained"
+                          style={{
+                            backgroundColor: "rgb(107 169 169)",
+                            marginTop: "10px",
+                          }}
+                        >
+                          <input
+                            type="file"
+                            accept="*"
+                            alt=""
+                            style={{ display: "none" }}
+                            onChange={handleFileChange}
+                          />
+                          Upload
+                        </Button>
+                        {fileName && (
+                          <p style={{ marginTop: "5px", marginBottom: "3px" }}>
+                            {fileName}
+                          </p>
+                        )}
+                      </div>
+                    </Box>
+
+                    <Box>
+                      <Button
+                        variant="contained"
+                        sx={{
+                          width: { xs: "85%", sm: "50%" },
+                          backgroundColor: "rgb(107 169 169)",
+                          textAlign: "start",
+                          marginTop: "20px",
+                        }}
+                        type="submit"
+                        onClick={handleSubmitFile}
+                      >
+                        {!loading1 && <p>Create Account</p>}
+                        {loading1 && (
+                          <CircularProgress
+                            style={{
+                              color: "white",
+                              width: "20px",
+                              height: "22px",
+                            }}
+                          />
+                        )}
+                      </Button>
+                    </Box>
+                  </Box>
+                </Grid>
+              </Grid>
+         
+          </div>
+        )}
+      </Box>
       <Footer />
     </div>
   );

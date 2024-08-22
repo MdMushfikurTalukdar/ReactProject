@@ -11,14 +11,10 @@ import {
   FormControl,
   InputLabel,
   FormHelperText,
-  Paper,
+  
   Card,
   CardContent,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
+  
   InputAdornment,
   CircularProgress,
 } from "@mui/material";
@@ -33,10 +29,8 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Footer from "../Home/Footer";
-import { Table } from "heroicons-react";
 import { enqueueSnackbar } from "notistack";
 import { MdDateRange } from "react-icons/md";
-import { FaCodeBranch } from "react-icons/fa";
 import { GiSpellBook } from "react-icons/gi";
 import { BaseUrl } from "../BaseUrl";
 
@@ -53,7 +47,7 @@ export function SemesterRegistration() {
   const [branches2, setBranches2] = useState([]);
   const [selectedSemester, setSelectedSemester] = useState("");
   const [userProfile, setUserProfile] = useState([]);
-  const [subjects, setSubjects] = useState([]);
+ 
   const [totalData, setTotalData] = useState([]);
   const [uniqueCodes, setUniqueCodes] = useState([]);
   const [uniqueSubjects, setUniqueSubjects] = useState([]);
@@ -82,7 +76,6 @@ export function SemesterRegistration() {
     handleSubmit,
     control,
     setValue,
-    register,
     trigger,
     formState: { errors },
   } = useForm({
@@ -321,7 +314,6 @@ export function SemesterRegistration() {
               item?.branch === data?.branch
             );
           })?.id;
-          
 
           let data1 = JSON.stringify({
             semester: b,
@@ -366,8 +358,6 @@ export function SemesterRegistration() {
                 },
                 autoHideDuration: 1000,
               });
-
-           
             })
             .catch((error) => {
               console.log(error);
@@ -441,22 +431,94 @@ export function SemesterRegistration() {
     <>
       <NavbarNew />
 
+      <Box
+        sx={{
+          width: "100vw",
+          textAlign: "center",
+          backgroundImage:
+            "url(https://images.unsplash.com/photo-1544006659-f0b21884ce1d?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
+          backgroundSize: "cover",
+          paddingTop: "2vw",
+          paddingBottom: "15vw",
+          position: "relative",
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.6)", // Overlay with opacity
+            zIndex: 1,
+          },
+        }}
+      >
+        <Grid
+          container
+          sx={{
+            position: "relative",
+            zIndex: 2,
+            color: "white",
+            padding: { xs: "20px", sm: "20px", md: "50px" },
+          }}
+        >
+          <Grid item xs={12} sm={12} lg={6} md={6}>
+            <Typography
+              variant="h1"
+              sx={{
+                fontSize: {
+                  xs: "2rem",
+                  sm: "2.4rem",
+                  md: "2.6rem",
+                  lg: "2.6rem",
+                },
+                marginTop: { xs: "20px", md: "80px" },
+                fontWeight: "bold",
+              }}
+            >
+              Semester Registration
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: {
+                  xs: "1rem",
+                  sm: "1.1rem",
+                  md: "1.2rem",
+                  lg: "1.2rem",
+                },
+                marginTop: "10px",
+                fontWeight: "500",
+                padding: { xs: "10px", sm: "10px", md: "0px" },
+              }}
+            >
+              Streamline student semester registration by prioritizing their course selections and schedules. Customize registration options to ensure efficient processing and optimal academic planning.
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={12} lg={6} md={6}></Grid>
+        </Grid>
+      </Box>
+
       <p
         style={{
-          width: "100%",
-          fontSize: "1.3rem",
-          marginTop: "30px",
+          fontSize: "2.0rem",
+          fontWeight: "500",
           textAlign: "center",
+          marginTop: "20px",
         }}
       >
         Semester Registration
       </p>
-
       <center>
-        <img
-          src="./images/semester.png"
-          alt=""
-          style={{ width: "310px", borderRadius: "10px", marginTop: "25px" }}
+        <Divider
+          sx={{
+            backgroundColor: "blue",
+            width: { lg: "7%", xs: "30%", md: "10%" },
+            fontWeight: "800",
+            textAlign: "center",
+            marginTop: "5px",
+          }}
         />
       </center>
 
@@ -471,6 +533,7 @@ export function SemesterRegistration() {
           alignItems: "center",
         }}
       >
+       
         <Grid
           item
           xs={12}
@@ -487,6 +550,8 @@ export function SemesterRegistration() {
         >
           <TextField
             type="text"
+             margin="normal"
+            variant="standard"
             placeholder="Student Name"
             value={`${userProfile?.personal_information?.first_name} ${userProfile?.personal_information?.middle_name} ${userProfile?.personal_information?.last_name}`}
             fullWidth
@@ -495,7 +560,7 @@ export function SemesterRegistration() {
               width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
               marginTop: "15px",
               marginBottom: "10px",
-              backgroundColor: "whitesmoke",
+              
             }}
             InputProps={{
               startAdornment: (
@@ -508,13 +573,15 @@ export function SemesterRegistration() {
 
           <TextField
             type="text"
+             margin="normal"
+            variant="standard"
             value={userProfile?.personal_information?.registration_number}
             fullWidth
             disabled
             sx={{
               width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
               marginBottom: "10px",
-              backgroundColor: "whitesmoke",
+              
             }}
             InputProps={{
               startAdornment: (
@@ -525,8 +592,30 @@ export function SemesterRegistration() {
             }}
           />
 
+<TextField
+            type="text"
+            variant="standard"
+            margin="normal"
+            value={userProfile?.academic_information?.session}
+            placeholder="session"
+            sx={{
+              width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
+              
+            }}
+            fullWidth
+            disabled
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <MdDateRange />
+                </InputAdornment>
+              ),
+            }}
+          />
+
           <FormControl
             fullWidth
+            margin="normal"
             sx={{
               width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
               marginBottom: "10px",
@@ -539,7 +628,7 @@ export function SemesterRegistration() {
               defaultValue=""
               render={({ field }) => (
                 <Select
-                  style={{ backgroundColor: "whitesmoke" }}
+               
                   {...field}
                   labelId="semester-label"
                   label="Choose Semester"
@@ -566,6 +655,7 @@ export function SemesterRegistration() {
 
           <FormControl
             fullWidth
+             margin="normal"
             sx={{
               width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
               marginBottom: "10px",
@@ -578,7 +668,7 @@ export function SemesterRegistration() {
               defaultValue=""
               render={({ field }) => (
                 <Select
-                  style={{ backgroundColor: "whitesmoke" }}
+                
                   {...field}
                   labelId="branch-label"
                   label="Branch"
@@ -602,24 +692,7 @@ export function SemesterRegistration() {
             <FormHelperText>{errors.branch?.message}</FormHelperText>
           </FormControl>
 
-          <TextField
-            type="text"
-            value={userProfile?.academic_information?.session}
-            placeholder="session"
-            sx={{
-              width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
-              backgroundColor: "whitesmoke",
-            }}
-            fullWidth
-            disabled
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <MdDateRange />
-                </InputAdornment>
-              ),
-            }}
-          />
+         
         </Grid>
 
         <Grid
@@ -669,15 +742,15 @@ export function SemesterRegistration() {
             </Box>
             <Button
               variant="contained"
-              color="primary"
+              sx={{backgroundColor:"rgb(107, 169, 169)"}}
               onClick={handleSubmit(onSubmit)}
             >
-              {!load && <p>Send Request</p>}
-                  {load && (
-                    <CircularProgress
-                      style={{ color: "white", width: "20px", height: "22px" }}
-                    />
-                  )}
+              {!load && <p >Send Request</p>}
+              {load && (
+                <CircularProgress
+                  style={{ color: "white", width: "20px", height: "22px" }}
+                />
+              )}
             </Button>
           </center>
         </Grid>
@@ -732,15 +805,15 @@ export function SemesterRegistration() {
             </Box>
             <Button
               variant="contained"
-              color="primary"
+              sx={{backgroundColor:"rgb(107, 169, 169)"}}
               onClick={handleSubmit(onSubmit)}
             >
-             {!load && <p>Send Request</p>}
-                  {load && (
-                    <CircularProgress
-                      style={{ color: "white", width: "20px", height: "22px" }}
-                    />
-                  )}
+              {!load && <p >Send Request</p>}
+              {load && (
+                <CircularProgress
+                  style={{ color: "white", width: "20px", height: "22px" }}
+                />
+              )}
             </Button>
           </center>
         </Grid>
@@ -749,9 +822,18 @@ export function SemesterRegistration() {
       <Grid container spacing={3} style={{ padding: "20px" }}>
         <Grid item xs={12} style={{ marginTop: "40px" }}>
           <center>
-            <p style={{ width: "100%", fontSize: "1.2rem" }}>
+            <p style={{ width: "100%", fontSize: "1.4rem",fontWeight:"500" }}>
               Previous Records
             </p>
+            <Divider
+              sx={{
+                backgroundColor: "blue",
+                width: { lg: "7%", xs: "30%", md: "10%" },
+                fontWeight: "600",
+                textAlign: "center",
+                marginTop: "9px",
+              }}
+            />
           </center>
         </Grid>
         <Box
@@ -766,17 +848,20 @@ export function SemesterRegistration() {
           }}
         >
           {result?.length === 0 && (
-            <center>
-              <img
-                src="./images/No_data.png"
-                alt=""
-                style={{
-                  width: "300px",
-                  borderRadius: "10px",
-                  marginTop: "30px",
-                }}
-              />
-            </center>
+            
+              <center>
+                <p
+                  style={{
+                    padding: "1vw 0 4vw 0",
+                    fontSize: "1.0rem",
+                    marginTop: "40px",
+                    marginLeft:"30px"
+                  }}
+                >
+                  No data Found.
+                </p>
+              </center>
+           
           )}
 
           {result.length > 0 &&

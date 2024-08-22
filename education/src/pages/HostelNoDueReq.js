@@ -24,6 +24,7 @@ import {
   Paper,
   Checkbox,
   CircularProgress,
+  Grid,
 } from "@mui/material";
 import Footer from "../components/Home/Footer";
 import "../App.css";
@@ -411,8 +412,77 @@ export const HostelNoDueReq = () => {
     );
   }
   return (
-    <div className="container-fluid" style={{ backgroundColor: "whitesmoke" }}>
+    <div className="container-fluid" style={{backgroundColor:"whitesmoke"}} >
       <NavbarNew />
+
+      <Box
+        sx={{
+          width: "100vw",
+          textAlign: "center",
+          backgroundImage:
+            "url(https://images.unsplash.com/photo-1544006659-f0b21884ce1d?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
+          backgroundSize: "cover",
+          paddingTop: "2vw",
+          paddingBottom: "15vw",
+          position: "relative",
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.6)", // Overlay with opacity
+            zIndex: 1,
+          },
+        }}
+      >
+        <Grid
+          container
+          sx={{
+            position: "relative",
+            zIndex: 2,
+            color: "white",
+            padding: { xs: "20px", sm: "20px", md: "50px" },
+          }}
+        >
+          <Grid item xs={12} sm={12} lg={6} md={6}>
+            <Typography
+              variant="h1"
+              sx={{
+                fontSize: {
+                  xs: "2rem",
+                  sm: "2.4rem",
+                  md: "2.6rem",
+                  lg: "2.6rem",
+                },
+                marginTop: { xs: "20px", md: "80px" },
+                fontWeight: "bold",
+              }}
+            >
+             Hostel No Due Request
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: {
+                  xs: "1rem",
+                  sm: "1.1rem",
+                  md: "1.2rem",
+                  lg: "1.2rem",
+                },
+                marginTop: "10px",
+                fontWeight: "500",
+                padding: { xs: "10px", sm: "10px", md: "0px" },
+              }}
+            >
+             Efficiently handle hostel no-due requests by prioritizing student submissions and verification. Customize the process to ensure timely clearance and accurate record-keeping.
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={12} lg={6} md={6}></Grid>
+        </Grid>
+      </Box>
       <Box
         className="bonafide-form"
         sx={{
@@ -427,10 +497,22 @@ export const HostelNoDueReq = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <Typography
             variant="h5"
-            style={{ marginBottom: "15px", textAlign: "center" }}
+            style={{ marginBottom: "5px", textAlign: "center" }}
           >
             Hostel No Due Request
           </Typography>
+          <center>
+            <Divider
+              sx={{
+                backgroundColor: "blue",
+                width: { lg: "20%", xs: "30%", md: "10%",sm:"15%" },
+                fontWeight: "800",
+                textAlign: "center",
+                marginTop: "5px",
+                marginBottom:"40px"
+              }}
+            />
+          </center>
           <Typography variant="h6" gutterBottom>
             Registration/Employee No:
           </Typography>
@@ -450,6 +532,10 @@ export const HostelNoDueReq = () => {
             <Select
               labelId="semester-label"
               id="semester"
+              variant="standard"
+              sx={{
+                width:"50%"
+              }}
               label="Semester"
               {...register("semester")}
               defaultValue=""
@@ -532,10 +618,22 @@ export const HostelNoDueReq = () => {
             )}
           </Button>
         </form>
-        <Divider sx={{ my: 3, color: "black", width: "100%" }} />
-        <Typography variant="h6" gutterBottom>
+       
+      
+        <Typography variant="h6" gutterBottom sx={{marginTop:"40px"}}>
           Approved No Dues Request
         </Typography>
+        <center style={{width:"100%"}}>
+            <Divider
+              sx={{
+                backgroundColor: "blue",
+                width: { lg: "7%", xs: "30%", md: "10%" },
+                fontWeight: "800",
+                textAlign: "center",
+                marginTop: "5px",
+              }}
+            />
+          </center>
         <Box
           style={{
             display: "flex",
@@ -553,7 +651,7 @@ export const HostelNoDueReq = () => {
             >
               <center>
                 <img
-                  src="./images/No_data.png"
+                  src="./images/semester_no_data.png"
                   alt=""
                   style={{ width: "250px", borderRadius: "10px" }}
                 />
@@ -622,6 +720,7 @@ export const HostelNoDueReq = () => {
           )}
         </Box>
       </Box>
+     
       <Box style={{ width: "100vw" }}>
         <Footer />
       </Box>

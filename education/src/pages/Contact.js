@@ -8,6 +8,7 @@ import {
   Box,
   CardMedia,
   CircularProgress,
+  Divider,
 } from "@mui/material";
 import { Header } from "../components/Home/Header";
 import Footer from "../components/Home/Footer";
@@ -114,21 +115,23 @@ export const Contact = () => {
             },
             autoHideDuration: 3000,
           });
-          
+
           navigate("/after-contact");
         })
         .catch((error) => {
-          
           setLoading(false);
-          if(error?.response?.data?.errors?.non_field_errors?.[0]){
-            enqueueSnackbar(error?.response?.data?.errors?.non_field_errors?.[0], {
-              variant: "error",
-              anchorOrigin: {
-                vertical: "bottom",
-                horizontal: "center",
-              },
-              autoHideDuration: 3000,
-            });
+          if (error?.response?.data?.errors?.non_field_errors?.[0]) {
+            enqueueSnackbar(
+              error?.response?.data?.errors?.non_field_errors?.[0],
+              {
+                variant: "error",
+                anchorOrigin: {
+                  vertical: "bottom",
+                  horizontal: "center",
+                },
+                autoHideDuration: 3000,
+              }
+            );
           }
         });
     } else {
@@ -148,42 +151,120 @@ export const Contact = () => {
     <>
       <Header />
 
+      <Box
+        sx={{
+          width: "100vw",
+          textAlign: "center",
+          backgroundImage:
+            "url(https://images.unsplash.com/photo-1544006659-f0b21884ce1d?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
+          backgroundSize: "cover",
+          paddingTop: "2vw",
+          paddingBottom: "15vw",
+          position: "relative",
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.6)", // Overlay with opacity
+            zIndex: 1,
+          },
+        }}
+      >
+        <Grid
+          container
+          sx={{
+            position: "relative",
+            zIndex: 2,
+            color: "white",
+            padding: { xs: "20px", sm: "20px", md: "50px" },
+          }}
+        >
+          <Grid item xs={12} sm={12} lg={6} md={6}>
+            <Typography
+              variant="h1"
+              sx={{
+                fontSize: {
+                  xs: "2rem",
+                  sm: "2.4rem",
+                  md: "2.6rem",
+                  lg: "2.6rem",
+                },
+                marginTop: { xs: "20px", md: "80px" },
+                fontWeight: "bold",
+              }}
+            >
+              Service Request form
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: {
+                  xs: "1rem",
+                  sm: "1.1rem",
+                  md: "1.2rem",
+                  lg: "1.2rem",
+                },
+                marginTop: "10px",
+                fontWeight: "500",
+                padding: { xs: "10px", sm: "10px", md: "0px" },
+              }}
+            >
+              Want to use our platform? Fill the below service request form and
+              our team will connect with you as soon as possible.
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={12} lg={6} md={6}></Grid>
+        </Grid>
+      </Box>
       <div>
         <Container maxWidth="lg" sx={{ py: 3, marginBottom: "100px" }}>
-          <Grid container spacing={7}>
-            <Grid item xs={12} md={5}>
-              <CardMedia
-                component="img"
-                image={`./images/${images[imageIndex]}`}
-                sx={{
-                  borderRadius: "15px",
-                  marginTop: { lg: "50%", xs: "2%", sm: "2%", md: "40%" },
-                  marginBottom: "20px",
-                  
-                  height: { lg: "50%", xs: "100%", md: "50%", sm: "100%" },
-                }}
-                alt="Contact Us Image"
-              />
-            </Grid>
+          <p
+            style={{
+              fontSize: "1.6rem",
+              textAlign: "center",
+              marginBottom: "10px",
+              marginTop: "10px",
+            }}
+          >
+            Service Request form
+          </p>
+          <center>
+            <Divider
+              sx={{
+                backgroundColor: "blue",
+                width: { lg: "20%", xs: "30%", md: "10%", sm: "15%" },
+                fontWeight: "800",
+                textAlign: "center",
+                marginTop: "5px",
+                marginBottom: "40px",
+              }}
+            />
+          </center>
+          <Grid container spacing={7} sx={{padding:{md:"55px",lg:"55px",sm:"55px"}}}>
+            <Grid
+              item
+              xs={12}
+              md={5}
+              sx={{
+                backgroundImage: "url(../images/contactUs.jpg)",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center",
+                backgroundSize: "contain",
+                marginTop:"50px",
+                display:{xs:"none",sm:"none",lg:"block",md:"block"}
+              }}
+            ></Grid>
             <Grid item xs={12} md={7}>
-              <p
-                style={{
-                  fontSize: "1.6rem",
-                  textAlign: "center",
-                  marginBottom: "10px",
-                  marginTop: "10px",
-                }}
-              >
-               Service Request form
-              </p>
-              <Typography variant="body1" color="text.secondary" textAlign="center">
-              Want to use our platform? Fill the below service request form and our team will connect with you as soon as possible.
-              </Typography>
               <Box sx={{ py: 1, mt: 2 }}>
                 <TextField
                   fullWidth
                   label="Name"
-                  variant="outlined"
+                  margin="normal"
+                  variant="standard"
                   placeholder="Name..."
                   InputLabelProps={{
                     shrink: true,
@@ -197,7 +278,8 @@ export const Contact = () => {
                 <TextField
                   fullWidth
                   label="Email"
-                  variant="outlined"
+                  margin="normal"
+                  variant="standard"
                   placeholder="Email..."
                   InputLabelProps={{
                     shrink: true,
@@ -211,7 +293,8 @@ export const Contact = () => {
                 <TextField
                   fullWidth
                   label="College Name"
-                  variant="outlined"
+                  margin="normal"
+                  variant="standard"
                   placeholder="College Name..."
                   InputLabelProps={{
                     shrink: true,
@@ -225,7 +308,8 @@ export const Contact = () => {
                 <TextField
                   fullWidth
                   label="College Address"
-                  variant="outlined"
+                  margin="normal"
+                  variant="standard"
                   placeholder="College Address..."
                   InputLabelProps={{
                     shrink: true,
@@ -239,7 +323,8 @@ export const Contact = () => {
                 <TextField
                   fullWidth
                   label="College Code"
-                  variant="outlined"
+                  margin="normal"
+                  variant="standard"
                   placeholder="College Code..."
                   InputLabelProps={{
                     shrink: true,
@@ -255,8 +340,8 @@ export const Contact = () => {
                   fullWidth
                   label="Phone Number"
                   placeholder="Phone Number"
-                  variant="outlined"
-                 
+                  margin="normal"
+                  variant="standard"
                   InputLabelProps={{
                     shrink: true,
                   }}
@@ -269,7 +354,8 @@ export const Contact = () => {
                 <TextField
                   fullWidth
                   label="Principal Name"
-                  variant="outlined"
+                  margin="normal"
+                  variant="standard"
                   placeholder="Principal Name..."
                   InputLabelProps={{
                     shrink: true,
@@ -284,7 +370,8 @@ export const Contact = () => {
                   type="date"
                   fullWidth
                   label="Established Date"
-                  variant="outlined"
+                  margin="normal"
+                  variant="standard"
                   InputLabelProps={{
                     shrink: true,
                   }}
@@ -316,27 +403,28 @@ export const Contact = () => {
                 <br />
                 {url && <img src={url} alt="" style={{ width: "150px" }} />}
               </Box>
-              <Button
-                variant="contained"
-                fullWidth
-                style={{
-                  backgroundColor: "rgb(107, 169, 169)",
-                }}
-                onClick={handleSubmit}
-              >
-                {!loading && <p>Submit Message</p>}
-                {loading && (
-                  <CircularProgress
-                    style={{ color: "white", width: "20px", height: "22px" }}
-                  />
-                )}
-              </Button>
+              <center>
+                <Button
+                  variant="contained"
+                  style={{
+                    width: "70%",
+                    backgroundColor: "rgb(107, 169, 169)",
+                  }}
+                  onClick={handleSubmit}
+                >
+                  {!loading && <p>Submit Message</p>}
+                  {loading && (
+                    <CircularProgress
+                      style={{ color: "white", width: "20px", height: "22px" }}
+                    />
+                  )}
+                </Button>
+              </center>
             </Grid>
           </Grid>
         </Container>
       </div>
 
-     
       <Footer />
     </>
   );

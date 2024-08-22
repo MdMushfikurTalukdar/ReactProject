@@ -269,30 +269,27 @@ export const BonafideForm = () => {
 
     if (token && token1) {
       const response = jwtDecode(token);
-      
-          axios
-            .get(
-              `${BaseUrl}/${response.college}/bonafide/?search=${
-                jwtDecode(sessionStorage?.getItem("accesstoken"))
-                  ?.registration_number
-              }`,
-              {
-                headers: {
-                  Authorization: `Bearer ${sessionStorage.getItem(
-                    "accesstoken"
-                  )}`,
-                },
-              }
-            )
-            .then((response) => {
-              setLoading(false);
-              console.log(response);
-              setResult(response.data.reverse());
-            })
-            .catch((error) => {
-              console.error(error);
-            });
-         
+
+      axios
+        .get(
+          `${BaseUrl}/${response.college}/bonafide/?search=${
+            jwtDecode(sessionStorage?.getItem("accesstoken"))
+              ?.registration_number
+          }`,
+          {
+            headers: {
+              Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+            },
+          }
+        )
+        .then((response) => {
+          setLoading(false);
+          console.log(response);
+          setResult(response.data.reverse());
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     } else {
       navigate("/login");
     }
@@ -305,40 +302,39 @@ export const BonafideForm = () => {
     if (token && token1) {
       const response = jwtDecode(token);
 
-          let config = {
-            method: "GET",
-            maxBodyLength: Infinity,
-            url: `${BaseUrl}/${response?.college}/profile/`,
-            headers: {
-              Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-            },
-          };
+      let config = {
+        method: "GET",
+        maxBodyLength: Infinity,
+        url: `${BaseUrl}/${response?.college}/profile/`,
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+        },
+      };
 
-          axios
-            .request(config)
-            .then((response) => {
-              console.log(response);
-              setProfile(response.data);
-              setLoading1(false);
-            })
-            .catch((error) => {
-              console.log(error);
-              if (
-                error?.response?.data?.errors?.detail ===
-                "Given token not valid for any token type"
-              ) {
-                enqueueSnackbar("Logging out", {
-                  variant: "error",
-                  anchorOrigin: {
-                    vertical: "bottom",
-                    horizontal: "center",
-                  },
-                  autoHideDuration: 3000,
-                });
-                navigate("/login");
-              }
+      axios
+        .request(config)
+        .then((response) => {
+          console.log(response);
+          setProfile(response.data);
+          setLoading1(false);
+        })
+        .catch((error) => {
+          console.log(error);
+          if (
+            error?.response?.data?.errors?.detail ===
+            "Given token not valid for any token type"
+          ) {
+            enqueueSnackbar("Logging out", {
+              variant: "error",
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "center",
+              },
+              autoHideDuration: 3000,
             });
-        
+            navigate("/login");
+          }
+        });
     } else {
       navigate("/login");
     }
@@ -390,17 +386,22 @@ export const BonafideForm = () => {
     formData.append("required_for", data.purpose);
 
     axios
-      .post(`${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/bonafide/`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-        },
-      })
+      .post(
+        `${BaseUrl}/${
+          jwtDecode(sessionStorage.getItem("accesstoken")).college
+        }/bonafide/`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+          },
+        }
+      )
       .then((response) => {
-
         reset();
-        setPreviewUrl('');
-        setName('');
+        setPreviewUrl("");
+        setName("");
         enqueueSnackbar("Request sent successfully", {
           variant: "success",
           anchorOrigin: {
@@ -476,7 +477,19 @@ export const BonafideForm = () => {
         <Grid container>
           <Grid item xs={12} md={6} lg={6}>
             <center>
-              <p style={{ fontSize: "1.2rem" }}>Bonafide Certificate Request</p>
+              <p style={{ fontSize: "1.4rem" }}>Bonafide Certificate Request</p>
+
+              <center>
+                <Divider
+                  sx={{
+                    backgroundColor: "blue",
+                    width: { lg: "22%", xs: "50%", md: "10%" },
+                    fontWeight: "800",
+                    textAlign: "center",
+                    marginTop: "5px",
+                  }}
+                />
+              </center>
             </center>
 
             <Grid
@@ -494,9 +507,11 @@ export const BonafideForm = () => {
               >
                 <center>
                   <CardMedia
-                    src="../images/Bonafide.png"
+                    component="img"
+                    image="../images/Bonafide.png"
                     alt=""
-                    sx={{ width: {lg:"35%",xs:"55%"}, marginTop: "20px" }}
+                    sx={{ width: { sm: "30%", xs: "55%" }, marginTop: "20px"
+                   }}
                   />
                 </center>
               </Box>
@@ -658,10 +673,15 @@ export const BonafideForm = () => {
                 marginTop: { lg: "2%", md: "15%" },
               }}
             >
-              <img
-                src="../images/Bonafide.png"
+              <CardMedia
+                component="img"
+                image="../images/Bonafide.png"
                 alt=""
-                style={{ width: "50%", marginLeft: "15%", marginTop: "5%" }}
+                sx={{
+                  width: { lg: "45%", xs: "90%", md: "55%" },
+                  marginLeft: "25%",
+                  marginTop: "5%",
+                }}
               />
             </Box>
           </Grid>
@@ -680,6 +700,17 @@ export const BonafideForm = () => {
               >
                 Previous Records
               </p>
+              <center>
+                <Divider
+                  sx={{
+                    backgroundColor: "blue",
+                    width: { lg: "7%", xs: "30%", md: "10%",sm:"20%" },
+                    fontWeight: "800",
+                    textAlign: "center",
+                    marginTop: "5px",
+                  }}
+                />
+              </center>
             </div>
           </Box>
         )}
@@ -737,12 +768,10 @@ export const BonafideForm = () => {
           ) : (
             <center>
               <img
-                src="./images/No_data.png"
+                src="./images/semester_no_data.png"
                 alt=""
                 style={{
-                  width: "320px",
-                  borderRadius: "10px",
-                  marginTop: "30px",
+                  width: "280px",
                 }}
               />
             </center>
@@ -765,8 +794,8 @@ export const BonafideForm = () => {
                 display: { xs: "none", sm: "block", md: "block", lg: "block" },
               }}
             >
-              <Box sx={{ marginTop: 5 }}>
-                <Divider style={{ fontWeight: "bold" }} />
+              <Box sx={{ marginTop: 2, marginRight: 7 }}>
+               
 
                 <p
                   style={{
@@ -778,19 +807,78 @@ export const BonafideForm = () => {
                   {" "}
                   Previous Records
                 </p>
+                <center>
+                  <Divider
+                    sx={{
+                      backgroundColor: "blue",
+                      width: { lg: "12%", xs: "30%", md: "10%",sm:"15%" },
+                      fontWeight: "800",
+                      textAlign: "center",
+                      marginTop: "5px",
+                    }}
+                  />
+                </center>
                 {result.length > 0 ? (
                   <TableContainer
                     component={Paper}
-                    sx={{ marginTop: 3, borderRadius: "10px" }}
+                    sx={{
+                      marginTop: 3,
+                      borderRadius: "10px",
+                      border: "none",
+                      "&:last-child td, &:last-child th": { border: 0 },
+                      borderRight: 0,
+                      borderBottom: 0,
+                      marginBottom: "50px",
+                      marginRight: "30px",
+                    }}
                   >
-                    <Table sx={{ minWidth: 650 }} aria-label="bonafide table">
-                      <TableHead style={{ backgroundColor: "#D2E9E9" }}>
+                    <Table
+                      sx={{
+                        minWidth: 650,
+                        borderRight: 0,
+                        "&:last-child td, &:last-child th": { border: 0 },
+                        border: 0,
+                        borderBottom: 0,
+                      }}
+                      aria-label="bonafide table"
+                    >
+                      <TableHead style={{ backgroundColor: "#545959" }}>
                         <TableRow>
-                          <TableCell>Bonafide Number</TableCell>
-                          <TableCell>Applied For</TableCell>
-                          <TableCell>Status</TableCell>
-                          <TableCell>Applied Date</TableCell>
-                          <TableCell>Actions</TableCell>
+                          <TableCell
+                            sx={{
+                              color: "white",
+                            }}
+                          >
+                            Bonafide Number
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              color: "white",
+                            }}
+                          >
+                            Applied For
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              color: "white",
+                            }}
+                          >
+                            Status
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              color: "white",
+                            }}
+                          >
+                            Applied Date
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              color: "white",
+                            }}
+                          >
+                            Actions
+                          </TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -835,7 +923,7 @@ export const BonafideForm = () => {
                           </TableRow>
                         )}
                       </TableBody>
-                      <TableFooter style={{ backgroundColor: "#D2E9E9" }}>
+                      <TableFooter style={{ backgroundColor: "#545959" }}>
                         <TableRow>
                           <TablePagination
                             rowsPerPageOptions={[
@@ -864,15 +952,15 @@ export const BonafideForm = () => {
                   </TableContainer>
                 ) : (
                   <center>
-                    <img
-                      src="./images/No_data.png"
-                      alt=""
-                      style={{
-                        width: "320px",
-                        borderRadius: "10px",
-                        marginTop: "30px",
-                      }}
-                    />
+                   <img
+                    src="./images/semester_no_data.png"
+                    alt=""
+                    style={{
+                      width: "280px",
+                      marginTop:"20px",
+                      marginBottom:"20px"
+                    }}
+                  />
                   </center>
                 )}
               </Box>

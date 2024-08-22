@@ -27,6 +27,7 @@ import {
   MenuItem,
   Select,
   InputLabel,
+  Divider,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
@@ -349,15 +350,95 @@ export const HostelRoomRequest = () => {
   return (
     <div className="container-fluid">
       <NavbarNew />
+
+      <Box
+        sx={{
+          width: "100vw",
+          textAlign: "center",
+          backgroundImage:
+            "url(https://images.unsplash.com/photo-1544006659-f0b21884ce1d?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
+          backgroundSize: "cover",
+          paddingTop: "2vw",
+          paddingBottom: "15vw",
+          position: "relative",
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.6)", // Overlay with opacity
+            zIndex: 1,
+          },
+        }}
+      >
+        <Grid
+          container
+          sx={{
+            position: "relative",
+            zIndex: 2,
+            color: "white",
+            padding: { xs: "20px", sm: "20px", md: "50px" },
+          }}
+        >
+          <Grid item xs={12} sm={12} lg={6} md={6}>
+            <Typography
+              variant="h1"
+              sx={{
+                fontSize: {
+                  xs: "2rem",
+                  sm: "2.4rem",
+                  md: "2.6rem",
+                  lg: "2.6rem",
+                },
+                marginTop: { xs: "20px", md: "80px" },
+                fontWeight: "bold",
+              }}
+            >
+              Hostel Room Request
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: {
+                  xs: "1rem",
+                  sm: "1.1rem",
+                  md: "1.2rem",
+                  lg: "1.2rem",
+                },
+                marginTop: "10px",
+                fontWeight: "500",
+                padding: { xs: "10px", sm: "10px", md: "0px" },
+              }}
+            >
+             Efficiently manage hostel room requests by prioritizing student preferences and needs. Customize room assignments to ensure optimal accommodation and a smooth living experience.
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={12} lg={6} md={6}></Grid>
+        </Grid>
+      </Box>
       <Box className="bonafide-form" sx={{ borderRadius: 3, padding: 0 }}>
         <Typography
           variant="p"
           align="center"
           gutterBottom
-          sx={{ fontSize: 20, marginTop: "20px" }}
+          sx={{ fontSize: 25, marginTop: "20px" }}
         >
           Hostel Room Allotment Request
         </Typography>
+        <center style={{width:"100%"}}>
+            <Divider
+              sx={{
+                backgroundColor: "blue",
+                width: { lg: "7%", xs: "30%", md: "10%" },
+                fontWeight: "800",
+                textAlign: "center",
+                marginTop: "5px",
+              }}
+            />
+          </center>
         <Grid container sx={{ padding: { lg: 5, md: 5, xs: 1, sm: 1 } }}>
           <Grid
             item
@@ -429,6 +510,7 @@ export const HostelRoomRequest = () => {
                   >
                     <TextField
                       label="Current CGPA"
+                      variant="standard"
                       type="text"
                       {...register("cgpa")}
                       error={!!errors.cgpa}
@@ -441,7 +523,8 @@ export const HostelRoomRequest = () => {
 
                   <FormControl
                     fullWidth
-                    variant="outlined"
+                    
+                    variant="standard"
                     margin="normal"
                     error={!!errors.RoomType?.message}
                   >
@@ -570,45 +653,37 @@ export const HostelRoomRequest = () => {
 
           <Grid item xs={12} sm={12} md={12} lg={6}>
             <Box>
-              <Box
-                sx={{
-                  display: {
-                    md: "none",
-                    lg: "block",
-                    xs: "none",
-                    sm: "none",
-                  },
-                }}
-              >
-                <center>
-                  <img
-                    src="../images/hostelRoom.jpg"
-                    alt=""
-                    style={{
-                      width: "310px",
-                      textAlign: "center",
-                      borderRadius: "9px",
-                    }}
-                  />
-                </center>
-              </Box>
-
+             
               <p
                 style={{
                   textAlign: "center",
                   marginBottom: "10px",
-                  marginTop: "20px",
-                  fontSize: "1.2rem",
+                  marginTop: "60px",
+                  fontSize: "1.3rem",
                 }}
               >
                 Previous Hostel Requests
               </p>
 
+              <center>
+            <Divider
+              sx={{
+                backgroundColor: "blue",
+                width: { lg: "17%", xs: "30%", md: "10%",sm:"15%" },
+                fontWeight: "800",
+                textAlign: "center",
+                marginTop: "5px",
+                marginBottom:"30px"
+              }}
+            />
+          </center>
+              
               <Box
                 style={{
                   display: "flex",
                   justifyContent: "center",
                   flexDirection: "column",
+                  alignItems:"center"
                 }}
               >
                 {result.length === 0 && (
@@ -626,15 +701,13 @@ export const HostelRoomRequest = () => {
                     }}
                   >
                     <center>
-                      <img
-                        src="../images/No_data.png"
-                        alt=""
-                        style={{
-                          width: "310px",
-                          borderRadius: "10px",
-                          marginTop: "10px",
-                        }}
-                      />
+                    <img
+                    src="./images/semester_no_data.png"
+                    alt=""
+                    style={{
+                      width: "280px",
+                    }}
+                  />
                     </center>
                   </Typography>
                 )}
@@ -646,8 +719,8 @@ export const HostelRoomRequest = () => {
                       key={index}
                       variant="outlined"
                       sx={{
-                        maxWidth: 305,
-                        marginBottom: 2,
+                        width: 305,
+                        marginBottom: 5,
                         backgroundColor: "rgb(243 244 246)",
                         marginLeft: "20px",
                         padding: 1,
@@ -692,31 +765,35 @@ export const HostelRoomRequest = () => {
                 ) : result.length === 0 ? (
                   <>
                     <center>
-                      <img
-                        src="./images/No_data.png"
-                        alt=""
-                        style={{
-                          width: "310px",
-                          borderRadius: "10px",
-                          marginTop: "30px",
-                        }}
-                      />
+                    <img
+                    src="./images/semester_no_data.png"
+                    alt=""
+                    style={{
+                      width: "280px",
+                      marginTop:"30px"
+                    }}
+                  />
                     </center>
                   </>
                 ) : (
-                  <TableContainer component={Paper} sx={{ marginTop: 3 }}>
+                  <TableContainer component={Paper} sx={{ marginTop: 3,border: "none",marginBottom:"50px",
+                    "&:last-child td, &:last-child th": { border: 0 },
+                    borderRight: 0,
+                    borderBottom: 0, }}>
                     <Table
-                      sx={{ minWidth: 650 }}
+                      sx={{ minWidth: 650, "&:last-child td, &:last-child th": { border: 0 },
+                      border: 0,
+                      borderBottom: 0, }}
                       aria-label="previous hostel requests"
                       style={{ textAlign: "center" }}
                     >
-                      <TableHead style={{ backgroundColor: "#D2E9E9" }}>
+                      <TableHead style={{ backgroundColor: "#545959" }}>
                         <TableRow>
-                          <TableCell style={{ textAlign: "center" }}>
+                          <TableCell style={{ textAlign: "center",color: "white", }}>
                             Status
                           </TableCell>
 
-                          <TableCell style={{ textAlign: "center" }}>
+                          <TableCell style={{ textAlign: "center",color: "white", }}>
                             Alloted Room
                           </TableCell>
                         </TableRow>
@@ -759,7 +836,7 @@ export const HostelRoomRequest = () => {
                             </TableRow>
                           ))}
                       </TableBody>
-                      <TableFooter style={{ backgroundColor: "#D2E9E9" }}>
+                      <TableFooter style={{ backgroundColor: "#545959" }}>
                         <TableRow>
                           <TablePagination
                             rowsPerPageOptions={[

@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import {
   Box,
-  TextField,
+  
   Typography,
   Button,
-  Paper,
+  
   FormControl,
   FormHelperText,
   CircularProgress,
   Select,
   MenuItem,
   InputLabel,
+  Grid,
+  Divider,
 } from "@mui/material";
 import Footer from "../components/Home/Footer";
 import NavbarNew from "../components/NavbarNew";
@@ -21,7 +23,7 @@ import axios from "axios";
 import { enqueueSnackbar } from "notistack";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
-import { BaseUrl, Url } from "../components/BaseUrl";
+import {  Url } from "../components/BaseUrl";
 
 const schema = yup.object().shape({
   branch: yup.string().required("Branch is required"),
@@ -29,7 +31,7 @@ const schema = yup.object().shape({
 
 export const SemBranch = () => {
   const navigate = useNavigate();
-  const [college, setCollege] = useState("");
+  
   const [load, setLoad] = useState(false);
 
   const regenerateToken = () => {
@@ -105,7 +107,7 @@ export const SemBranch = () => {
         (response.role !== "super-admin" && response.role !== "office")
       ) {
         navigate("/login");
-      } 
+      }
     } else {
       navigate("/login");
     }
@@ -166,9 +168,8 @@ export const SemBranch = () => {
     { name: "Plastics Engineering", abbreviation: "PLE" },
     { name: "Petrochemical Engineering", abbreviation: "PCE" },
     { name: "Energy Engineering", abbreviation: "EE" },
-    { name: "Computer Science and Business Systems", abbreviation: "CSBS" }
-];
-
+    { name: "Computer Science and Business Systems", abbreviation: "CSBS" },
+  ];
 
   const onSubmit = (data) => {
     setLoad(true);
@@ -181,7 +182,9 @@ export const SemBranch = () => {
     let config = {
       method: "post",
       maxBodyLength: Infinity,
-      url: `${Url}/${jwtDecode(sessionStorage.getItem('accesstoken')).college}/branch/`,
+      url: `${Url}/${
+        jwtDecode(sessionStorage.getItem("accesstoken")).college
+      }/branch/`,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
@@ -273,6 +276,75 @@ export const SemBranch = () => {
   return (
     <Box>
       <NavbarNew />
+
+      <Box
+        sx={{
+          width: "100vw",
+          textAlign: "center",
+          backgroundImage:
+            "url(https://images.unsplash.com/photo-1544006659-f0b21884ce1d?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
+          backgroundSize: "cover",
+          paddingTop: "2vw",
+          paddingBottom: "15vw",
+          position: "relative",
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.6)", // Overlay with opacity
+            zIndex: 1,
+          },
+        }}
+      >
+        <Grid
+          container
+          sx={{
+            position: "relative",
+            zIndex: 2,
+            color: "white",
+            padding: { xs: "20px", sm: "20px", md: "50px" },
+          }}
+        >
+          <Grid item xs={12} sm={12} lg={6} md={6}>
+            <Typography
+              variant="h1"
+              sx={{
+                fontSize: {
+                  xs: "2rem",
+                  sm: "2.4rem",
+                  md: "2.6rem",
+                  lg: "2.6rem",
+                },
+                marginTop: { xs: "20px", md: "80px" },
+                fontWeight: "bold",
+              }}
+            >
+              Branch Enrollment
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: {
+                  xs: "1rem",
+                  sm: "1.1rem",
+                  md: "1.2rem",
+                  lg: "1.2rem",
+                },
+                marginTop: "10px",
+                fontWeight: "500",
+                padding: { xs: "10px", sm: "10px", md: "0px" },
+              }}
+            >
+             Streamline your system by adding and organizing branches. Customize each branch to align with your specific needs, ensuring efficient management and optimal performance.
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={12} lg={6} md={6}></Grid>
+        </Grid>
+      </Box>
       <Box
         sx={{
           padding: 4,
@@ -281,7 +353,7 @@ export const SemBranch = () => {
           margin: "auto",
           marginTop: 5,
           marginBottom: 18,
-          height:"70vh"
+          height: "50vh",
         }}
       >
         <Typography
@@ -292,23 +364,30 @@ export const SemBranch = () => {
         >
           Branch Enrollment
         </Typography>
+
         <center>
-          <img
-            src="./images/enrollment.png"
-            alt=""
-            style={{ width: "250px", borderRadius: "10px",marginBottom:"20px" }}
-          />
-        </center>
+            <Divider
+              sx={{
+                backgroundColor: "blue",
+                width: { lg: "27%", xs: "30%", md: "10%" },
+                fontWeight: "800",
+                textAlign: "center",
+                marginTop: "5px",
+              }}
+            />
+          </center>
+        
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
             gap: 3,
+            marginTop:10
           }}
         >
           <form onSubmit={handleSubmit(onSubmit)}>
             <FormControl fullWidth error={!!errors.branch}>
-            <InputLabel>Branch</InputLabel>
+              <InputLabel>Branch</InputLabel>
               <Select
                 label="Branch*"
                 variant="outlined"
@@ -316,7 +395,6 @@ export const SemBranch = () => {
                 {...register("branch")}
                 defaultValue=""
               >
-                
                 {branches.map((branch) => (
                   <MenuItem
                     key={branch.abbreviation}

@@ -28,6 +28,11 @@ html {
   background-color: rgb(107 169 169);
   overflow-x: hidden;
 }
+.parentdiv_large_screen {
+  height: 100%;
+  
+  overflow-x: hidden;
+}
 .children1_small_screen {
   width: 100vw;
   height: fit-content;
@@ -68,7 +73,7 @@ html {
   border-radius: 8px 0px 0px 8px;
   text-align: center;
   padding: 25px;
-  height: 100vh;
+
   width: 100vw;
 }
 .Divider {

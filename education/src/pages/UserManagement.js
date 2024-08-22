@@ -14,6 +14,8 @@ import {
   TextField,
   Select,
   MenuItem,
+  Grid,
+  Divider,
 } from "@mui/material";
 import axios from "axios";
 import { Url } from "../components/BaseUrl";
@@ -280,7 +282,6 @@ export const UserManagement = () => {
   };
 
   const handleUpdate = (id) => {
-
     setload1(true);
     const token = sessionStorage.getItem("accesstoken");
     const token1 = sessionStorage.getItem("refreshtoken");
@@ -404,6 +405,75 @@ export const UserManagement = () => {
   return (
     <Box>
       <NavbarNew />
+
+      <Box
+        sx={{
+          width: "100vw",
+          textAlign: "center",
+          backgroundImage:
+            "url(https://images.unsplash.com/photo-1544006659-f0b21884ce1d?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
+          backgroundSize: "cover",
+          paddingTop: "2vw",
+          paddingBottom: "15vw",
+          position: "relative",
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.6)", // Overlay with opacity
+            zIndex: 1,
+          },
+        }}
+      >
+        <Grid
+          container
+          sx={{
+            position: "relative",
+            zIndex: 2,
+            color: "white",
+            padding: { xs: "20px", sm: "20px", md: "50px" },
+          }}
+        >
+          <Grid item xs={12} sm={12} lg={6} md={6}>
+            <Typography
+              variant="h1"
+              sx={{
+                fontSize: {
+                  xs: "2rem",
+                  sm: "2.4rem",
+                  md: "2.6rem",
+                  lg: "2.6rem",
+                },
+                marginTop: { xs: "20px", md: "80px" },
+                fontWeight: "bold",
+              }}
+            >
+              User Management
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: {
+                  xs: "1rem",
+                  sm: "1.1rem",
+                  md: "1.2rem",
+                  lg: "1.2rem",
+                },
+                marginTop: "10px",
+                fontWeight: "500",
+                padding: { xs: "10px", sm: "10px", md: "0px" },
+              }}
+            >
+              Efficiently manage your users by prioritizing their roles and responsibilities. Customize their roles as needed to ensure optimal organization and performance.
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={12} lg={6} md={6}></Grid>
+        </Grid>
+      </Box>
       <Box sx={{ minHeight: "80vh", padding: "5px" }}>
         {edit && (
           <center>
@@ -491,12 +561,12 @@ export const UserManagement = () => {
                 sx={{ width: "70%", marginTop: "15px" }}
                 onClick={(e) => handleUpdate(editInfo.id)}
               >
-              {!load1 && <p>Edit</p>}
-                  {load1 && (
-                    <CircularProgress
-                      style={{ color: "white", width: "20px", height: "22px" }}
-                    />
-                  )}
+                {!load1 && <p>Edit</p>}
+                {load1 && (
+                  <CircularProgress
+                    style={{ color: "white", width: "20px", height: "22px" }}
+                  />
+                )}
               </Button>
             </Box>
           </center>
@@ -560,35 +630,93 @@ export const UserManagement = () => {
         )}
         <center>
           <h2 style={{ marginTop: "20px" }}>User Management</h2>
+
+          <center>
+            <Divider
+              sx={{
+                backgroundColor: "blue",
+                width: { lg: "7%", xs: "30%", md: "10%" },
+                fontWeight: "800",
+                textAlign: "center",
+                marginTop: "5px",
+              }}
+            />
+          </center>
         </center>
         <TableContainer
           component={Paper}
           sx={{
-            maxWidth: 900,
+            maxWidth: "90vw",
             margin: "auto",
             marginTop: 5,
             minWidth: 200,
             marginBottom: "40px",
+            border: "none",
+            "&:last-child td, &:last-child th": { border: 0 },
+            borderRight:0,
+            borderBottom:0
           }}
         >
-          <Table>
-            <TableHead sx={{ backgroundColor: "rgb(107, 169, 169)" }}>
-              <TableRow>
-                <TableCell align="center">Role</TableCell>
-
-                <TableCell align="center">Registration Number</TableCell>
-                <TableCell align="center">Actions</TableCell>
+          <Table
+            sx={{
+              borderRight:0,
+              "&:last-child td, &:last-child th": { border: 0 },
+              border:0,
+              borderBottom:0
+            }}
+          >
+            <TableHead sx={{ backgroundColor: "#545959", '&:last-child td, &:last-child th': { border: 0 },borderRight:"none" }}>
+              <TableRow >
+                <TableCell
+                  align="center"
+                  sx={{
+                    color: "white",
+                    borderBottom: "none",
+                    borderRight: "none",
+                    '&:last-child td, &:last-child th': { border: 0 }
+                  }}
+                >
+                  Role
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{
+                    color: "white",
+                    borderBottom: "none",
+                    borderRight: "none",
+                  }}
+                >
+                  Registration Number
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{
+                    color: "white",
+                    borderBottom: "none",
+                    borderRight: "none",
+                  }}
+                >
+                  Actions
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {users.map((user, index) => (
-                <TableRow key={index}>
-                  <TableCell align="center">{user.role}</TableCell>
+                <TableRow
+                  key={index}
+                  sx={{
+                    backgroundColor: index % 2 === 0 ? "white" : "whitesmoke",
 
-                  <TableCell align="center">
+                    "&:last-child td, &:last-child th": { border: 0 },
+                  }}
+                >
+                  <TableCell align="center" sx={{ borderRight: "none" }}>
+                    {user.role}
+                  </TableCell>
+                  <TableCell align="center" sx={{ borderRight: "none" }}>
                     {user.registration_number}
                   </TableCell>
-                  <TableCell align="center">
+                  <TableCell align="center" sx={{ borderRight: "none" }}>
                     <Button
                       onClick={(e) =>
                         handleEdit(user.registration_number, user.role, user.id)
