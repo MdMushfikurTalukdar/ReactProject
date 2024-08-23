@@ -16,6 +16,7 @@ import { enqueueSnackbar } from "notistack";
 import axios from "axios";
 import { Url } from "../components/BaseUrl";
 import { useNavigate } from "react-router-dom";
+import { MdEmail, MdLocationOn, MdPhone } from "react-icons/md";
 
 export const Contact = () => {
   const [imageIndex, setImageIndex] = React.useState(0);
@@ -244,7 +245,11 @@ export const Contact = () => {
               }}
             />
           </center>
-          <Grid container spacing={7} sx={{padding:{md:"55px",lg:"55px",sm:"55px"}}}>
+          <Grid
+            container
+            spacing={7}
+            sx={{ padding: { md: "55px", lg: "55px", sm: "55px" } }}
+          >
             <Grid
               item
               xs={12}
@@ -254,8 +259,8 @@ export const Contact = () => {
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "center",
                 backgroundSize: "contain",
-                marginTop:"50px",
-                display:{xs:"none",sm:"none",lg:"block",md:"block"}
+                marginTop: "50px",
+                display: { xs: "none", sm: "none", lg: "block", md: "block" },
               }}
             ></Grid>
             <Grid item xs={12} md={7}>
@@ -423,6 +428,76 @@ export const Contact = () => {
             </Grid>
           </Grid>
         </Container>
+
+       
+            <center>
+            <Typography variant="h4" mb={2} className="header">
+              Get in touch
+            </Typography>
+            <Divider
+              sx={{
+                backgroundColor: "blue",
+                width: { lg: "10vw", xs: "70vw", md: "40vw" },
+                fontWeight: "700",
+              }}
+            />
+            </center>
+            <Box my={2} sx={{ padding: "20px" }}>
+      <Grid
+        container
+        spacing={3}
+        justifyContent="center"
+        alignItems="center"
+        textAlign="center"
+      >
+        {/* Email Section */}
+        <Grid item xs={12} sm={4}>
+          <Typography variant="h6" color="textPrimary">
+            <Box display="flex" justifyContent="center" alignItems="center" gap={1}>
+              <MdEmail />
+              <Box>Email</Box>
+            </Box>
+          </Typography>
+          <Typography variant="body1" color="textSecondary">
+            contact2atplc@gmail.com
+          </Typography>
+        </Grid>
+
+        {/* Phone Section */}
+        <Grid item xs={12} sm={4}>
+          <Typography variant="h6" color="textPrimary">
+            <Box display="flex" justifyContent="center" alignItems="center" gap={1}>
+              <MdPhone />
+              <Box>Phone</Box>
+            </Box>
+          </Typography>
+          <Typography variant="body1" color="textSecondary">
+            +91 6205695667
+          </Typography>
+        </Grid>
+
+        {/* Address Section */}
+        <Grid item xs={12} sm={4}>
+          <Typography variant="h6" color="textPrimary">
+            <Box display="flex" justifyContent="center" alignItems="center" gap={1}>
+              <MdLocationOn />
+              <Box>Address</Box>
+            </Box>
+          </Typography>
+          <Typography variant="body1" color="textSecondary">
+            3/365, Aryan Bhawan
+            <br />
+            Lakho Binda Campus, Santunagar,
+            <br />
+            Madhubani (Bihar)-India
+            <br />
+            Pin-847211
+          </Typography>
+        </Grid>
+      </Grid>
+
+      
+    </Box>
       </div>
 
       <Footer />
