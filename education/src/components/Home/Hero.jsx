@@ -118,11 +118,11 @@ export const Hero=()=>{
           width: "100vw",
           textAlign: "center",
           backgroundImage:
-            "url(../images/homepage_intro3.png)",
+            "url(../images/homepage_intro1.jpg)",
           backgroundRepeat: "no-repeat",
-          backgroundPosition: "center",
-          backgroundSize: "contain",
-          paddingTop: "4vw",
+          backgroundPosition: "center 85%",
+          backgroundSize: "cover",
+          paddingTop: {lg:"4vw",md:"4vw",sm:"4vw",xs:"15vw"},
           paddingBottom: {lg:"15vw",xs:"25vw",md:"15vw"},
           position: "relative",
           "&::before": {
@@ -160,7 +160,7 @@ export const Hero=()=>{
                 fontWeight: "bold",
               }}
             >
-              Welcome to Smart Campus
+              Welcome to Smart One
             </Typography>
 
             

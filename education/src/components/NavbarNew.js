@@ -605,7 +605,7 @@ export const NavbarNew = () => {
                 navigate("/");
               }}
             >
-              Smart Campus
+              Smart One
             </h1>
           </div>
           <div className="flex items-center space-x-4">

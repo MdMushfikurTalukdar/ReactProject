@@ -161,7 +161,7 @@ export const Contact = () => {
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
           backgroundSize: "cover",
-          paddingTop: "2vw",
+          paddingTop: { lg: "2vw", xs: "20vw", md: "2vw", sm: "2vw" },
           paddingBottom: "15vw",
           position: "relative",
           "&::before": {
@@ -429,8 +429,8 @@ export const Contact = () => {
           </Grid>
         </Container>
 
-       
-            <center>
+        <Box sx={{display:{lg:"block",md:"block",sm:"none",xs:"none"}}}>
+          <center>
             <Typography variant="h4" mb={2} className="header">
               Get in touch
             </Typography>
@@ -441,63 +441,168 @@ export const Contact = () => {
                 fontWeight: "700",
               }}
             />
-            </center>
-            <Box my={2} sx={{ padding: "20px" }}>
-      <Grid
-        container
-        spacing={3}
-        justifyContent="center"
-        alignItems="center"
-        textAlign="center"
-      >
-        {/* Email Section */}
-        <Grid item xs={12} sm={4}>
-          <Typography variant="h6" color="textPrimary">
-            <Box display="flex" justifyContent="center" alignItems="center" gap={1}>
-              <MdEmail />
-              <Box>Email</Box>
-            </Box>
-          </Typography>
-          <Typography variant="body1" color="textSecondary">
-            contact2atplc@gmail.com
-          </Typography>
-        </Grid>
+          </center>
+          <Box my={2} sx={{ padding: "20px" }}>
+            <Grid
+              container
+              spacing={3}
+              justifyContent="center"
+              alignItems="center"
+              textAlign="center"
+            >
+              {/* Email Section */}
+              <Grid item xs={12} sm={4}>
+                <Typography variant="h6" color="textPrimary">
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    gap={1}
+                  >
+                    <MdEmail />
+                    <Box>Email</Box>
+                  </Box>
+                </Typography>
+                <Typography variant="body1" color="textSecondary">
+                lyssstartup24@gmail.com
+                </Typography>
+              </Grid>
 
-        {/* Phone Section */}
-        <Grid item xs={12} sm={4}>
-          <Typography variant="h6" color="textPrimary">
-            <Box display="flex" justifyContent="center" alignItems="center" gap={1}>
-              <MdPhone />
-              <Box>Phone</Box>
-            </Box>
-          </Typography>
-          <Typography variant="body1" color="textSecondary">
-            +91 6205695667
-          </Typography>
-        </Grid>
+              {/* Phone Section */}
+              <Grid item xs={12} sm={4}>
+                <Typography variant="h6" color="textPrimary">
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    gap={1}
+                  >
+                    <MdPhone />
+                    <Box>Phone</Box>
+                  </Box>
+                </Typography>
+                <Typography variant="body1" color="textSecondary">
+                  +91 6205695667
+                </Typography>
+              </Grid>
 
-        {/* Address Section */}
-        <Grid item xs={12} sm={4}>
-          <Typography variant="h6" color="textPrimary">
-            <Box display="flex" justifyContent="center" alignItems="center" gap={1}>
-              <MdLocationOn />
-              <Box>Address</Box>
-            </Box>
-          </Typography>
-          <Typography variant="body1" color="textSecondary">
-            3/365, Aryan Bhawan
-            <br />
-            Lakho Binda Campus, Santunagar,
-            <br />
-            Madhubani (Bihar)-India
-            <br />
-            Pin-847211
-          </Typography>
-        </Grid>
-      </Grid>
+              {/* Address Section */}
+              <Grid item xs={12} sm={4}>
+                <Typography variant="h6" color="textPrimary">
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    gap={1}
+                  >
+                    <MdLocationOn />
+                    <Box>Address</Box>
+                  </Box>
+                </Typography>
+                <Typography variant="body1" color="textSecondary">
+                  3/365, Aryan Bhawan
+                  <br />
+                  Lakho Binda Campus, Santunagar,
+                  <br />
+                  Madhubani (Bihar)-India
+                  <br />
+                  Pin-847211
+                </Typography>
+              </Grid>
+            </Grid>
+          </Box>
+        </Box>
 
-      
-    </Box>
+        <Box sx={{display:{lg:"none",md:"none",sm:"block",xs:"block"}}}>
+          {/* <center> */}
+          <Box sx={{padding:"10px"}}>
+            <Typography variant="h4" mb={2} style={{marginLeft:"20px"}} >
+              Get in touch
+            </Typography>
+            <Divider
+              sx={{
+                backgroundColor: "blue",
+                width: { lg: "10vw", xs: "60vw", md: "40vw" },
+                fontWeight: "700",
+                marginLeft:"15px",
+              }}
+            />
+            </Box>
+
+          <Box my={2} sx={{ padding: "24px" }}>
+            <Grid
+              container
+              spacing={3}
+              justifyContent="center"
+              alignItems="center"
+            
+            >
+         
+              <Grid item xs={12} sm={4}>
+                <Typography variant="h6" color="textPrimary">
+                  <Box
+                    display="flex"
+                  
+                    alignItems="center"
+                    gap={1}
+                  >
+                    <MdEmail />
+                    <Box>Email</Box>
+                  </Box>
+                </Typography>
+                <Typography variant="body1" color="textSecondary">
+                  lyssstartup24@gmail.com
+                </Typography>
+              </Grid>
+
+              
+              <Grid item xs={12} sm={4}>
+                <Typography variant="h6" color="textPrimary">
+                  <Box
+                    display="flex"
+                    
+                    alignItems="center"
+                    gap={1}
+                  >
+                    <MdPhone />
+                    <Box>Phone</Box>
+                  </Box>
+                </Typography>
+                <Typography variant="body1" color="textSecondary">
+                  +91 6205695667
+                </Typography>
+              </Grid>
+
+             
+              <Grid item xs={12} sm={4}>
+                <Typography variant="h6" color="textPrimary">
+                  <Box
+                    display="flex"
+                   
+                    alignItems="center"
+                    gap={1}
+                  >
+                    <MdLocationOn />
+                    <Box>Address</Box>
+                  </Box>
+                </Typography>
+                <Typography variant="body1" color="textSecondary">
+                  3/365, Aryan Bhawan
+                  <br />
+                  Lakho Binda Campus, Santunagar,
+                  <br />
+                  Madhubani (Bihar)-India
+                  <br />
+                  Pin-847211
+                </Typography>
+              </Grid>
+            </Grid>
+          </Box>
+        </Box>
+
+
+
+
       </div>
 
       <Footer />

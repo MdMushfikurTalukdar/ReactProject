@@ -53,8 +53,7 @@ const Footer = () => {
             <FooterLink onClick={(e)=>window.location.href='/'}>Home</FooterLink>
             <FooterLink onClick={(e)=>window.location.href='/about'}>About</FooterLink>
             <FooterLink onClick={(e)=>window.location.href='/contact'}>Contact Us</FooterLink>
-            <FooterLink onClick={(e)=>window.location.href='/gallary'}>Gallary</FooterLink>
-
+          
             
           </Grid>
          
@@ -64,8 +63,8 @@ const Footer = () => {
           </Typography>
           <Box display="flex" alignItems="center" mb={1}>
             <MdEmail style={{ marginRight: '8px' }} />
-            <FooterLink href="mailto:contact2atplc@gmail.com" color="textSecondary">
-              contact2atplc@gmail.com
+            <FooterLink href="mailto:lyssstartup24@gmail.com" color="textSecondary">
+              lyssstartup24@gmail.com
             </FooterLink>
           </Box>
           <Box display="flex" alignItems="center" mb={1}>

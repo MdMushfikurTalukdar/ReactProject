@@ -69,7 +69,7 @@ export const Header = () => {
               variant="h6"
               noWrap
               component="a"
-              href="#app-bar-with-responsive-menu"
+              onClick={(e)=>navigate('/')}
               sx={{
                 mr: 'auto',
                 fontWeight: "bold",
@@ -80,7 +80,7 @@ export const Header = () => {
                 
               }}
             >
-              Smart Campus
+              Smart One
             </Typography>
 
             <Menu

@@ -95,9 +95,9 @@ export const Home = () => {
         <Testimonials />
         <Box
           sx={{
-            padding: { xs: "3%", lg: "7%", md: "7%", sm: "10%" },
+            padding: { xs: "3%", lg: "7%", md: "5%", sm: "10%" },
             fontSize: { xs: "20.4pt", lg: "20pt", sm: "23pt", md: "26pt" },
-            fontWeight: "900",
+            fontWeight: "500",
             display: { xs: "none", lg: "block", md: "block", sm: "block" },
           }}
         >
@@ -110,10 +110,10 @@ export const Home = () => {
             }}
             id="text001"
           >
-            Ready to Explore Our Smart Campus?
+            Ready to Explore Our Smart One?
           </p>
-          <p style={{ fontSize: "2.3rem", textAlign: "center" }} id="text002">
-            Stay Connected with Our Campus Community
+          <p style={{ fontSize: "2.3rem", textAlign: "center" }} >
+            Stay Connected with Our Campus
             <br /> Community.
           </p>
           <p
@@ -123,13 +123,11 @@ export const Home = () => {
               lineClamp: 2,
               padding: "10px",
             }}
-            id="text004"
+           
           >
             Our platform brings together students, faculty, and staff to keep
             everyone up-to-date with the latest campus news, events, and
-            announcements. Our team is dedicated to fostering a vibrant and
-            informed community, ensuring that all members have access to the
-            resources and information they need.
+            announcements.
           </p>
 
           <center>
@@ -164,7 +162,7 @@ export const Home = () => {
               marginBottom: "10px",
             }}
           >
-            Ready to Explore Our Smart Campus?
+            Ready to Explore Our Smart One?
           </p>
 
           <p style={{ textAlign: "center", padding: "15px" }}>
