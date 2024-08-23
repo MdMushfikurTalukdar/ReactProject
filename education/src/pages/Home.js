@@ -1,23 +1,191 @@
-import React from 'react';
-import {Hero} from "../components/Home/Hero.jsx"
-import {Header} from "../components/Home/Header.js"
-import Products from '../components/Home/Products.jsx';
-import  {Clients}  from '../components/Home/Client.jsx';
-import Footer from '../components/Home/Footer';
-import Testimonials from "../components/Home/Testonomials.jsx"
+import React from "react";
+import { Hero } from "../components/Home/Hero.jsx";
+import { Header } from "../components/Home/Header.js";
+import Products from "../components/Home/Products.jsx";
+import { Clients } from "../components/Home/Client.jsx";
+import Footer from "../components/Home/Footer";
+import Testimonials from "../components/Home/Testonomials.jsx";
+import { Box, Button, Grid, Typography } from "@mui/material";
 
 export const Home = () => {
-  
-
-
   return (
-    <div className="App overflow-x-hidden">
+    <div
+      className="App overflow-x-hidden"
+      style={{ backgroundColor: "whitesmoke" }}
+    >
       <Header />
       <main className="animate-fade">
         <Hero />
-        <Products/>
+        <Box sx={{ width: "100vw", textAlign: "center", marginTop: "7rem" }}>
+          <p
+            style={{
+              fontSize: "2.3rem",
+              fontWeight: "600",
+              color: "rgb(107, 169, 169)",
+              marginBottom:"20px"
+            }}
+            id="text00"
+          >
+            platform Features
+          </p>
+          <Grid container>
+            <Grid item lg={5} xs={12} sm={12} md={12}>
+              <Typography
+                variant="h2"
+                id="domainText"
+                color="text.secondary"
+                sx={{
+                  fontSize: {
+                    lg: "1.4rem",
+                    xs: "1.0rem",
+                    sm: "1.0rem",
+                    md: "1.2rem",
+                  },
+                  fontWeight: "500",
+
+                  margin: {
+                    lg: "130px 0px 20px 30px",
+                    xs: "30px 0px 20px 0px",
+                    md: "30px 0px 0px 0px",
+                    sm: "30px 0px 0px 0px",
+                  },
+                  padding: "10px",
+                }}
+              >
+                Our domain encompasses a diverse range of services designed to
+                cater to the evolving needs of businesses and individuals in
+                today's dynamic environment. Here’s an overview of what we
+                offer:
+              </Typography>
+            </Grid>
+            <Grid
+              item
+              lg={7}
+              sm={12}
+              xs={12}
+              md={12}
+              sx={{
+                marginTop: { xs: "20px", md: "20px", sm: "20px", lg: "0px" },
+              }}
+            >
+              <Box id="text00">
+                <Products />
+              </Box>
+            </Grid>
+          </Grid>
+        </Box>
+        <p
+          style={{
+            textAlign: "center",
+            backgroundColor: "whitesmoke",
+            fontSize: "2.0rem",
+            fontWeight: "600",
+            margin: "20px 0px 20px 0px",
+            color:"rgb(107, 169, 169)"
+          }}
+        >
+          Our Clients
+        </p>
         <Clients />
-      <Testimonials/>
+        <Testimonials />
+        <Box
+          sx={{
+            padding: { xs: "3%", lg: "7%", md: "7%", sm: "10%" },
+            fontSize: { xs: "20.4pt", lg: "20pt", sm: "23pt", md: "26pt" },
+            fontWeight: "900",
+            display: { xs: "none", lg: "block", md: "block", sm: "block" },
+          }}
+        >
+          <p
+            style={{
+              color: "rgb(107, 169, 169)",
+              textAlign: "center",
+              fontSize: "1.2rem",
+              marginBottom: "10px",
+            }}
+            id="text001"
+          >
+            Ready to Explore Our Smart Campus?
+          </p>
+          <p style={{ fontSize: "2.3rem", textAlign: "center" }} id="text002">
+            Stay Connected with Our Campus Community
+            <br /> Community.
+          </p>
+          <p
+            style={{
+              textAlign: "center",
+              fontSize: "1.2rem",
+              lineClamp: 2,
+              padding: "10px",
+            }}
+            id="text004"
+          >
+            Our platform brings together students, faculty, and staff to keep
+            everyone up-to-date with the latest campus news, events, and
+            announcements. Our team is dedicated to fostering a vibrant and
+            informed community, ensuring that all members have access to the
+            resources and information they need.
+          </p>
+
+          <center>
+            <Button
+              variant="contained"
+              id="button"
+              sx={{
+                width: { lg: "30%", md: "40%", xs: "55%", sm: "40%" },
+                padding: "10px",
+                borderRadius: "25px",
+                backgroundColor: "rgb(107, 169, 169)",
+                marginTop: "60px",
+                marginBottom: "40px",
+              }}
+              onClick={(e) => (window.location.href = "/contact")}
+            >
+              Let's Connect
+            </Button>
+          </center>
+        </Box>
+        <Box
+          sx={{
+            display: { xs: "block", lg: "none", md: "none", sm: "none" },
+            marginTop: "50px",
+          }}
+        >
+          <p
+            style={{
+              color: "rgb(107, 169, 169)",
+              textAlign: "center",
+              fontSize: "1.5rem",
+              marginBottom: "10px",
+            }}
+          >
+            Ready to Explore Our Smart Campus?
+          </p>
+
+          <p style={{ textAlign: "center", padding: "15px" }}>
+            "Our platform brings together students, faculty, and staff to keep
+            everyone up-to-date with the latest campus news, events, and
+            announcements. "
+          </p>
+
+          <center>
+            <Button
+              variant="contained"
+              id="button"
+              sx={{
+                width: { lg: "30%", md: "40%", xs: "55%", sm: "40%" },
+                padding: "10px",
+                borderRadius: "25px",
+                backgroundColor: "rgb(107, 169, 169)",
+                marginTop: "20px",
+                marginBottom: "40px",
+              }}
+              onClick={(e) => (window.location.href = "/contact")}
+            >
+              Let's Connect
+            </Button>
+          </center>
+        </Box>
       </main>
       <Footer />
     </div>

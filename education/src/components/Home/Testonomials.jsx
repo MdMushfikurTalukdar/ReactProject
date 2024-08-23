@@ -72,7 +72,7 @@ const Testimonials = () => {
   return (
     <Box py={8} bgcolor="#f5f5f5">
       <Container>
-        <Typography variant="h4" align="center" gutterBottom>
+        <Typography variant="h4" align="center" gutterBottom sx={{fontWeight: "600",color:"rgb(107, 169, 169)"}}>
           What Our Clients Say
         </Typography>
         <Slider {...settings}>
