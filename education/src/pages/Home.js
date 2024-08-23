@@ -4,7 +4,7 @@ import { Header } from "../components/Home/Header.js";
 import Products from "../components/Home/Products.jsx";
 import { Clients } from "../components/Home/Client.jsx";
 import Footer from "../components/Home/Footer";
-import Testimonials from "../components/Home/Testonomials.jsx";
+import {Testimonials} from "../components/Home/Testonomials.jsx";
 import { Box, Button, Grid, Typography } from "@mui/material";
 
 export const Home = () => {
@@ -16,7 +16,7 @@ export const Home = () => {
       <Header />
       <main className="animate-fade">
         <Hero />
-        <Box sx={{ width: "100vw", textAlign: "center", marginTop: "7rem" }}>
+        <Box sx={{ width: "100vw", textAlign: "center", marginTop: "3rem" }}>
           <p
             style={{
               fontSize: "2.3rem",
@@ -26,7 +26,7 @@ export const Home = () => {
             }}
             id="text00"
           >
-            platform Features
+             Features
           </p>
           <Grid container>
             <Grid item lg={5} xs={12} sm={12} md={12}>
@@ -52,10 +52,7 @@ export const Home = () => {
                   padding: "10px",
                 }}
               >
-                Our domain encompasses a diverse range of services designed to
-                cater to the evolving needs of businesses and individuals in
-                today's dynamic environment. Here’s an overview of what we
-                offer:
+                Our Smart Campus platform offers a comprehensive suite of features designed to meet the diverse needs of students, faculty, and administrators in a modern educational environment. Here’s an overview of what we provide:
               </Typography>
             </Grid>
             <Grid
@@ -84,9 +81,17 @@ export const Home = () => {
             color:"rgb(107, 169, 169)"
           }}
         >
-          Our Clients
+          Client Testimonials
         </p>
         <Clients />
+        <p  style={{
+            textAlign: "center",
+            backgroundColor: "whitesmoke",
+            fontSize: "2.0rem",
+            fontWeight: "600",
+            margin: "20px 0px 20px 0px",
+            color:"rgb(107, 169, 169)"
+          }}>Our Clients</p>
         <Testimonials />
         <Box
           sx={{
