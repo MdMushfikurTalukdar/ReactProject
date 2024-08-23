@@ -55,7 +55,7 @@ function Complain() {
                 fontWeight: "bold",
               }}
             >
-             Complain
+             Register Complaint
             </Typography>
             <Typography
               sx={{

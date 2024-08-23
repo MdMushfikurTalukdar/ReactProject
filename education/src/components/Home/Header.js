@@ -12,8 +12,8 @@ import MenuItem from '@mui/material/MenuItem';
 import { useNavigate } from 'react-router-dom';
 import { CgMenuLeftAlt } from 'react-icons/cg';
 
-const pages = ['Dashboard', 'About', 'Contact', 'Login'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const pages = ['About', 'Contact', 'Login'];
+const settings = ['Profile', 'Account', 'Logout'];
 
 export const Header = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);

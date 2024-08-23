@@ -533,7 +533,7 @@ export const BonafideForm = () => {
                   sx={{
                     width: { lg: "86%", md: "70%", xs: "100%", sm: "90%" },
                   }}
-                  variant="outlined"
+                  variant="standard"
                   error={!!errors.purpose?.message}
                 >
                   <InputLabel id="purpose-label">Select Purpose</InputLabel>
@@ -541,6 +541,7 @@ export const BonafideForm = () => {
                     name="purpose"
                     control={control}
                     defaultValue=""
+                   
                     render={({ field }) => (
                       <Select {...field} label="Select Purpose">
                         <MenuItem value="credit card">

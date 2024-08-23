@@ -164,6 +164,10 @@ export const UserManagement = () => {
   };
 
   useEffect(() => {
+    const token = sessionStorage.getItem("accesstoken");
+    const token1 = sessionStorage.getItem("refreshtoken");
+
+    if (token && token1) {
     axios
       .get(
         `${Url}/${
@@ -197,10 +201,13 @@ export const UserManagement = () => {
           navigate("/login");
         }
       });
+    }else{
+      navigate('/login');
+    }
   }, []);
 
   useEffect(() => {
-    if (sessionStorage?.getItem("accesstoken")) {
+    if (sessionStorage?.getItem("accesstoken") && sessionStorage?.getItem("refreshtoken")) {
       const response = jwtDecode(sessionStorage?.getItem("accesstoken"));
       if (
         response.exp < Math.floor(Date.now() / 1000) ||

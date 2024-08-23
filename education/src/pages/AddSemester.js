@@ -6,6 +6,8 @@ import {
   Button,
   FormControl,
   FormHelperText,
+  Grid,
+  Divider,
 } from "@mui/material";
 import Footer from "../components/Home/Footer";
 import NavbarNew from "../components/NavbarNew";
@@ -75,9 +77,8 @@ export const AddSemester = () => {
     { name: "Plastics Engineering", abbreviation: "PLE" },
     { name: "Petrochemical Engineering", abbreviation: "PCE" },
     { name: "Energy Engineering", abbreviation: "EE" },
-    { name: "Computer Science and Business Systems", abbreviation: "CSBS" }
-];
-
+    { name: "Computer Science and Business Systems", abbreviation: "CSBS" },
+  ];
 
   const regenerateToken = () => {
     if (sessionStorage?.getItem("accesstoken")) {
@@ -152,10 +153,12 @@ export const AddSemester = () => {
       ) {
         navigate("/login");
       } else {
-        branches.map((item)=>
-          item.abbreviation===jwtDecode(sessionStorage.getItem("accesstoken")).branch?setBranch(item.name):null
-          
-        )
+        branches.map((item) =>
+          item.abbreviation ===
+          jwtDecode(sessionStorage.getItem("accesstoken")).branch
+            ? setBranch(item.name)
+            : null
+        );
       }
     } else {
       navigate("/login");
@@ -182,7 +185,7 @@ export const AddSemester = () => {
         semester_name: data.semester_name,
         branch: jwtDecode(sessionStorage.getItem("accesstoken")).branch,
         subject_codes: subject_code_array,
-        branch_name: branch
+        branch_name: branch,
       });
 
       console.log(data1);
@@ -255,8 +258,22 @@ export const AddSemester = () => {
             navigate("/login");
           }
 
-          if (error?.response?.data?.errors?.non_field_errors?.[0]){
-            enqueueSnackbar(error?.response?.data?.errors?.non_field_errors?.[0], {
+          if (error?.response?.data?.errors?.non_field_errors?.[0]) {
+            enqueueSnackbar(
+              error?.response?.data?.errors?.non_field_errors?.[0],
+              {
+                variant: "error",
+                anchorOrigin: {
+                  vertical: "bottom",
+                  horizontal: "center",
+                },
+                autoHideDuration: 1000,
+              }
+            );
+          }
+
+          if (error?.response?.data?.errors?.subject_code?.[0]) {
+            enqueueSnackbar(error?.response?.data?.errors?.subject_code?.[0], {
               variant: "error",
               anchorOrigin: {
                 vertical: "bottom",
@@ -264,19 +281,7 @@ export const AddSemester = () => {
               },
               autoHideDuration: 1000,
             });
-          } 
-
-
-          if(error?.response?.data?.errors?.subject_code?.[0]){
-          enqueueSnackbar(error?.response?.data?.errors?.subject_code?.[0], {
-            variant: "error",
-            anchorOrigin: {
-              vertical: "bottom",
-              horizontal: "center",
-            },
-            autoHideDuration: 1000,
-          });
-        }
+          }
         });
     } else {
       navigate("/login");
@@ -286,6 +291,75 @@ export const AddSemester = () => {
   return (
     <Box>
       <NavbarNew />
+
+      <Box
+        sx={{
+          width: "100vw",
+          textAlign: "center",
+          backgroundImage:
+            "url(https://images.unsplash.com/photo-1544006659-f0b21884ce1d?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
+          backgroundSize: "cover",
+          paddingTop: "2vw",
+          paddingBottom: "15vw",
+          position: "relative",
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.6)", // Overlay with opacity
+            zIndex: 1,
+          },
+        }}
+      >
+        <Grid
+          container
+          sx={{
+            position: "relative",
+            zIndex: 2,
+            color: "white",
+            padding: { xs: "20px", sm: "20px", md: "50px" },
+          }}
+        >
+          <Grid item xs={12} sm={12} lg={6} md={6}>
+            <Typography
+              variant="h1"
+              sx={{
+                fontSize: {
+                  xs: "2rem",
+                  sm: "2.4rem",
+                  md: "2.6rem",
+                  lg: "2.6rem",
+                },
+                marginTop: { xs: "20px", md: "50px" },
+                fontWeight: "bold",
+              }}
+            >
+              Subject Enrollment
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: {
+                  xs: "1rem",
+                  sm: "1.1rem",
+                  md: "1.2rem",
+                  lg: "1.2rem",
+                },
+                marginTop: "10px",
+                fontWeight: "500",
+                padding: { xs: "10px", sm: "10px", md: "0px" },
+              }}
+            >
+              Efficiently manage the addition of subjects by prioritizing curriculum needs and verifying course details. Customize the process to ensure accurate subject listings and streamlined course management.
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={12} lg={6} md={6}></Grid>
+        </Grid>
+      </Box>
       <Box
         elevation={3}
         sx={{
@@ -293,7 +367,7 @@ export const AddSemester = () => {
           borderRadius: 2,
           maxWidth: 400,
           margin: "auto",
-          marginTop: 4,
+          marginTop: 2,
           marginBottom: 9,
         }}
       >
@@ -301,15 +375,26 @@ export const AddSemester = () => {
           variant="h5"
           component="h1"
           gutterBottom
-          sx={{ textAlign: "center", marginBottom: 2 }}
+          sx={{ textAlign: "center", marginBottom: 1 }}
         >
           Subject Enrollment
         </Typography>
         <center>
+        <Divider
+          sx={{
+            backgroundColor: "blue",
+            width: { lg: "29%", xs: "30%", md: "10%",sm:"10%" },
+            fontWeight: "800",
+            textAlign: "center",
+            marginTop: "5px",
+          }}
+        />
+      </center>
+        <center>
           <img
             src="./images/enrollment.png"
             alt=""
-            style={{ width: "250px", borderRadius: "10px" }}
+            style={{ width: "250px", borderRadius: "10px",marginTop:"40px" }}
           />
         </center>
         <Box
@@ -323,8 +408,8 @@ export const AddSemester = () => {
             <FormControl fullWidth error={!!errors.semester_name}>
               <TextField
                 type="text"
-                label="Semester Name"
-                variant="outlined"
+                label="Semester Name*"
+                variant="standard"
                 fullWidth
                 style={{ marginBottom: "5px" }}
                 {...register("semester_name")}
@@ -335,7 +420,7 @@ export const AddSemester = () => {
               <TextField
                 type="text"
                 label="Subject Code*"
-                variant="outlined"
+                variant="standard"
                 fullWidth
                 style={{ marginBottom: "5px" }}
                 {...register("subject_code")}
@@ -349,7 +434,7 @@ export const AddSemester = () => {
                 color="primary"
                 sx={{
                   alignSelf: "center",
-                  paddingX: 4,
+                  paddingX: 2,
                   paddingY: 1,
                   marginTop: 1,
                 }}

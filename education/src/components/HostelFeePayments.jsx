@@ -6,7 +6,7 @@ import {
   Container,
   Grid,
   Typography,
-  Paper,
+  
   Box,
   InputAdornment,
   CircularProgress,
@@ -630,7 +630,7 @@ function HostelFeePayment() {
                   <Grid item xs={12} sm={6}>
                     <TextField
                       label="Name"
-                      variant="outlined"
+                      variant="standard"
                       fullWidth
                       sx={{
                         marginTop: {
@@ -654,7 +654,7 @@ function HostelFeePayment() {
                   <Grid item xs={12} sm={6}>
                     <TextField
                       label="Registration No"
-                      variant="outlined"
+                      variant="standard"
                       fullWidth
                       value={profileData.registrationNo}
                       disabled
@@ -683,7 +683,7 @@ function HostelFeePayment() {
                           }}
                           select
                           label="Fee Type"
-                          variant="outlined"
+                          variant="standard"
                           fullWidth
                           error={!!errors.feeType}
                           helperText={errors.feeType?.message}
@@ -714,7 +714,7 @@ function HostelFeePayment() {
                           customInput={
                             <TextField
                               label="Start Date"
-                              variant="outlined"
+                              variant="standard"
                               fullWidth
                               error={!!errors.startDate}
                               helperText={errors.startDate?.message}
@@ -727,7 +727,7 @@ function HostelFeePayment() {
                               }}
                               sx={{
                                 width: {
-                                  lg: "225%",
+                                  lg: "253%",
                                   md: "calc(100vw - 55vw)",
                                   xs: "100%",
                                   sm: "46vw",
@@ -753,7 +753,7 @@ function HostelFeePayment() {
                           customInput={
                             <TextField
                               label="End Date"
-                              variant="outlined"
+                              variant="standard"
                               fullWidth
                               error={!!errors.endDate}
                               helperText={errors.endDate?.message}
@@ -766,7 +766,7 @@ function HostelFeePayment() {
                               }}
                               sx={{
                                 width: {
-                                  lg: "225%",
+                                  lg: "253%",
                                   md: "calc(100vw - 55vw)",
                                   xs: "100%",
                                   sm: "46vw",
@@ -786,7 +786,7 @@ function HostelFeePayment() {
                         <TextField
                           {...field}
                           placeholder="Number of Months"
-                          variant="outlined"
+                          variant="standard"
                           fullWidth
                           error={!!errors.noOfMonths}
                           helperText={errors.noOfMonths?.message}
@@ -810,7 +810,7 @@ function HostelFeePayment() {
                         <TextField
                           {...field}
                           placeholder="Monthly Charges"
-                          variant="outlined"
+                          variant="standard"
                           fullWidth
                           error={!!errors?.monthlyCharges}
                           helperText={errors?.monthlyCharges?.message}

@@ -616,6 +616,7 @@ export function SemesterRegistration() {
           <FormControl
             fullWidth
             margin="normal"
+             variant="standard"
             sx={{
               width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
               marginBottom: "10px",
@@ -655,7 +656,8 @@ export function SemesterRegistration() {
 
           <FormControl
             fullWidth
-             margin="normal"
+            margin="normal"
+            variant="standard"
             sx={{
               width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
               marginBottom: "10px",

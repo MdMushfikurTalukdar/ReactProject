@@ -95,6 +95,8 @@ export const LoginPage = () => {
             navigate("/registrar-dashboard");
         } else if (response.role === "office") {
           navigate(`/register/${jwtDecode(res.data.token.access).college}`);
+        }else if (response.role === "hod") {
+          navigate(`/sem-sub-register`);
         } else {
          
           navigate("/dashboard");

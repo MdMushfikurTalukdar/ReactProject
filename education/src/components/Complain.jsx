@@ -31,6 +31,7 @@ import {
   TableHead,
   useTheme,
   CircularProgress,
+  Divider,
 } from "@mui/material";
 
 import "slick-carousel/slick/slick.css";
@@ -504,13 +505,24 @@ const ComplaintForm = () => {
           <Grid item xs={12} md={6} lg={6} style={{ marginTop: "15px" }}>
             <p
               style={{
-                marginBottom: "3%",
+                marginBottom: "1%",
                 textAlign: "center",
                 fontSize: "1.3rem",
               }}
             >
               Register Complaint
             </p>
+            <center>
+              <Divider
+                sx={{
+                  backgroundColor: "blue",
+                  width: { lg: "10%", xs: "30%", md: "10%" },
+                  fontWeight: "800",
+                  textAlign: "center",
+                  marginTop: "0px",
+                }}
+              />
+            </center>
 
             <center>
               <Box
@@ -521,7 +533,7 @@ const ComplaintForm = () => {
                 }}
               >
                 <img
-                  src={`./images/complaints2.png`}
+                  src={`./images/addfee.png`}
                   alt=""
                   style={{ borderRadius: "10px", width: "300px" }}
                 />
@@ -535,7 +547,7 @@ const ComplaintForm = () => {
                   md: "transparent",
                 },
                 padding: { lg: "5px", md: "0px", xs: "15px", sm: "20px" },
-                marginTop: { lg: "0px", md: "42px", xs: "29px", sm: "19px" },
+                marginTop: { lg: "40px", md: "42px", xs: "29px", sm: "19px" },
                 marginLeft: { lg: "10px", md: "42px", xs: "0px", sm: "0px" },
                 borderRadius: "5px",
               }}
@@ -550,7 +562,6 @@ const ComplaintForm = () => {
                 >
                   <Grid item xs={12}>
                     <TextField
-                      
                       label="Registration/ Employee No"
                       fullWidth
                       value={profileData?.registrationNo}
@@ -575,7 +586,7 @@ const ComplaintForm = () => {
                       fullWidth
                       value={profileData?.branch}
                       disabled
-                     variant="standard"
+                      variant="standard"
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -585,8 +596,11 @@ const ComplaintForm = () => {
                       render={({ field }) => (
                         <FormControl fullWidth variant="outlined">
                           <InputLabel>Complaint Type</InputLabel>
-                          <Select {...field} label="Complaint Type"
-                          variant="standard">
+                          <Select
+                            {...field}
+                            label="Complaint Type"
+                            variant="standard"
+                          >
                             <MenuItem value="Ragging related">
                               Ragging related
                             </MenuItem>
@@ -618,10 +632,9 @@ const ComplaintForm = () => {
                       control={control}
                       render={({ field }) => (
                         <TextField
-
                           {...field}
                           label="Subject"
-                         variant="standard"
+                          variant="standard"
                           fullWidth
                           error={!!errors.subject}
                           helperText={
@@ -659,7 +672,7 @@ const ComplaintForm = () => {
                       variant="contained"
                       color="primary"
                       sx={{
-                        width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },
+                        width: { lg: "50%", md: "50%", xs: "100%", sm: "90%" },
                         backgroundColor: "rgb(107, 169, 169)",
                       }}
                     >
@@ -685,14 +698,14 @@ const ComplaintForm = () => {
               sx={{
                 display: { xs: "none", sm: "none", md: "block", lg: "block" },
 
-                marginTop: "50px",
+                marginTop: "90px",
                 borderRadius: "15px",
               }}
             >
               <img
-                src={`./images/complaints1.png`}
+                src={`./images/addfee.png`}
                 alt=""
-                style={{ borderRadius: "10px", width: "450px" }}
+                style={{ borderRadius: "10px", width: "280px" }}
               />
             </Box>
             <Box sx={{ marginTop: "50px" }}>
@@ -707,6 +720,18 @@ const ComplaintForm = () => {
               >
                 Previous Complaints
               </Typography>
+              <center>
+       
+        <Divider
+          sx={{
+            backgroundColor: "blue",
+            width: { lg: "12%", xs: "30%", md: "10%" },
+            fontWeight: "800",
+            textAlign: "center",
+            marginTop: "5px",
+          }}
+        />
+      </center>
             </Box>
             {previousRecord.length === 0 ? (
               <center>
@@ -717,7 +742,7 @@ const ComplaintForm = () => {
                     marginTop: "20px",
                   }}
                 >
-                  No data available currently.
+                  No Data Found.
                 </p>
               </center>
             ) : responsive ? (
@@ -763,19 +788,35 @@ const ComplaintForm = () => {
             ) : (
               <TableContainer
                 component={Paper}
-                style={{ marginTop: "20px", marginBottom: "50px" }}
+                sx={{ marginTop: "20px", marginBottom: "50px",border: "none",
+                  "&:last-child td, &:last-child th": { border: 0 },
+                  borderRight: 0,
+                  borderBottom: 0, }}
               >
                 <Table
-                  sx={{ minWidth: 500 }}
+                  sx={{ minWidth: 500,borderRight: 0,
+                    "&:last-child td, &:last-child th": { border: 0 },
+                    border: 0,
+                    borderBottom: 0, }}
                   aria-label="custom pagination table"
                 >
-                  <TableHead style={{ backgroundColor: "#D2E9E9" }}>
+                  <TableHead style={{ backgroundColor: "#545959" }}>
                     <TableRow>
-                      <TableCell>Complaint Type</TableCell>
-                      <TableCell>Subject</TableCell>
-                      <TableCell>Description</TableCell>
-                      <TableCell>Date</TableCell>
-                      <TableCell>Status</TableCell>
+                      <TableCell sx={{
+                              color: "white",
+                            }}>Complaint Type</TableCell>
+                      <TableCell sx={{
+                              color: "white",
+                            }}>Subject</TableCell>
+                      <TableCell sx={{
+                              color: "white",
+                            }}>Description</TableCell>
+                      <TableCell sx={{
+                              color: "white",
+                            }}>Date</TableCell>
+                      <TableCell sx={{
+                              color: "white",
+                            }}>Status</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -816,7 +857,7 @@ const ComplaintForm = () => {
                       </TableRow>
                     )}
                   </TableBody>
-                  <TableFooter style={{ backgroundColor: "#D2E9E9" }}>
+                  <TableFooter style={{ backgroundColor: "#545959" }}>
                     <TableRow>
                       <TablePagination
                         rowsPerPageOptions={[

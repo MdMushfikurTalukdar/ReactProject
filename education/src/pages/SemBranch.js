@@ -235,9 +235,7 @@ export const SemBranch = () => {
           }
           setLoad(false);
           reset();
-        })
-
-        .catch((error) => {
+        }).catch((error) => {
           console.log(error);
           setLoad(false);
           if (
