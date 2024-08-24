@@ -356,9 +356,9 @@ export const HostelRoomRequest = () => {
           width: "100vw",
           textAlign: "center",
           backgroundImage:
-            "url(https://images.unsplash.com/photo-1544006659-f0b21884ce1d?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)",
+            "url(../images/banner4.jpg)",
           backgroundRepeat: "no-repeat",
-          backgroundPosition: "center",
+          backgroundPosition: "bottom",
           backgroundSize: "cover",
           paddingTop: "2vw",
           paddingBottom: "15vw",
@@ -720,7 +720,7 @@ export const HostelRoomRequest = () => {
                       key={index}
                       variant="outlined"
                       sx={{
-                        width: 305,
+                        width: 296,
                         marginBottom: 5,
                         backgroundColor: "rgb(243 244 246)",
                         marginLeft: "20px",
@@ -742,7 +742,7 @@ export const HostelRoomRequest = () => {
                           color="text.secondary"
                           sx={{ fontSize: 15 }}
                         >
-                          Status: {data?.status}
+                          <b>Status:</b> {data?.status}
                         </Typography>
                         <br />
                         <Typography
@@ -750,14 +750,14 @@ export const HostelRoomRequest = () => {
                           color="text.secondary"
                           sx={{ fontSize: 15 }}
                         >
-                          Alloted Room No:
+                          <b>Alloted Room No: </b>
                           {allotedRoom? (
                             <Typography variant="body2" color="text.secondary">
                               {" "}
                               {allotedRoom?.[0]?.hostel_room}
                             </Typography>
                           ) : (
-                            <p>Not alloted by now.</p>
+                            <span>Not alloted by now.</span>
                           )}
                         </Typography>
                       </CardContent>

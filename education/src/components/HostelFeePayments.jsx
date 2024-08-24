@@ -566,6 +566,7 @@ function HostelFeePayment() {
   }
 
   return (
+    
     <Container maxWidth="lg">
       <Box elevation={0} sx={{ p: { lg: 1, md: 1, xs: 0 }, mt: 3 }}>
         <p

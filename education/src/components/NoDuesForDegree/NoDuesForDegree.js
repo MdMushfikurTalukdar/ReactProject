@@ -285,20 +285,26 @@ export function NoDuesForDegree() {
   }, []);
 
   const onSubmit = async (data) => {
+
+    
+    const token = sessionStorage.getItem("accesstoken");
+    const token1 = sessionStorage.getItem("refreshtoken");
+
+    if (token && token1) {
     if (userProfile?.personal_information?.first_name === null)
-      return enqueueSnackbar("name field is empty", { variant: "error" });
+      return enqueueSnackbar("Please update your profile", { variant: "error" });
 
     if (!userProfile?.academic_information?.branch)
-      return enqueueSnackbar("branch field is empty", { variant: "error" });
+      return enqueueSnackbar("Please update your profile", { variant: "error" });
 
     if (!userProfile?.personal_information?.father_name)
-      return enqueueSnackbar("Father field is empty", { variant: "error" });
+      return enqueueSnackbar("Please update your profile", { variant: "error" });
 
     if (!userProfile?.academic_information?.category)
-      return enqueueSnackbar("Category field is empty", { variant: "error" });
+      return enqueueSnackbar("Please update your profile", { variant: "error" });
 
     if (!userProfile?.academic_information?.session)
-      return enqueueSnackbar("Session field is empty", { variant: "error" });
+      return enqueueSnackbar("Please update your profile", { variant: "error" });
 
     const requestData = {
       name: `${userProfile?.personal_information?.first_name} ${userProfile?.personal_information?.last_name}`,
@@ -354,9 +360,8 @@ export function NoDuesForDegree() {
               navigate("/login");
             }
 
-            // setTimeout(() => {
-            //   window.location.reload();
-            // }, 2000);
+            setResult([...result,{name:`${userProfile?.personal_information?.first_name} ${userProfile?.personal_information?.middle_name} ${userProfile?.personal_information?.last_name}`,registration_number:jwtDecode(sessionStorage.getItem("accesstoken")).registration_number,status:"pending"}])
+         
 
             enqueueSnackbar("Request was applied successfully", {
               variant: "success",
@@ -439,6 +444,9 @@ export function NoDuesForDegree() {
     } else {
       navigate("/login");
     }
+  }else{
+    navigate("/login");
+  }
   };
 
   const [page, setPage] = useState(0);
@@ -469,7 +477,7 @@ export function NoDuesForDegree() {
   return (
     <div className="container-fluid">
       <NavbarNew />
-      <BannerSection image={"https://images.unsplash.com/photo-1544006659-f0b21884ce1d?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"} title={"No Dues For Degree"} 
+      <BannerSection image={"../images/banner2.jpg"} title={"No Dues For Degree"} 
       subtitle={"Streamline the degree no-dues process by prioritizing student clearances and outstanding obligations. Customize the verification process to ensure efficient completion and timely degree issuance."}/>
       <Box
         className="no-dues-form"
@@ -753,46 +761,55 @@ export function NoDuesForDegree() {
                 marginTop: "20px",
               }}
             >
-              <Card
-                variant="outlined"
-                sx={{
-                  minWidth: 275,
-                  width: "80vw",
-                  marginBottom: 2,
-                  backgroundColor: "rgb(243 244 246)",
-                }}
-              >
-                <CardContent>
-                  <Typography
-                    sx={{ fontSize: 15 }}
-                    color="text.secondary"
-                    gutterBottom
-                  >
-                    Request Details
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    style={{ fontSize: 15 }}
-                  >
-                    Registration Number: {data?.registration_number}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    style={{ fontSize: 15 }}
-                  >
-                    Name: {data?.name}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    style={{ fontSize: 15 }}
-                  >
-                    Status: {data?.status}
-                  </Typography>
-                </CardContent>
-              </Card>
+             <Card
+      variant="outlined"
+      sx={{
+        minWidth: 275,
+        width: "80vw",
+        marginBottom: 3,
+        backgroundColor: "rgb(243, 244, 246)",
+        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)", // Subtle shadow for depth
+        borderRadius: 2, // Rounded corners for a modern look
+        padding: 2, // Added padding for a more spacious feel
+        transition: "transform 0.2s ease-in-out", // Smooth hover effect
+        "&:hover": {
+          transform: "scale(1.02)", // Slightly enlarges on hover
+        },
+      }}
+    >
+      <CardContent>
+        <Typography
+          sx={{
+            fontSize: 18,
+            fontWeight: "bold",
+            marginBottom: 1,
+            color: "text.primary",
+          }}
+          gutterBottom
+        >
+          Request Details
+        </Typography>
+
+        <Box mb={1.0}>
+          <Typography variant="body1" color="text.secondary" sx={{ fontSize: 16 }}>
+            <b>Registration Number:</b> {data?.registration_number}
+          </Typography>
+        </Box>
+
+        <Box mb={1.0}>
+          <Typography variant="body1" color="text.secondary" sx={{ fontSize: 16 }}>
+            <b>Name:</b> {data?.name}
+          </Typography>
+        </Box>
+
+        <Box>
+          <Typography variant="body1" color="text.secondary" sx={{ fontSize: 16 }}>
+            <b>Status:</b> {data?.status}
+          </Typography>
+        </Box>
+      </CardContent>
+    </Card>
+  
             </Box>
           ))
         ) : (

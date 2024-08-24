@@ -420,9 +420,9 @@ export const HostelNoDueReq = () => {
           width: "100vw",
           textAlign: "center",
           backgroundImage:
-            "url(https://images.unsplash.com/photo-1544006659-f0b21884ce1d?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)",
+            "url(../images/banner5.jpg)",
           backgroundRepeat: "no-repeat",
-          backgroundPosition: "center",
+          backgroundPosition: "top-center",
           backgroundSize: "cover",
           paddingTop: "2vw",
           paddingBottom: "15vw",
@@ -651,11 +651,7 @@ export const HostelNoDueReq = () => {
               }}
             >
               <center>
-                <img
-                  src="./images/semester_no_data.png"
-                  alt=""
-                  style={{ width: "250px", borderRadius: "10px" }}
-                />
+                <p style={{fontSize:"1.2rem",marginTop:"50px",marginBottom:"40px"}}>No Data Found.</p>
               </center>
             </Typography>
           )}

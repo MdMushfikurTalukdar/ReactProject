@@ -40,6 +40,8 @@ import NavbarNew from "../components/NavbarNew";
 import { Footer } from "../components/Footer";
 import { enqueueSnackbar } from "notistack";
 import { BaseUrl, Url } from "../components/BaseUrl";
+import { BannerSection } from "../components/BannerSection";
+import { formatDate } from "../components/FormDate";
 
 // Validation schema
 const schema = yup.object().shape({
@@ -470,6 +472,9 @@ export const BonafideForm = () => {
   return (
     <div className="container-fluid">
       <NavbarNew />
+
+      <BannerSection image={"https://images.unsplash.com/photo-1544006659-f0b21884ce1d?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"} title={"Bonafide Form"} 
+      subtitle={"Streamline the bonafide certificate issuance process by prioritizing student verifications and confirming their enrollment status. Customize the verification process to ensure efficient completion and timely issuance of the certificate."}/>
       <Box
         className="bonafide-form"
         sx={{ borderRadius: 3, padding: 1, marginTop: 3 }}
@@ -731,6 +736,7 @@ export const BonafideForm = () => {
                   }}
                 >
                   <CardContent>
+                    <Box>
                     <Typography
                       sx={{ fontSize: 14 }}
                       color="text.secondary"
@@ -738,20 +744,20 @@ export const BonafideForm = () => {
                     >
                       Bonafide Details
                     </Typography>
-                    <Typography variant="p" component="div">
-                      Bonafide Number: {data?.bonafide_number}
+
+                    </Box>
+                    <Typography variant="body2">
+                      <b>Bonafide Number:</b> {data?.bonafide_number}
                     </Typography>
-                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                      Student Information
+                   
+                    <Typography variant="body2">
+                      <b>Applied For:</b> {data?.required_for}
                     </Typography>
                     <Typography variant="body2">
-                      Applied For: {data?.required_for}
+                    <b>Status:</b> {data?.status}
                     </Typography>
                     <Typography variant="body2">
-                      Status: {data?.status}
-                    </Typography>
-                    <Typography variant="body2">
-                      Applied Date: {data?.applied_date}
+                      <b>Applied Date:</b> {formatDate(data?.applied_date)}
                     </Typography>
                     {data?.status === "approved" ? (
                       <Button
