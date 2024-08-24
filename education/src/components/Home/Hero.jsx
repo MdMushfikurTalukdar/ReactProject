@@ -6,8 +6,9 @@
 // import { Button } from "@mui/material";
 // import { useNavigate } from "react-router-dom";
 
-import { Box, Grid, Typography } from "@mui/material"
-import { Header } from "./Header"
+import { Box, Button, Grid, Typography } from "@mui/material";
+import { Header } from "./Header";
+import { Navigate, useNavigate } from "react-router-dom";
 
 // export const Hero = () => {
 //   const settings = {
@@ -92,7 +93,7 @@ import { Header } from "./Header"
 //                 color="primary"
 //                 style={{
 //                   marginTop: "20px",
-                 
+
 //                   fontSize: "1rem",
 //                   boxShadow: "0px 5px 15px rgba(0,0,0,0.3)",
 //                 }}
@@ -108,22 +109,22 @@ import { Header } from "./Header"
 //   );
 // };
 
+export const Hero = () => {
 
-export const Hero=()=>{
+  const navigate=useNavigate();
 
-  return(
+  return (
     <Box>
       <Box
         sx={{
           width: "100vw",
           textAlign: "center",
-          backgroundImage:
-            "url(../images/homepage_intro1.jpg)",
+          backgroundImage: "url(../images/homepage_intro1.jpg)",
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center 85%",
           backgroundSize: "cover",
-          paddingTop: {lg:"4vw",md:"4vw",sm:"4vw",xs:"15vw"},
-          paddingBottom: {lg:"15vw",xs:"25vw",md:"15vw"},
+          paddingTop: { lg: "4vw", md: "4vw", sm: "4vw", xs: "15vw" },
+          paddingBottom: { lg: "15vw", xs: "25vw", md: "15vw" },
           position: "relative",
           "&::before": {
             content: '""',
@@ -163,7 +164,6 @@ export const Hero=()=>{
               Welcome to Smart One
             </Typography>
 
-            
             <Typography
               sx={{
                 fontSize: {
@@ -177,12 +177,17 @@ export const Hero=()=>{
                 padding: { xs: "10px", sm: "10px", md: "0px" },
               }}
             >
-              Revolutionizing the campus experience with smart technology and seamless connectivity.
+              Revolutionizing the campus experience with smart technology and
+              seamless connectivity.
             </Typography>
+
+            <Button variant="contained" onClick={(e)=>navigate('/login')}
+              sx={{borderRadius:"20px",marginTop:"10px",width:"20%",backgroundColor: "rgb(107, 169, 169)", "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
+              transition: 'background-color 0.3s ease-in-out',}}>Login</Button>
           </Grid>
           <Grid item xs={12} sm={12} lg={6} md={6}></Grid>
         </Grid>
       </Box>
     </Box>
-  )
-}
+  );
+};

@@ -43,11 +43,12 @@ import LastPageIcon from "@mui/icons-material/LastPage";
 
 import { enqueueSnackbar } from "notistack";
 import { BaseUrl, Url } from "./BaseUrl";
+import { formatDate } from "./FormDate";
 
 const complaintSchema = yup.object().shape({
   type: yup.string().required("Complaint type is required"),
-  subject: yup.string().required("Subject is required"),
-  description: yup.string().required("Description is required"),
+  subject: yup.string().max(40).min(20).required("Subject is required"),
+  description: yup.string().max(400).min(25).required("Description is required"),
 });
 
 function TablePaginationActions(props) {
@@ -535,7 +536,7 @@ const ComplaintForm = () => {
                 <img
                   src={`./images/addfee.png`}
                   alt=""
-                  style={{ borderRadius: "10px", width: "300px" }}
+                  style={{ borderRadius: "10px", width: "260px",marginTop:"20px" }}
                 />
               </Box>
             </center>
@@ -674,6 +675,9 @@ const ComplaintForm = () => {
                       sx={{
                         width: { lg: "50%", md: "50%", xs: "100%", sm: "90%" },
                         backgroundColor: "rgb(107, 169, 169)",
+                        "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
+                        borderRadius:"20px",
+                        marginTop:"20px"
                       }}
                     >
                       {!loading1 && <p>Submit</p>}
@@ -708,7 +712,13 @@ const ComplaintForm = () => {
                 style={{ borderRadius: "10px", width: "280px" }}
               />
             </Box>
-            <Box sx={{ marginTop: "50px" }}>
+           
+          </Grid>
+        </Grid>
+        <center>
+        <Box>
+
+        <Box sx={{ marginTop: "50px" }}>
               <Typography
                 variant="p"
                 sx={{
@@ -733,7 +743,8 @@ const ComplaintForm = () => {
         />
       </center>
             </Box>
-            {previousRecord.length === 0 ? (
+          
+        {previousRecord.length === 0 ? (
               <center>
                 <p
                   style={{
@@ -750,46 +761,68 @@ const ComplaintForm = () => {
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => (
                   <Card
-                    variant="outlined"
-                    key={index}
-                    sx={{
-                      marginBottom: 2,
-                      bgcolor: "#f5f5f5",
-                      textAlign: "justify",
-                      marginTop: "20px",
-                      maxWidth: 310,
-                    }}
-                  >
-                    <CardContent>
-                      <Typography color="textSecondary">
-                        <span style={{ fontSize: "1.0rem" }}>Subject:</span>{" "}
+                  variant="outlined"
+                  key={index}
+                  sx={{
+                    marginBottom: 3,
+                    marginTop: 3,
+                    bgcolor: "#ffffff", // Light background for a cleaner look
+                    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)", // Subtle shadow for depth
+                    borderRadius: 2, // Rounded corners for a modern look
+                    maxWidth: 350, // Slightly wider for more content space
+                    transition: "transform 0.2s ease-in-out", // Smooth hover effect
+                    "&:hover": {
+                      transform: "scale(1.02)", // Slightly enlarges on hover
+                    },
+                  }}
+                >
+                  <CardContent>
+                    <Box mb={2}>
+                      <Typography
+                        variant="h6"
+                        color="textPrimary"
+                        sx={{ fontWeight: "bold" }}
+                      >
                         {row.complaint_type}
                       </Typography>
-                      <Typography color="textSecondary">
-                        <span style={{ fontSize: "1.0rem" }}>Description:</span>{" "}
-                        {row.complaint_description}
+                      <Box>
+                      <Typography variant="body1" color="textSecondary">
+                         {formatDate(row.registered_date)}
                       </Typography>
-                      <Typography color="textSecondary">
-                        <span style={{ fontSize: "1.0rem" }}>Type:</span>{" "}
-                        {row.complaint_type}
+                    </Box>
+            
+                    </Box>
+
+                   
+                    <Box mb={2}>
+                      <Typography variant="body1" textAlign="start" color="textSecondary">
+                        <b>Description:</b> {row.complaint_description}
                       </Typography>
-                      <Typography color="textSecondary">
-                        {" "}
-                        <span style={{ fontSize: "1.0rem" }}>Status:</span>{" "}
-                        {row.status}
+                    </Box>
+            
+                    <Box mb={2}>
+                      <Typography variant="body1" textAlign="start" color="textSecondary">
+                        <b>Subject:</b> {row.subject}
                       </Typography>
-                      <Typography color="textSecondary">
-                        <span style={{ fontSize: "1.0rem" }}>Date:</span>{" "}
-                        {row.registered_date}
+                      <Typography variant="body1" textAlign="start" color="textSecondary">
+                        <b>Status:</b> {row.status}
                       </Typography>
-                    </CardContent>
-                  </Card>
+                  
+                    </Box>
+            
+                    
+                    
+            
+                   
+                  </CardContent>
+                </Card>
                 ))
             ) : (
               <TableContainer
                 component={Paper}
                 sx={{ marginTop: "20px", marginBottom: "50px",border: "none",
                   "&:last-child td, &:last-child th": { border: 0 },
+                  maxWidth:"80%",
                   borderRight: 0,
                   borderBottom: 0, }}
               >
@@ -800,7 +833,7 @@ const ComplaintForm = () => {
                     borderBottom: 0, }}
                   aria-label="custom pagination table"
                 >
-                  <TableHead style={{ backgroundColor: "#545959" }}>
+                  <TableHead style={{ backgroundColor: "#545959", }}>
                     <TableRow>
                       <TableCell sx={{
                               color: "white",
@@ -810,9 +843,11 @@ const ComplaintForm = () => {
                             }}>Subject</TableCell>
                       <TableCell sx={{
                               color: "white",
+                              
                             }}>Description</TableCell>
                       <TableCell sx={{
                               color: "white",
+                              width:"10%"
                             }}>Date</TableCell>
                       <TableCell sx={{
                               color: "white",
@@ -845,7 +880,7 @@ const ComplaintForm = () => {
                             <TableCell>{row.complaint_type}</TableCell>
                             <TableCell>{row.subject}</TableCell>
                             <TableCell>{row.complaint_description}</TableCell>
-                            <TableCell>{row.registered_date}</TableCell>
+                            <TableCell>{formatDate(row.registered_date)}</TableCell>
                             <TableCell>{row.status}</TableCell>
                           </TableRow>
                         ))
@@ -885,8 +920,8 @@ const ComplaintForm = () => {
                 </Table>
               </TableContainer>
             )}
-          </Grid>
-        </Grid>
+        </Box>
+        </center>
         <ToastContainer />
       </Box>
     </div>

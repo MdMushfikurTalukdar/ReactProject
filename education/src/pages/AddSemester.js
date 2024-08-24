@@ -437,6 +437,8 @@ export const AddSemester = () => {
                   paddingX: 2,
                   paddingY: 1,
                   marginTop: 1,
+                  "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
+                  borderRadius:"20px",
                 }}
                 type="submit"
               >

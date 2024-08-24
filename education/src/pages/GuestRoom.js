@@ -17,7 +17,6 @@ import {
   Card,
   CircularProgress,
   Grid,
- 
 } from "@mui/material";
 import { Footer } from "../components/Footer";
 import "../App.css";
@@ -27,7 +26,6 @@ import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 import { BaseUrl, Url } from "../components/BaseUrl";
-
 
 // Validation schema
 const schema = yup.object().shape({
@@ -48,7 +46,7 @@ export const GuestRoom = () => {
     formState: { errors },
     control,
     reset,
-    setValue
+    setValue,
   } = useForm({
     resolver: yupResolver(schema),
   });
@@ -74,7 +72,6 @@ export const GuestRoom = () => {
   const [responsive, setResponsive] = useState(window.innerWidth < 669);
   const [loading, setLoading] = useState(true);
   const [key, setKey] = useState(0);
-
 
   const regenerateToken = () => {
     if (sessionStorage?.getItem("accesstoken")) {
@@ -269,16 +266,25 @@ export const GuestRoom = () => {
                 }
               );
 
-              setResult([...result,{purpose_of_request:data.purpose,from_date:from,to_date:data.toDate,no_of_persons:data.numberOfPersons,status:"pending"}])
+              setResult([
+                ...result,
+                {
+                  purpose_of_request: data.purpose,
+                  from_date: from,
+                  to_date: data.toDate,
+                  no_of_persons: data.numberOfPersons,
+                  status: "pending",
+                },
+              ]);
 
               reset({
-                purpose:"",
-                toDate:"",
-                numberOfPersons:""
-              })
-              setValue("purpose","");
-              setValue("toDate","");
-              setValue("numberOfPersons","")
+                purpose: "",
+                toDate: "",
+                numberOfPersons: "",
+              });
+              setValue("purpose", "");
+              setValue("toDate", "");
+              setValue("numberOfPersons", "");
               setFrom("");
 
               setKey((prevKey) => prevKey + 1);
@@ -364,65 +370,75 @@ export const GuestRoom = () => {
     <div className="container-fluid">
       <NavbarNew />
       <Box
-      sx={{
-        width: "100vw",
-        textAlign: "center",
-        backgroundImage:
-          "url(https://images.unsplash.com/photo-1544006659-f0b21884ce1d?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "center",
-        backgroundSize: "cover",
-        paddingTop: "2vw",
-        paddingBottom: "15vw",
-        position: "relative",
-        "&::before": {
-          content: '""',
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          backgroundColor: "rgba(0, 0, 0, 0.6)", // Overlay with opacity
-          zIndex: 1,
-        },
-      }}
-    >
-      <Grid
-        container
         sx={{
+          width: "100vw",
+          textAlign: "center",
+          backgroundImage:
+            "url(https://images.unsplash.com/photo-1544006659-f0b21884ce1d?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
+          backgroundSize: "cover",
+          paddingTop: "2vw",
+          paddingBottom: "15vw",
           position: "relative",
-          zIndex: 2,
-          color: "white",
-          padding: { xs: "20px", sm: "20px", md: "50px" },
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.6)", // Overlay with opacity
+            zIndex: 1,
+          },
         }}
       >
-        <Grid item xs={12} sm={12} lg={6} md={6}>
-          <Typography
-            variant="h1"
-            sx={{
-              fontSize: { xs: "2rem", sm: "2.4rem", md: "2.6rem", lg: "2.6rem" },
-              marginTop: { xs: "20px", md: "50px" },
-              fontWeight: "bold",
-            }}
-          >
-            Guest Room Request
-          </Typography>
-          <Typography
-            sx={{
-              fontSize: { xs: "1rem", sm: "1.1rem", md: "1.2rem", lg: "1.2rem" },
-              marginTop: "10px",
-              fontWeight: "500",
-              padding: { xs: "10px", sm: "10px", md: "0px" },
-            }}
-          >
-            If you have any questions, suggestions, or require assistance,
-            please do not hesitate to reach out to us. We are here to help and
-            look forward to hearing from you.
-          </Typography>
+        <Grid
+          container
+          sx={{
+            position: "relative",
+            zIndex: 2,
+            color: "white",
+            padding: { xs: "20px", sm: "20px", md: "50px" },
+          }}
+        >
+          <Grid item xs={12} sm={12} lg={6} md={6}>
+            <Typography
+              variant="h1"
+              sx={{
+                fontSize: {
+                  xs: "2rem",
+                  sm: "2.4rem",
+                  md: "2.6rem",
+                  lg: "2.6rem",
+                },
+                marginTop: { xs: "20px", md: "50px" },
+                fontWeight: "bold",
+              }}
+            >
+              Guest Room Request
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: {
+                  xs: "1rem",
+                  sm: "1.1rem",
+                  md: "1.2rem",
+                  lg: "1.2rem",
+                },
+                marginTop: "10px",
+                fontWeight: "500",
+                padding: { xs: "10px", sm: "10px", md: "0px" },
+              }}
+            >
+              If you have any questions, suggestions, or require assistance,
+              please do not hesitate to reach out to us. We are here to help and
+              look forward to hearing from you.
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={12} lg={6} md={6}></Grid>
         </Grid>
-        <Grid item xs={12} sm={12} lg={6} md={6}></Grid>
-      </Grid>
-    </Box>
+      </Box>
       <Box
         className="bonafide-form"
         sx={{ padding: { lg: 1, xs: 1 }, borderRadius: 2 }}
@@ -436,18 +452,17 @@ export const GuestRoom = () => {
           Guest Room Allotment Request
         </Typography>
 
-        <center style={{width:"80%"}}>
-        
-        <Divider
-          sx={{
-            backgroundColor: "blue",
-            width: { lg: "12%", xs: "30%", md: "10%" },
-            fontWeight: "800",
-            textAlign: "center",
-            marginTop: "5px",
-          }}
-        />
-      </center>
+        <center style={{ width: "80%" }}>
+          <Divider
+            sx={{
+              backgroundColor: "blue",
+              width: { lg: "12%", xs: "30%", md: "10%" },
+              fontWeight: "800",
+              textAlign: "center",
+              marginTop: "5px",
+            }}
+          />
+        </center>
 
         {/* <img
           src="./images/hostel_caretaker.png"
@@ -522,7 +537,6 @@ export const GuestRoom = () => {
                 id="fromDate"
                 label="From"
                 type="date"
-               
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -597,21 +611,22 @@ export const GuestRoom = () => {
               )}
             </FormControl>
 
-<center>
-            <Button
-              variant="contained"
-              color="primary"
-              type="submit"
-              fullWidth
-              sx={{
-                marginTop: "16px",
-                backgroundColor: "rgb(107,169,169)",
-                marginBottom: "15px",
-                width: { lg: "50%", md: "50%", xs: "100%", sm: "90%" }
-              }}
-            >
-              Send Request
-            </Button>
+            <center>
+              <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+                fullWidth
+                sx={{
+                  marginTop: "16px",
+                  backgroundColor: "rgb(107,169,169)",
+                  marginBottom: "15px",
+                  width: { lg: "50%", md: "50%", xs: "100%", sm: "90%" },
+                  borderRadius: "20px",
+                }}
+              >
+                Send Request
+              </Button>
             </center>
           </form>
         </Box>
@@ -619,18 +634,17 @@ export const GuestRoom = () => {
         <Typography variant="p" gutterBottom style={{ fontSize: "1.2rem" }}>
           Previous Requests
         </Typography>
-        <center style={{width:"80%"}}>
-        
-        <Divider
-          sx={{
-            backgroundColor: "blue",
-            width: { lg: "10%", xs: "30%", md: "10%" },
-            fontWeight: "800",
-            textAlign: "center",
-            marginTop: "5px",
-          }}
-        />
-      </center>
+        <center style={{ width: "80%" }}>
+          <Divider
+            sx={{
+              backgroundColor: "blue",
+              width: { lg: "10%", xs: "30%", md: "10%" },
+              fontWeight: "800",
+              textAlign: "center",
+              marginTop: "5px",
+            }}
+          />
+        </center>
         <Divider sx={{ mb: 3 }} />
 
         <Box
@@ -692,7 +706,7 @@ export const GuestRoom = () => {
                   width: "300px",
                   borderRadius: "10px",
                   marginTop: "30px",
-                  marginBottom:"30px"
+                  marginBottom: "30px",
                 }}
               />
             </center>

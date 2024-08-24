@@ -502,6 +502,8 @@ const AddFeesCaretaker = () => {
                   sx={{
                     width: { xs: "85%", sm: "50%", lg: "50%", md: "50%" },
                     marginTop: "30px",
+                    borderRadius:"20px",
+                    "&:hover": { backgroundColor: "rgb(85, 136, 136)" }
                   }}
                 >
                   {!loading && <p>{editId ? "Update" : "Submit"}</p>}

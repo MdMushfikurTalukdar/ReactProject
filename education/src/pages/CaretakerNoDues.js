@@ -547,14 +547,14 @@ export const CaretakerNoDues = () => {
                             <Button
                               variant="contained"
                               onClick={(e) => handleVerification(data.id)}
-                              style={{ backgroundColor: "rgb(107, 169, 169)" }}
+                              style={{ backgroundColor: "rgb(107, 169, 169)", borderRadius:"20px", }}
                             >
                               Accept
                             </Button>
                             <Button
                               variant="contained"
                               onClick={(e) => handleReject(data.id)}
-                              style={{ backgroundColor: "rgb(107, 169, 169)" }}
+                              style={{ backgroundColor: "rgb(107, 169, 169)", borderRadius:"20px", }}
                             >
                               Reject
                             </Button>
@@ -702,14 +702,14 @@ export const CaretakerNoDues = () => {
                             <Button
                               variant="contained"
                               onClick={(e) => handleVerification(data.id)}
-                              style={{ backgroundColor: "rgb(107, 169, 169)" }}
+                              style={{ backgroundColor: "rgb(107, 169, 169)", borderRadius:"20px", }}
                             >
                               Accept
                             </Button>
                             <Button
                               variant="contained"
                               onClick={(e) => handleReject(data.id)}
-                              style={{ backgroundColor: "rgb(107, 169, 169)" }}
+                              style={{ backgroundColor: "rgb(107, 169, 169)", borderRadius:"20px", }}
                             >
                               Reject
                             </Button>
@@ -857,14 +857,14 @@ export const CaretakerNoDues = () => {
                             <Button
                               variant="contained"
                               onClick={(e) => handleVerification(data.id)}
-                              style={{ backgroundColor: "rgb(107, 169, 169)" }}
+                              style={{ backgroundColor: "rgb(107, 169, 169)", borderRadius:"20px", }}
                             >
                               Accept
                             </Button>
                             <Button
                               variant="contained"
                               onClick={(e) => handleReject(data.id)}
-                              style={{ backgroundColor: "rgb(107, 169, 169)" }}
+                              style={{ backgroundColor: "rgb(107, 169, 169)", borderRadius:"20px", }}
                             >
                               Reject
                             </Button>

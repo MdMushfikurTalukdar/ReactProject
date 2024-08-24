@@ -413,6 +413,7 @@ export const SemBranch = () => {
                   paddingX: 4,
                   paddingY: 1,
                   marginTop: 3,
+                  borderRadius:"20px",
                 }}
                 type="submit"
               >

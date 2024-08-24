@@ -113,6 +113,7 @@ export const LoginPage = () => {
         // axios.defaults.headers.common['Authorization']=res.data.token.access;
         sessionStorage.setItem("accesstoken", res.data.token.access);
         sessionStorage.setItem("refreshtoken", res.data.token.refresh);
+        reset();
       })
       .catch((err) => {
         console.log(err);
@@ -142,7 +143,7 @@ export const LoginPage = () => {
         setLoading(false);
       });
 
-    reset();
+   
   };
 
   const checking = (e) => {
@@ -288,7 +289,9 @@ export const LoginPage = () => {
                   color: "#fff",
                   backgroundColor: "rgb(107, 169, 169)",
                   "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
+                  borderRadius:"20px",
                 }}
+                
                 type="submit"
               >
                 {!loading && <p>Login</p>}

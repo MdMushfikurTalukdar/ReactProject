@@ -40,7 +40,7 @@ export const NoDuesForDegreeApproval = () => {
           let config = {
             method: "post",
             maxBodyLength: Infinity,
-            url: "https://amarnath013.pythonanywhere.com/api/user/token/refresh/",
+            url: `${BaseUrl}/token/refresh/`,
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
@@ -237,7 +237,7 @@ export const NoDuesForDegreeApproval = () => {
     let config = {
       method: "patch",
       maxBodyLength: Infinity,
-      url: `${BaseUrl}/No-dues-list/${user_id}/departments/${id}/`,
+      url: `${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/No-dues-list/${user_id}/departments/${id}/`,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
@@ -326,7 +326,7 @@ export const NoDuesForDegreeApproval = () => {
         let config = {
           method: "patch",
           maxBodyLength: Infinity,
-          url: `${BaseUrl}/No-dues-list/${user_id}/departments/${id}/`,
+          url: `${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/No-dues-list/${user_id}/departments/${id}/`,
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
@@ -423,7 +423,7 @@ export const NoDuesForDegreeApproval = () => {
     let config = {
       method: "patch",
       maxBodyLength: Infinity,
-      url: `${BaseUrl}/No-dues-list/${user_id}/departments/${id}/`,
+      url: `${BaseUrl}/${jwtDecode(sessionStorage.getItem("accesstoken")).college}/No-dues-list/${user_id}/departments/${id}/`,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
@@ -567,12 +567,13 @@ export const NoDuesForDegreeApproval = () => {
                     <Button
                       variant="outlined"
                       onClick={() => handleApproval(data?.requested_data?.id)}
-                      style={{ marginRight: "5px" }}
+                      style={{ marginRight: "5px", borderRadius:"20px", }}
                     >
                       Approve
                     </Button>
                     <Button
                       variant="outlined"
+                      style={{ borderRadius:"20px",}}
                       onClick={() => handleRejection(data?.requested_data?.id)}
                     >
                       Reject
@@ -716,7 +717,7 @@ export const NoDuesForDegreeApproval = () => {
                   <Button
                     variant="outlined"
                     onClick={() => handleReapproval(data?.id)}
-                    style={{ marginRight: "5px" }}
+                    style={{ marginRight: "5px", borderRadius:"20px", }}
                   >
                     Approve
                   </Button>

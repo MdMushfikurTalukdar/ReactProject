@@ -574,6 +574,7 @@ export const BonafideForm = () => {
                       backgroundColor: "rgb(107, 169, 169)",
                       color: "#fff",
                       "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
+                      borderRadius:"20px",
                     }}
                   >
                     <input
@@ -647,6 +648,7 @@ export const BonafideForm = () => {
                     color: "#fff",
                     "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
                     width: { lg: "80%", md: "70%", xs: "100%", sm: "90%" },
+                    borderRadius:"20px",
                   }}
                 >
                   {!loading2 && <p>Send Request</p>}

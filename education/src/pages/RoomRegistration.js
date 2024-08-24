@@ -586,6 +586,7 @@ const RoomRegistration = () => {
                     marginTop: 2,
                     width: { xs: "85%", sm: "50%" },
                     backgroundColor: "rgb(107 169 169)",
+                    borderRadius:"20px",
                   }}
                 >
                  {!loading2 && <p>Register Room</p>}
@@ -637,6 +638,7 @@ const RoomRegistration = () => {
                   style={{
                     backgroundColor: "rgb(107 169 169)",
                     marginTop: "10px",
+                    borderRadius:"20px",
                   }}
                 >
                   <TextField
@@ -666,6 +668,7 @@ const RoomRegistration = () => {
                     backgroundColor: "rgb(107 169 169)",
                     textAlign: "start",
                     marginTop: "20px",
+                    borderRadius:"20px",
                   }}
                   type="submit"
                   onClick={handleSubmitFile}

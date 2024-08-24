@@ -565,7 +565,7 @@ export const UserManagement = () => {
               )}
               <Button
                 variant="contained"
-                sx={{ width: "70%", marginTop: "15px" }}
+                sx={{ width: "70%", marginTop: "15px", borderRadius:"20px", }}
                 onClick={(e) => handleUpdate(editInfo.id)}
               >
                 {!load1 && <p>Edit</p>}
@@ -614,7 +614,7 @@ export const UserManagement = () => {
               <Box sx={{ display: "flex", gap: "5px" }}>
                 <Button
                   variant="contained"
-                  sx={{ width: "70%", marginTop: "15px" }}
+                  sx={{ width: "70%", marginTop: "15px", borderRadius:"20px", }}
                   onClick={handleDelete}
                 >
                   {!load && <p>Yes</p>}
@@ -626,7 +626,7 @@ export const UserManagement = () => {
                 </Button>
                 <Button
                   variant="contained"
-                  sx={{ width: "70%", marginTop: "15px" }}
+                  sx={{ width: "70%", marginTop: "15px", borderRadius:"20px", }}
                   onClick={(e) => setDelete1(false)}
                 >
                   No
@@ -724,7 +724,7 @@ export const UserManagement = () => {
                     {user.registration_number}
                   </TableCell>
                   <TableCell align="center" sx={{ borderRight: "none" }}>
-                    <Button
+                    <Button 
                       onClick={(e) =>
                         handleEdit(user.registration_number, user.role, user.id)
                       }

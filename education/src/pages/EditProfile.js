@@ -1363,6 +1363,7 @@ export const EditProfile = () => {
                       style={{ marginBottom: "40px" }}
                       sx={{
                         width: { lg: "30%", md: "70%", xs: "100%", sm: "90%" },
+                        borderRadius:"20px",
                       }}
                     >
                       {!loading && <p>Update</p>}

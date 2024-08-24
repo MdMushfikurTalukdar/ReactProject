@@ -604,6 +604,7 @@ export const HostelNoDueReq = () => {
               backgroundColor: "rgb(107, 169, 169)",
               color: "#fff",
               "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
+              borderRadius:"20px",
             }}
           >
             {!loading1 && <p>Send Request</p>}

@@ -583,7 +583,7 @@ export const HostelRoomRequest = () => {
                           backgroundColor: "rgb(107, 169, 169)",
                           color: "#fff",
                           "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
-
+                          borderRadius:"20px",
                           width: {
                             lg: "70%",
                             md: "70%",
@@ -630,6 +630,7 @@ export const HostelRoomRequest = () => {
                       marginBottom: 2,
                       backgroundColor: "rgb(107, 169, 169)",
                       color: "#fff",
+                      borderRadius:"20px",
                       "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
 
                       width: { lg: "70%", md: "70%", xs: "100%", sm: "90%" },

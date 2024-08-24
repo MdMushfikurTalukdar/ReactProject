@@ -63,7 +63,7 @@ export const Clients = () => {
   ];
 
   return (
-    <Box sx={{backgroundColor:"whitesmoke"}}>
+    <Box sx={{backgroundColor:"whitesmoke", marginTop:"40px"}}>
       <SliderContainer>
         <Swiper
           ref={swiperRef}

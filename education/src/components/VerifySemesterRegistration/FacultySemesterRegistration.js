@@ -454,6 +454,7 @@ const FacultySemesterRegistration = () => {
             <Button
               variant="contained"
               color="primary"
+              style={{ borderRadius:"20px",}}
               onClick={() => onSubmit("approved")}
             >
               {!loading && <p>Approve</p>}

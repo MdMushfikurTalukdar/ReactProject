@@ -116,7 +116,7 @@ export const About = () => {
                 },
                 padding: {
                   lg: "0px",
-                  xs: "20px",
+                  xs: "10px",
                   sm: "10px",
                   md: "0px",
                 },
@@ -154,7 +154,7 @@ export const About = () => {
           />
         </center>
         <Typography component="div"
-          sx={{ padding: "30px", fontSize: "1.2rem", textAlign: {lg:"justify",md:"justify",xs:"initial" } }}
+          sx={{ padding: "20px", fontSize: "1.1rem", textAlign: {lg:"justify",md:"justify",xs:"initial",sm:"initial" } }}
         >
           SmartOne is an innovative online platform designed to transform the
           campus experience through advanced technology and seamless

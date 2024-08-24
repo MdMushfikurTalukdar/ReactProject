@@ -394,6 +394,9 @@ export const Contact = () => {
                     width: { lg: "40%", md: "50%", xs: "100%", sm: "50%" },
                     marginTop: { xs: "10px", lg: "10px" },
                     marginBottom: "20px",
+                    borderRadius:"20px",
+                    "&:hover": { backgroundColor: "rgb(85, 136, 136)" }
+                    
                   }}
                 >
                   <label>
@@ -414,6 +417,9 @@ export const Contact = () => {
                   style={{
                     width: "70%",
                     backgroundColor: "rgb(107, 169, 169)",
+                    "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
+                    borderRadius:"20px",
+                    marginTop:"20px"
                   }}
                   onClick={handleSubmit}
                 >
@@ -516,7 +522,7 @@ export const Contact = () => {
         <Box sx={{display:{lg:"none",md:"none",sm:"block",xs:"block"}}}>
           {/* <center> */}
           <Box sx={{padding:"10px"}}>
-            <Typography variant="h4" mb={2} style={{marginLeft:"20px"}} >
+            <Typography variant="p" mb={2} style={{marginLeft:"20px",fontSize:"2.0rem",marginBottom:"10px"}} >
               Get in touch
             </Typography>
             <Divider
@@ -525,6 +531,7 @@ export const Contact = () => {
                 width: { lg: "10vw", xs: "60vw", md: "40vw" },
                 fontWeight: "700",
                 marginLeft:"15px",
+                marginTop:"10px"
               }}
             />
             </Box>
@@ -547,7 +554,7 @@ export const Contact = () => {
                     gap={1}
                   >
                     <MdEmail />
-                    <Box>Email</Box>
+                    <Box style={{fontSize:"1.2rem"}}>Email</Box>
                   </Box>
                 </Typography>
                 <Typography variant="body1" color="textSecondary">
@@ -565,7 +572,7 @@ export const Contact = () => {
                     gap={1}
                   >
                     <MdPhone />
-                    <Box>Phone</Box>
+                    <Box style={{fontSize:"1.2rem"}}>Phone</Box>
                   </Box>
                 </Typography>
                 <Typography variant="body1" color="textSecondary">
@@ -583,7 +590,7 @@ export const Contact = () => {
                     gap={1}
                   >
                     <MdLocationOn />
-                    <Box>Address</Box>
+                    <Box style={{fontSize:"1.2rem"}}>Address</Box>
                   </Box>
                 </Typography>
                 <Typography variant="body1" color="textSecondary">

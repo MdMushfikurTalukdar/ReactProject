@@ -580,6 +580,7 @@ const HostelRoomAllotment = () => {
                                     xs: "100%",
                                     sm: "90%",
                                   },
+                                  borderRadius:"20px",
                                 }}
                               >
                                 Submit

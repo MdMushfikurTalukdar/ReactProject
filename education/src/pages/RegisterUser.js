@@ -632,6 +632,8 @@ export const RegisterUser = () => {
                         width: { xs: "85%", sm: "50%" },
                         backgroundColor: "rgb(107 169 169)",
                         textAlign: "start",
+                        borderRadius:"20px",
+                        // marginBottom:"20px"
                       }}
                       type="submit"
                     >
@@ -648,15 +650,7 @@ export const RegisterUser = () => {
                     </Button>
                   </form>
 
-                  <p style={{ fontSize: "0.8rem", marginTop: "10px" }}>
-                    Already have an account?{" "}
-                    <span
-                      style={{ color: "rgb(107 169 169)" }}
-                      onClick={(e) => navigate("/login")}
-                    >
-                      Login
-                    </span>
-                  </p>
+              
 
                   <Divider
                     component="span"
@@ -698,6 +692,7 @@ export const RegisterUser = () => {
                         style={{
                           backgroundColor: "rgb(107 169 169)",
                           marginTop: "10px",
+                          borderRadius:"20px",
                         }}
                       >
                         <input
@@ -724,6 +719,7 @@ export const RegisterUser = () => {
                         backgroundColor: "rgb(107 169 169)",
                         textAlign: "start",
                         marginTop: "20px",
+                        borderRadius:"20px",
                       }}
                       type="submit"
                       onClick={handleSubmitFile}
@@ -857,7 +853,7 @@ export const RegisterUser = () => {
                       <TextField
                         type="text"
                         label="Registration Number"
-                        placeholder="0123442"
+                        placeholder="01234420214"
                         sx={{
                           width: "50%",
                           marginTop: "12px",
@@ -913,6 +909,10 @@ export const RegisterUser = () => {
                         width: "50%",
                         backgroundColor: "rgb(107 169 169)",
                         textAlign: "start",
+                        borderRadius:"20px",
+                        "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
+                        transition: 'background-color 0.3s ease-in-out',
+                        marginBottom:"20px"
                       }}
                       type="submit"
                     >
@@ -929,17 +929,7 @@ export const RegisterUser = () => {
                     </Button>
                   </form>
 
-                  <p style={{ fontSize: "0.8rem", marginTop: "10px" }}>
-                    Already have an account?{" "}
-                    <span
-                      className="cursor-pointer"
-                      onClick={(e) => navigate("/login")}
-                      style={{ color: "rgb(107 169 169)" }}
-                    >
-                      Login
-                    </span>
-                  </p>
-
+                
                   <Divider
                     component="span"
                     role="presentation"
@@ -972,7 +962,7 @@ export const RegisterUser = () => {
                           Upload a csv file
                         </p>
                         <Box className="mt-3 text-xl">
-                          <FaUpload style={{ color: "rgb(107 169 169)" }} />
+                          <FaUpload style={{ color: "rgb(107 169 169)", }} />
                         </Box>
                         <Button
                           component="label"
@@ -980,6 +970,8 @@ export const RegisterUser = () => {
                           style={{
                             backgroundColor: "rgb(107 169 169)",
                             marginTop: "10px",
+                            borderRadius:"20px",
+                            marginBottom:"10px"
                           }}
                         >
                           <input
@@ -1007,6 +999,9 @@ export const RegisterUser = () => {
                           backgroundColor: "rgb(107 169 169)",
                           textAlign: "start",
                           marginTop: "20px",
+                          borderRadius:"20px",
+                          "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
+                          transition: 'background-color 0.3s ease-in-out',
                         }}
                         type="submit"
                         onClick={handleSubmitFile}

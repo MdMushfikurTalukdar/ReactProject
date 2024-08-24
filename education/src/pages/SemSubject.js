@@ -356,6 +356,7 @@ export const SemSubject = () => {
                     paddingX: 1.5,
                     paddingY: 1.0,
                     marginTop: 2,
+                    borderRadius:"20px",
                   }}
                   type="submit"
                 >

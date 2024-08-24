@@ -840,7 +840,7 @@ function HostelFeePayment() {
                     <Button
                       type="submit"
                       variant="contained"
-                      style={{ backgroundColor: "#8ecccc" }}
+                      style={{ backgroundColor: "#8ecccc", borderRadius:"20px", }}
                       fullWidth
                     >
                       {!loading1 && <p>Request For Payment</p>}

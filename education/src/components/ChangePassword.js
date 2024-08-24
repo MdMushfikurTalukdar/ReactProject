@@ -299,9 +299,11 @@ export const ChangePassword = () => {
               sx={{
                 marginTop: 2,
                 color: '#fff',
+                borderRadius:"20px",
                 backgroundColor: "rgb(107, 169, 169)",
                 "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
                 transition: 'background-color 0.3s ease-in-out',
+                
               }}
             >
               Change Password

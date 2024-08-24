@@ -78,7 +78,8 @@ export const Home = () => {
             fontSize: "2.0rem",
             fontWeight: "600",
             margin: "20px 0px 20px 0px",
-            color:"rgb(107, 169, 169)"
+            color:"rgb(107, 169, 169)",
+            marginTop:"57px"
           }}
         >
           Client Testimonials
@@ -90,7 +91,8 @@ export const Home = () => {
             fontSize: "2.0rem",
             fontWeight: "600",
             margin: "20px 0px 20px 0px",
-            color:"rgb(107, 169, 169)"
+            color:"rgb(107, 169, 169)",
+            marginTop:"50px"
           }}>Our Clients</p>
         <Testimonials />
         <Box
@@ -99,6 +101,7 @@ export const Home = () => {
             fontSize: { xs: "20.4pt", lg: "20pt", sm: "23pt", md: "26pt" },
             fontWeight: "500",
             display: { xs: "none", lg: "block", md: "block", sm: "block" },
+            marginTop:"50px"
           }}
         >
           <p

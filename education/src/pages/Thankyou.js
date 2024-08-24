@@ -41,7 +41,7 @@ export const ThankYou = () => {
           <Button
             variant="outlined"
             color="primary"
-            sx={{ marginTop: 3 }}
+            sx={{ marginTop: 3, borderRadius:"20px", }}
             onClick={() => navigate('/')}
           >
             Go Back to Home
