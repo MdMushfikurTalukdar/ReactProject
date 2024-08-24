@@ -1,10 +1,8 @@
 import {
   Box,
-  Button,
   CircularProgress,
   Divider,
   Grid,
-  TextField,
   Typography,
 } from "@mui/material";
 import "../App.css";
@@ -15,14 +13,14 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../pages/logout.css";
 import { jwtDecode } from "jwt-decode";
-import { BaseUrl, Url } from "./BaseUrl";
+import { BaseUrl } from "./BaseUrl";
 import { enqueueSnackbar } from "notistack";
 
 export const ProfileMainBody = () => {
   const [userProfile, setUserProfile] = useState([]);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [college,setCollege]=useState('');
+  const [college, setCollege] = useState("");
 
   useEffect(() => {
     if (sessionStorage?.getItem("accesstoken")) {
@@ -45,39 +43,38 @@ export const ProfileMainBody = () => {
     if (token && token1) {
       const response = jwtDecode(token);
 
+      let config = {
+        method: "GET",
+        maxBodyLength: Infinity,
+        url: `${BaseUrl}/${response?.college}/profile/`,
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+        },
+      };
 
-          let config = {
-            method: "GET",
-            maxBodyLength: Infinity,
-            url: `${BaseUrl}/${response?.college}/profile/`,
-            headers: {
-              Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-            },
-          };
-
-          axios
-            .request(config)
-            .then((response) => {
-              setUserProfile(response.data);
-              setLoading(false);
-            })
-            .catch((error) => {
-              console.log(error);
-              if (
-                error?.response?.data?.errors?.detail ===
-                "Given token not valid for any token type"
-              ) {
-                enqueueSnackbar("Logging out", {
-                  variant: "error",
-                  anchorOrigin: {
-                    vertical: "bottom",
-                    horizontal: "center",
-                  },
-                  autoHideDuration: 3000,
-                });
-                navigate("/login");
-              }
+      axios
+        .request(config)
+        .then((response) => {
+          setUserProfile(response.data);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.log(error);
+          if (
+            error?.response?.data?.errors?.detail ===
+            "Given token not valid for any token type"
+          ) {
+            enqueueSnackbar("Logging out", {
+              variant: "error",
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "center",
+              },
+              autoHideDuration: 3000,
             });
+            navigate("/login");
+          }
+        });
     } else {
       navigate("/login");
     }
@@ -149,11 +146,16 @@ export const ProfileMainBody = () => {
               Basic details
             </p>
 
-            <FaUserEdit
-              style={{ fontSize: "1.6rem" }}
-              className="text-gray-500"
-              onClick={(e) => navigate("/profileEdit")}
-            />
+            <Box onClick={(e) => navigate("/profileEdit")} style={{cursor:"pointer"}}>
+              <div style={{display:"flex",gap:"5px"}}>
+              <FaUserEdit
+                style={{ fontSize: "1.2rem" }}
+                className="text-gray-500"
+                
+              />
+              <span style={{color:"rgb(107, 169, 169)"}}>Edit</span>
+              </div>
+            </Box>
           </div>
           <Box className="bg-gray-100 p-3 rounded-2xl mt-6">
             <Grid container className="mt-3">
@@ -849,9 +851,7 @@ export const ProfileMainBody = () => {
                 </Typography>
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
-                <Typography variant="p">
-                  {college}
-                </Typography>
+                <Typography variant="p">{college}</Typography>
               </Grid>
 
               <Divider

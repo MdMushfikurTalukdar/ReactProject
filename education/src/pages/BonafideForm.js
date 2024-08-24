@@ -686,9 +686,9 @@ export const BonafideForm = () => {
                 image="../images/Bonafide.png"
                 alt=""
                 sx={{
-                  width: { lg: "45%", xs: "90%", md: "55%" },
+                  width: { lg: "350px", xs: "90%", md: "55%" },
                   marginLeft: "25%",
-                  marginTop: "5%",
+                  marginTop: "10%",
                 }}
               />
             </Box>
@@ -803,179 +803,182 @@ export const BonafideForm = () => {
                 display: { xs: "none", sm: "block", md: "block", lg: "block" },
               }}
             >
-              <Box sx={{ marginTop: 2, marginRight: 7 }}>
-               
-
-                <p
-                  style={{
-                    marginTop: "20px",
-                    textAlign: "center",
-                    fontSize: "1.3rem",
-                  }}
-                >
-                  {" "}
-                  Previous Records
-                </p>
-                <center>
-                  <Divider
-                    sx={{
-                      backgroundColor: "blue",
-                      width: { lg: "12%", xs: "30%", md: "10%",sm:"15%" },
-                      fontWeight: "800",
-                      textAlign: "center",
-                      marginTop: "5px",
-                    }}
-                  />
-                </center>
-                {result.length > 0 ? (
-                  <TableContainer
-                    component={Paper}
-                    sx={{
-                      marginTop: 3,
-                      borderRadius: "10px",
-                      border: "none",
-                      "&:last-child td, &:last-child th": { border: 0 },
-                      borderRight: 0,
-                      borderBottom: 0,
-                      marginBottom: "50px",
-                      marginRight: "30px",
-                    }}
-                  >
-                    <Table
-                      sx={{
-                        minWidth: 650,
-                        borderRight: 0,
-                        "&:last-child td, &:last-child th": { border: 0 },
-                        border: 0,
-                        borderBottom: 0,
-                      }}
-                      aria-label="bonafide table"
-                    >
-                      <TableHead style={{ backgroundColor: "#545959" }}>
-                        <TableRow>
-                          <TableCell
-                            sx={{
-                              color: "white",
-                            }}
-                          >
-                            Bonafide Number
-                          </TableCell>
-                          <TableCell
-                            sx={{
-                              color: "white",
-                            }}
-                          >
-                            Applied For
-                          </TableCell>
-                          <TableCell
-                            sx={{
-                              color: "white",
-                            }}
-                          >
-                            Status
-                          </TableCell>
-                          <TableCell
-                            sx={{
-                              color: "white",
-                            }}
-                          >
-                            Applied Date
-                          </TableCell>
-                          <TableCell
-                            sx={{
-                              color: "white",
-                            }}
-                          >
-                            Actions
-                          </TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {(rowsPerPage > 0
-                          ? result.slice(
-                              page * rowsPerPage,
-                              page * rowsPerPage + rowsPerPage
-                            )
-                          : result
-                        ).map((data, index) => (
-                          <TableRow key={index}>
-                            <TableCell>{data.bonafide_number}</TableCell>
-                            <TableCell>{data.required_for}</TableCell>
-                            <TableCell>{data.status}</TableCell>
-                            <TableCell>{data.applied_date}</TableCell>
-                            <TableCell>
-                              {data.status === "approved" ? (
-                                <Button
-                                  size="small"
-                                  variant="contained"
-                                  color="primary"
-                                  onClick={() =>
-                                    navigate("/bonafideCertificate")
-                                  }
-                                >
-                                  View
-                                </Button>
-                              ) : (
-                                <Typography
-                                  variant="body2"
-                                  color="textSecondary"
-                                >
-                                  N/A
-                                </Typography>
-                              )}
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                        {emptyRows > 0 && (
-                          <TableRow style={{ height: 53 * emptyRows }}>
-                            <TableCell colSpan={6} />
-                          </TableRow>
-                        )}
-                      </TableBody>
-                      <TableFooter style={{ backgroundColor: "#545959" }}>
-                        <TableRow>
-                          <TablePagination
-                            rowsPerPageOptions={[
-                              5,
-                              10,
-                              25,
-                              { label: "All", value: -1 },
-                            ]}
-                            colSpan={5}
-                            count={result.length}
-                            rowsPerPage={rowsPerPage}
-                            page={page}
-                            SelectProps={{
-                              inputProps: {
-                                "aria-label": "rows per page",
-                              },
-                              native: true,
-                            }}
-                            onPageChange={handleChangePage}
-                            onRowsPerPageChange={handleChangeRowsPerPage}
-                            ActionsComponent={TablePaginationActions}
-                          />
-                        </TableRow>
-                      </TableFooter>
-                    </Table>
-                  </TableContainer>
-                ) : (
-                  <center>
-                   <img
-                    src="./images/semester_no_data.png"
-                    alt=""
-                    style={{
-                      width: "280px",
-                      marginTop:"20px",
-                      marginBottom:"20px"
-                    }}
-                  />
-                  </center>
-                )}
-              </Box>
+            
             </Grid>
           </Grid>
+          
         )}
+          {!responsive && <Box sx={{ marginTop: 2 }}>
+               
+
+               <p
+                 style={{
+                   marginTop: "20px",
+                   textAlign: "center",
+                   fontSize: "1.3rem",
+                 }}
+               >
+                 {" "}
+                 Previous Records
+               </p>
+               <center>
+                 <Divider
+                   sx={{
+                     backgroundColor: "blue",
+                     width: { lg: "12%", xs: "30%", md: "10%",sm:"15%" },
+                     fontWeight: "800",
+                     textAlign: "center",
+                     marginTop: "5px",
+                   }}
+                 />
+               </center>
+               {result.length > 0 ? (
+                 <TableContainer
+                   component={Paper}
+                   sx={{
+                    width:"100%",
+                     marginTop: 3,
+                     borderRadius: "10px",
+                     border: "none",
+                     "&:last-child td, &:last-child th": { border: 0 },
+                     borderRight: 0,
+                     borderBottom: 0,
+                     marginBottom: "50px",
+                     marginRight: "10px",
+                   }}
+                 >
+                   <Table
+                     sx={{
+                       minWidth: 650,
+                       borderRight: 0,
+                       "&:last-child td, &:last-child th": { border: 0 },
+                       border: 0,
+                       borderBottom: 0,
+                     }}
+                     aria-label="bonafide table"
+                   >
+                     <TableHead style={{ backgroundColor: "#545959" }}>
+                       <TableRow>
+                         <TableCell
+                           sx={{
+                             color: "white",
+                           }}
+                         >
+                           Bonafide Number
+                         </TableCell>
+                         <TableCell
+                           sx={{
+                             color: "white",
+                           }}
+                         >
+                           Applied For
+                         </TableCell>
+                         <TableCell
+                           sx={{
+                             color: "white",
+                           }}
+                         >
+                           Status
+                         </TableCell>
+                         <TableCell
+                           sx={{
+                             color: "white",
+                           }}
+                         >
+                           Applied Date
+                         </TableCell>
+                         <TableCell
+                           sx={{
+                             color: "white",
+                           }}
+                         >
+                           Actions
+                         </TableCell>
+                       </TableRow>
+                     </TableHead>
+                     <TableBody>
+                       {(rowsPerPage > 0
+                         ? result.slice(
+                             page * rowsPerPage,
+                             page * rowsPerPage + rowsPerPage
+                           )
+                         : result
+                       ).map((data, index) => (
+                         <TableRow key={index}>
+                           <TableCell>{data.bonafide_number}</TableCell>
+                           <TableCell>{data.required_for}</TableCell>
+                           <TableCell>{data.status}</TableCell>
+                           <TableCell>{data.applied_date}</TableCell>
+                           <TableCell>
+                             {data.status === "approved" ? (
+                               <Button
+                                 size="small"
+                                 variant="contained"
+                                 color="primary"
+                                 onClick={() =>
+                                   navigate("/bonafideCertificate")
+                                 }
+                               >
+                                 View
+                               </Button>
+                             ) : (
+                               <Typography
+                                 variant="body2"
+                                 color="textSecondary"
+                               >
+                                 N/A
+                               </Typography>
+                             )}
+                           </TableCell>
+                         </TableRow>
+                       ))}
+                       {emptyRows > 0 && (
+                         <TableRow style={{ height: 53 * emptyRows }}>
+                           <TableCell colSpan={6} />
+                         </TableRow>
+                       )}
+                     </TableBody>
+                     <TableFooter style={{ backgroundColor: "#545959" }}>
+                       <TableRow>
+                         <TablePagination
+                           rowsPerPageOptions={[
+                             5,
+                             10,
+                             25,
+                             { label: "All", value: -1 },
+                           ]}
+                           colSpan={5}
+                           count={result.length}
+                           rowsPerPage={rowsPerPage}
+                           page={page}
+                           SelectProps={{
+                             inputProps: {
+                               "aria-label": "rows per page",
+                             },
+                             native: true,
+                           }}
+                           onPageChange={handleChangePage}
+                           onRowsPerPageChange={handleChangeRowsPerPage}
+                           ActionsComponent={TablePaginationActions}
+                         />
+                       </TableRow>
+                     </TableFooter>
+                   </Table>
+                 </TableContainer>
+               ) : (
+                 <center>
+                  <img
+                   src="./images/semester_no_data.png"
+                   alt=""
+                   style={{
+                     width: "280px",
+                     marginTop:"20px",
+                     marginBottom:"20px"
+                   }}
+                 />
+                 </center>
+               )}
+             </Box>}
       </Box>
 
       <Footer />

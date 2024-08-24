@@ -392,7 +392,7 @@ const RoomRegistration = () => {
         width: "100vw",
         textAlign: "center",
         backgroundImage:
-          "url(https://images.unsplash.com/photo-1544006659-f0b21884ce1d?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)",
+          "url(../images/banner9.jpg)",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
         backgroundSize: "cover",
@@ -489,6 +489,19 @@ const RoomRegistration = () => {
             <Typography variant="h5" gutterBottom textAlign="center">
               Room Registration
             </Typography>
+            <center>
+            <Divider
+              sx={{
+                backgroundColor: "blue",
+                width: { lg: "20%", xs: "30%", md: "10%",sm:"15%" },
+                fontWeight: "800",
+                textAlign: "center",
+                marginTop: "5px",
+                marginBottom:"40px"
+              }}
+            />
+          </center>
+
             <form onSubmit={handleSubmit(onSubmit)}>
               <center>
                 
@@ -500,7 +513,7 @@ const RoomRegistration = () => {
                       {...field}
                       label="Room Number"
                       
-                      variant="outlined"
+                      variant="standard"
                       margin="normal"
                       fullWidth
                       sx={{
@@ -520,7 +533,7 @@ const RoomRegistration = () => {
                       label="Capacity"
                       
                       margin="normal"
-                      variant="outlined"
+                      variant="standard"
                       fullWidth
                       sx={{
                         width: { lg: "80%", md: "80%", xs: "100%", sm: "90%" },
@@ -566,7 +579,7 @@ const RoomRegistration = () => {
                       label="Status"
 
                       margin="normal"
-                      variant="outlined"
+                      variant="standard"
                       fullWidth
                       
                       sx={{

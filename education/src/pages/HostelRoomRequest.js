@@ -356,7 +356,7 @@ export const HostelRoomRequest = () => {
           width: "100vw",
           textAlign: "center",
           backgroundImage:
-            "url(../images/banner4.jpg)",
+            "url(../images/banner8.jpg)",
           backgroundRepeat: "no-repeat",
           backgroundPosition: "bottom",
           backgroundSize: "cover",

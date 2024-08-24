@@ -72,6 +72,7 @@ export const GuestRoom = () => {
   const [responsive, setResponsive] = useState(window.innerWidth < 669);
   const [loading, setLoading] = useState(true);
   const [key, setKey] = useState(0);
+  const [loading1,setLoading1]=useState(false);
 
   const regenerateToken = () => {
     if (sessionStorage?.getItem("accesstoken")) {
@@ -218,10 +219,15 @@ export const GuestRoom = () => {
   }, []);
 
   const onSubmit = async (data) => {
+
+
     const token = sessionStorage.getItem("accesstoken");
     const token1 = sessionStorage.getItem("refreshtoken");
 
     if (token && token1) {
+
+      setLoading1(true);
+
       let requestData = JSON.stringify({
         user:
           sessionStorage?.getItem("accesstoken") === null
@@ -276,7 +282,7 @@ export const GuestRoom = () => {
                   status: "pending",
                 },
               ]);
-
+              setLoading1(false);
               reset({
                 purpose: "",
                 toDate: "",
@@ -313,6 +319,8 @@ export const GuestRoom = () => {
               }
             })
             .catch((error) => {
+
+              setLoading1(false);
               if (
                 error?.response?.data?.errors?.detail ===
                 "Given token not valid for any token type"
@@ -374,7 +382,7 @@ export const GuestRoom = () => {
           width: "100vw",
           textAlign: "center",
           backgroundImage:
-            "url(../images/banner6.jpg)",
+            "url(../images/banner11.jpg)",
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center 70%",
           backgroundSize: "cover",
@@ -625,7 +633,16 @@ export const GuestRoom = () => {
                   borderRadius: "20px",
                 }}
               >
-                Send Request
+                {!loading1 && <p>Send Request</p>}
+                      {loading1 && (
+                        <CircularProgress
+                          style={{
+                            color: "white",
+                            width: "20px",
+                            height: "22px",
+                          }}
+                        />
+                      )}
               </Button>
             </center>
           </form>
