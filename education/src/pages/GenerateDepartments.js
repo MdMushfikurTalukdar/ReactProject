@@ -1,34 +1,26 @@
 import React, { useEffect, useState } from "react";
 import {
   Box,
-  TextField,
+  
   Typography,
   Button,
-  FormControl,
-  FormHelperText,
+ 
   Grid,
   Divider,
+  CircularProgress,
 } from "@mui/material";
 import Footer from "../components/Home/Footer";
 import NavbarNew from "../components/NavbarNew";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import axios from "axios";
 import { enqueueSnackbar } from "notistack";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { Url } from "../components/BaseUrl";
 
-const schema = yup.object().shape({
-  subject_name: yup.string().required("Subject name is required"),
-  subject_code: yup.string().required("Subject code is required"),
-  name: yup.string().required("Name is required"),
-});
 
-export const SemSubject = () => {
+export const GenerateDepartments = () => {
   const navigate = useNavigate();
-  const [branch, setBranch] = useState("");
+  const [load, setLoad] = useState(false);
 
   const regenerateToken = () => {
     if (sessionStorage?.getItem("accesstoken")) {
@@ -97,7 +89,7 @@ export const SemSubject = () => {
       const response = jwtDecode(sessionStorage?.getItem("accesstoken"));
       if (
         response.exp < Math.floor(Date.now() / 1000) ||
-        (response.role !== "super-admin" && response.role !== "hod")
+        (response.role !== "super-admin" && response.role !== "office")
       ) {
         navigate("/login");
       }
@@ -106,36 +98,24 @@ export const SemSubject = () => {
     }
   }, []);
 
-  const {
-    handleSubmit,
-    register,
-    formState: { errors },
-    reset,
-  } = useForm({ resolver: yupResolver(schema) });
+  const onSubmit = () => {
 
-  const onSubmit = (data) => {
     const token = sessionStorage.getItem("accesstoken");
     const token1 = sessionStorage.getItem("refreshtoken");
 
     if (token && token1) {
-      var subject_code = data.subject_code.toLowerCase();
-      let data1 = JSON.stringify({
-        subject_name: data.subject_name,
-        subject_code: subject_code,
-        instructor: data.name,
-      });
+      setLoad(true);
 
       let config = {
         method: "post",
         maxBodyLength: Infinity,
         url: `${Url}/${
           jwtDecode(sessionStorage.getItem("accesstoken")).college
-        }/subject/`,
+        }/generate-department/`,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
         },
-        data: data1,
       };
 
       const token = sessionStorage.getItem("accesstoken");
@@ -165,7 +145,8 @@ export const SemSubject = () => {
             } else {
               navigate("/login");
             }
-            enqueueSnackbar("Subject Added successfully", {
+            setLoad(false);
+            enqueueSnackbar("Department created successfully", {
               variant: "success",
               anchorOrigin: {
                 vertical: "bottom",
@@ -174,9 +155,21 @@ export const SemSubject = () => {
               autoHideDuration: 1000,
             });
 
-            reset();
+           
           })
           .catch((error) => {
+
+            setLoad(false);
+
+            enqueueSnackbar("Departments created successfully", {
+                variant: "success",
+                anchorOrigin: {
+                  vertical: "bottom",
+                  horizontal: "center",
+                },
+                autoHideDuration: 1000,
+              });
+
             if (
               error?.response?.data?.errors?.detail ===
               "Given token not valid for any token type"
@@ -191,16 +184,19 @@ export const SemSubject = () => {
               });
               navigate("/login");
             }
-            if(error?.response?.data?.errors?.subject_code?.[0]){
-            enqueueSnackbar(error?.response?.data?.errors?.subject_code?.[0], {
-              variant: "error",
-              anchorOrigin: {
-                vertical: "bottom",
-                horizontal: "center",
-              },
-              autoHideDuration: 1000,
-            });
-          }
+            if (error?.response?.data?.errors?.subject_code?.[0]) {
+              enqueueSnackbar(
+                error?.response?.data?.errors?.subject_code?.[0],
+                {
+                  variant: "error",
+                  anchorOrigin: {
+                    vertical: "bottom",
+                    horizontal: "center",
+                  },
+                  autoHideDuration: 1000,
+                }
+              );
+            }
           });
       } else {
         navigate("/login");
@@ -261,7 +257,7 @@ export const SemSubject = () => {
                 fontWeight: "bold",
               }}
             >
-              Hod Dashboard
+              Generate Departments
             </Typography>
             <Typography
               sx={{
@@ -276,9 +272,7 @@ export const SemSubject = () => {
                 padding: { xs: "10px", sm: "10px", md: "0px" },
               }}
             >
-              Efficiently manage departmental tasks by prioritizing faculty
-              submissions and approvals. Customize workflows to ensure timely
-              decision-making and accurate record-keeping across the department.
+              Automatically generate and manage college departments with the click of a button, streamlining the creation process while ensuring efficient task prioritization, timely decision-making, and accurate record-keeping across all departments.
             </Typography>
           </Grid>
           <Grid item xs={12} sm={12} lg={6} md={6}></Grid>
@@ -287,7 +281,7 @@ export const SemSubject = () => {
       <h4
         style={{ textAlign: "center", marginTop: "30px", fontSize: "1.4rem" }}
       >
-        Subject Register
+        Generate Departments
       </h4>
       <center>
         <Divider
@@ -338,57 +332,41 @@ export const SemSubject = () => {
           <Grid item xs={12} md={6}>
             <Box
               component="form"
-              onSubmit={handleSubmit(onSubmit)}
+             
               sx={{
                 display: "flex",
                 flexDirection: "column",
                 gap: 3,
               }}
             >
-              <FormControl fullWidth error={!!errors.subject_name}>
-                <TextField
-                  type="text"
-                  label="Subject Name*"
-                  variant="standard"
-                  fullWidth
-                  {...register("subject_name")}
-                />
-                <FormHelperText>{errors?.subject_name?.message}</FormHelperText>
-              </FormControl>
-              <FormControl fullWidth error={!!errors.subject_code}>
-                <TextField
-                  type="text"
-                  label="Subject Code*"
-                  variant="standard"
-                  fullWidth
-                  {...register("subject_code")}
-                />
-                <FormHelperText>{errors?.subject_code?.message}</FormHelperText>
-              </FormControl>
-              <FormControl fullWidth error={!!errors.name}>
-                <TextField
-                  type="text"
-                  label="Name*"
-                  variant="standard"
-                  fullWidth
-                  {...register("name")}
-                />
-                <FormHelperText>{errors?.name?.message}</FormHelperText>
-              </FormControl>
-              <Box sx={{ display: "flex", justifyContent: "center" }}>
+              <Box sx={{ display: "flex", justifyContent: "center",flexDirection:"column",marginTop:"10%" }}>
+                <center>
+                <p>Click the below button to generate deparments automatically.</p>
                 <Button
                   variant="contained"
                   color="primary"
                   sx={{
                     paddingX: 1.5,
                     paddingY: 1.0,
-                    marginTop: 2,
+                    marginTop: 3,
                     borderRadius: "20px",
+                    width:"60%",
                   }}
-                  type="submit"
+                  onClick={onSubmit}
+                  
                 >
-                  Add Subject
+                  {!load && <p>Generate Departments</p>}
+                      {load && (
+                        <CircularProgress
+                          style={{
+                            color: "white",
+                            width: "20px",
+                            height: "22px",
+                          }}
+                        />
+                      )}
                 </Button>
+                </center>
               </Box>
             </Box>
           </Grid>
@@ -399,4 +377,3 @@ export const SemSubject = () => {
   );
 };
 
-export default SemSubject;

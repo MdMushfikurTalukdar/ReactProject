@@ -97,6 +97,8 @@ export const LoginPage = () => {
           navigate(`/register/${jwtDecode(res.data.token.access).college}`);
         }else if (response.role === "hod") {
           navigate(`/sem-sub-register`);
+        }else if (response.role === "department") {
+          navigate(`/No-dues-for-degree-approval`);
         } else {
          
           navigate("/dashboard");

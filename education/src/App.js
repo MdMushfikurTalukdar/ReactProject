@@ -33,7 +33,7 @@ import VerifySemesterRegistration from "./components/VerifySemesterRegistration/
 import FacultySemesterRegistration from "./components/VerifySemesterRegistration/FacultySemesterRegistration.js";
 import ShowHostelRoomRequest from "./pages/ShowHostelRoomRequest.js";
 import Contact from "./pages/Contact.js";
-import NoDuesForDegreeApproval from "./pages/NoDuesForDegreeApproval";
+import {NoDuesForDegreeApproval} from "./pages/NoDuesForDegreeApproval";
 import NotFoundPage from "./pages/NotFoundPage.js";
 import { AdminDashboard } from "./pages/AdminDashboard.js";
 import { CaretakerDashboard } from "./pages/CaretakerDashboard.js";
@@ -43,6 +43,7 @@ import { UserManagement } from "./pages/UserManagement.js";
 import AddSemester from "./pages/AddSemester.js";
 import RoomRegistration from "./pages/RoomRegistration.js";
 import { ThankYou } from "./pages/Thankyou.js";
+import { GenerateDepartments } from "./pages/GenerateDepartments.js";
 
 
 function App() {
@@ -84,6 +85,7 @@ function App() {
             <Route path="/caretaker-dashboard" element={<CaretakerDashboard/>}/>
             <Route path="/hostel-no-due-request" element={<CaretakerNoDues/>}/>
             <Route path="/sem-sub-register" element={<SemSubject/>}/>
+            <Route path="/generate-departments" element={<GenerateDepartments/>}/>
             <Route path="/sem-register" element={<AddSemester/>}/>
             <Route path="/sem-branch-register" element={<SemBranch/>}/>
             <Route path="/hostel-mess-fee-payment" element={<HostelfeePayment/>} />
