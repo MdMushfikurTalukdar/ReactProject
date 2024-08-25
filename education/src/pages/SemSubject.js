@@ -177,6 +177,8 @@ export const SemSubject = () => {
             reset();
           })
           .catch((error) => {
+
+             console.log(error);
             if (
               error?.response?.data?.errors?.detail ===
               "Given token not valid for any token type"
@@ -190,6 +192,16 @@ export const SemSubject = () => {
                 autoHideDuration: 3000,
               });
               navigate("/login");
+            }
+            if(error?.response?.data?.errors?.non_field_errors?.[0]){
+              enqueueSnackbar(error?.response?.data?.errors?.non_field_errors?.[0], {
+                variant: "error",
+                anchorOrigin: {
+                  vertical: "bottom",
+                  horizontal: "center",
+                },
+                autoHideDuration: 1000,
+              });
             }
             if(error?.response?.data?.errors?.subject_code?.[0]){
             enqueueSnackbar(error?.response?.data?.errors?.subject_code?.[0], {

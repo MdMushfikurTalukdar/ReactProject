@@ -479,6 +479,7 @@ export const RegisterUser = () => {
               autoHideDuration: 3000,
             });
           }
+          reset();
         })
         .catch((err) => {
           console.log(err);
@@ -522,7 +523,7 @@ export const RegisterUser = () => {
           }
         });
 
-      reset();
+     
     } else {
       navigate("/login");
     }

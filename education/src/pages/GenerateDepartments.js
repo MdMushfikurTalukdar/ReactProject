@@ -22,67 +22,7 @@ export const GenerateDepartments = () => {
   const navigate = useNavigate();
   const [load, setLoad] = useState(false);
 
-  const regenerateToken = () => {
-    if (sessionStorage?.getItem("accesstoken")) {
-      const response = jwtDecode(sessionStorage?.getItem("accesstoken"));
-      const response1 = jwtDecode(sessionStorage?.getItem("refreshtoken"));
-      if (
-        response.exp < Math.floor(Date.now() / 1000) ||
-        response1.exp < Math.floor(Date.now() / 1000)
-      ) {
-        navigate("/login");
-      } else {
-        if (
-          sessionStorage.getItem("refreshtoken") &&
-          sessionStorage.getItem("accesstoken")
-        ) {
-          let data = {
-            refresh: sessionStorage?.getItem("refreshtoken"),
-          };
-
-          let config = {
-            method: "post",
-            maxBodyLength: Infinity,
-            url: `${Url}/token/refresh/`,
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
-            },
-            data: data,
-          };
-
-          axios
-            .request(config)
-            .then((response) => {
-              sessionStorage.setItem("accesstoken", response.data.access);
-            })
-            .catch((error) => {
-              if (error?.message === "Request failed with status code 500") {
-                navigate("/login");
-              }
-              if (
-                error?.response?.data?.errors?.detail ===
-                "Given token not valid for any token type"
-              ) {
-                enqueueSnackbar("Logging out", {
-                  variant: "error",
-                  anchorOrigin: {
-                    vertical: "bottom",
-                    horizontal: "center",
-                  },
-                  autoHideDuration: 3000,
-                });
-                navigate("/login");
-              }
-            });
-        } else {
-          navigate("/login");
-        }
-      }
-    } else {
-      navigate("/login");
-    }
-  };
+ 
 
   useEffect(() => {
     if (sessionStorage?.getItem("accesstoken")) {
@@ -99,113 +39,68 @@ export const GenerateDepartments = () => {
   }, []);
 
   const onSubmit = () => {
-
     const token = sessionStorage.getItem("accesstoken");
     const token1 = sessionStorage.getItem("refreshtoken");
-
+  
     if (token && token1) {
       setLoad(true);
-
+  
       let config = {
         method: "post",
         maxBodyLength: Infinity,
-        url: `${Url}/${
-          jwtDecode(sessionStorage.getItem("accesstoken")).college
-        }/generate-department/`,
+        url: `${Url}/${jwtDecode(token).college}/generate-department/`,
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+          Authorization: `Bearer ${token}`,
         },
       };
-
-      const token = sessionStorage.getItem("accesstoken");
-      const token1 = sessionStorage.getItem("refreshtoken");
-
-      if (token && token1) {
-        axios
-          .request(config)
-          .then((response) => {
-            if (token && token1) {
-              let currentDate = new Date();
-              const decodedToken = jwtDecode(token);
-
-              if (
-                decodedToken.exp * 1000 - currentDate.getTime() <
-                59 * 60 * 1000
-              ) {
-                try {
-                  regenerateToken(); // Wait for the token regeneration to complete
-                } catch (error) {
-                  console.error(
-                    "Error in request interceptor while regenerating token:",
-                    error
-                  );
-                }
-              }
-            } else {
-              navigate("/login");
-            }
-            setLoad(false);
-            enqueueSnackbar("Department created successfully", {
-              variant: "success",
+  
+      axios
+        .request(config)
+        .then((response) => {
+          setLoad(false);
+          enqueueSnackbar("Department created successfully", {
+            variant: "success",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            autoHideDuration: 1000,
+          });
+        })
+        .catch((error) => {
+          setLoad(false);
+  
+          if (
+            error?.response?.data?.errors?.detail ===
+            "Given token not valid for any token type"
+          ) {
+            enqueueSnackbar("Logging out", {
+              variant: "error",
               anchorOrigin: {
                 vertical: "bottom",
                 horizontal: "center",
               },
-              autoHideDuration: 1000,
+              autoHideDuration: 3000,
             });
-
-           
-          })
-          .catch((error) => {
-
-            setLoad(false);
-
-            enqueueSnackbar("Departments created successfully", {
-                variant: "success",
-                anchorOrigin: {
-                  vertical: "bottom",
-                  horizontal: "center",
-                },
-                autoHideDuration: 1000,
-              });
-
-            if (
-              error?.response?.data?.errors?.detail ===
-              "Given token not valid for any token type"
-            ) {
-              enqueueSnackbar("Logging out", {
-                variant: "error",
-                anchorOrigin: {
-                  vertical: "bottom",
-                  horizontal: "center",
-                },
-                autoHideDuration: 3000,
-              });
-              navigate("/login");
-            }
-            if (error?.response?.data?.errors?.subject_code?.[0]) {
-              enqueueSnackbar(
-                error?.response?.data?.errors?.subject_code?.[0],
-                {
-                  variant: "error",
-                  anchorOrigin: {
-                    vertical: "bottom",
-                    horizontal: "center",
-                  },
-                  autoHideDuration: 1000,
-                }
-              );
-            }
-          });
-      } else {
-        navigate("/login");
-      }
+            navigate("/login");
+          } else {
+            // Handle other errors
+            enqueueSnackbar("Failed to create department", {
+              variant: "error",
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "center",
+              },
+              autoHideDuration: 3000,
+            });
+          }
+        });
     } else {
       navigate("/login");
     }
   };
-
+  
   return (
     <Box>
       <NavbarNew />

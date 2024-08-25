@@ -501,25 +501,20 @@ const HostelRoomAllotment = () => {
                           xs: "88%",
                           sm: "80%",
                         },
-                        backgroundColor: "rgb(244, 243, 243)",
+                        // backgroundColor: "rgb(244, 243, 243)",
                         border: "2px solid whitesmoke",
                       }}
                     >
-                      <CardMedia
-                        component="img"
-                        sx={{ height: 260, objectFit: "cover" }}
-                        image={`data:image/jpeg;base64,${item.latest_marksheet}`}
-                        alt="Marksheet"
-                      />
+                   
 
                       <CardContent>
                         <Grid container spacing={3}>
-                          <Grid item xs={12}>
+                          <Grid item xs={12} sx={{padding:"10px",marginTop:"20px"}}>
                             <p>
-                              Registration Number: {item?.registration_number}
+                              <b>Registration Number:</b> {item?.registration_number}
                             </p>
                             <p>
-                              Prefered Room Type: {item?.prefered_room_type}
+                             <b> Prefered Room Type:</b> {item?.prefered_room_type}
                             </p>
                           </Grid>
                           <Grid item xs={12}>
@@ -540,6 +535,7 @@ const HostelRoomAllotment = () => {
                               <Select
                                 labelId="numberOfPersons-label"
                                 id="RoomType"
+                                variant="standard"
                                 label="Allot Room"
                                 onChange={(e) => setHostel_room(e.target.value)}
                               >
