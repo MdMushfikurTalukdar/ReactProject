@@ -57,7 +57,7 @@ export const GenerateDepartments = () => {
         .request(config)
         .then((response) => {
           setLoad(false);
-          enqueueSnackbar("Department created successfully", {
+          enqueueSnackbar("Departments created successfully", {
             variant: "success",
             anchorOrigin: {
               vertical: "bottom",
