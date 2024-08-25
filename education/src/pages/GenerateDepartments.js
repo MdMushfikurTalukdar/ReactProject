@@ -46,15 +46,13 @@ export const GenerateDepartments = () => {
       setLoad(true);
   
       let config = {
-        method: "post",
+        method: 'post',
         maxBodyLength: Infinity,
         url: `${Url}/${jwtDecode(token).college}/generate-department/`,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { 
+          Authorization: `Bearer ${token}`
+        }
       };
-  
       axios
         .request(config)
         .then((response) => {
