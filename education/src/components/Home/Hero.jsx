@@ -121,7 +121,7 @@ export const Hero = () => {
           textAlign: "center",
           backgroundImage: "url(../images/homepage_intro1.jpg)",
           backgroundRepeat: "no-repeat",
-          backgroundPosition: "center 85%",
+          backgroundPosition: "center 80%",
           backgroundSize: "cover",
           paddingTop: { lg: "4vw", md: "4vw", sm: "4vw", xs: "15vw" },
           paddingBottom: { lg: "15vw", xs: "25vw", md: "15vw" },
@@ -133,7 +133,7 @@ export const Hero = () => {
             left: 0,
             width: "100%",
             height: "100%",
-            backgroundColor: "rgba(0, 0, 0, 0.7)", // Overlay with opacity
+            backgroundColor: "rgba(0, 0, 0, 0.6)", // Overlay with opacity
             zIndex: 1,
           },
         }}

@@ -6,9 +6,9 @@ import {
   Button,
   Container,
   Box,
-  CardMedia,
   CircularProgress,
   Divider,
+  InputAdornment,
 } from "@mui/material";
 import { Header } from "../components/Home/Header";
 import Footer from "../components/Home/Footer";
@@ -17,6 +17,19 @@ import axios from "axios";
 import { Url } from "../components/BaseUrl";
 import { useNavigate } from "react-router-dom";
 import { MdEmail, MdLocationOn, MdPhone } from "react-icons/md";
+import {
+  AddLocationAltOutlined,
+  BusinessCenterOutlined,
+  CloudUpload,
+  DateRangeOutlined,
+  EmailOutlined,
+  FileUpload,
+  PersonPinCircleOutlined,
+  PersonPinCircleSharp,
+  PhoneAndroidOutlined,
+  QrCode2Outlined,
+} from "@mui/icons-material";
+import { BiSolidInstitution } from "react-icons/bi";
 
 export const Contact = () => {
   const [imageIndex, setImageIndex] = React.useState(0);
@@ -274,6 +287,13 @@ export const Contact = () => {
                   InputLabelProps={{
                     shrink: true,
                   }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <PersonPinCircleOutlined />
+                      </InputAdornment>
+                    ),
+                  }}
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
@@ -292,6 +312,13 @@ export const Contact = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <EmailOutlined />
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </Box>
               <Box sx={{ py: 1 }}>
@@ -307,6 +334,13 @@ export const Contact = () => {
                   name="college_name"
                   value={formData.college_name}
                   onChange={handleInputChange}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <BusinessCenterOutlined />
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </Box>
               <Box sx={{ py: 1 }}>
@@ -322,6 +356,13 @@ export const Contact = () => {
                   name="college_address"
                   value={formData.college_address}
                   onChange={handleInputChange}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <AddLocationAltOutlined />
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </Box>
               <Box sx={{ py: 1 }}>
@@ -337,6 +378,13 @@ export const Contact = () => {
                   name="college_code"
                   value={formData.college_code}
                   onChange={handleInputChange}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <QrCode2Outlined />
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </Box>
               <Box sx={{ py: 1 }}>
@@ -353,6 +401,13 @@ export const Contact = () => {
                   name="phone_number"
                   value={formData.phone_number}
                   onChange={handleInputChange}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <PhoneAndroidOutlined />
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </Box>
               <Box sx={{ py: 1 }}>
@@ -368,6 +423,13 @@ export const Contact = () => {
                   name="principal_name"
                   value={formData.principal_name}
                   onChange={handleInputChange}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <PersonPinCircleSharp />
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </Box>
               <Box sx={{ py: 1 }}>
@@ -383,48 +445,78 @@ export const Contact = () => {
                   name="established_date"
                   value={formData.established_date}
                   onChange={handleInputChange}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <DateRangeOutlined />
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </Box>
-              <Box sx={{ py: 1 }}>
-                <span>College logo: </span>
+              <Box sx={{ py: 1,display:"flex",gap:"9px" }}>
+                <span style={{marginTop:"20px"}}>College logo: </span>
                 <Button
                   variant="contained"
                   component="label"
                   sx={{
-                    backgroundColor: "rgb(107, 169, 169)",
-                    width: { lg: "40%", md: "50%", xs: "100%", sm: "50%" },
+                    background:
+                      "linear-gradient(90deg, rgba(107,169,169,1) 0%, rgba(85,136,136,1) 100%)",
+                    width: { lg: "35%", md: "50%", xs: "50%", sm: "50%" },
                     marginTop: { xs: "10px", lg: "10px" },
                     marginBottom: "20px",
-                    borderRadius:"20px",
-                    "&:hover": { backgroundColor: "rgb(85, 136, 136)" }
-                    
+                    borderRadius: "25px",
+                    padding: "8px 20px",
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                    color: "white",
+                    boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+                    textTransform: "none",
+                    "&:hover": {
+                      background:
+                        "linear-gradient(90deg, rgba(85,136,136,1) 0%, rgba(107,169,169,1) 100%)",
+                      boxShadow: "0px 6px 16px rgba(0, 0, 0, 0.2)",
+                    },
                   }}
                 >
-                
-                    <input
-                      type="file"
-                      hidden
-                      onChange={handleFileChange}
-                    />
-                    Upload
-                 
+                  <Box
+                    sx={{ display: "flex", alignItems: "center", gap: "8px" }}
+                  >
+                    <CloudUpload sx={{ fontSize: "20px" }} />
+                    <span>Upload</span>
+                  </Box>
+                  <input type="file" hidden onChange={handleFileChange} />
                 </Button>
                 <br />
-                {url && <img src={url} alt="" style={{ width: "150px" }} />}
+                {url && (
+                  <img
+                    src={url}
+                    alt=""
+                    style={{
+                      width: "150px",
+                      marginTop: "10px",
+                      borderRadius: "10px",
+                    }}
+                  />
+                )}
               </Box>
+
               <center>
                 <Button
                   variant="contained"
-                  style={{
-                    width: "70%",
+                  sx={{
+                    width: {lg:"70%",xs:"100%"},
                     backgroundColor: "rgb(107, 169, 169)",
                     "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
-                    borderRadius:"20px",
-                    marginTop:"20px"
+                    borderRadius: "20px",
+                    marginTop: "20px",
                   }}
                   onClick={handleSubmit}
                 >
-                  {!loading && <p>Request For Service/Platform Use</p>}
+                  {!loading && <Typography variant="body2" sx={{
+                    fontSize:{lg:"14px",sm:"",xs:"12px"},
+                    padding:"4px"
+                  }}>Request For Service/Platform Use</Typography>}
                   {loading && (
                     <CircularProgress
                       style={{ color: "white", width: "20px", height: "22px" }}
@@ -436,7 +528,9 @@ export const Contact = () => {
           </Grid>
         </Container>
 
-        <Box sx={{display:{lg:"block",md:"block",sm:"none",xs:"none"}}}>
+        <Box
+          sx={{ display: { lg: "block", md: "block", sm: "none", xs: "none" } }}
+        >
           <center>
             <Typography variant="h4" mb={2} className="header">
               Get in touch
@@ -471,7 +565,7 @@ export const Contact = () => {
                   </Box>
                 </Typography>
                 <Typography variant="body1" color="textSecondary">
-                lyssstartup24@gmail.com
+                  lyssstartup24@gmail.com
                 </Typography>
               </Grid>
 
@@ -520,10 +614,20 @@ export const Contact = () => {
           </Box>
         </Box>
 
-        <Box sx={{display:{lg:"none",md:"none",sm:"block",xs:"block"}}}>
+        <Box
+          sx={{ display: { lg: "none", md: "none", sm: "block", xs: "block" } }}
+        >
           {/* <center> */}
-          <Box sx={{padding:"10px"}}>
-            <Typography variant="p" mb={2} style={{marginLeft:"20px",fontSize:"2.0rem",marginBottom:"10px"}} >
+          <Box sx={{ padding: "10px" }}>
+            <Typography
+              variant="p"
+              mb={2}
+              style={{
+                marginLeft: "20px",
+                fontSize: "2.0rem",
+                marginBottom: "10px",
+              }}
+            >
               Get in touch
             </Typography>
             <Divider
@@ -531,11 +635,11 @@ export const Contact = () => {
                 backgroundColor: "blue",
                 width: { lg: "10vw", xs: "60vw", md: "40vw" },
                 fontWeight: "700",
-                marginLeft:"15px",
-                marginTop:"10px"
+                marginLeft: "15px",
+                marginTop: "10px",
               }}
             />
-            </Box>
+          </Box>
 
           <Box my={2} sx={{ padding: "24px" }}>
             <Grid
@@ -543,19 +647,12 @@ export const Contact = () => {
               spacing={3}
               justifyContent="center"
               alignItems="center"
-            
             >
-         
               <Grid item xs={12} sm={4}>
                 <Typography variant="h6" color="textPrimary">
-                  <Box
-                    display="flex"
-                  
-                    alignItems="center"
-                    gap={1}
-                  >
+                  <Box display="flex" alignItems="center" gap={1}>
                     <MdEmail />
-                    <Box style={{fontSize:"1.2rem"}}>Email</Box>
+                    <Box style={{ fontSize: "1.2rem" }}>Email</Box>
                   </Box>
                 </Typography>
                 <Typography variant="body1" color="textSecondary">
@@ -563,17 +660,11 @@ export const Contact = () => {
                 </Typography>
               </Grid>
 
-              
               <Grid item xs={12} sm={4}>
                 <Typography variant="h6" color="textPrimary">
-                  <Box
-                    display="flex"
-                    
-                    alignItems="center"
-                    gap={1}
-                  >
+                  <Box display="flex" alignItems="center" gap={1}>
                     <MdPhone />
-                    <Box style={{fontSize:"1.2rem"}}>Phone</Box>
+                    <Box style={{ fontSize: "1.2rem" }}>Phone</Box>
                   </Box>
                 </Typography>
                 <Typography variant="body1" color="textSecondary">
@@ -581,17 +672,11 @@ export const Contact = () => {
                 </Typography>
               </Grid>
 
-             
               <Grid item xs={12} sm={4}>
                 <Typography variant="h6" color="textPrimary">
-                  <Box
-                    display="flex"
-                   
-                    alignItems="center"
-                    gap={1}
-                  >
+                  <Box display="flex" alignItems="center" gap={1}>
                     <MdLocationOn />
-                    <Box style={{fontSize:"1.2rem"}}>Address</Box>
+                    <Box style={{ fontSize: "1.2rem" }}>Address</Box>
                   </Box>
                 </Typography>
                 <Typography variant="body1" color="textSecondary">
@@ -607,10 +692,6 @@ export const Contact = () => {
             </Grid>
           </Box>
         </Box>
-
-
-
-
       </div>
 
       <Footer />

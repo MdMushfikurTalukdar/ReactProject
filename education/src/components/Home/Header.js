@@ -5,7 +5,6 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
@@ -42,16 +41,10 @@ export const Header = () => {
   };
 
   return (
-    <AppBar position="static" sx={{
-      backgroundColor:"#e8e8e8",
-      color:"black",
-      
-     
-    }}>
+    <AppBar position="static" sx={{ backgroundColor: 'whitesmoke', color: 'black' }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1}}>
-            {/* Menu Icon for Mobile View */}
+          <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
             <IconButton
               size="medium"
               aria-label="menu"
@@ -64,20 +57,18 @@ export const Header = () => {
               <CgMenuLeftAlt />
             </IconButton>
 
-            {/* Title */}
             <Typography
               variant="h6"
               noWrap
               component="a"
-              onClick={(e)=>navigate('/')}
+              onClick={() => navigate('/')}
               sx={{
                 mr: 'auto',
-                fontWeight: "bold",
-               
+                fontWeight: 'bold',
+                cursor: 'pointer',
                 color: 'inherit',
                 textDecoration: 'none',
                 display: { xs: 'block', md: 'block' },
-                
               }}
             >
               Smart One
@@ -99,42 +90,43 @@ export const Header = () => {
               onClose={handleCloseNavMenu}
               sx={{
                 display: { xs: 'block', md: 'none' },
-                color:"black",
-               
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} style={{ width:"140px"}} onClick={() => handleNavigate(page)}>
+                <MenuItem key={page} style={{ width: '140px' }} onClick={() => handleNavigate(page)}>
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
 
-          {/* Navigation Buttons for Desktop View */}
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
                 key={page}
                 onClick={() => handleNavigate(page)}
-                sx={{ mx: 1, color: 'black' }}
+                sx={{
+                  mx: 1,
+                  color: 'black',
+                  '&:hover': {
+                    backgroundColor: 'rgba(107, 169, 169, 0.1)',
+                    borderRadius: '10px',
+                  },
+                }}
               >
                 {page}
               </Button>
             ))}
           </Box>
 
-          {/* Settings Menu */}
-          <Box sx={{ display: 'flex', alignItems: 'center',color:"black" }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', color: 'rgb(107, 169, 169)' }}>
             <Menu
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
                 vertical: 'top',
                 horizontal: 'right',
-                
               }}
-             
               keepMounted
               transformOrigin={{
                 vertical: 'top',

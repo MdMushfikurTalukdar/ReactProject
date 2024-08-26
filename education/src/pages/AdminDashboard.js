@@ -77,15 +77,11 @@ export const AdminDashboard = () => {
       is_verified: true,
     };
     axios
-      .put(
-        `${Url}/college-requests/${e}/verify/`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-          },
-        }
-      )
+      .put(`${Url}/college-requests/${e}/verify/`, data, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+        },
+      })
       .then((response) => {
         setLoad1(false);
         setResult((prev) =>
@@ -117,7 +113,10 @@ export const AdminDashboard = () => {
             autoHideDuration: 3000,
           });
         }
-        if(err?.response?.data?.errors?.non_field_errors?.[0]==="The 'is_verified' field cannot be changed once it is set to True."){
+        if (
+          err?.response?.data?.errors?.non_field_errors?.[0] ===
+          "The 'is_verified' field cannot be changed once it is set to True."
+        ) {
           enqueueSnackbar("Already action is taken.", {
             variant: "warning",
             anchorOrigin: {
@@ -148,15 +147,11 @@ export const AdminDashboard = () => {
       is_verified: false,
     };
     axios
-      .put(
-        `${Url}/college-requests/${e}/verify/`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-          },
-        }
-      )
+      .put(`${Url}/college-requests/${e}/verify/`, data, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+        },
+      })
       .then((response) => {
         console.log(response);
         enqueueSnackbar("Email Sent.", {
@@ -214,66 +209,74 @@ export const AdminDashboard = () => {
     <div className="bg-gray-100 min-h-screen">
       <NavbarNew />
       <Box
-      sx={{
-        width: "100vw",
-        textAlign: "center",
-        backgroundImage:
-          "url(https://images.unsplash.com/photo-1544006659-f0b21884ce1d?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "center",
-        backgroundSize: "cover",
-        paddingTop: "2vw",
-        paddingBottom: "15vw",
-        position: "relative",
-        "&::before": {
-          content: '""',
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          backgroundColor: "rgba(0, 0, 0, 0.6)", // Overlay with opacity
-          zIndex: 1,
-        },
-      }}
-    >
-      <Grid
-        container
         sx={{
+          width: "100vw",
+          textAlign: "center",
+          backgroundImage:
+            "url(https://images.unsplash.com/photo-1544006659-f0b21884ce1d?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
+          backgroundSize: "cover",
+          paddingTop: "2vw",
+          paddingBottom: "15vw",
           position: "relative",
-          zIndex: 2,
-          color: "white",
-          padding: { xs: "20px", sm: "20px", md: "50px" },
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.6)", // Overlay with opacity
+            zIndex: 1,
+          },
         }}
       >
-        <Grid item xs={12} sm={12} lg={6} md={6}>
-          <Typography
-            variant="h1"
-            sx={{
-              fontSize: { xs: "2rem", sm: "2.4rem", md: "2.6rem", lg: "2.6rem" },
-              marginTop: { xs: "20px", md: "50px" },
-              fontWeight: "bold",
-            }}
-          >
-            Dashboard
-          </Typography>
-          <Typography
-            sx={{
-              fontSize: { xs: "1rem", sm: "1.1rem", md: "1.2rem", lg: "1.2rem" },
-              marginTop: "10px",
-              fontWeight: "500",
-              padding: { xs: "10px", sm: "10px", md: "0px" },
-            }}
-          >
-            If you have any questions, suggestions, or require assistance,
-            please do not hesitate to reach out to us. We are here to help and
-            look forward to hearing from you.
-          </Typography>
+        <Grid
+          container
+          sx={{
+            position: "relative",
+            zIndex: 2,
+            color: "white",
+            padding: { xs: "20px", sm: "20px", md: "50px" },
+          }}
+        >
+          <Grid item xs={12} sm={12} lg={6} md={6}>
+            <Typography
+              variant="h1"
+              sx={{
+                fontSize: {
+                  xs: "2rem",
+                  sm: "2.4rem",
+                  md: "2.6rem",
+                  lg: "2.6rem",
+                },
+                marginTop: { xs: "20px", md: "50px" },
+                fontWeight: "bold",
+              }}
+            >
+              Dashboard
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: {
+                  xs: "1rem",
+                  sm: "1.1rem",
+                  md: "1.2rem",
+                  lg: "1.2rem",
+                },
+                marginTop: "10px",
+                fontWeight: "500",
+                padding: { xs: "10px", sm: "10px", md: "0px" },
+              }}
+            >
+              Welcome to the Admin Dashboard! Manage your operations
+              efficiently, monitor key metrics, and make informed decisions.
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={12} lg={6} md={6}></Grid>
         </Grid>
-        <Grid item xs={12} sm={12} lg={6} md={6}></Grid>
-      </Grid>
-    </Box>
- 
+      </Box>
 
       <p
         style={{
@@ -299,7 +302,15 @@ export const AdminDashboard = () => {
       <Box sx={{ padding: "7px", marginBottom: "20px" }}>
         {result?.length === 0 && (
           <center>
-           <p style={{padding:"9vw 0 9vw 0",fontSize:"1.4rem",marginTop:"50px"}}>No data available currently.</p>
+            <p
+              style={{
+                padding: "9vw 0 9vw 0",
+                fontSize: "1.4rem",
+                marginTop: "50px",
+              }}
+            >
+              No data available currently.
+            </p>
           </center>
         )}
         <Grid container spacing={2} sx={{ width: "100vw", marginTop: "50px" }}>
@@ -412,24 +423,32 @@ export const AdminDashboard = () => {
                       </Grid>
                     </CardContent>
                   </CardActionArea>
-                  {!data?.is_verified ? <CardActions
-                    style={{ padding: "0px 15px 15px 15px", float: "right" }}
-                  >
-                    <Button
-                      variant="contained"
-                      onClick={(e) => handleVerification(data.id)}
-                      style={{ backgroundColor: "rgb(107, 169, 169)", borderRadius:"20px", }}
+                  {!data?.is_verified ? (
+                    <CardActions
+                      style={{ padding: "0px 15px 15px 15px", float: "right" }}
                     >
-                      Accept
-                    </Button>
-                    <Button
-                      variant="contained"
-                      onClick={(e) => handleReject(data.id)}
-                      style={{ backgroundColor: "rgb(107, 169, 169)", borderRadius:"20px", }}
-                    >
-                      Reject
-                    </Button>
-                  </CardActions>:null}
+                      <Button
+                        variant="contained"
+                        onClick={(e) => handleVerification(data.id)}
+                        style={{
+                          backgroundColor: "rgb(107, 169, 169)",
+                          borderRadius: "20px",
+                        }}
+                      >
+                        Accept
+                      </Button>
+                      <Button
+                        variant="contained"
+                        onClick={(e) => handleReject(data.id)}
+                        style={{
+                          backgroundColor: "rgb(107, 169, 169)",
+                          borderRadius: "20px",
+                        }}
+                      >
+                        Reject
+                      </Button>
+                    </CardActions>
+                  ) : null}
                 </Card>
               </Grid>
             ))}
