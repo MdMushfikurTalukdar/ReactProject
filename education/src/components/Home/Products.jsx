@@ -45,7 +45,7 @@ const Products = () => {
       description: 'Hostel/Mess: You can apply online for Hostel/Mess rooms.',
     },
     {
-      image: 'Guest.jpg',
+      image: 'guest.jpg',
       description: 'Guest Room: Now you can book Exclusive Guest Room online.',
     },
   ];
