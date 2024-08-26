@@ -105,7 +105,7 @@ export const About = () => {
               variant="h1"
               sx={{
                 paddingBottom: "20px",
-                fontSize: "1.2rem",
+                fontSize: "1.1rem",
                 marginLeft: {
                   lg: "20px",
                   xs: "0px",
@@ -118,7 +118,7 @@ export const About = () => {
                   sm: "10px",
                   md: "0px",
                 },
-                fontWeight: "500",
+                fontWeight: "400",
                 color: "white",
                 marginTop: "-20px",
               }}
