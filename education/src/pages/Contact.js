@@ -174,8 +174,8 @@ export const Contact = () => {
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
           backgroundSize: "cover",
-          paddingTop: { lg: "2vw", xs: "20vw", md: "2vw", sm: "2vw" },
-          paddingBottom: "15vw",
+          paddingTop: { lg: "2vw", xs: "25vh", md: "2vw", sm: "5vw" },
+          paddingBottom: { lg: "15vw", xs: "20vh", md: "15vw" },
           position: "relative",
           "&::before": {
             content: '""',

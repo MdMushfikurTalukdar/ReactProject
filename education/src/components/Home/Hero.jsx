@@ -123,8 +123,8 @@ export const Hero = () => {
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center 80%",
           backgroundSize: "cover",
-          paddingTop: { lg: "4vw", md: "4vw", sm: "4vw", xs: "15vw" },
-          paddingBottom: { lg: "15vw", xs: "25vw", md: "15vw" },
+          paddingTop: { lg: "4vw", md: "4vw", sm: "4vw", xs: "35vw" },
+          paddingBottom: { lg: "13vw", xs: "25vw", md: "15vw" },
           position: "relative",
           "&::before": {
             content: '""',
@@ -182,8 +182,8 @@ export const Hero = () => {
             </Typography>
 
             <Button variant="contained" onClick={(e)=>navigate('/login')}
-              sx={{borderRadius:"20px",marginTop:"10px",width:"20%",backgroundColor: "rgb(107, 169, 169)", "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
-              transition: 'background-color 0.3s ease-in-out',}}>Login</Button>
+              sx={{borderRadius:"20px",marginTop:"10px",width:{lg:"20%",xs:"30%",sm:"20%"},backgroundColor: "rgb(107, 169, 169)", "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
+              transition: 'background-color 0.3s ease-in-out',}}>Sign in</Button>
           </Grid>
           <Grid item xs={12} sm={12} lg={6} md={6}></Grid>
         </Grid>

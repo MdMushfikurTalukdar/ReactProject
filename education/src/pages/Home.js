@@ -26,7 +26,7 @@ export const Home = () => {
             }}
             id="text00"
           >
-             Features
+             Key Aspects
           </p>
           <Grid container>
             <Grid item lg={5} xs={12} sm={12} md={12}>
@@ -142,6 +142,8 @@ export const Home = () => {
                 padding: "10px",
                 borderRadius: "25px",
                 backgroundColor: "rgb(107, 169, 169)",
+                "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
+                transition: 'background-color 0.3s ease-in-out',
                 marginTop: "60px",
                 marginBottom: "40px",
               }}
@@ -183,6 +185,8 @@ export const Home = () => {
                 padding: "10px",
                 borderRadius: "25px",
                 backgroundColor: "rgb(107, 169, 169)",
+                "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
+                transition: 'background-color 0.3s ease-in-out',
                 marginTop: "20px",
                 marginBottom: "40px",
               }}
