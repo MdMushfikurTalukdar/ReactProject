@@ -389,6 +389,7 @@ export const Contact = () => {
                 <span>College logo: </span>
                 <Button
                   variant="contained"
+                  component="label"
                   sx={{
                     backgroundColor: "rgb(107, 169, 169)",
                     width: { lg: "40%", md: "50%", xs: "100%", sm: "50%" },
@@ -399,14 +400,14 @@ export const Contact = () => {
                     
                   }}
                 >
-                  <label>
+                
                     <input
                       type="file"
-                      style={{ display: "none" }}
+                      hidden
                       onChange={handleFileChange}
                     />
                     Upload
-                  </label>
+                 
                 </Button>
                 <br />
                 {url && <img src={url} alt="" style={{ width: "150px" }} />}
@@ -423,7 +424,7 @@ export const Contact = () => {
                   }}
                   onClick={handleSubmit}
                 >
-                  {!loading && <p>Submit Message</p>}
+                  {!loading && <p>Request For Service/Platform Use</p>}
                   {loading && (
                     <CircularProgress
                       style={{ color: "white", width: "20px", height: "22px" }}
