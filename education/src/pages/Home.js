@@ -17,17 +17,17 @@ export const Home = () => {
       <main className="animate-fade">
         <Hero />
         <Box sx={{ width: "100vw", textAlign: "center", marginTop: "3rem" }}>
-          <p
+          <Typography variant="h1"
             style={{
               fontSize: "2.3rem",
               fontWeight: "600",
               color: "rgb(107, 169, 169)",
               marginBottom:"20px"
             }}
-            id="text00"
+            // id="text00"
           >
              Key Aspects
-          </p>
+          </Typography>
           <Grid container>
             <Grid item lg={5} xs={12} sm={12} md={12}>
               <Typography
