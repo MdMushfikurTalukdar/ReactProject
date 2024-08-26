@@ -54,7 +54,7 @@ export const Home = () => {
                     sm: "1.0rem",
                     md: "1.2rem",
                   },
-                  fontWeight: "500",
+                  fontWeight: "400",
 
                   margin: {
                     lg: "130px 0px 20px 30px",
