@@ -38,7 +38,7 @@ const Products = () => {
     },
     {
       image: 'product_intro2.jpg',
-      description: 'Certificates: Now you can get your precious certificates online.',
+      description: 'Certificates: Now you can get your precious college related certificate online.',
     },
     {
       image: 'product_intro3.jpg',
