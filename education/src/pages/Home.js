@@ -4,8 +4,8 @@ import { Header } from "../components/Home/Header.js";
 import Products from "../components/Home/Products.jsx";
 import { Clients } from "../components/Home/Client.jsx";
 import Footer from "../components/Home/Footer";
-import {Testimonials} from "../components/Home/Testonomials.jsx";
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Testimonials } from "../components/Home/Testonomials.jsx";
+import { Box, Button, Divider, Grid, Typography } from "@mui/material";
 
 export const Home = () => {
   return (
@@ -17,17 +17,30 @@ export const Home = () => {
       <main className="animate-fade">
         <Hero />
         <Box sx={{ width: "100vw", textAlign: "center", marginTop: "3rem" }}>
-          <Typography variant="h1"
+          <Typography
+            variant="h1"
             style={{
               fontSize: "2.3rem",
               fontWeight: "600",
               color: "rgb(107, 169, 169)",
-              marginBottom:"20px"
+              marginBottom: "20px",
             }}
             // id="text00"
           >
-             Key Aspects
+            Key Aspects
           </Typography>
+          <center>
+          <Divider
+            sx={{
+              backgroundColor: "blue",
+              width: { lg: "10%", xs: "40%", md: "10%", sm: "15%" },
+              fontWeight: "800",
+              textAlign: "center",
+              marginTop: "5px",
+              marginBottom: "40px",
+            }}
+          />
+        </center>
           <Grid container>
             <Grid item lg={5} xs={12} sm={12} md={12}>
               <Typography
@@ -52,7 +65,10 @@ export const Home = () => {
                   padding: "10px",
                 }}
               >
-                Our Smart Campus platform offers a comprehensive suite of features designed to meet the diverse needs of students, faculty, and administrators in a modern educational environment. Here’s an overview of what we provide:
+                Our Smart Campus platform offers a comprehensive suite of
+                features designed to meet the diverse needs of students,
+                faculty, and administrators in a modern educational environment.
+                Here’s an overview of what we provide:
               </Typography>
             </Grid>
             <Grid
@@ -78,22 +94,50 @@ export const Home = () => {
             fontSize: "2.0rem",
             fontWeight: "600",
             margin: "20px 0px 20px 0px",
-            color:"rgb(107, 169, 169)",
-            marginTop:"57px"
+            color: "rgb(107, 169, 169)",
+            marginTop: "57px",
           }}
         >
           Client Testimonials
         </p>
+        <center>
+          <Divider
+            sx={{
+              backgroundColor: "blue",
+              width: { lg: "10%", xs: "50%", md: "10%", sm: "15%" },
+              fontWeight: "800",
+              textAlign: "center",
+              marginTop: "5px",
+              marginBottom: "40px",
+            }}
+          />
+        </center>
         <Clients />
-        <p  style={{
+        <p
+          style={{
             textAlign: "center",
             backgroundColor: "whitesmoke",
             fontSize: "2.0rem",
             fontWeight: "600",
             margin: "20px 0px 20px 0px",
-            color:"rgb(107, 169, 169)",
-            marginTop:"50px"
-          }}>Our Clients</p>
+            color: "rgb(107, 169, 169)",
+            marginTop: "50px",
+          }}
+        >
+          Our Clients
+        </p>
+        <center>
+          <Divider
+            sx={{
+              backgroundColor: "blue",
+              width: { lg: "8%", xs: "30%", md: "10%", sm: "15%" },
+              fontWeight: "800",
+              textAlign: "center",
+              marginTop: "5px",
+              marginBottom: "40px",
+            }}
+          />
+        </center>
         <Testimonials />
         <Box
           sx={{
@@ -101,7 +145,7 @@ export const Home = () => {
             fontSize: { xs: "20.4pt", lg: "20pt", sm: "23pt", md: "26pt" },
             fontWeight: "500",
             display: { xs: "none", lg: "block", md: "block", sm: "block" },
-            marginTop:"50px"
+            marginTop: "50px",
           }}
         >
           <p
@@ -115,7 +159,7 @@ export const Home = () => {
           >
             Ready to Explore Our Smart One?
           </p>
-          <p style={{ fontSize: "2.3rem", textAlign: "center" }} >
+          <p style={{ fontSize: "2.3rem", textAlign: "center" }}>
             Stay Connected with Our Campus
             <br /> Community.
           </p>
@@ -126,7 +170,6 @@ export const Home = () => {
               lineClamp: 2,
               padding: "10px",
             }}
-           
           >
             Our platform brings together students, faculty, and staff to keep
             everyone up-to-date with the latest campus news, events, and
@@ -143,7 +186,7 @@ export const Home = () => {
                 borderRadius: "25px",
                 backgroundColor: "rgb(107, 169, 169)",
                 "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
-                transition: 'background-color 0.3s ease-in-out',
+                transition: "background-color 0.3s ease-in-out",
                 marginTop: "60px",
                 marginBottom: "40px",
               }}
@@ -186,7 +229,7 @@ export const Home = () => {
                 borderRadius: "25px",
                 backgroundColor: "rgb(107, 169, 169)",
                 "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
-                transition: 'background-color 0.3s ease-in-out',
+                transition: "background-color 0.3s ease-in-out",
                 marginTop: "20px",
                 marginBottom: "40px",
               }}

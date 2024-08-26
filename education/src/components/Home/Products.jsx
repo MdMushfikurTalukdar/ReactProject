@@ -34,7 +34,7 @@ const Products = () => {
   const products = [
     {
       image: 'product_intro1.jpg',
-      description: 'Semester Registration where you can register your semester.',
+      description: 'Semester Registration: you can register your semester online.',
     },
     {
       image: 'product_intro2.jpg',

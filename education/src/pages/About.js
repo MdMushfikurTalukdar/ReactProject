@@ -150,10 +150,10 @@ export const About = () => {
         </Typography>
         <center>
           <Divider
-            style={{
-              padding: "0.7px",
+            sx={{
+              // padding: "0.7px",
               backgroundColor: "rgb(79 79 138)",
-              width: "180px",
+              width: { lg: "8%", xs: "36%", md: "10%", sm: "15%" },
               marginTop: "10px",
             }}
           />
@@ -186,10 +186,10 @@ export const About = () => {
         </center>
         <center>
           <Divider
-            style={{
-              padding: "0.7px",
+            sx={{
+             
               backgroundColor: "rgb(79 79 138)",
-              width: "180px",
+              width: { lg: "5%", xs: "30%", md: "10%", sm: "15%" },
               marginTop: "10px",
             }}
           />
