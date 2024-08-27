@@ -26,7 +26,6 @@ import { FaCameraRetro } from "react-icons/fa";
 import { BaseUrl, Url } from "../components/BaseUrl";
 import { ClimbingBoxLoader } from "react-spinners";
 
-
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 const phoneNumberRegex = /^\d{10}$/;
 
@@ -55,7 +54,30 @@ const schema = yup.object().shape({
     .matches(
       dateRegex,
       "Date has wrong format. Use one of these formats instead: YYYY-MM-DD."
-    ),
+    )
+    .test("invalid_date", "Invalid DOB", (value) => {
+      if (!value) return false;
+
+      const today = new Date();
+      const [year, month, day] = value.split('-').map(Number);
+
+      // Create a Date object from the given DOB
+      const dob = new Date(year, month - 1, day); // month is 0-based in JS Date
+
+      // Calculate the difference in years
+      const age = today.getFullYear() - dob.getFullYear();
+      
+      // Adjust if the DOB hasn't reached the current date in the current year
+      const isBeforeBirthdayThisYear =
+        today.getMonth() < dob.getMonth() ||
+        (today.getMonth() === dob.getMonth() && today.getDate() < dob.getDate());
+
+      // Subtract one year if the user's birthday hasn't occurred yet this year
+      const actualAge = isBeforeBirthdayThisYear ? age - 1 : age;
+
+      // The person should be at least 15 years old
+      return actualAge >= 15;
+    }),
   permanent_address: yup.string(),
   isCorrespndance_same: yup.string(),
   correspndance_address: yup.string(),
@@ -81,6 +103,13 @@ const schema = yup.object().shape({
     .integer("Registration year must be an integer")
     .min(1000, "Registration year must be a of 4 digit")
     .max(9999, "Registration year must be a of 4 digit")
+    .test(
+      "invalid_registration_year",
+      "Registration Year should be equal or less than current year",
+      (value) => {
+        return value <= new Date().getFullYear();
+      }
+    )
     .required("Registration year is required"),
 
   year: yup
@@ -98,7 +127,17 @@ const schema = yup.object().shape({
     ),
   branch: yup.string().required("Branch is required"),
   merit_serial_number: yup.string(),
-  category: yup.string().required("category is required"),
+  category: yup
+    .string()
+    .test(
+      "is-valid-board",
+      "Values must be between General, OBC, SC, ST",
+      (value) =>
+        !value ||
+        ["General", "OBC", "SC", "ST", "general", "obc", "sc", "st"].includes(
+          value
+        )
+    ),
   college_name: yup.string().required("College Name is required"),
   date_of_admission: yup
     .string()
@@ -107,7 +146,33 @@ const schema = yup.object().shape({
       "Date has wrong format. Use one of these formats instead: YYYY-MM-DD."
     )
     .required("Date Of Admission is required"),
-  session: yup.string().required(),
+  session: yup
+    .string()
+    .test(
+      "invalid_session_value",
+      "Must be a valid session (e.g., 2020-2024)",
+      (value) => {
+        // Ensure the value exists
+        if (!value) return false;
+
+        // Split the string by hyphen
+        const years = value.split("-");
+
+        // Check if the array has exactly two elements
+        if (years.length !== 2) return false;
+
+        // Check if both parts are exactly four digits long
+
+        const startYear = years[0];
+        const endYear = years[1];
+        const isValidStartYear = /^\d{4}$/.test(years[0]);
+        const isValidEndYear = /^\d{4}$/.test(years[1]);
+
+        if (endYear <= startYear) return false;
+
+        return isValidStartYear && isValidEndYear;
+      }
+    ),
   university_reg_no: yup.string(),
   TC_or_CL_no: yup
     .string()
@@ -149,20 +214,25 @@ const schema = yup.object().shape({
 
 export const EditProfile = () => {
   const navigate = useNavigate();
-  
 
   const regenerateToken = () => {
     if (sessionStorage?.getItem("accesstoken")) {
       const response = jwtDecode(sessionStorage?.getItem("accesstoken"));
       const response1 = jwtDecode(sessionStorage?.getItem("refreshtoken"));
-      if (response.exp < Math.floor(Date.now() / 1000) || response1.exp < Math.floor(Date.now() / 1000)) {
+      if (
+        response.exp < Math.floor(Date.now() / 1000) ||
+        response1.exp < Math.floor(Date.now() / 1000)
+      ) {
         navigate("/login");
-      }else{
-        if (sessionStorage.getItem("refreshtoken") && sessionStorage.getItem("accesstoken")) {
+      } else {
+        if (
+          sessionStorage.getItem("refreshtoken") &&
+          sessionStorage.getItem("accesstoken")
+        ) {
           let data = {
             refresh: sessionStorage?.getItem("refreshtoken"),
           };
-    
+
           let config = {
             method: "post",
             maxBodyLength: Infinity,
@@ -173,7 +243,7 @@ export const EditProfile = () => {
             },
             data: data,
           };
-    
+
           axios
             .request(config)
             .then((response) => {
@@ -181,10 +251,13 @@ export const EditProfile = () => {
               sessionStorage.setItem("accesstoken", response.data.access);
             })
             .catch((error) => {
-              if(error?.message==='Request failed with status code 500'){
-                navigate('/login');
+              if (error?.message === "Request failed with status code 500") {
+                navigate("/login");
               }
-              if(error?.response?.data?.errors?.detail==="Given token not valid for any token type"){
+              if (
+                error?.response?.data?.errors?.detail ===
+                "Given token not valid for any token type"
+              ) {
                 enqueueSnackbar("Logging out", {
                   variant: "error",
                   anchorOrigin: {
@@ -192,7 +265,7 @@ export const EditProfile = () => {
                     horizontal: "center",
                   },
                   autoHideDuration: 3000,
-                });  
+                });
                 navigate("/login");
               }
               console.log(error);
@@ -204,11 +277,13 @@ export const EditProfile = () => {
     } else {
       navigate("/login");
     }
-   
   };
 
   useEffect(() => {
-    if (sessionStorage?.getItem("accesstoken") && sessionStorage?.getItem("refreshtoken")) {
+    if (
+      sessionStorage?.getItem("accesstoken") &&
+      sessionStorage?.getItem("refreshtoken")
+    ) {
       const response = jwtDecode(sessionStorage?.getItem("accesstoken"));
       if (
         response.token_type !== "access" &&
@@ -248,7 +323,7 @@ export const EditProfile = () => {
   const [file, setFile] = useState("");
   const [imgPreview, setImgPreview] = useState("");
   const [loading, setLoading] = useState(true);
-  const [slug,setSlug]=useState('');
+  const [slug, setSlug] = useState("");
 
   useEffect(() => {
     const token = sessionStorage?.getItem("accesstoken");
@@ -256,71 +331,155 @@ export const EditProfile = () => {
 
     if (token && token1) {
       const response = jwtDecode(token);
-          console.log(response.college);
-          const profileConfig = {
-            method: "GET",
-            maxBodyLength: Infinity,
-            url: `${Url}/${response?.college}/profile/`,
-            headers: {
-              Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
-            },
-          };
+      console.log(response.college);
+      const profileConfig = {
+        method: "GET",
+        maxBodyLength: Infinity,
+        url: `${Url}/${response?.college}/profile/`,
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+        },
+      };
 
-          axios
-          .request(profileConfig).then((response) => {
+      axios
+        .request(profileConfig)
+        .then((response) => {
           const token = sessionStorage.getItem("accesstoken");
           if (token) {
             let currentDate = new Date();
             const decodedToken = jwtDecode(token);
 
-            if (decodedToken.exp * 1000 - currentDate.getTime() < 59 * 60 * 1000) {
+            if (
+              decodedToken.exp * 1000 - currentDate.getTime() <
+              59 * 60 * 1000
+            ) {
               regenerateToken().catch((error) => {
-                console.error("Error in request interceptor while regenerating token:", error);
-                navigate('/login');
+                console.error(
+                  "Error in request interceptor while regenerating token:",
+                  error
+                );
+                navigate("/login");
               });
             }
           } else {
-            navigate('/login');
+            navigate("/login");
           }
           console.log(response);
           setLoading(false);
           setUserProfile(response?.data);
-          setIsCorrespndanceSame(response?.data?.personal_information?.isCorrespndance_same);
-          setValue("first_name", response.data.personal_information?.first_name || "");
-          setValue("last_name", response.data.personal_information?.last_name || "");
-          setValue("father_name", response.data.personal_information?.father_name || "");
-          setValue("middle_name", response.data.personal_information?.middle_name || "");
-          setValue("date_of_birth", response.data.personal_information?.date_of_birth || "");
+          setIsCorrespndanceSame(
+            response?.data?.personal_information?.isCorrespndance_same
+          );
+          setValue(
+            "first_name",
+            response.data.personal_information?.first_name || ""
+          );
+          setValue(
+            "last_name",
+            response.data.personal_information?.last_name || ""
+          );
+          setValue(
+            "father_name",
+            response.data.personal_information?.father_name || ""
+          );
+          setValue(
+            "middle_name",
+            response.data.personal_information?.middle_name || ""
+          );
+          setValue(
+            "date_of_birth",
+            response.data.personal_information?.date_of_birth || ""
+          );
           setValue("gender", response.data.personal_information?.gender || "");
           setValue("email", response.data.contact_information?.email || "");
-          setValue("permanent_address", response.data.personal_information?.permanent_address || "");
-          setValue("isCorrespndance_same", response.data.personal_information?.isCorrespndance_same || "false");
-          setValue("correspndance_address", response.data.personal_information?.correspndance_address || "");
-          setValue("student_email", response.data.contact_information?.student_email || "");
-          setValue("student_phone_number", response.data.contact_information?.student_phone_number || "");
-          setValue("fathers_mobile_number", response.data.contact_information?.fathers_mobile_number || "");
-          setValue("registration_year", response.data.academic_information?.registration_year || "");
+          setValue(
+            "permanent_address",
+            response.data.personal_information?.permanent_address || ""
+          );
+          setValue(
+            "isCorrespndance_same",
+            response.data.personal_information?.isCorrespndance_same || "false"
+          );
+          setValue(
+            "correspndance_address",
+            response.data.personal_information?.correspndance_address || ""
+          );
+          setValue(
+            "student_email",
+            response.data.contact_information?.student_email || ""
+          );
+          setValue(
+            "student_phone_number",
+            response.data.contact_information?.student_phone_number || ""
+          );
+          setValue(
+            "fathers_mobile_number",
+            response.data.contact_information?.fathers_mobile_number || ""
+          );
+          setValue(
+            "registration_year",
+            response.data.academic_information?.registration_year || ""
+          );
           setValue("year", response.data.academic_information?.year || "");
-          setValue("last_qualification", response.data.academic_information?.last_qualification || "");
+          setValue(
+            "last_qualification",
+            response.data.academic_information?.last_qualification || ""
+          );
           setValue("school", response.data.academic_information?.school || "");
           setValue("board", response.data.academic_information?.board || "");
           setValue("branch", response.data.academic_information?.branch || "");
-          setValue("merit_serial_number", response.data.academic_information?.merit_serial_number || "");
-          setValue("category", response.data.academic_information?.category || "");
-          setValue("college_name", response.data.academic_information?.college_name || "");
-          setValue("date_of_admission", response.data.academic_information?.date_of_admission || "");
-          setValue("session", response.data.academic_information?.session || "");
-          setValue("university_reg_no", response.data.academic_information?.university_reg_no || "");
-          setValue("TC_or_CL_no", response.data.tc_information?.TC_or_CL_no || "");
-          setValue("issuing_date_tc", response.data.tc_information?.issuing_date_tc || "");
+          setValue(
+            "merit_serial_number",
+            response.data.academic_information?.merit_serial_number || ""
+          );
+          setValue(
+            "category",
+            response.data.academic_information?.category || ""
+          );
+          setValue(
+            "college_name",
+            response.data.academic_information?.college_name || ""
+          );
+          setValue(
+            "date_of_admission",
+            response.data.academic_information?.date_of_admission || ""
+          );
+          setValue(
+            "session",
+            response.data.academic_information?.session || ""
+          );
+          setValue(
+            "university_reg_no",
+            response.data.academic_information?.university_reg_no || ""
+          );
+          setValue(
+            "TC_or_CL_no",
+            response.data.tc_information?.TC_or_CL_no || ""
+          );
+          setValue(
+            "issuing_date_tc",
+            response.data.tc_information?.issuing_date_tc || ""
+          );
           setValue("purpose", response.data.tc_information?.purpose || "");
-          setValue("character_certificate_issued", response.data.tc_information?.character_certificate_issued || "");
-          setValue("character_certificate_no", response.data.tc_information?.character_certificate_no || "");
-          setValue("issuing_date_cr", response.data.tc_information?.issuing_date_cr || "");
+          setValue(
+            "character_certificate_issued",
+            response.data.tc_information?.character_certificate_issued || ""
+          );
+          setValue(
+            "character_certificate_no",
+            response.data.tc_information?.character_certificate_no || ""
+          );
+          setValue(
+            "issuing_date_cr",
+            response.data.tc_information?.issuing_date_cr || ""
+          );
         })
         .catch((error) => {
           console.log(error);
-          if (error?.response?.data?.errors?.detail === "Given token not valid for any token type") {
+          if (
+            error?.response?.data?.errors?.detail ===
+            "Given token not valid for any token type"
+          ) {
             enqueueSnackbar("Logging out", {
               variant: "error",
               anchorOrigin: {
@@ -339,7 +498,6 @@ export const EditProfile = () => {
       navigate("/login");
     }
   }, []);
-
 
   const UpdateSubmit = (data) => {
     console.log(file);
@@ -429,7 +587,9 @@ export const EditProfile = () => {
     let config = {
       method: "put",
       maxBodyLength: Infinity,
-      url: `${BaseUrl}/${jwtDecode(sessionStorage.getItem('accesstoken')).college}/profile/`,
+      url: `${BaseUrl}/${
+        jwtDecode(sessionStorage.getItem("accesstoken")).college
+      }/profile/`,
       headers: {
         "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
@@ -438,64 +598,64 @@ export const EditProfile = () => {
     };
     const token = sessionStorage.getItem("accesstoken");
     const token1 = sessionStorage.getItem("refreshtoken");
-    if(token && token1){
-    axios
-      .request(config)
-      .then((response) => {
-        console.log(response.data);
-        const token = sessionStorage.getItem("accesstoken");
-        const token1 = sessionStorage.getItem("refreshtoken");
-        if (token && token1) {
-          let currentDate = new Date();
-          const decodedToken = jwtDecode(token);
+    if (token && token1) {
+      axios
+        .request(config)
+        .then((response) => {
+          console.log(response.data);
+          const token = sessionStorage.getItem("accesstoken");
+          const token1 = sessionStorage.getItem("refreshtoken");
+          if (token && token1) {
+            let currentDate = new Date();
+            const decodedToken = jwtDecode(token);
 
-          if (
-            decodedToken.exp * 1000 - currentDate.getTime() <
-            59 * 60 * 1000
-          ) {
-            try {
-              regenerateToken(); // Wait for the token regeneration to complete
-            } catch (error) {
-              console.error(
-                "Error in request interceptor while regenerating token:",
-                error
-              );
+            if (
+              decodedToken.exp * 1000 - currentDate.getTime() <
+              59 * 60 * 1000
+            ) {
+              try {
+                regenerateToken(); // Wait for the token regeneration to complete
+              } catch (error) {
+                console.error(
+                  "Error in request interceptor while regenerating token:",
+                  error
+                );
+              }
             }
+          } else {
+            navigate("/login");
           }
-        }else{
-          navigate('/login');
-        }
-        enqueueSnackbar(response.data.message, {
-          variant: "success",
-          anchorOrigin: {
-            vertical: "bottom",
-            horizontal: "center",
-          },
-          autoHideDuration: 3000,
-        });
-        setLoading(false);
-        navigate("/profile");
-      })
-      .catch((error) => {
-        setLoading(false);
-        if (
-          error?.response?.data?.errors?.detail ===
-          "Given token not valid for any token type"
-        ) {
-          enqueueSnackbar("Logging out", {
-            variant: "error",
+          enqueueSnackbar(response.data.message, {
+            variant: "success",
             anchorOrigin: {
               vertical: "bottom",
               horizontal: "center",
             },
             autoHideDuration: 3000,
           });
-          navigate("/login");
-        }
-        console.log(error);
-      });
-    }else{
-      navigate('/login');
+          setLoading(false);
+          navigate("/profile");
+        })
+        .catch((error) => {
+          setLoading(false);
+          if (
+            error?.response?.data?.errors?.detail ===
+            "Given token not valid for any token type"
+          ) {
+            enqueueSnackbar("Logging out", {
+              variant: "error",
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "center",
+              },
+              autoHideDuration: 3000,
+            });
+            navigate("/login");
+          }
+          console.log(error);
+        });
+    } else {
+      navigate("/login");
     }
   };
 
@@ -1363,12 +1523,21 @@ export const EditProfile = () => {
                       style={{ marginBottom: "40px" }}
                       sx={{
                         width: { lg: "30%", md: "70%", xs: "100%", sm: "90%" },
-                        borderRadius:"20px",
+                        borderRadius: "20px",
+                        backgroundColor: "rgb(107 169 169)",
+                        "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
+                        transition: "background-color 0.3s ease-in-out",
                       }}
                     >
                       {!loading && <p>Update</p>}
                       {loading && (
-                        <CircularProgress style={{ color: "white",width:"20px",height:"22px" }} />
+                        <CircularProgress
+                          style={{
+                            color: "white",
+                            width: "20px",
+                            height: "22px",
+                          }}
+                        />
                       )}
                     </Button>
                   </center>

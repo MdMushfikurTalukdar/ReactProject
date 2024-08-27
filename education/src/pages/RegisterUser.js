@@ -567,7 +567,7 @@ export const RegisterUser = () => {
                   className="parentGrid_small_screen"
                 >
                   <h2 style={{ marginRight: "35%", color: "rgb(107 169 169)" }}>
-                    <p>Create Account</p>
+                    <p>Register Accounts</p>
                   </h2>
 
                   <form onSubmit={handleSubmit(onSubmit)}>
@@ -638,7 +638,7 @@ export const RegisterUser = () => {
                       }}
                       type="submit"
                     >
-                      {!loading && <p>Create Account</p>}
+                      {!loading && <p>Register Account</p>}
                       {loading && (
                         <CircularProgress
                           style={{
@@ -725,7 +725,7 @@ export const RegisterUser = () => {
                       type="submit"
                       onClick={handleSubmitFile}
                     >
-                      {!loading1 && <p>Create Account</p>}
+                      {!loading1 && <p>Register Account</p>}
                       {loading1 && (
                         <CircularProgress
                           style={{
@@ -744,7 +744,7 @@ export const RegisterUser = () => {
         )}
 
         {!responsive && (
-          <div className="children1_large_screen">
+          <div className="children1_large_screen" style={{marginBottom:"40px"}}>
           
               <Grid container>
                 <Grid
@@ -768,7 +768,7 @@ export const RegisterUser = () => {
                         }}
                       >
                         {" "}
-                        Dashboard
+                       Office  Dashboard
                       </h1>
                       <h4
                         style={{
@@ -846,7 +846,7 @@ export const RegisterUser = () => {
                         //   textAlign:"center"
                       }}
                     >
-                      Create Account
+                     Register Accounts
                     </h2>
                   </center>
                   <form onSubmit={handleSubmit(onSubmit)}>
@@ -917,7 +917,7 @@ export const RegisterUser = () => {
                       }}
                       type="submit"
                     >
-                      {!loading && <p>Create Account</p>}
+                      {!loading && <p>Register Account</p>}
                       {loading && (
                         <CircularProgress
                           style={{
@@ -1004,10 +1004,11 @@ export const RegisterUser = () => {
                           "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
                           transition: 'background-color 0.3s ease-in-out',
                         }}
+                        
                         type="submit"
                         onClick={handleSubmitFile}
                       >
-                        {!loading1 && <p>Create Account</p>}
+                        {!loading1 && <p>Register Account</p>}
                         {loading1 && (
                           <CircularProgress
                             style={{
