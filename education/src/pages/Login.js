@@ -181,9 +181,9 @@ export const LoginPage = () => {
           <Grid
             item
             xs={12}
-            md={6}
+            md={12}
             lg={4}
-            sx={{ display: { xs: "none", md: "flex" }, 
+            sx={{ display: { xs: "none", md: "none",lg:"flex" }, 
             justifyContent: "flex-end",  }}
           >
             <video
@@ -191,9 +191,9 @@ export const LoginPage = () => {
               muted
               loop
               style={{
-                width: "60%",
+                width: "70%",
                 height: "88vh",
-                // eight: "90vh",
+             
                 objectFit: "cover",
               }}
             >
@@ -209,7 +209,7 @@ export const LoginPage = () => {
             sx={{
             
               display: "flex",
-              justifyContent: {lg:"flex-start",md:"flex-start",xs:"center",sm:"center"}
+              justifyContent: {lg:"flex-start",md:"center",xs:"center",sm:"center"}
             }}
           >
             <Box
@@ -218,7 +218,7 @@ export const LoginPage = () => {
                 borderRadius: "16px",
                 p: {xs:1,lg:4,md:4,sm:9},
                 width: "100%",
-                maxWidth: { xs: "100%", sm: "80%", md: "85%", lg: "57%" },
+                maxWidth: { xs: "100%", sm: "80%", md: "80%", lg: "65%" },
                 bgcolor: {lg:"background.paper",md:"background.paper",xs:"transparent",sm:"transparent"},
                 marginBottom:{xs:"50px",sm:"40px",lg:"0px",md:"0px"}
               }}
