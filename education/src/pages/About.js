@@ -33,7 +33,7 @@ export const About = () => {
         overflowX: "hidden",
         backgroundColor: "whitesmoke",
         color: "#113",
-        fontFamily: "math",
+       
       }}
     >
       <Header />

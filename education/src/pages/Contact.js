@@ -120,16 +120,16 @@ export const Contact = () => {
         .then((response) => {
           console.log(response);
           setLoading(false);
-          enqueueSnackbar(response?.data?.message, {
+          enqueueSnackbar("An email will be sent after the verification is completed by the admin.", {
             variant: "success",
             anchorOrigin: {
               vertical: "bottom",
               horizontal: "center",
             },
-            autoHideDuration: 3000,
+            autoHideDuration: 5000,
           });
 
-          navigate("/after-contact");
+          navigate("/");
         })
         .catch((error) => {
           setLoading(false);
