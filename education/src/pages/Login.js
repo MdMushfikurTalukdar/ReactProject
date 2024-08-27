@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
@@ -11,17 +11,16 @@ import {
   Box,
   Button,
   CircularProgress,
+  Grid,
   InputAdornment,
   TextField,
 } from "@mui/material";
-import Style from "../components/StyleLogin";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import Checkbox from "@mui/material/Checkbox";
 import { Url } from "../components/BaseUrl";
 import { jwtDecode } from "jwt-decode";
-
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
@@ -92,15 +91,14 @@ export const LoginPage = () => {
         } else if (response.role === "caretaker") {
           navigate("/caretaker-dashboard");
         } else if (response.role === "registrar") {
-            navigate("/registrar-dashboard");
+          navigate("/registrar-dashboard");
         } else if (response.role === "office") {
           navigate(`/register/${jwtDecode(res.data.token.access).college}`);
-        }else if (response.role === "hod") {
+        } else if (response.role === "hod") {
           navigate(`/sem-sub-register`);
-        }else if (response.role === "department") {
+        } else if (response.role === "department") {
           navigate(`/No-dues-for-degree-approval`);
         } else {
-         
           navigate("/dashboard");
         }
 
@@ -144,8 +142,6 @@ export const LoginPage = () => {
         }
         setLoading(false);
       });
-
-   
   };
 
   const checking = (e) => {
@@ -159,155 +155,196 @@ export const LoginPage = () => {
     rememberMe = false;
   }
   return (
-    <>
- 
+    <Box
+      sx={{
+        backgroundColor: {lg:"whitesmoke",md:"whitesmoke",xs:"white",sm:"white"},
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <Header />
 
-      <div className=" flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 loginBody" style={{height:"90vh"}}>
-        <Box
-          className="max-w-md w-full space-y-8"
-          sx={{
-            boxShadow: {
-              lg: 3,
-              md: 3,
-              sm: 3,
-              xs: 0,
-              borderRadius: "16px",
-              padding: "32px",
-              width: "100%",
-              maxWidth: "400px",
-            },
-          }}
-        >
-          <center>
-            <img
-              src="../images/login.png"
-              alt=""
-              style={{ width: "150px", textAlign: "center", height: "auto" }}
-            />
-          </center>
-
-          <p
-            className="text-center text-3xl text-gray-900 textSign"
-            style={{ marginTop: "-16px", marginBottom: "20px" }}
+      <Box
+        className="loginBody"
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexGrow: 1,
+          px: 2,
+          py: {lg:4,md:4,xs:0,sm:0}
+        }}
+      >
+        <Grid container spacing={5} justifyContent="center" alignItems="center">
+          <Grid
+            item
+            xs={12}
+            md={6}
+            lg={4}
+            sx={{ display: { xs: "none", md: "flex" }, 
+            justifyContent: "flex-end",  }}
           >
-            Welcome Back !!
-          </p>
-          <p
-            className="text-center text-md text-gray-900 textSign"
-            style={{ marginTop: "-16px" }}
+            <video
+              autoPlay
+              muted
+              loop
+              style={{
+                width: "60%",
+                height: "88vh",
+                // eight: "90vh",
+                objectFit: "cover",
+              }}
+            >
+              <source src="./images/login.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            md={6}
+            lg={6}
+            sx={{
+            
+              display: "flex",
+              justifyContent: {lg:"flex-start",md:"flex-start",xs:"center",sm:"center"}
+            }}
           >
-            Sign in to your account
-          </p>
-
-          <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
-            <input type="hidden" name="remember" defaultValue="true" />
-            <div className="rounded-md shadow-sm -space-y-px">
-              <div>
-                <label htmlFor="roll-number" className="sr-only">
-                  Registration no.
-                </label>
-                <TextField
-                  id="roll-number"
-                  type="text"
-                  label="Registration no./Employee ID."
-                  fullWidth
-                  defaultValue={getCookie("rollnumber")}
-                  {...register("rollNumber", { required: true })}
-                  autoComplete="off"
-                  className={`appearance-none rounded-none relative block w-full px-3 py-2 border ${
-                    errors.rollNumber ? "border-red-500" : "border-gray-300"
-                  } placeholder-blue-300 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
-                  placeholder="Registration no./Employee ID."
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <CgProfile />
-                      </InputAdornment>
-                    ),
-                  }}
+            <Box
+              sx={{
+                boxShadow: {lg:2,md:3,xs:0,sm:0},
+                borderRadius: "16px",
+                p: {xs:1,lg:4,md:4,sm:9},
+                width: "100%",
+                maxWidth: { xs: "100%", sm: "80%", md: "85%", lg: "57%" },
+                bgcolor: {lg:"background.paper",md:"background.paper",xs:"transparent",sm:"transparent"},
+                marginBottom:{xs:"50px",sm:"40px",lg:"0px",md:"0px"}
+              }}
+            >
+              <center>
+                <img
+                  src="../images/login.png"
+                  alt="Login"
+                  style={{ width: "150px", height: "auto" }}
                 />
-                {errors.rollNumber && (
-                  <p className="text-black-500 text-xs mt-1 textSign">
-                    Regestration No./Employee Id is required
-                  </p>
-                )}
-              </div>
-              <div>
-                <label htmlFor="password" className="sr-only">
-                  Password
-                </label>
-                <TextField
-                  id="password"
-                  type={hide ? "text" : "password"}
-                  label="password"
-                  {...register("password", { required: true })}
-                  fullWidth
-                  autoComplete="current-password"
-                  sx={{ marginTop: "14px" }}
-                  placeholder="Password"
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <RiLockPasswordFill />
-                      </InputAdornment>
-                    ),
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        {hide ? (
-                          <FaEyeSlash
-                            className="cursor-pointer"
-                            onClick={(e) => setHide(!hide)}
-                          />
-                        ) : (
-                          <FaEye
-                            className="cursor-pointer"
-                            onClick={(e) => setHide(!hide)}
-                          />
-                        )}
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-                {errors.password && (
-                  <p className="text-black-500 text-xs mt-1 textSign">
-                    Password is required
-                  </p>
-                )}
-              </div>
-              <Checkbox
-                {...label}
-                defaultChecked={rememberMe}
-                onClick={checking}
-              />
-              Remember me?
-            </div>
+              </center>
 
-            <div>
-              <Button
-                variant="contained"
-                fullWidth
-                sx={{
-                  color: "#fff",
-                  backgroundColor: "rgb(107, 169, 169)",
-                  "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
-                  borderRadius:"20px",
-                }}
-                
-                type="submit"
+              <p
+                className="text-center text-3xl text-gray-900"
+                style={{ margin: "6px 0 6px 0" }}
               >
-                {!loading && <p>Login</p>}
-                {loading && (
-                  <CircularProgress
-                    style={{ color: "white", width: "20px", height: "22px" }}
+                Welcome Back !!
+              </p>
+              <p
+                className="text-center text-md text-gray-900"
+                style={{ margin: "0 0 20px 0" }}
+              >
+                Sign in to your account
+              </p>
+
+              <form className="space-y-3"
+             onSubmit={handleSubmit(onSubmit)}>
+                <div>
+                  <TextField
+                    id="roll-number"
+                    type="text"
+                    label="Registration no./Employee ID."
+                    fullWidth
+                    defaultValue={getCookie("rollnumber")}
+                    {...register("rollNumber", { required: true })}
+                    autoComplete="off"
+                    className={`appearance-none block w-full px-3 py-2 border ${
+                      errors.rollNumber ? "border-red-500" : "border-gray-300"
+                    } placeholder-blue-300 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
+                    placeholder="Registration no./Employee ID."
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <CgProfile />
+                        </InputAdornment>
+                      ),
+                    }}
                   />
-                )}
-              </Button>
-            </div>
-          </form>
-        </Box>
-      </div>
+                  {errors.rollNumber && (
+                    <p className="text-red-500 text-xs mt-1">
+                      Registration No./Employee ID is required
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <TextField
+                    id="password"
+                    type={hide ? "text" : "password"}
+                    label="Password"
+                    {...register("password", { required: true })}
+                    fullWidth
+                    autoComplete="current-password"
+                    sx={{ marginTop: "14px" }}
+                    placeholder="Password"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <RiLockPasswordFill />
+                        </InputAdornment>
+                      ),
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          {hide ? (
+                            <FaEyeSlash
+                              className="cursor-pointer"
+                              onClick={() => setHide(!hide)}
+                            />
+                          ) : (
+                            <FaEye
+                              className="cursor-pointer"
+                              onClick={() => setHide(!hide)}
+                            />
+                          )}
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                  {errors.password && (
+                    <p className="text-red-500 text-xs mt-1">
+                      Password is required
+                    </p>
+                  )}
+                </div>
+                <div >
+                <Checkbox
+                  {...label}
+                  defaultChecked={rememberMe}
+                  onClick={checking}
+                />
+                Remember me?
+                </div>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  sx={{
+                    color: "#fff",
+                    backgroundColor: "rgb(107, 169, 169)",
+                    "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
+                    borderRadius: "20px",
+                    
+                  }}
+                  type="submit"
+                >
+                  {!loading && <p>Login</p>}
+                  {loading && (
+                    <CircularProgress
+                      style={{ color: "white", width: "20px", height: "22px" }}
+                    />
+                  )}
+                </Button>
+              </form>
+            </Box>
+          </Grid>
+        </Grid>
+      </Box>
+
       <Footer />
-    </>
+    </Box>
   );
 };

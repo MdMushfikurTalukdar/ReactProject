@@ -23,13 +23,12 @@ import {
   CloudUpload,
   DateRangeOutlined,
   EmailOutlined,
-  FileUpload,
   PersonPinCircleOutlined,
   PersonPinCircleSharp,
   PhoneAndroidOutlined,
   QrCode2Outlined,
 } from "@mui/icons-material";
-import { BiSolidInstitution } from "react-icons/bi";
+
 
 export const Contact = () => {
   const [imageIndex, setImageIndex] = React.useState(0);
@@ -488,7 +487,9 @@ export const Contact = () => {
                   <input type="file" hidden onChange={handleFileChange} />
                 </Button>
                 <br />
-                {url && (
+               
+              </Box>
+              {url && (
                   <img
                     src={url}
                     alt=""
@@ -499,8 +500,6 @@ export const Contact = () => {
                     }}
                   />
                 )}
-              </Box>
-
               <center>
                 <Button
                   variant="contained"
