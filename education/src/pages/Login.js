@@ -172,7 +172,8 @@ export const LoginPage = () => {
           alignItems: "center",
           justifyContent: "center",
           flexGrow: 1,
-          px: 2,
+          px:2,
+          marginTop:{lg:2,md:2,xs:6,sm:4},
           py: {lg:4,md:4,xs:0,sm:0}
         }}
       >
