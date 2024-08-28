@@ -354,7 +354,7 @@ export const EditProfile = () => {
   const [file, setFile] = useState("");
   const [imgPreview, setImgPreview] = useState("");
   const [loading, setLoading] = useState(true);
-  const [slug, setSlug] = useState("");
+  
 
   useEffect(() => {
     const token = sessionStorage?.getItem("accesstoken");
