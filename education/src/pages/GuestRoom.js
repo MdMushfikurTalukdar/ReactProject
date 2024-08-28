@@ -631,6 +631,7 @@ export const GuestRoom = () => {
                   marginBottom: "15px",
                   width: { lg: "50%", md: "50%", xs: "100%", sm: "90%" },
                   borderRadius: "20px",
+                  "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
                 }}
               >
                 {!loading1 && <p>Send Request</p>}

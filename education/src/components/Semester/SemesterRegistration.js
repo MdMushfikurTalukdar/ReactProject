@@ -287,12 +287,14 @@ export function SemesterRegistration() {
     if (token && token1) {
       console.log("data");
 
-      if (userProfile?.personal_information?.first_name === null)
+      if (userProfile?.personal_information?.first_name === null){
         return enqueueSnackbar("name field is empty", { variant: "error" });
 
-      if (!userProfile?.academic_information?.session)
+      }
+      if (!userProfile?.academic_information?.session){
         return enqueueSnackbar("Session field is empty", { variant: "error" });
 
+      }
       let config = {
         method: "get",
         maxBodyLength: Infinity,
@@ -679,7 +681,10 @@ export function SemesterRegistration() {
             </Box>
             <Button
               variant="contained"
-              sx={{backgroundColor:"rgb(107, 169, 169)", borderRadius:"20px",}}
+              sx={{backgroundColor:"rgb(107, 169, 169)", borderRadius:"20px",
+                "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
+                transition: 'background-color 0.3s ease-in-out',
+              }}
               onClick={handleSubmit(onSubmit)}
             >
               {!load && <p >Send Request</p>}

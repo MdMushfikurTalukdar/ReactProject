@@ -351,6 +351,8 @@ export const BonafideForm = () => {
       profile?.academic_information?.session === null ||
       profile?.academic_information?.date_of_admission === null
     ) {
+      
+      setLoading2(false);
       return enqueueSnackbar("Update Your Profile first.", {
         variant: "warning",
         anchorOrigin: {

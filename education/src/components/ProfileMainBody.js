@@ -535,7 +535,7 @@ export const ProfileMainBody = () => {
                 style={{ marginTop: "0px", marginBottom: "5px" }}
               >
                 <Typography variant="p" style={{ fontSize: "1.2rem" }}>
-                  Registration_number
+                  Registration No.
                 </Typography>
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
@@ -570,7 +570,7 @@ export const ProfileMainBody = () => {
                 }}
               >
                 <Typography variant="p" style={{ fontSize: "1.2rem" }}>
-                  Enrollment_date
+                  Enrollment Date
                 </Typography>
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>

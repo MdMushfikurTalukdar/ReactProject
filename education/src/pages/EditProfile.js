@@ -34,7 +34,11 @@ const schema = yup.object().shape({
   last_name: yup.string().required("Last name is required"),
   father_name: yup.string().required("Father name is required"),
   middle_name: yup.string(),
-  gender: yup.string(),
+  gender: yup.string().test("Invalid_gender","Gender Must be between Male,Female,Others",(value)=>{
+    if(["Male","male","Female","female","Others","others"].includes(value)===false)
+      return false;
+    else return true;
+  }),
   student_email: yup
     .string()
     .email("Invalid email format")
@@ -61,7 +65,21 @@ const schema = yup.object().shape({
       const today = new Date();
       const [year, month, day] = value.split('-').map(Number);
 
+      if(month>12)return false;
+      if(day>31)return false;
+      if(day===parseInt("00"))return false;
+      if(month===parseInt("00"))return false;
       // Create a Date object from the given DOB
+
+      if ([4, 6, 9, 11].includes(month) && day > 30) return false;
+
+      // February (leap year check)
+      if (month === 2) {
+        const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+        if (day > 29 || (day === 29 && !isLeapYear)) return false;
+      }
+
+
       const dob = new Date(year, month - 1, day); // month is 0-based in JS Date
 
       // Calculate the difference in years
@@ -144,7 +162,20 @@ const schema = yup.object().shape({
     .matches(
       dateRegex,
       "Date has wrong format. Use one of these formats instead: YYYY-MM-DD."
-    )
+    ).test("invalid_DOA","Invalid Date of admission",(value)=>{
+      
+      const [year, month, day] = value.split('-').map(Number);
+
+      if(year>parseInt(new Date().getFullYear()))return false;
+      if(month>parseInt(new Date().getMonth()+1))return false;
+      if(day>parseInt(new Date().getDate()))return false;
+      if(month>12)return false;
+      if(day>31)return false;
+      if(day===parseInt("00"))return false;
+      if(month===parseInt("00"))return false;
+
+      return true;
+    })
     .required("Date Of Admission is required"),
   session: yup
     .string()
@@ -1089,7 +1120,7 @@ export const EditProfile = () => {
                           style={{ marginBottom: "5px" }}
                         >
                           <Typography variant="p">
-                            Registration_number
+                            Registration No.
                           </Typography>
                         </Grid>
                         <Grid item lg={4} sm={12} xs={12} md={12}>

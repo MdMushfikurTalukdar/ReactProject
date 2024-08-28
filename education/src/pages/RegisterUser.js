@@ -175,7 +175,8 @@ export const RegisterUser = () => {
 
   const schema = yup.object().shape({
     registration_number: yup
-      .string()
+      .string().min(8, "Registration number must be at least 4 characters")
+      .max(11, "Registration number cannot exceed 11 characters")
       .required("registration number is required"),
     password: yup
       .string()
@@ -494,6 +495,17 @@ export const RegisterUser = () => {
               autoHideDuration: 3000,
             });
           }
+          if(err?.response?.data?.errors?.registration_number?.[0])
+          {
+            enqueueSnackbar(err?.response?.data?.errors?.registration_number?.[0], {
+              variant: "error",
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "center",
+              },
+              autoHideDuration: 3000,
+            });
+          }
           if (
             err?.response?.data?.message ===
             "User already exists with this registration number and college"
@@ -582,6 +594,9 @@ export const RegisterUser = () => {
                         }}
                         {...register("registration_number")}
                         helperText={errors.registration_number?.message}
+                        FormHelperTextProps={{
+                          sx: { color: 'red' },  // Set the color of the helper text to red
+                        }}
                       />
                     </Box>
                     <Box>
@@ -595,6 +610,9 @@ export const RegisterUser = () => {
                         }}
                         {...register("password")}
                         helperText={errors.password?.message}
+                        FormHelperTextProps={{
+                          sx: { color: 'red' },  // Set the color of the helper text to red
+                        }}
                       />
                     </Box>
                     <Box>
@@ -609,6 +627,9 @@ export const RegisterUser = () => {
                         }}
                         {...register("password2")}
                         helperText={errors.password2?.message}
+                        FormHelperTextProps={{
+                          sx: { color: 'red' },  // Set the color of the helper text to red
+                        }}
                       />
                     </Box>
                     <Box>
@@ -616,7 +637,7 @@ export const RegisterUser = () => {
                         type="text"
                         label="Role"
                         placeholder="Role..."
-                        required
+                        
                         sx={{
                           width: { lg: "50%", md: "50%", sm: "50%", xs: "80%" },
                           marginBottom: "10px",
@@ -624,6 +645,9 @@ export const RegisterUser = () => {
                         }}
                         {...register("role")}
                         helperText={errors.role?.message}
+                        FormHelperTextProps={{
+                          sx: { color: 'red' },  // Set the color of the helper text to red
+                        }}
                       />
                     </Box>
 
@@ -634,7 +658,8 @@ export const RegisterUser = () => {
                         backgroundColor: "rgb(107 169 169)",
                         textAlign: "start",
                         borderRadius:"20px",
-                        // marginBottom:"20px"
+                        "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
+                        transition: 'background-color 0.3s ease-in-out',
                       }}
                       type="submit"
                     >
@@ -694,6 +719,7 @@ export const RegisterUser = () => {
                           backgroundColor: "rgb(107 169 169)",
                           marginTop: "10px",
                           borderRadius:"20px",
+                         
                         }}
                       >
                         <input
@@ -721,6 +747,8 @@ export const RegisterUser = () => {
                         textAlign: "start",
                         marginTop: "20px",
                         borderRadius:"20px",
+                        "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
+                        transition: 'background-color 0.3s ease-in-out',
                       }}
                       type="submit"
                       onClick={handleSubmitFile}
@@ -861,6 +889,9 @@ export const RegisterUser = () => {
                         }}
                         {...register("registration_number")}
                         helperText={errors?.registration_number?.message}
+                        FormHelperTextProps={{
+                          sx: { color: 'red' },  // Set the color of the helper text to red
+                        }}
                       />
                     </Box>
                     <Box>
@@ -874,6 +905,9 @@ export const RegisterUser = () => {
                         }}
                         {...register("password")}
                         helperText={errors?.password?.message}
+                        FormHelperTextProps={{
+                          sx: { color: 'red' },  // Set the color of the helper text to red
+                        }}
                       />
                     </Box>
                     <Box>
@@ -888,6 +922,9 @@ export const RegisterUser = () => {
                         }}
                         {...register("password2")}
                         helperText={errors?.password2?.message}
+                        FormHelperTextProps={{
+                          sx: { color: 'red' },  // Set the color of the helper text to red
+                        }}
                       />
                     </Box>
                     <Box>
@@ -902,6 +939,9 @@ export const RegisterUser = () => {
                         }}
                         {...register("role")}
                         helperText={errors?.role?.message}
+                        FormHelperTextProps={{
+                          sx: { color: 'red' },  // Set the color of the helper text to red
+                        }}
                       />
                     </Box>
                     <Button

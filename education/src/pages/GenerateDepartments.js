@@ -244,11 +244,14 @@ export const GenerateDepartments = () => {
                     marginTop: 3,
                     borderRadius: "20px",
                     width:"60%",
+                    backgroundColor: "rgb(107, 169, 169)",
+                    color: "#fff",
+                    "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
                   }}
                   onClick={onSubmit}
                   
                 >
-                  {!load && <p>Generate Departments</p>}
+                  {!load && <Typography variant="body2" sx={{fontSize:{xs:"12px"}}}>Generate Departments</Typography>}
                       {load && (
                         <CircularProgress
                           style={{
