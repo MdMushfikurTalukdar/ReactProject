@@ -21,6 +21,7 @@ import { BaseUrl, Url } from "../components/BaseUrl";
 import { jwtDecode } from "jwt-decode";
 import NavbarNew from "../components/NavbarNew";
 import Footer from "../components/Home/Footer";
+import { BannerSection } from "../components/BannerSection";
 
 export const RegisterUser = () => {
   const [responsive, setResponsive] = useState(
@@ -545,6 +546,8 @@ export const RegisterUser = () => {
     return (
       <>
         <NavbarNew />
+
+      
         <Box
           display="flex"
           justifyContent="center"
@@ -560,14 +563,15 @@ export const RegisterUser = () => {
   return (
     <div className="App">
       <NavbarNew />
+
+      <BannerSection image={"../images/banner1.jpg"} title={"Office Dashboard"} 
+      subtitle={"Enhance productivity by automating routine tasks and prioritizing key operations for efficient office management."}/>
+
+
       <Box>
         {responsive && (
           <div className="parentdiv_small_screen">
-            <img
-              src="../images/logo.png"
-              alt=""
-              style={{ height: "auto", width: "70px" }}
-            />
+            
             <div className="children1_small_screen">
               <Grid container>
                 <Grid
@@ -578,8 +582,8 @@ export const RegisterUser = () => {
                   lg={9}
                   className="parentGrid_small_screen"
                 >
-                  <h2 style={{ marginRight: "35%", color: "rgb(107 169 169)" }}>
-                    <p>Register Accounts</p>
+                  <h2 style={{ color: "rgb(107 169 169)",textAlign:"center",marginTop:"10px",marginBottom:"10px" }}>
+                    Register Accounts
                   </h2>
 
                   <form onSubmit={handleSubmit(onSubmit)}>
@@ -603,7 +607,7 @@ export const RegisterUser = () => {
                       <TextField
                         type="password"
                         label="password"
-                        placeholder="password"
+                        placeholder="Password"
                         sx={{
                           width: { lg: "50%", md: "50%", sm: "50%", xs: "80%" },
                           marginTop: "12px",
@@ -619,7 +623,7 @@ export const RegisterUser = () => {
                       <TextField
                         type="password"
                         label="confirm password"
-                        placeholder="confirm password..."
+                        placeholder="Confirm Password..."
                         sx={{
                           width: { lg: "50%", md: "50%", sm: "50%", xs: "80%" },
                           marginBottom: "10px",
@@ -641,7 +645,7 @@ export const RegisterUser = () => {
                         sx={{
                           width: { lg: "50%", md: "50%", sm: "50%", xs: "80%" },
                           marginBottom: "10px",
-                          marginTop: "10px",
+                          
                         }}
                         {...register("role")}
                         helperText={errors.role?.message}
@@ -738,7 +742,7 @@ export const RegisterUser = () => {
                       )}
                     </div>
                   </Box>
-                  <Box>
+                  <Box sx={{marginBottom:"50px"}}>
                     <Button
                       variant="contained"
                       sx={{
@@ -784,49 +788,9 @@ export const RegisterUser = () => {
                   // sx={{ height: "fit-content" }}
                 >
                   <center>
-                    <div style={{ color: "white" }}>
-                      <h1
-                        style={{
-                          position: "relative",
-                          top: "5rem",
-                          left: "5rem",
-                          width: "400px",
-                          height: "auto",
-                          color: "black",
-                        }}
-                      >
-                        {" "}
-                       Office  Dashboard
-                      </h1>
-                      <h4
-                        style={{
-                          position: "relative",
-                          top: "6rem",
-                          left: "5rem",
-                          width: "400px",
-                          height: "auto",
-                          color: "black",
-                        }}
-                      >
-                        Empowering Workspaces,
-                        <br />
-                      </h4>
-                      <h4
-                        style={{
-                          position: "relative",
-                          top: "6rem",
-                          left: "6rem",
-                          width: "400px",
-                          height: "auto",
-                          color: "black",
-                        }}
-                      >
-                        {" "}
-                        Inspiring Innovation
-                        <br />
-                      </h4>
-
-                      <h4
+                    <div >
+                      
+                   <h4
                         style={{
                           position: "relative",
                           top: "8rem",
@@ -838,7 +802,7 @@ export const RegisterUser = () => {
                         }}
                       >
                         {" "}
-                        Total Registered Id:{id}
+                        Total Registered Accounts: {id}
                         <br />
                       </h4>
                     </div>
@@ -869,7 +833,7 @@ export const RegisterUser = () => {
                     <h2
                       style={{
                         //   marginRight: "35%",
-                        //   marginTop: "0px",
+                          marginBottom: "10px",
                         color: "rgb(107 169 169)",
                         //   textAlign:"center"
                       }}
@@ -877,6 +841,8 @@ export const RegisterUser = () => {
                      Register Accounts
                     </h2>
                   </center>
+
+                
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <Box>
                       <TextField
@@ -898,7 +864,7 @@ export const RegisterUser = () => {
                       <TextField
                         type="password"
                         label="Password"
-                        placeholder="password..."
+                        placeholder="Password..."
                         sx={{
                           width: "50%",
                           marginTop: "12px",
@@ -914,7 +880,7 @@ export const RegisterUser = () => {
                       <TextField
                         type="password"
                         label="Confirm Password"
-                        placeholder="confirmPassword..."
+                        placeholder="Confirm Password..."
                         sx={{
                           width: "50%",
                           marginBottom: "10px",

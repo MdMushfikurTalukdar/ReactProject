@@ -10,6 +10,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { BaseUrl } from "./BaseUrl";
 import { TiDelete } from "react-icons/ti";
+import { BorderRight } from "@mui/icons-material";
 
 dayjs.extend(relativeTime);
 
@@ -68,10 +69,18 @@ export const NavbarNew = () => {
     // { name: "Semester Registration Request", link: "/verifySemesterRegistration" }
   ];
 
-  const office = [{ name: "Add Branch", link: "/sem-branch-register" },
-    {name: "User Management", link: "/user-management"},
-    {name:"Register" , link:sessionStorage?.getItem("accesstoken")?`/register/${jwtDecode(sessionStorage?.getItem("accesstoken")).college}`:null},
-    {name: "Generate Departments", link: "/generate-departments"},
+  const office = [
+    { name: "Add Branch", link: "/sem-branch-register" },
+    { name: "User Management", link: "/user-management" },
+    {
+      name: "Register",
+      link: sessionStorage?.getItem("accesstoken")
+        ? `/register/${
+            jwtDecode(sessionStorage?.getItem("accesstoken")).college
+          }`
+        : null,
+    },
+    { name: "Generate Departments", link: "/generate-departments" },
   ];
 
   const fees_add = [
@@ -79,7 +88,7 @@ export const NavbarNew = () => {
     { name: "Hostel Room Allotment", link: "/hostel-room-allotment" },
     { name: "Hostel No Due Request", link: "/hostel-no-due-request" },
     { name: "Hostel/Mess Fee Payment", link: "/caretaker-dashboard" },
-    { name: "Room Register", link: "/room-register" }
+    { name: "Room Register", link: "/room-register" },
 
     // { name: "Show Hostel Room Requests", link: "/hostel-room-allotment-requests" },
   ];
@@ -111,7 +120,6 @@ export const NavbarNew = () => {
     { name: "Add Subjects", link: "/sem-sub-register" },
     { name: "Add Semester", link: "/sem-register" },
     { name: "Sign No Dues(for TC)", link: "/underDevelopment" },
-    
   ];
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -250,11 +258,8 @@ export const NavbarNew = () => {
   const [showNotifications, setShowNotifications] = useState(false);
 
   const deleteNotification = (id) => {
-    
     let data = JSON.stringify({
-      "ids": [
-        id
-      ]
+      ids: [id],
     });
 
     let config = {
@@ -262,10 +267,10 @@ export const NavbarNew = () => {
       maxBodyLength: Infinity,
       url: `${BaseUrl}/notification/delete_all_notification/`,
       headers: {
-        'Content-Type': 'application/json', 
+        "Content-Type": "application/json",
         Authorization: `Bearer ${sessionStorage?.getItem("accesstoken")}`,
       },
-      data : data
+      data: data,
     };
 
     axios
@@ -622,14 +627,14 @@ export const NavbarNew = () => {
               )}
             </div>
             {showNotifications && (
-              <div
+              <Box
                 className="bg-white shadow-lg rounded-md z-10"
-                style={{
+                sx={{
                   position: "absolute",
                   top: "54px",
                   right: "24px",
-                  width: "16.7rem",
-                  backgroundColor: "whitesmoke",
+                  width: { lg: "20.7rem", xs: "16.7rem" },
+                 
                 }}
               >
                 <Box p={2} style={{ overflowY: "scroll", height: "450px" }}>
@@ -651,19 +656,21 @@ export const NavbarNew = () => {
                         key={notification.id}
                         className="flex justify-between items-center py-2 font-semibold"
                       >
-                        <div>
-                          <p>{notification.message}</p>
-                          <p className="text-xs text-gray-500">
-                            {dayjs(notification.time).fromNow()}
-                          </p>
-                        </div>
-                        <Button
-                          size="small"
-                          onClick={() => deleteNotification(notification.id)}
-                          style={{ color: "rgb(107, 169, 169)" }}
-                        >
-                          <TiDelete style={{ fontSize: "1.5rem" }} />
-                        </Button>
+                        <Box style={{backgroundColor:"rgb(244, 246, 248)",display:'flex',flexDirection:"row",padding:"10px",borderRadius:"14px"}}>
+                          <div >
+                            <p>{notification.message}</p>
+                            <p className="text-xs text-gray-500">
+                              {dayjs(notification.time).fromNow()}
+                            </p>
+                          </div>
+                          <Button
+                            size="small"
+                            onClick={() => deleteNotification(notification.id)}
+                            style={{ color: "rgb(107, 169, 169)" }}
+                          >
+                            <TiDelete style={{ fontSize: "1.5rem" }} />
+                          </Button>
+                        </Box>
                       </div>
                     ))
                   ) : (
@@ -675,7 +682,7 @@ export const NavbarNew = () => {
                     </p>
                   )}
                 </Box>
-              </div>
+              </Box>
             )}
             {roll === "student" && (
               <div className="relative">

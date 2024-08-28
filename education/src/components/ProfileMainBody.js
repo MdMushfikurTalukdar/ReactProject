@@ -110,7 +110,6 @@ export const ProfileMainBody = () => {
           overflowX: "hidden",
         }}
       >
-        <center></center>
         <Box className="text-center">
           {userProfile?.personal_information?.profile_picture !== null ? (
             <img

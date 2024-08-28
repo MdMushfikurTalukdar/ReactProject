@@ -41,7 +41,7 @@ html {
 }
 .parentGrid_small_screen {
   background-color: #e3f4f4;
-  border-radius: 20px 20px 20px 20px;
+  /* border-radius: 20px 20px 20px 20px; */
   text-align: center;
   padding: 15px;
   height: fit-content;

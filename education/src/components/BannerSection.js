@@ -11,7 +11,7 @@ export const BannerSection = ({image,title,subtitle}) => {
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
         backgroundSize: "cover",
-        paddingTop: "2vw",
+        paddingTop: {xs:"8vw",lg:"2vw",md:"2vw"},
         paddingBottom: "15vw",
         position: "relative",
         "&::before": {
