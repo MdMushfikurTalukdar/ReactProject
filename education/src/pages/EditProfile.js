@@ -589,7 +589,7 @@ export const EditProfile = () => {
       data.merit_serial_number
     );
     formData.append("academic_information.category", data.category);
-    // formData.append("academic_information.college_name", data.college_name);
+    formData.append("academic_information.college_name", data.college_name);
     formData.append(
       "academic_information.date_of_admission",
       data.date_of_admission

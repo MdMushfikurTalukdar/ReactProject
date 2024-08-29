@@ -55,6 +55,7 @@ export const ProfileMainBody = () => {
       axios
         .request(config)
         .then((response) => {
+          console.log(response.data);
           setUserProfile(response.data);
           setLoading(false);
         })
@@ -850,7 +851,7 @@ export const ProfileMainBody = () => {
                 </Typography>
               </Grid>
               <Grid item lg={4} sm={12} xs={12} md={12}>
-                <Typography variant="p">{college}</Typography>
+                <Typography variant="p">{userProfile?.academic_information?.college_name || <p>NA</p>}</Typography>
               </Grid>
 
               <Divider
