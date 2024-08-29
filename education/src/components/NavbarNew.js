@@ -4,19 +4,20 @@ import "./NavbarNew.css"; // If you have custom CSS, keep this import
 import { jwtDecode } from "jwt-decode";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { CgMenuLeftAlt, CgProfile, CgMenuRightAlt } from "react-icons/cg";
-import { Box, Button, Divider } from "@mui/material";
+import { Box, Button, Divider, Typography } from "@mui/material";
 import axios from "axios";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { BaseUrl } from "./BaseUrl";
 import { TiDelete } from "react-icons/ti";
-import { BorderRight } from "@mui/icons-material";
 
 dayjs.extend(relativeTime);
 
 export const NavbarNew = () => {
   const navigate = useNavigate();
   const [roll, setRoll] = useState("");
+  const [result, setResult] = useState([]);
+  const [name,setName]=useState([]);
 
   useEffect(() => {
     if (sessionStorage.getItem("accesstoken") === null) {
@@ -26,7 +27,63 @@ export const NavbarNew = () => {
 
       setRoll(response?.role);
     }
-  }, []);
+  }, [navigate]);
+
+  useEffect(() => {
+    const token = sessionStorage.getItem("accesstoken");
+    const token1 = sessionStorage.getItem("refreshtoken");
+
+    if (token && token1) {
+      const response = jwtDecode(token);
+
+      axios
+        .get(
+          `${BaseUrl}/${response?.college}/colleges/${response?.college}/`,
+          {
+            headers: {
+              Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log(response.data);
+          setResult(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else {
+      navigate("/login");
+    }
+  }, [navigate]);
+
+  useEffect(() => {
+    const token = sessionStorage.getItem("accesstoken");
+    const token1 = sessionStorage.getItem("refreshtoken");
+
+    if (token && token1) {
+      const response = jwtDecode(token);
+
+      axios
+        .get(
+          `${BaseUrl}/${response?.college}/profile/`,
+          {
+            headers: {
+              Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log(response.data);
+          setName(response?.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   const mainOptions = [
     "General",
@@ -614,6 +671,28 @@ export const NavbarNew = () => {
               Smart One
             </h1>
           </div>
+          <Box sx={{display:{
+            xs:"none",
+            sm:"none",
+            md:"block",
+            lg:"block"
+          }}}>
+            <div >
+            {result?.college_logo && result?.college_name && 
+            <span style={{display:"flex",gap:"5px"}}>
+            <img
+                src={`${result?.college_logo}`}
+                alt="College Logo"
+                style={{width:"40px",borderRadius:"10px"}}
+                
+              />
+            <span>{result?.college_name}</span>
+            </span>}
+            </div>
+           
+           
+            
+          </Box>
           <div className="flex items-center space-x-4">
             <div
               className="relative cursor-pointer"
@@ -634,7 +713,6 @@ export const NavbarNew = () => {
                   top: "54px",
                   right: "24px",
                   width: { lg: "20.7rem", xs: "16.7rem" },
-                 
                 }}
               >
                 <Box p={2} style={{ overflowY: "scroll", height: "450px" }}>
@@ -656,8 +734,16 @@ export const NavbarNew = () => {
                         key={notification.id}
                         className="flex justify-between items-center py-2 font-semibold"
                       >
-                        <Box style={{backgroundColor:"rgb(244, 246, 248)",display:'flex',flexDirection:"row",padding:"10px",borderRadius:"14px"}}>
-                          <div >
+                        <Box
+                          style={{
+                            backgroundColor: "rgb(244, 246, 248)",
+                            display: "flex",
+                            flexDirection: "row",
+                            padding: "10px",
+                            borderRadius: "14px",
+                          }}
+                        >
+                          <div>
                             <p>{notification.message}</p>
                             <p className="text-xs text-gray-500">
                               {dayjs(notification.time).fromNow()}
@@ -685,10 +771,17 @@ export const NavbarNew = () => {
               </Box>
             )}
             {roll === "student" && (
-              <div className="relative">
+              <div className="relative" style={{display:"flex",gap:"5px"}}>
+                <Typography variant="body2" sx={{fontWeight:"600",display:{
+                  xs:"none",sm:"block",lg:"block",md:"block"
+                }}}>
+                 {name?.personal_information?.first_name?.slice(0, 1)?.toUpperCase()}
+                 {name?.personal_information?.first_name?.slice(1)}{" "} 
+                 </Typography>
                 <CgProfile
-                  size={24}
-                  className="cursor-pointer z-20"
+                  size={26}
+                  style={{position:"relative",top:"-3px"}}
+                  className="cursor-pointer z-20 "
                   onClick={(e) => {
                     navigate("/profile");
                   }}

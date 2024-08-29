@@ -5,6 +5,7 @@ import {
   CircularProgress,
   Divider,
   Grid,
+  MenuItem,
   TextField,
   Typography,
 } from "@mui/material";
@@ -36,6 +37,7 @@ export const RegisterUser = () => {
   const [id, setId] = useState(0);
   const [loading3, setLoading3] = useState(true);
   const [key, setKey] = useState(0);
+  const [key1,setKey1]=useState(0);
 
   useEffect(() => {
     if (sessionStorage?.getItem("accesstoken")) {
@@ -176,7 +178,8 @@ export const RegisterUser = () => {
 
   const schema = yup.object().shape({
     registration_number: yup
-      .string().min(8, "Registration number must be at least 4 characters")
+      .string()
+      .min(8, "Registration number must be at least 4 characters")
       .max(11, "Registration number cannot exceed 11 characters")
       .required("registration number is required"),
     password: yup
@@ -212,6 +215,7 @@ export const RegisterUser = () => {
     register,
     handleSubmit,
     formState: { errors },
+    setValue
   } = useForm({
     resolver: yupResolver(schema),
   });
@@ -482,6 +486,7 @@ export const RegisterUser = () => {
             });
           }
           reset();
+          setKey1(key1+1);
         })
         .catch((err) => {
           console.log(err);
@@ -496,16 +501,18 @@ export const RegisterUser = () => {
               autoHideDuration: 3000,
             });
           }
-          if(err?.response?.data?.errors?.registration_number?.[0])
-          {
-            enqueueSnackbar(err?.response?.data?.errors?.registration_number?.[0], {
-              variant: "error",
-              anchorOrigin: {
-                vertical: "bottom",
-                horizontal: "center",
-              },
-              autoHideDuration: 3000,
-            });
+          if (err?.response?.data?.errors?.registration_number?.[0]) {
+            enqueueSnackbar(
+              err?.response?.data?.errors?.registration_number?.[0],
+              {
+                variant: "error",
+                anchorOrigin: {
+                  vertical: "bottom",
+                  horizontal: "center",
+                },
+                autoHideDuration: 3000,
+              }
+            );
           }
           if (
             err?.response?.data?.message ===
@@ -535,8 +542,6 @@ export const RegisterUser = () => {
             navigate("/login");
           }
         });
-
-     
     } else {
       navigate("/login");
     }
@@ -547,7 +552,6 @@ export const RegisterUser = () => {
       <>
         <NavbarNew />
 
-      
         <Box
           display="flex"
           justifyContent="center"
@@ -564,14 +568,17 @@ export const RegisterUser = () => {
     <div className="App">
       <NavbarNew />
 
-      <BannerSection image={"../images/banner1.jpg"} title={"Office Dashboard"} 
-      subtitle={"Enhance productivity by automating routine tasks and prioritizing key operations for efficient office management."}/>
-
+      <BannerSection
+        image={"../images/banner1.jpg"}
+        title={"Office Dashboard"}
+        subtitle={
+          "Enhance productivity by automating routine tasks and prioritizing key operations for efficient office management."
+        }
+      />
 
       <Box>
         {responsive && (
           <div className="parentdiv_small_screen">
-            
             <div className="children1_small_screen">
               <Grid container>
                 <Grid
@@ -580,9 +587,16 @@ export const RegisterUser = () => {
                   sm={12}
                   md={9}
                   lg={9}
-                  className="parentGrid_small_screen"
+                  className="parentGrid_small_screen"  key={key1}
                 >
-                  <h2 style={{ color: "rgb(107 169 169)",textAlign:"center",marginTop:"10px",marginBottom:"10px" }}>
+                  <h2
+                    style={{
+                      color: "rgb(107 169 169)",
+                      textAlign: "center",
+                      marginTop: "10px",
+                      marginBottom: "10px",
+                    }}
+                  >
                     Register Accounts
                   </h2>
 
@@ -599,7 +613,7 @@ export const RegisterUser = () => {
                         {...register("registration_number")}
                         helperText={errors.registration_number?.message}
                         FormHelperTextProps={{
-                          sx: { color: 'red' },  // Set the color of the helper text to red
+                          sx: { color: "red" }, // Set the color of the helper text to red
                         }}
                       />
                     </Box>
@@ -615,7 +629,7 @@ export const RegisterUser = () => {
                         {...register("password")}
                         helperText={errors.password?.message}
                         FormHelperTextProps={{
-                          sx: { color: 'red' },  // Set the color of the helper text to red
+                          sx: { color: "red" }, // Set the color of the helper text to red
                         }}
                       />
                     </Box>
@@ -632,27 +646,37 @@ export const RegisterUser = () => {
                         {...register("password2")}
                         helperText={errors.password2?.message}
                         FormHelperTextProps={{
-                          sx: { color: 'red' },  // Set the color of the helper text to red
+                          sx: { color: "red" }, // Set the color of the helper text to red
                         }}
                       />
                     </Box>
                     <Box>
-                      <TextField
-                        type="text"
-                        label="Role"
-                        placeholder="Role..."
-                        
-                        sx={{
-                          width: { lg: "50%", md: "50%", sm: "50%", xs: "80%" },
-                          marginBottom: "10px",
-                          
-                        }}
-                        {...register("role")}
-                        helperText={errors.role?.message}
-                        FormHelperTextProps={{
-                          sx: { color: 'red' },  // Set the color of the helper text to red
-                        }}
-                      />
+                    <TextField
+                      select
+                      label="Role"
+                      placeholder="Role..."
+                      fullWidth
+                      sx={{
+                        width: { lg: "50%", md: "50%", sm: "50%", xs: "80%" },
+                        marginBottom: "10px",
+                        marginTop: "10px",
+                      }}
+                      {...register("role")}
+                      error={!!errors.role}
+                      helperText={errors?.role?.message}
+                      FormHelperTextProps={{
+                        sx: { color: "red" }, // Set the color of the helper text to red
+                      }}
+                    >
+                      <MenuItem value="student">Student</MenuItem>
+                      <MenuItem value="faculty">Faculty</MenuItem>
+                      <MenuItem value="super-admin">Super Admin</MenuItem>
+                      <MenuItem value="office">Office</MenuItem>
+                      <MenuItem value="principal">Principal</MenuItem>
+                      <MenuItem value="caretaker">Caretaker</MenuItem>
+                      <MenuItem value="department">Department</MenuItem>
+                      <MenuItem value="registrar">Registrar</MenuItem>
+                    </TextField>
                     </Box>
 
                     <Button
@@ -661,9 +685,9 @@ export const RegisterUser = () => {
                         width: { xs: "85%", sm: "50%" },
                         backgroundColor: "rgb(107 169 169)",
                         textAlign: "start",
-                        borderRadius:"20px",
+                        borderRadius: "20px",
                         "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
-                        transition: 'background-color 0.3s ease-in-out',
+                        transition: "background-color 0.3s ease-in-out",
                       }}
                       type="submit"
                     >
@@ -679,8 +703,6 @@ export const RegisterUser = () => {
                       )}
                     </Button>
                   </form>
-
-              
 
                   <Divider
                     component="span"
@@ -722,8 +744,7 @@ export const RegisterUser = () => {
                         style={{
                           backgroundColor: "rgb(107 169 169)",
                           marginTop: "10px",
-                          borderRadius:"20px",
-                         
+                          borderRadius: "20px",
                         }}
                       >
                         <input
@@ -742,7 +763,7 @@ export const RegisterUser = () => {
                       )}
                     </div>
                   </Box>
-                  <Box sx={{marginBottom:"50px"}}>
+                  <Box sx={{ marginBottom: "50px" }}>
                     <Button
                       variant="contained"
                       sx={{
@@ -750,9 +771,9 @@ export const RegisterUser = () => {
                         backgroundColor: "rgb(107 169 169)",
                         textAlign: "start",
                         marginTop: "20px",
-                        borderRadius:"20px",
+                        borderRadius: "20px",
                         "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
-                        transition: 'background-color 0.3s ease-in-out',
+                        transition: "background-color 0.3s ease-in-out",
                       }}
                       type="submit"
                       onClick={handleSubmitFile}
@@ -776,155 +797,256 @@ export const RegisterUser = () => {
         )}
 
         {!responsive && (
-          <div className="children1_large_screen" style={{marginBottom:"40px"}}>
-          
-              <Grid container>
-                <Grid
-                  item
-                  xs={12}
-                  sm={12}
-                  md={3}
-                  lg={3}
-                  // sx={{ height: "fit-content" }}
-                >
-                  <center>
-                    <div >
-                      
-                   <h4
-                        style={{
-                          position: "relative",
-                          top: "8rem",
-                          left: "5.0rem",
-                          width: "400px",
-                          height: "auto",
-                          fontSize: "1.3rem",
-                          color: "black",
-                        }}
-                      >
-                        {" "}
-                        Total Registered Accounts: {id}
-                        <br />
-                      </h4>
-                    </div>
-
-                    <CardMedia
-                      component="img"
-                      image="../images/register_page_icon.png"
-                      sx={{
+          <div
+            className="children1_large_screen"
+            style={{ marginBottom: "40px" }}
+          >
+            <Grid container>
+              <Grid
+                item
+                xs={12}
+                sm={12}
+                md={3}
+                lg={3}
+                // sx={{ height: "fit-content" }}
+              >
+                <center>
+                  <div>
+                    <h4
+                      style={{
                         position: "relative",
-                        top: "10rem",
-                        left: { lg: "5rem", md: "2rem" },
+                        top: "8rem",
+                        left: "5.0rem",
                         width: "400px",
                         height: "auto",
-                      }}
-                      alt=""
-                    />
-                  </center>
-                </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  sm={12}
-                  md={9}
-                  lg={9}
-                  className="parentGrid_largeScreen"
-                >
-                  <center>
-                    <h2
-                      style={{
-                        //   marginRight: "35%",
-                          marginBottom: "10px",
-                        color: "rgb(107 169 169)",
-                        //   textAlign:"center"
+                        fontSize: "1.3rem",
+                        color: "black",
                       }}
                     >
-                     Register Accounts
-                    </h2>
-                  </center>
+                      {" "}
+                      Total Registered Accounts: {id}
+                      <br />
+                    </h4>
+                  </div>
 
-                
-                  <form onSubmit={handleSubmit(onSubmit)}>
-                    <Box>
-                      <TextField
-                        type="text"
-                        label="Registration Number"
-                        placeholder="01234420214"
-                        sx={{
-                          width: "50%",
-                          marginTop: "12px",
-                        }}
-                        {...register("registration_number")}
-                        helperText={errors?.registration_number?.message}
-                        FormHelperTextProps={{
-                          sx: { color: 'red' },  // Set the color of the helper text to red
+                  <CardMedia
+                    component="img"
+                    image="../images/register_page_icon.png"
+                    sx={{
+                      position: "relative",
+                      top: "10rem",
+                      left: { lg: "5rem", md: "2rem" },
+                      width: "400px",
+                      height: "auto",
+                    }}
+                    alt=""
+                  />
+                </center>
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                sm={12}
+                md={9}
+                lg={9}
+                className="parentGrid_largeScreen"
+                key={key1}
+              >
+                <center>
+                  <h2
+                    style={{
+                      //   marginRight: "35%",
+                      marginBottom: "10px",
+                      color: "rgb(107 169 169)",
+                      //   textAlign:"center"
+                    }}
+                  >
+                    Register Accounts
+                  </h2>
+                </center>
+
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <Box>
+                    <TextField
+                      type="text"
+                      label="Registration Number"
+                      placeholder="01234420214"
+                      sx={{
+                        width: "50%",
+                        marginTop: "12px",
+                      }}
+                      {...register("registration_number")}
+                      helperText={errors?.registration_number?.message}
+                      FormHelperTextProps={{
+                        sx: { color: "red" }, // Set the color of the helper text to red
+                      }}
+                    />
+                  </Box>
+                  <Box>
+                    <TextField
+                      type="password"
+                      label="Password"
+                      placeholder="Password..."
+                      sx={{
+                        width: "50%",
+                        marginTop: "12px",
+                      }}
+                      {...register("password")}
+                      helperText={errors?.password?.message}
+                      FormHelperTextProps={{
+                        sx: { color: "red" }, // Set the color of the helper text to red
+                      }}
+                    />
+                  </Box>
+                  <Box>
+                    <TextField
+                      type="password"
+                      label="Confirm Password"
+                      placeholder="Confirm Password..."
+                      sx={{
+                        width: "50%",
+                        marginBottom: "10px",
+                        marginTop: "10px",
+                      }}
+                      {...register("password2")}
+                      helperText={errors?.password2?.message}
+                      FormHelperTextProps={{
+                        sx: { color: "red" }, // Set the color of the helper text to red
+                      }}
+                    />
+                  </Box>
+                  <Box>
+                    <TextField
+                      select
+                      label="Role"
+                      placeholder="Role..."
+                      fullWidth
+                      sx={{
+                        width: { lg: "50%", md: "50%", sm: "50%", xs: "80%" },
+                        marginBottom: "10px",
+                        marginTop: "10px",
+                      }}
+                      {...register("role")}
+                      error={!!errors.role}
+                      helperText={errors?.role?.message}
+                      FormHelperTextProps={{
+                        sx: { color: "red" }, // Set the color of the helper text to red
+                      }}
+                    >
+                      <MenuItem value="student">Student</MenuItem>
+                      <MenuItem value="faculty">Faculty</MenuItem>
+                      <MenuItem value="super-admin">Super Admin</MenuItem>
+                      <MenuItem value="office">Office</MenuItem>
+                      <MenuItem value="principal">Principal</MenuItem>
+                      <MenuItem value="caretaker">Caretaker</MenuItem>
+                      <MenuItem value="department">Department</MenuItem>
+                      <MenuItem value="registrar">Registrar</MenuItem>
+                    </TextField>
+                  </Box>
+                  <Button
+                    variant="contained"
+                    style={{
+                      width: "50%",
+                      backgroundColor: "rgb(107 169 169)",
+                      textAlign: "start",
+                      borderRadius: "20px",
+                      "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
+                      transition: "background-color 0.3s ease-in-out",
+                      marginBottom: "20px",
+                    }}
+                    type="submit"
+                  >
+                    {!loading && <p>Register Account</p>}
+                    {loading && (
+                      <CircularProgress
+                        style={{
+                          color: "white",
+                          width: "20px",
+                          height: "22px",
                         }}
                       />
-                    </Box>
-                    <Box>
-                      <TextField
-                        type="password"
-                        label="Password"
-                        placeholder="Password..."
-                        sx={{
-                          width: "50%",
-                          marginTop: "12px",
-                        }}
-                        {...register("password")}
-                        helperText={errors?.password?.message}
-                        FormHelperTextProps={{
-                          sx: { color: 'red' },  // Set the color of the helper text to red
-                        }}
-                      />
-                    </Box>
-                    <Box>
-                      <TextField
-                        type="password"
-                        label="Confirm Password"
-                        placeholder="Confirm Password..."
-                        sx={{
-                          width: "50%",
-                          marginBottom: "10px",
-                          marginTop: "10px",
-                        }}
-                        {...register("password2")}
-                        helperText={errors?.password2?.message}
-                        FormHelperTextProps={{
-                          sx: { color: 'red' },  // Set the color of the helper text to red
-                        }}
-                      />
-                    </Box>
-                    <Box>
-                      <TextField
-                        type="text"
-                        label="Role"
-                        placeholder="Role..."
-                        sx={{
-                          width: { lg: "50%", md: "50%", sm: "50%", xs: "80%" },
-                          marginBottom: "10px",
-                          marginTop: "10px",
-                        }}
-                        {...register("role")}
-                        helperText={errors?.role?.message}
-                        FormHelperTextProps={{
-                          sx: { color: 'red' },  // Set the color of the helper text to red
-                        }}
-                      />
-                    </Box>
-                    <Button
-                      variant="contained"
+                    )}
+                  </Button>
+                </form>
+
+                <Divider
+                  component="span"
+                  role="presentation"
+                  className="Divider"
+                >
+                  <Typography>or</Typography>
+                </Divider>
+
+                <Box
+                  container
+                  sx={{
+                    marginTop: "20px",
+                  }}
+                  key={key}
+                >
+                  <Box style={{ width: "100%", textAlign: "-webkit-center" }}>
+                    <div
                       style={{
                         width: "50%",
+                        border: "1px dotted grey",
+                        padding: "5px",
+                        backgroundColor: "whitesmoke",
+                        borderRadius: "10px",
+                      }}
+                    >
+                      <p
+                        className="text-bold text-xl"
+                        style={{ color: "rgb(107 169 169)" }}
+                      >
+                        Upload a csv file
+                      </p>
+                      <Box className="mt-3 text-xl">
+                        <FaUpload style={{ color: "rgb(107 169 169)" }} />
+                      </Box>
+                      <Button
+                        component="label"
+                        variant="contained"
+                        style={{
+                          backgroundColor: "rgb(107 169 169)",
+                          marginTop: "10px",
+                          borderRadius: "20px",
+                          marginBottom: "10px",
+                        }}
+                      >
+                        <input
+                          type="file"
+                          accept="*"
+                          alt=""
+                          style={{ display: "none" }}
+                          onChange={handleFileChange}
+                        />
+                        Upload
+                      </Button>
+                      {fileName && (
+                        <p style={{ marginTop: "5px", marginBottom: "3px" }}>
+                          {fileName}
+                        </p>
+                      )}
+                    </div>
+                  </Box>
+
+                  <Box>
+                    <Button
+                      variant="contained"
+                      sx={{
+                        width: { xs: "85%", sm: "50%" },
                         backgroundColor: "rgb(107 169 169)",
                         textAlign: "start",
-                        borderRadius:"20px",
+                        marginTop: "20px",
+                        borderRadius: "20px",
                         "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
-                        transition: 'background-color 0.3s ease-in-out',
-                        marginBottom:"20px"
+                        transition: "background-color 0.3s ease-in-out",
                       }}
                       type="submit"
+                      onClick={handleSubmitFile}
                     >
-                      {!loading && <p>Register Account</p>}
-                      {loading && (
+                      {!loading1 && <p>Register Account</p>}
+                      {loading1 && (
                         <CircularProgress
                           style={{
                             color: "white",
@@ -934,102 +1056,10 @@ export const RegisterUser = () => {
                         />
                       )}
                     </Button>
-                  </form>
-
-                
-                  <Divider
-                    component="span"
-                    role="presentation"
-                    className="Divider"
-                  >
-                    <Typography>or</Typography>
-                  </Divider>
-
-                  <Box
-                    container
-                    sx={{
-                      marginTop: "20px",
-                    }}
-                    key={key}
-                  >
-                    <Box style={{ width: "100%", textAlign: "-webkit-center" }}>
-                      <div
-                        style={{
-                          width: "50%",
-                          border: "1px dotted grey",
-                          padding: "5px",
-                          backgroundColor: "whitesmoke",
-                          borderRadius: "10px",
-                        }}
-                      >
-                        <p
-                          className="text-bold text-xl"
-                          style={{ color: "rgb(107 169 169)" }}
-                        >
-                          Upload a csv file
-                        </p>
-                        <Box className="mt-3 text-xl">
-                          <FaUpload style={{ color: "rgb(107 169 169)", }} />
-                        </Box>
-                        <Button
-                          component="label"
-                          variant="contained"
-                          style={{
-                            backgroundColor: "rgb(107 169 169)",
-                            marginTop: "10px",
-                            borderRadius:"20px",
-                            marginBottom:"10px"
-                          }}
-                        >
-                          <input
-                            type="file"
-                            accept="*"
-                            alt=""
-                            style={{ display: "none" }}
-                            onChange={handleFileChange}
-                          />
-                          Upload
-                        </Button>
-                        {fileName && (
-                          <p style={{ marginTop: "5px", marginBottom: "3px" }}>
-                            {fileName}
-                          </p>
-                        )}
-                      </div>
-                    </Box>
-
-                    <Box>
-                      <Button
-                        variant="contained"
-                        sx={{
-                          width: { xs: "85%", sm: "50%" },
-                          backgroundColor: "rgb(107 169 169)",
-                          textAlign: "start",
-                          marginTop: "20px",
-                          borderRadius:"20px",
-                          "&:hover": { backgroundColor: "rgb(85, 136, 136)" },
-                          transition: 'background-color 0.3s ease-in-out',
-                        }}
-                        
-                        type="submit"
-                        onClick={handleSubmitFile}
-                      >
-                        {!loading1 && <p>Register Account</p>}
-                        {loading1 && (
-                          <CircularProgress
-                            style={{
-                              color: "white",
-                              width: "20px",
-                              height: "22px",
-                            }}
-                          />
-                        )}
-                      </Button>
-                    </Box>
                   </Box>
-                </Grid>
+                </Box>
               </Grid>
-         
+            </Grid>
           </div>
         )}
       </Box>

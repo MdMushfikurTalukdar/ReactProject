@@ -52,7 +52,7 @@ export const AdminDashboard = () => {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `https://smart-backend-uebh.onrender.com/api/user/college-requests/`,
+      url: `${Url}/college-requests/`,
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
       },

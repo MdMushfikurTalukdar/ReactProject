@@ -6,6 +6,8 @@ import {
   FormControl,
   FormControlLabel,
   Grid,
+  InputLabel,
+  MenuItem,
   Radio,
   RadioGroup,
   TextField,
@@ -25,20 +27,32 @@ import NavbarNew from "../components/NavbarNew";
 import { FaCameraRetro } from "react-icons/fa";
 import { BaseUrl, Url } from "../components/BaseUrl";
 import { ClimbingBoxLoader } from "react-spinners";
+import { format } from "date-fns";
 
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 const phoneNumberRegex = /^\d{10}$/;
+const today = format(new Date(), "yyyy-MM-dd");
 
 const schema = yup.object().shape({
   first_name: yup.string().required("First name is required"),
   last_name: yup.string().required("Last name is required"),
   father_name: yup.string().required("Father name is required"),
   middle_name: yup.string(),
-  gender: yup.string().test("Invalid_gender","Gender Must be between Male,Female,Others",(value)=>{
-    if(["Male","male","Female","female","Others","others"].includes(value)===false)
-      return false;
-    else return true;
-  }),
+  gender: yup
+    .string()
+    .test(
+      "Invalid_gender",
+      "Gender Must be between Male,Female,Others",
+      (value) => {
+        if (
+          ["Male", "male", "Female", "female", "Others", "others"].includes(
+            value
+          ) === false
+        )
+          return false;
+        else return true;
+      }
+    ),
   student_email: yup
     .string()
     .email("Invalid email format")
@@ -63,32 +77,33 @@ const schema = yup.object().shape({
       if (!value) return false;
 
       const today = new Date();
-      const [year, month, day] = value.split('-').map(Number);
+      const [year, month, day] = value.split("-").map(Number);
 
-      if(month>12)return false;
-      if(day>31)return false;
-      if(day===parseInt("00"))return false;
-      if(month===parseInt("00"))return false;
+      if (month > 12) return false;
+      if (day > 31) return false;
+      if (day === parseInt("00")) return false;
+      if (month === parseInt("00")) return false;
       // Create a Date object from the given DOB
 
       if ([4, 6, 9, 11].includes(month) && day > 30) return false;
 
       // February (leap year check)
       if (month === 2) {
-        const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+        const isLeapYear =
+          (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
         if (day > 29 || (day === 29 && !isLeapYear)) return false;
       }
-
 
       const dob = new Date(year, month - 1, day); // month is 0-based in JS Date
 
       // Calculate the difference in years
       const age = today.getFullYear() - dob.getFullYear();
-      
+
       // Adjust if the DOB hasn't reached the current date in the current year
       const isBeforeBirthdayThisYear =
         today.getMonth() < dob.getMonth() ||
-        (today.getMonth() === dob.getMonth() && today.getDate() < dob.getDate());
+        (today.getMonth() === dob.getMonth() &&
+          today.getDate() < dob.getDate());
 
       // Subtract one year if the user's birthday hasn't occurred yet this year
       const actualAge = isBeforeBirthdayThisYear ? age - 1 : age;
@@ -113,7 +128,7 @@ const schema = yup.object().shape({
       "is-valid-last_qualification",
       "Values must be between Matric, Intermediate, Polytechnic",
       (value) =>
-        !value || ["Matric", "Intermediate", "Polytechnic"].includes(value)
+        !value || ["matric", "intermediate", "polytechnic"].includes(value)
     ),
 
   registration_year: yup
@@ -162,16 +177,16 @@ const schema = yup.object().shape({
     .matches(
       dateRegex,
       "Date has wrong format. Use one of these formats instead: YYYY-MM-DD."
-    ).test("invalid_DOA","Invalid Date of admission",(value)=>{
-      
-      const [year, month, day] = value.split('-').map(Number);
+    )
+    .test("invalid_DOA", "Invalid Date of admission", (value) => {
+      const [year, month, day] = value.split("-").map(Number);
 
-      if(year>parseInt(new Date().getFullYear()))return false;
-     
-      if(month>12)return false;
-      if(day>31)return false;
-      if(day===parseInt("00"))return false;
-      if(month===parseInt("00"))return false;
+      if (year > parseInt(new Date().getFullYear())) return false;
+
+      if (month > 12) return false;
+      if (day > 31) return false;
+      if (day === parseInt("00")) return false;
+      if (month === parseInt("00")) return false;
 
       return true;
     })
@@ -353,7 +368,57 @@ export const EditProfile = () => {
   const [file, setFile] = useState("");
   const [imgPreview, setImgPreview] = useState("");
   const [loading, setLoading] = useState(true);
-  
+
+  const branches = [
+    { name: "Computer Science and Engineering", abbreviation: "CSE" },
+    { name: "Mechanical Engineering", abbreviation: "ME" },
+    { name: "Electrical Engineering", abbreviation: "EE" },
+    { name: "Civil Engineering", abbreviation: "CE" },
+    { name: "Electronics and Communication Engineering", abbreviation: "ECE" },
+    { name: "Chemical Engineering", abbreviation: "CHE" },
+    { name: "Information Technology", abbreviation: "IT" },
+    { name: "Biomedical Engineering", abbreviation: "BME" },
+    { name: "Aeronautical Engineering", abbreviation: "AE" },
+    { name: "Automobile Engineering", abbreviation: "AU" },
+    { name: "Biotechnology Engineering", abbreviation: "BT" },
+    { name: "Industrial Engineering", abbreviation: "IE" },
+    { name: "Environmental Engineering", abbreviation: "EN" },
+    { name: "Petroleum Engineering", abbreviation: "PE" },
+    { name: "Instrumentation Engineering", abbreviation: "IE" },
+    { name: "Agricultural Engineering", abbreviation: "AG" },
+    { name: "Mining Engineering", abbreviation: "MN" },
+    { name: "Marine Engineering", abbreviation: "MRE" },
+    { name: "Textile Engineering", abbreviation: "TE" },
+    { name: "Food Technology", abbreviation: "FT" },
+    { name: "Production Engineering", abbreviation: "PR" },
+    { name: "Metallurgical Engineering", abbreviation: "MT" },
+    { name: "Polymer Engineering", abbreviation: "PM" },
+    { name: "Naval Architecture", abbreviation: "NA" },
+    { name: "Power Engineering", abbreviation: "PW" },
+    { name: "Robotics Engineering", abbreviation: "RE" },
+    { name: "Software Engineering", abbreviation: "SE" },
+    { name: "Geological Engineering", abbreviation: "GE" },
+    { name: "Structural Engineering", abbreviation: "ST" },
+    { name: "Mechatronics Engineering", abbreviation: "MTX" },
+    { name: "Aerospace Engineering", abbreviation: "ASP" },
+    { name: "Marine Technology", abbreviation: "MRT" },
+    { name: "Nano Engineering", abbreviation: "NE" },
+    { name: "Materials Science and Engineering", abbreviation: "MSE" },
+    { name: "Telecommunication Engineering", abbreviation: "TCE" },
+    { name: "Nuclear Engineering", abbreviation: "NE" },
+    { name: "Optical Engineering", abbreviation: "OE" },
+    { name: "Automotive Engineering", abbreviation: "AUE" },
+    { name: "Systems Engineering", abbreviation: "SYE" },
+    { name: "Renewable Energy Engineering", abbreviation: "REE" },
+    { name: "Biochemical Engineering", abbreviation: "BCE" },
+    { name: "Mining and Mineral Engineering", abbreviation: "MME" },
+    { name: "Safety Engineering", abbreviation: "SE" },
+    { name: "Corrosion Engineering", abbreviation: "CE" },
+    { name: "Plastics Engineering", abbreviation: "PLE" },
+    { name: "Petrochemical Engineering", abbreviation: "PCE" },
+    { name: "Energy Engineering", abbreviation: "EE" },
+    { name: "Computer Science and Business Systems", abbreviation: "CSBS" },
+  ];
 
   useEffect(() => {
     const token = sessionStorage?.getItem("accesstoken");
@@ -915,12 +980,17 @@ export const EditProfile = () => {
                         </Grid>
                         <Grid item lg={4} sm={12} xs={12} md={12}>
                           <TextField
-                            type="text"
+                            type="date"
                             fullWidth
                             sx={{ marginTop: "10px" }}
                             {...register("date_of_birth")}
                             error={!!errors.date_of_birth}
                             helperText={errors.date_of_birth?.message}
+                            InputProps={{
+                              inputProps: {
+                                max: today, // Set the maximum selectable date to today
+                              },
+                            }}
                           />
                         </Grid>
 
@@ -937,14 +1007,21 @@ export const EditProfile = () => {
                         </Grid>
                         <Grid item lg={4} sm={12} xs={12} md={12}>
                           <TextField
-                            type="text"
+                            select
                             fullWidth
+                            label="Select gender"
                             sx={{ marginTop: "10px" }}
                             {...register("gender")}
+                            value={watch("gender")}
                             error={!!errors.gender}
                             helperText={errors.gender?.message}
-                          />
+                          >
+                            <MenuItem value="Male">Male</MenuItem>
+                            <MenuItem value="Female">Female</MenuItem>
+                            <MenuItem value="Others">Others</MenuItem>
+                          </TextField>
                         </Grid>
+
                         <Divider style={{ width: "100%", margin: "10px 0" }} />
                         <Grid
                           item
@@ -962,6 +1039,7 @@ export const EditProfile = () => {
                             fullWidth
                             sx={{ marginTop: "10px" }}
                             {...register("permanent_address")}
+                            
                             error={!!errors.permanent_address}
                             helperText={errors.permanent_address?.message}
                           />
@@ -1118,9 +1196,7 @@ export const EditProfile = () => {
                           md={12}
                           style={{ marginBottom: "5px" }}
                         >
-                          <Typography variant="p">
-                            Registration No.
-                          </Typography>
+                          <Typography variant="p">Registration No.</Typography>
                         </Grid>
                         <Grid item lg={4} sm={12} xs={12} md={12}>
                           <Typography variant="p">
@@ -1166,13 +1242,20 @@ export const EditProfile = () => {
                         </Grid>
                         <Grid item lg={4} sm={12} xs={12} md={12}>
                           <TextField
-                            type="text"
+                            select
                             fullWidth
-                            style={{ marginTop: "10px" }}
+                            label="Select Year"
+                            sx={{ marginTop: "10px" }}
                             {...register("year")}
+                            value={watch("year")} // Watch for changes and set the initial value
                             error={!!errors.year}
                             helperText={errors.year?.message}
-                          />
+                          >
+                            <MenuItem value="1">1</MenuItem>
+                            <MenuItem value="2">2</MenuItem>
+                            <MenuItem value="3">3</MenuItem>
+                            <MenuItem value="4">4</MenuItem>
+                          </TextField>
                         </Grid>
 
                         <Divider style={{ width: "100%", margin: "10px 0" }} />
@@ -1190,13 +1273,21 @@ export const EditProfile = () => {
                         </Grid>
                         <Grid item lg={4} sm={12} xs={12} md={12}>
                           <TextField
-                            type="text"
+                            select
                             fullWidth
-                            style={{ marginTop: "10px" }}
+                            label="Select Last Qualification"
+                            sx={{ marginTop: "10px" }}
                             {...register("last_qualification")}
+                            value={watch("last_qualification")} // Watch for changes and set the initial value
                             error={!!errors.last_qualification}
                             helperText={errors.last_qualification?.message}
-                          />
+                          >
+                            <MenuItem value="matric">Matric</MenuItem>
+                            <MenuItem value="intermediate">
+                              Intermediate
+                            </MenuItem>
+                            <MenuItem value="polytechnic">Polytechnic</MenuItem>
+                          </TextField>
                         </Grid>
 
                         <Divider style={{ width: "100%", margin: "10px 0" }} />
@@ -1234,13 +1325,20 @@ export const EditProfile = () => {
                         </Grid>
                         <Grid item lg={4} sm={12} xs={12} md={12}>
                           <TextField
-                            type="text"
+                            select
                             fullWidth
-                            style={{ marginTop: "10px" }}
+                            label="Select Board"
+                            sx={{ marginTop: "10px" }}
                             {...register("board")}
+                            value={watch("board")} // Watch for changes and set the initial value
                             error={!!errors.board}
                             helperText={errors.board?.message}
-                          />
+                          >
+                            <MenuItem value="CBSE">CBSE</MenuItem>
+                            <MenuItem value="ICSE">ICSE</MenuItem>
+                            <MenuItem value="BSEB">BSEB</MenuItem>
+                            <MenuItem value="Others">Others</MenuItem>
+                          </TextField>
                         </Grid>
 
                         <Divider style={{ width: "100%", margin: "10px 0" }} />
@@ -1256,13 +1354,27 @@ export const EditProfile = () => {
                         </Grid>
                         <Grid item lg={4} sm={12} xs={12} md={12}>
                           <TextField
-                            type="text"
+                            select
                             fullWidth
-                            style={{ marginTop: "10px" }}
+                            label="Select Branch"
+                            sx={{ marginTop: "10px" }}
                             {...register("branch")}
+                            value={watch("branch")} // Watch for changes and set the initial value
                             error={!!errors.branch}
                             helperText={errors.branch?.message}
-                          />
+                            FormHelperTextProps={{
+                              sx: { color: "red" }, // Set the color of the helper text to red
+                            }}
+                          >
+                            {branches.map((branch) => (
+                              <MenuItem
+                                key={branch.abbreviation}
+                                value={branch.abbreviation}
+                              >
+                                {branch.name} ({branch.abbreviation})
+                              </MenuItem>
+                            ))}
+                          </TextField>
                         </Grid>
 
                         <Divider style={{ width: "100%", margin: "10px 0" }} />
@@ -1302,14 +1414,22 @@ export const EditProfile = () => {
                         </Grid>
                         <Grid item lg={4} sm={12} xs={12} md={12}>
                           <TextField
-                            type="string"
+                            select
                             fullWidth
-                            style={{ marginTop: "10px" }}
+                            label="Select Category"
+                            sx={{ marginTop: "10px" }}
                             {...register("category")}
+                            value={watch("category")} // Watch for changes and set the initial value
                             error={!!errors.category}
                             helperText={errors.category?.message}
-                          />
+                          >
+                            <MenuItem value="General">General</MenuItem>
+                            <MenuItem value="SC">SC</MenuItem>
+                            <MenuItem value="ST">ST</MenuItem>
+                            <MenuItem value="OBC">OBC</MenuItem>
+                          </TextField>
                         </Grid>
+
                         <Divider style={{ width: "100%", margin: "10px 0" }} />
                         <Grid
                           item
@@ -1344,14 +1464,20 @@ export const EditProfile = () => {
                         >
                           <Typography variant="p">Date Of Admission</Typography>
                         </Grid>
+
                         <Grid item lg={4} sm={12} xs={12} md={12}>
                           <TextField
-                            type="text"
+                            type="date"
                             fullWidth
-                            style={{ marginTop: "10px" }}
+                            sx={{ marginTop: "10px" }}
                             {...register("date_of_admission")}
                             error={!!errors.date_of_admission}
                             helperText={errors.date_of_admission?.message}
+                            InputProps={{
+                              inputProps: {
+                                max: today, // Set the maximum selectable date to today
+                              },
+                            }}
                           />
                         </Grid>
 
