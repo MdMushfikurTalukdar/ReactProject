@@ -167,8 +167,7 @@ const schema = yup.object().shape({
       const [year, month, day] = value.split('-').map(Number);
 
       if(year>parseInt(new Date().getFullYear()))return false;
-      if(month>parseInt(new Date().getMonth()+1))return false;
-      if(day>parseInt(new Date().getDate()))return false;
+     
       if(month>12)return false;
       if(day>31)return false;
       if(day===parseInt("00"))return false;
