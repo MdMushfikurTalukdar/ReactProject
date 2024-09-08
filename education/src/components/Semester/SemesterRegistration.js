@@ -110,7 +110,7 @@ export function SemesterRegistration() {
     } else {
       navigate("/login");
     }
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     const token = sessionStorage.getItem("accesstoken");
@@ -143,7 +143,7 @@ export function SemesterRegistration() {
     } else {
       navigate("/login");
     }
-  }, [userProfile]);
+  }, [navigate]);
 
   useEffect(() => {
     if (sessionStorage?.getItem("accesstoken")) {
@@ -197,7 +197,7 @@ export function SemesterRegistration() {
     } else {
       navigate("/login");
     }
-  }, []);
+  }, [navigate]);
 
   const fetchBranches = (semester) => {
     const token = sessionStorage.getItem("accesstoken");
